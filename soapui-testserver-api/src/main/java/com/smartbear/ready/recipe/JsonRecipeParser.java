@@ -80,9 +80,19 @@ public class JsonRecipeParser implements ObjectRecipeParser {
             WsdlTestSuite testSuite = project.addNewTestSuite("Recipe Test Suite");
             WsdlTestCase testCase = testSuite.addNewTestCase("Recipe Test Case");
             addTestCaseOptions(testCase, testCaseStruct);
+            addTestCaseProperties(testCase, testCaseStruct);
             addTestSteps(testCase, testCaseStruct.testSteps, new StringToObjectMap());
         }
         return project;
+    }
+
+    private void addTestCaseProperties(WsdlTestCase testCase, TestCaseStruct testCaseStruct) {
+        Map<String, String> properties = testCaseStruct.properties;
+        if (properties != null) {
+            for (Map.Entry<String, String> property : properties.entrySet()) {
+                testCase.setPropertyValue(property.getKey(), property.getValue());
+            }
+        }
     }
 
     private void addTestCaseOptions(WsdlTestCase testCase, TestCaseStruct testCaseStruct) {
