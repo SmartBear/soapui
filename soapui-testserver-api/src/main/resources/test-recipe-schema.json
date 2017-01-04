@@ -543,7 +543,7 @@
             "$ref": "#/definitions/SoapRequestTestStep"
           },
           {
-            "$ref": "#/definitions/WsdlMockResponseTestStep"
+            "$ref": "#/definitions/SOAPMockResponseTestStep"
           },
           {
             "$ref": "#/definitions/PropertyTransferTestStep"
@@ -734,7 +734,7 @@
             "enum": [
               "REST Request",
               "SOAP Request",
-              "Wsdl Mock Response",
+              "SOAPMockResponse",
               "Property Transfer",
               "Groovy",
               "JDBC Request",
@@ -783,13 +783,13 @@
       },
       "additionalProperties": false
     },
-    "WsdlMockResponseTestStep": {
+    "SOAPMockResponseTestStep": {
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
           "enum": [
-            "Wsdl Mock Response"
+            "SOAPMockResponse"
           ]
         },
         "name": {

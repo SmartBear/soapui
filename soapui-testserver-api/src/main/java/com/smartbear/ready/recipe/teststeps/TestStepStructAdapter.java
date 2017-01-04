@@ -30,7 +30,7 @@ public class TestStepStructAdapter implements JsonDeserializer<TestStepStruct> {
                 return context.deserialize(testStepObject, DelayTestStepStruct.class);
             case TestStepNames.PROPERTIES_TYPE:
                 return context.deserialize(testStepObject, PropertiesTestStepStruct.class);
-            case TestStepNames.WSDL_MOCK_RESPONSE_TYPE:
+            case TestStepNames.SOAP_MOCK_RESPONSE_TYPE:
                 return context.deserialize(testStepObject, WsdlMockResponseStepStruct.class);
             case TestStepNames.JDBC_REQUEST_TYPE:
                 return context.deserialize(testStepObject, JdbcRequestTestStepStruct.class);

@@ -14,7 +14,7 @@ import com.smartbear.ready.recipe.teststeps.WsdlMockResponseStepStruct;
 import static com.eviware.soapui.support.ModelItemNamer.createName;
 import static com.smartbear.ready.recipe.WsdlExtractor.getWsdlInterface;
 
-public class WsdlMockResponseTestStepParser implements TestStepJsonParser {
+public class SoapMockResponseTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct testStepElement, StringToObjectMap context) throws ParseException {
         WsdlMockResponseStepStruct stepStruct = (WsdlMockResponseStepStruct) testStepElement;

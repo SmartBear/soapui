@@ -13,7 +13,7 @@ import static com.smartbear.ready.recipe.TestStepNames.PROPERTIES_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.PROPERTY_TRANSFER_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.REST_REQUEST_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.SOAP_REQUEST_TYPE;
-import static com.smartbear.ready.recipe.TestStepNames.WSDL_MOCK_RESPONSE_TYPE;
+import static com.smartbear.ready.recipe.TestStepNames.SOAP_MOCK_RESPONSE_TYPE;
 
 class TestStepTypeResolver implements TypeIdResolver {
     private JavaType baseType;
@@ -57,7 +57,7 @@ class TestStepTypeResolver implements TypeIdResolver {
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, DelayTestStepStruct.class);
             case PROPERTIES_TYPE:
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, PropertiesTestStepStruct.class);
-            case WSDL_MOCK_RESPONSE_TYPE:
+            case SOAP_MOCK_RESPONSE_TYPE:
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, WsdlMockResponseStepStruct.class);
             case JDBC_REQUEST_TYPE:
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, JdbcRequestTestStepStruct.class);

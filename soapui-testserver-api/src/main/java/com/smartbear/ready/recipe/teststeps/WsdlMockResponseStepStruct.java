@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 
-@ApiModel(value = "WsdlMockResponseTestStep", description = "Wsdl mock response test step definition")
+@ApiModel(value = "SOAPMockResponseTestStep", description = "SOAP mock response test step definition")
 public class WsdlMockResponseStepStruct extends TestStepStruct {
     public String wsdl;
     public String binding;

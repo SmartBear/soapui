@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class WsdlMockResponseTestStepParserTest extends RecipeParserTestBase {
+public class SoapMockResponseTestStepParserTest extends RecipeParserTestBase {
     @Test
     public void parsesRecipeWithWsdlMockResponseTestStep() throws Exception {
         WsdlProject wsdlProject = buildProjectFromRecipe("wsdl-mock-response-test-step.json");

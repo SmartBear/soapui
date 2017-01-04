@@ -1,7 +1,7 @@
 {
   "testSteps": [
     {
-      "type": "Wsdl Mock Response",
+      "type": "SOAPMockResponse",
       "wsdl": "http://www.webservicex.com/globalweather.asmx?WSDL",
       "binding": "GlobalWeatherSoap12",
       "operation": "GetCitiesByCountry",
