@@ -12,7 +12,7 @@ import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 import com.smartbear.ready.recipe.teststeps.WsdlMockResponseStepStruct;
 
 import static com.eviware.soapui.support.ModelItemNamer.createName;
-import static com.smartbear.ready.recipe.WsdlUtils.getWsdlInterface;
+import static com.smartbear.ready.recipe.WsdlExtractor.getWsdlInterface;
 
 public class WsdlMockResponseTestStepParser implements TestStepJsonParser {
     @Override

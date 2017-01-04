@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
-import static com.smartbear.ready.recipe.WsdlUtils.getWsdlInterface;
+import static com.smartbear.ready.recipe.WsdlExtractor.getWsdlInterface;
 
 /**
  * Parses a JSON Object describing a SOAP Request test step.

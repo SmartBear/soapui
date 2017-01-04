@@ -6,7 +6,10 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.SoapUIException;
 
-public class WsdlUtils {
+/**
+ * A utility class to extract objects after adding WSDL to a project.
+ */
+public class WsdlExtractor {
     static WsdlInterface getWsdlInterface(WsdlTestCase testCase, String wsdlUrl, String binding) throws ParseException {
         WsdlProject project = testCase.getTestSuite().getProject();
         WsdlInterface[] projectInterfaces = project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE).toArray(
