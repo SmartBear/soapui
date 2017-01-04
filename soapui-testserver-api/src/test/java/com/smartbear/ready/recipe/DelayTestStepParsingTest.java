@@ -11,7 +11,7 @@ public class DelayTestStepParsingTest extends RecipeParserTestBase {
     @Test
     public void parsesDelayTestStep() throws Exception {
         WsdlProject project = buildProjectFromRecipe("delay-test-step.json");
-        WsdlDelayTestStep delayTestStep = (WsdlDelayTestStep) project.getTestSuiteAt(0).getTestCaseAt(0).getTestStepAt(1);
+        WsdlDelayTestStep delayTestStep = getSingleTestStepIn(project, WsdlDelayTestStep.class);
         assertThat(delayTestStep.getDelay(), is(3000));
     }
 }

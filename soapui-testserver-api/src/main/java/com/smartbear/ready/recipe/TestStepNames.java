@@ -11,4 +11,5 @@ public class TestStepNames {
     public static final String JDBC_REQUEST_TYPE = "JDBC Request";
     public static final String DELAY_TYPE = "Delay";
     public static final String PROPERTIES_TYPE = "Properties";
+    public static final String SOAP_MOCK_RESPONSE_TYPE = "SOAPMockResponse";
 }
