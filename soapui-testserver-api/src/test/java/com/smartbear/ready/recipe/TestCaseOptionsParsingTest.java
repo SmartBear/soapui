@@ -23,6 +23,9 @@ public class TestCaseOptionsParsingTest extends RecipeParserTestBase {
         assertThat(testCase.getSettings().getString(HttpSettings.SOCKET_TIMEOUT, "-1"), is("0"));
         assertThat(testCase.getTimeout(), is(0L));
         assertThat(testCase.getMaxResults(), is(0));
+        assertThat(testCase.getProperties().size(), is(2));
+        assertThat(testCase.getProperties().get("test").getValue(), is("test"));
+        assertThat(testCase.getProperties().get("test2").getValue(), is("test2"));
     }
 
     @Test
@@ -39,5 +42,6 @@ public class TestCaseOptionsParsingTest extends RecipeParserTestBase {
         assertThat(testCase.getSettings().getString(HttpSettings.SOCKET_TIMEOUT, "-1"), is("100"));
         assertThat(testCase.getTimeout(), is(1000L));
         assertThat(testCase.getMaxResults(), is(0));
+        assertThat(testCase.getProperties().size(), is(0));
     }
 }

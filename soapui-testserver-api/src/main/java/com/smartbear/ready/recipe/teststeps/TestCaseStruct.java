@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Map;
+
 import static com.smartbear.ready.recipe.NullChecker.checkNotNull;
 
 /**
@@ -21,6 +23,7 @@ public class TestCaseStruct {
     public int testCaseTimeout;
     public String clientCertFileName;
     public String clientCertPassword;
+    public Map<String, String> properties;
 
     /**
      * Adding only getter for 'maxResults' test case option as it must NOT be exposed to the Runtime Service user (hence not supported in JSON schema),
@@ -45,7 +48,8 @@ public class TestCaseStruct {
             @JsonProperty("testCaseTimeout") int testCaseTimeout,
             @JsonProperty("testSteps") TestStepStruct[] testSteps,
             @JsonProperty("clientCertFileName") String clientCertFileName,
-            @JsonProperty("clientCertPassword") String clientCertPassword) {
+            @JsonProperty("clientCertPassword") String clientCertPassword,
+            @JsonProperty("properties") Map<String, String> properties) {
 
         checkNotNull(testSteps, "testSteps");
 
@@ -59,6 +63,7 @@ public class TestCaseStruct {
         this.testSteps = testSteps;
         this.clientCertFileName = clientCertFileName;
         this.clientCertPassword = clientCertPassword;
+        this.properties = properties;
     }
 
     public boolean isSearchProperties() {
