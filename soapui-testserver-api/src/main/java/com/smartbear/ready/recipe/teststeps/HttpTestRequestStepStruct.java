@@ -16,6 +16,7 @@ public class HttpTestRequestStepStruct extends TestStepStruct {
     public boolean entitizeParameters;
     public String clientCertificateFileName;
     public String clientCertificatePassword;
+    public RequestAttachmentStruct[] attachments;
 
     public HttpTestRequestStepStruct(String type, String name, String URI,
                                      AssertionStruct[] assertions,
@@ -27,7 +28,8 @@ public class HttpTestRequestStepStruct extends TestStepStruct {
                                      String requestBody,
                                      AuthenticationStruct authentication,
                                      String clientCertificateFileName,
-                                     String clientCertificatePassword) {
+                                     String clientCertificatePassword,
+                                     RequestAttachmentStruct[] attachments) {
         super(type, name);
         this.URI = URI;
         this.assertions = assertions;
@@ -40,5 +42,6 @@ public class HttpTestRequestStepStruct extends TestStepStruct {
         this.authentication = authentication;
         this.clientCertificateFileName = clientCertificateFileName;
         this.clientCertificatePassword = clientCertificatePassword;
+        this.attachments = attachments;
     }
 }

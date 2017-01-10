@@ -38,9 +38,10 @@ public class SoapTestRequestStepStruct extends HttpTestRequestStepStruct {
             @JsonProperty("followRedirects") boolean followRedirects,
             @JsonProperty("entitizeParameters") boolean entitizeParameters,
             @JsonProperty("clientCertificateFileName") String clientCertificateFileName,
-            @JsonProperty("clientCertificatePassword") String clientCertificatePassword) {
+            @JsonProperty("clientCertificatePassword") String clientCertificatePassword,
+            @JsonProperty("attachments") RequestAttachmentStruct[] attachments) {
         super(type, name, uri, assertions, encoding, headers, timeout, followRedirects, entitizeParameters,
-                requestBody, authentication, clientCertificateFileName, clientCertificatePassword);
+                requestBody, authentication, clientCertificateFileName, clientCertificatePassword, attachments);
 
         checkNotNull(wsdl, "wsdl");
         checkNotNull(operation, "operation");

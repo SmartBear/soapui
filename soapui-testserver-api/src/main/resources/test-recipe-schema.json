@@ -15,6 +15,29 @@
         }
       ]
     },
+    "RequestAttachment": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "contentId": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "required": [
+        "contentType",
+        "content"
+      ],
+      "additionalProperties": false
+    },
     "OAuth2AccessTokenPosition": {
       "type": "string",
       "enum": [
@@ -897,6 +920,12 @@
             ]
           }
         },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestAttachment"
+          }
+        },
         "assertions": {
           "type": "array",
           "items": {
@@ -1055,6 +1084,12 @@
                 }
               }
             ]
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestAttachment"
           }
         },
         "assertions": {
