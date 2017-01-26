@@ -325,7 +325,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
 		return (statusCode != HttpServletResponse.SC_SEE_OTHER && 
 				httpRequestWrapper != null &&
 				httpRequestWrapper.getMethod()
-				.equals(RestRequestInterface.HttpMethod.POST.toString());
+				.equals(RestRequestInterface.HttpMethod.POST.toString()));
 	}
 
     private ExtendedHttpMethod followRedirects(HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
