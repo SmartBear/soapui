@@ -54,7 +54,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
-import com.eviware.soapui.integration.impl.CajoServer;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.model.TestPropertyHolder;
@@ -70,7 +69,6 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
-import com.eviware.soapui.settings.LoadUISettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
@@ -728,7 +726,6 @@ public class SoapUI {
                     });
                 }
 
-                startCajoServerIfNotOverriddenBySetting();
                 if (isFirstLaunch) {
                     Tools.openURL(HelpUrls.SOAPUI_WELCOME_PAGE);
                 }
@@ -739,14 +736,6 @@ public class SoapUI {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
-            }
-        }
-
-        private void startCajoServerIfNotOverriddenBySetting() {
-            if (!getSettings().isSet(LoadUISettings.START_CAJO_SERVER_AT_STARTUP) || getSettings().getBoolean(LoadUISettings.START_CAJO_SERVER_AT_STARTUP)) {
-                CajoServer.getInstance().start();
-            } else {
-                log.info("Cajo server not started because setting '" + LoadUISettings.START_CAJO_SERVER_AT_STARTUP + "' is false.");
             }
         }
     }
