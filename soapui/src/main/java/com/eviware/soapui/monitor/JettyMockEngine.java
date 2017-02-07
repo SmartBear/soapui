@@ -30,6 +30,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.log.JettyLogger;
+import com.google.common.io.ByteStreams;
 import org.apache.log4j.Logger;
 import org.mortbay.component.AbstractLifeCycle;
 import org.mortbay.io.Connection;
@@ -56,6 +57,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.nio.channels.SocketChannel;
@@ -66,6 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * Core Mock-Engine hosting a Jetty web server
@@ -564,13 +567,14 @@ public class JettyMockEngine implements MockEngine {
     private class ServerHandler extends AbstractHandler {
         public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch)
                 throws IOException, ServletException {
+            HttpServletRequest requestWrapper = new SoapUIHttpServletRequestWrapper(request);
             // find mockService
-            Map<String, List<MockRunner>> map = runners.get(request.getLocalPort());
+            Map<String, List<MockRunner>> map = runners.get(requestWrapper.getLocalPort());
 
             // ssl?
-            if (map == null && sslConnector != null && request.getLocalPort() == sslConnector.getPort()) {
+            if (map == null && sslConnector != null && requestWrapper.getLocalPort() == sslConnector.getPort()) {
                 for (Map<String, List<MockRunner>> runnerMap : runners.values()) {
-                    if (runnerMap.containsKey(request.getPathInfo())) {
+                    if (runnerMap.containsKey(requestWrapper.getPathInfo())) {
                         map = runnerMap;
                         break;
                     }
@@ -578,12 +582,12 @@ public class JettyMockEngine implements MockEngine {
             }
 
             if (map != null) {
-                List<MockRunner> wsdlMockRunners = map.get(request.getPathInfo());
+                List<MockRunner> wsdlMockRunners = map.get(requestWrapper.getPathInfo());
                 if (wsdlMockRunners == null) {
                     String bestMatchedRootPath = "";
 
                     for (String root : map.keySet()) {
-                        if (request.getPathInfo().startsWith(root) && root.length() > bestMatchedRootPath.length()) {
+                        if (requestWrapper.getPathInfo().startsWith(root) && root.length() > bestMatchedRootPath.length()) {
                             bestMatchedRootPath = root;
                             wsdlMockRunners = map.get(root);
                         }
@@ -601,7 +605,7 @@ public class JettyMockEngine implements MockEngine {
                             }
 
                             try {
-                                result = wsdlMockRunner.dispatchRequest(request, response);
+                                result = wsdlMockRunner.dispatchRequest(requestWrapper, response);
                                 if (result != null) {
                                     result.finish();
                                     break;
@@ -621,7 +625,7 @@ public class JettyMockEngine implements MockEngine {
                         response.setContentType("text/html");
                         response.getWriter().print(
                                 SoapMessageBuilder.buildFault("Server", e.getMessage(), SoapVersion.Utils
-                                        .getSoapVersionForContentType(request.getContentType(), SoapVersion.Soap11)));
+                                        .getSoapVersionForContentType(requestWrapper.getContentType(), SoapVersion.Soap11)));
                         // throw new ServletException( e );
                     }
                 } else {
@@ -704,6 +708,54 @@ public class JettyMockEngine implements MockEngine {
             } catch (Exception e) {
                 SoapUI.logError(e);
             }
+        }
+    }
+    
+    protected final class SoapUIHttpServletRequestWrapper extends HttpServletRequestWrapper {
+        
+        private String characterEncoding;
+        private byte[] content;
+        private int contentLength = -1;
+        private String contentType;
+        
+        public SoapUIHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
+            super(request);
+            init(request);
+        }
+        
+        protected final void init(HttpServletRequest request) throws IOException {
+            contentLength = request.getContentLength();
+            contentType = request.getContentType();
+            characterEncoding = request.getCharacterEncoding();
+            
+            content = ByteStreams.toByteArray(request.getInputStream());
+        }
+        
+        @Override
+        public ServletInputStream getInputStream() {
+            final ByteArrayInputStream bais = new ByteArrayInputStream(content);
+            return new ServletInputStream() {
+                
+                @Override
+                public int read() throws IOException {
+                    return bais.read();
+                }
+            };
+        }
+        
+        @Override
+        public int getContentLength() {
+            return contentLength;
+        }
+        
+        @Override
+        public String getContentType() {
+            return contentType;
+        }
+        
+        @Override
+        public BufferedReader getReader() throws IOException {
+            return new BufferedReader(new InputStreamReader(getInputStream(), characterEncoding));
         }
     }
 }
