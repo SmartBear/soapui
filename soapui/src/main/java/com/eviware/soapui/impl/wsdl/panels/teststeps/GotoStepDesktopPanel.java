@@ -259,9 +259,6 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
         builder.addRelatedGap();
         builder.addFixed(testStepsCombo);
         builder.addGlue();
-        testConditionButton = new JButton(new TestConditionAction());
-        testConditionButton.setEnabled(false);
-        builder.addFixed(testConditionButton);
         builder.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         return builder;
     }
