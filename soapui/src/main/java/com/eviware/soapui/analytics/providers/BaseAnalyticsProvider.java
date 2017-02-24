@@ -26,14 +26,13 @@ import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
-/**
- * Created by aleshin on 5/15/2014.
- */
 public abstract class BaseAnalyticsProvider implements AnalyticsProvider {
 
     @Override
@@ -58,6 +57,26 @@ public abstract class BaseAnalyticsProvider implements AnalyticsProvider {
 
     public final String getUserCountry() {
         return System.getProperty("user.country", "n/a");
+    }
+
+    String getInstallId() {
+        String hostName = "Unknown";
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (Exception ignore) {
+
+        }
+        try {
+            String installIdString = hostName + System.getProperty("user.name");
+            StringBuilder sb = new StringBuilder();
+            byte[] bytes = installIdString.getBytes(StandardCharsets.UTF_8);
+            for (int i = 0; i < bytes.length; i++) {
+                sb.append(String.format("%02X%s", bytes[i], (i < bytes.length - 1) ? "-" : ""));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            return "Unknown";
+        }
     }
 
     public final String getStrScreenSize() {
