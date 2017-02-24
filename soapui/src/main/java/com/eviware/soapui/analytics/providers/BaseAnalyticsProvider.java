@@ -31,6 +31,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public abstract class BaseAnalyticsProvider implements AnalyticsProvider {
 
@@ -68,7 +69,7 @@ public abstract class BaseAnalyticsProvider implements AnalyticsProvider {
         try {
             String installIdString = hostName + System.getProperty("user.name");
             StringBuilder sb = new StringBuilder();
-            byte[] bytes = installIdString.getBytes();
+            byte[] bytes = installIdString.getBytes(StandardCharsets.UTF_8);
             for (int i = 0; i < bytes.length; i++) {
                 sb.append(String.format("%02X%s", bytes[i], (i < bytes.length - 1) ? "-" : ""));
             }

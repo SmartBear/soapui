@@ -27,9 +27,6 @@ import java.util.UUID;
 import static com.eviware.soapui.analytics.AnalyticsManager.Category.SESSION_START;
 import static com.eviware.soapui.analytics.AnalyticsManager.Category.SESSION_STOP;
 
-/**
- * Created by avdeev on 02.02.2015.
- */
 public class OSUserProvider extends BaseAnalyticsProvider implements UserInfoProvider {
     final private static String ANALYTICS_SERVER_URL = "https://analytics01.smartbear.com/open-source-analytics-server";
     final private static String USER_INFO_URL = ANALYTICS_SERVER_URL + "/analytics";
@@ -78,7 +75,6 @@ public class OSUserProvider extends BaseAnalyticsProvider implements UserInfoPro
                 .append("}");
 
         String jsonString = jsonBuilder.toString();
-        System.out.println(jsonString);
         sendRecord(SESSION_URL, jsonString);
     }
 
