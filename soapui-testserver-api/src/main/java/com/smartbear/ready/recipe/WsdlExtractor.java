@@ -1,10 +1,13 @@
 package com.smartbear.ready.recipe;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.SoapUIException;
+
+import java.util.List;
 
 /**
  * A utility class to extract objects after adding WSDL to a project.
@@ -12,10 +15,10 @@ import com.eviware.soapui.support.SoapUIException;
 public class WsdlExtractor {
     static WsdlInterface getWsdlInterface(WsdlTestCase testCase, String wsdlUrl, String binding) throws ParseException {
         WsdlProject project = testCase.getTestSuite().getProject();
-        WsdlInterface[] projectInterfaces = project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE).toArray(
-                new WsdlInterface[project.getInterfaceCount()]);
+        List<AbstractInterface<?>> wsdlInterfaces = project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE);
+        WsdlInterface[] wsdlInterfacesArray = wsdlInterfaces.toArray(new WsdlInterface[wsdlInterfaces.size()]);
 
-        WsdlInterface wsdlInterface = findNamedInterface(projectInterfaces, wsdlUrl, binding);
+        WsdlInterface wsdlInterface = findNamedInterface(wsdlInterfacesArray, wsdlUrl, binding);
 
         if (wsdlInterface == null) {
             try {
