@@ -12,6 +12,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAsse
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathContentAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathCountAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathExistenceAssertion;
 import com.eviware.soapui.security.assertion.InvalidHttpStatusCodesAssertion;
 import com.eviware.soapui.security.assertion.ValidHttpStatusCodesAssertion;
 import org.junit.AfterClass;
@@ -85,17 +86,6 @@ public class AssertionsParsingTest extends RecipeParserTestBase {
     }
 
     @Test
-    public void parsesNotContainsAssertion() throws Exception {
-        WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(9);
-        assertTrue("Wrong assertion class: " + assertion.getClass(), assertion instanceof SimpleNotContainsAssertion);
-        SimpleNotContainsAssertion notContainsAssertion = (SimpleNotContainsAssertion) assertion;
-        assertThat(notContainsAssertion.getName(), is("NotContainsAssertion"));
-        assertThat(notContainsAssertion.getToken(), is("Silent Force"));
-        assertTrue("Wrong value for ignoreCase", notContainsAssertion.isIgnoreCase());
-        assertTrue("Wrong value for useRegexp", notContainsAssertion.isUseRegEx());
-    }
-
-    @Test
     public void parsesXPathContainsAssertion() throws Exception {
         WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(3);
         assertTrue("Wrong assertion class: " + assertion.getClass(), assertion instanceof XPathContainsAssertion);
@@ -144,8 +134,19 @@ public class AssertionsParsingTest extends RecipeParserTestBase {
     }
 
     @Test
-    public void parsesScriptAssertion() throws Exception {
+    public void parsesJsonPathExistenceAssertion() throws Exception {
+
         WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(7);
+        assertTrue("Wrong assertion class: " + assertion.getClass(), assertion instanceof JsonPathExistenceAssertion);
+        JsonPathExistenceAssertion jsonPathExistenceAssertion = (JsonPathExistenceAssertion) assertion;
+        assertThat(jsonPathExistenceAssertion.getName(), is("JsonPathExistenceAssertion"));
+        assertThat(jsonPathExistenceAssertion.getPath(), is("$.actors"));
+        assertThat(jsonPathExistenceAssertion.getExpectedContent(), is("true"));
+    }
+
+    @Test
+    public void parsesScriptAssertion() throws Exception {
+        WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(8);
         assertTrue("Wrong assertion class: " + assertion.getClass(), assertion instanceof GroovyScriptAssertion);
         GroovyScriptAssertion groovyScriptAssertion = (GroovyScriptAssertion) assertion;
         assertThat(groovyScriptAssertion.getName(), is("ScriptAssertion"));
@@ -155,12 +156,23 @@ public class AssertionsParsingTest extends RecipeParserTestBase {
 
     @Test
     public void parsesResponseSlaAssertion() throws Exception {
-        WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(8);
+        WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(9);
         assertTrue("Wrong assertion class: " + assertion.getClass(), assertion instanceof ResponseSLAAssertion);
         ResponseSLAAssertion responseSLAAssertion = (ResponseSLAAssertion) assertion;
         assertThat(responseSLAAssertion.getName(), is("ResponseSlaAssertion"));
         assertThat(responseSLAAssertion.getSLA(), is("500"));
 
+    }
+
+    @Test
+    public void parsesNotContainsAssertion() throws Exception {
+        WsdlMessageAssertion assertion = restRequestStep.getAssertionAt(10);
+        assertTrue("Wrong assertion class: " + assertion.getClass(), assertion instanceof SimpleNotContainsAssertion);
+        SimpleNotContainsAssertion notContainsAssertion = (SimpleNotContainsAssertion) assertion;
+        assertThat(notContainsAssertion.getName(), is("NotContainsAssertion"));
+        assertThat(notContainsAssertion.getToken(), is("Silent Force"));
+        assertTrue("Wrong value for ignoreCase", notContainsAssertion.isIgnoreCase());
+        assertTrue("Wrong value for useRegexp", notContainsAssertion.isUseRegEx());
     }
 
     private RestTestRequestStep getRequestTestStepForRecipe(String recipeFileName) throws Exception {

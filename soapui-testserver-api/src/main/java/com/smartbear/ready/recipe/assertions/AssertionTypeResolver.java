@@ -11,6 +11,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcStatusAssertio
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcTimeoutAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathContentAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathCountAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathExistenceAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
 import com.eviware.soapui.security.assertion.InvalidHttpStatusCodesAssertion;
@@ -50,37 +51,40 @@ public class AssertionTypeResolver implements TypeIdResolver {
 
     @Override
     public JavaType typeFromId(String type) {
+        TypeFactory typeFactory = TypeFactory.defaultInstance();
         switch (type) {
             case ValidHttpStatusCodesAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, ValidHttpStatusCodesAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, ValidHttpStatusCodesAssertionStruct.class);
             case InvalidHttpStatusCodesAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, InvalidHttpStatusCodesAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, InvalidHttpStatusCodesAssertionStruct.class);
             case SimpleContainsAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, SimpleContainsAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, SimpleContainsAssertionStruct.class);
             case SimpleNotContainsAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, SimpleNotContainsAssertionStruct.class);
-            case  XPathContainsAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, XPathContainsAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, SimpleNotContainsAssertionStruct.class);
+            case XPathContainsAssertion.LABEL:
+                return typeFactory.constructSpecializedType(baseType, XPathContainsAssertionStruct.class);
             case XQueryContainsAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, XQueryContainsAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, XQueryContainsAssertionStruct.class);
             case JsonPathContentAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, JsonPathContentAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, JsonPathContentAssertionStruct.class);
+            case JsonPathExistenceAssertion.LABEL:
+                return typeFactory.constructSpecializedType(baseType, JsonPathExistenceAssertionStruct.class);
             case JsonPathCountAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, JsonPathCountAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, JsonPathCountAssertionStruct.class);
             case GroovyScriptAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, GroovyScriptAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, GroovyScriptAssertionStruct.class);
             case ResponseSLAAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, ResponseSLAAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, ResponseSLAAssertionStruct.class);
             case JdbcStatusAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, JdbcStatusAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, JdbcStatusAssertionStruct.class);
             case JdbcTimeoutAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, JdbcTimeoutAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, JdbcTimeoutAssertionStruct.class);
             case SchemaComplianceAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, SchemaComplianceAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, SchemaComplianceAssertionStruct.class);
             case SoapFaultAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, SoapFaultAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, SoapFaultAssertionStruct.class);
             case NotSoapFaultAssertion.LABEL:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, NotSoapFaultAssertionStruct.class);
+                return typeFactory.constructSpecializedType(baseType, NotSoapFaultAssertionStruct.class);
             default:
                 return handleUnknownAssertionType(type);
         }

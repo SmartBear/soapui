@@ -153,6 +153,7 @@
               "XQuery Match",
               "JsonPath Match",
               "JsonPath Count",
+              "JsonPath Existence Match",
               "Script Assertion",
               "Response SLA",
               "JDBC Status",
@@ -330,6 +331,34 @@
       "required": [
         "type",
         "xquery",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "JsonPathExistenceAssertion": {
+      "type": "object",
+      "title": "JsonPath Existence Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JsonPath Existence Match"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "jsonPath": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string",
+          "default": "true"
+        }
+      },
+      "required": [
+        "type",
+        "jsonPath",
         "expectedContent"
       ],
       "additionalProperties": false
@@ -1119,6 +1148,9 @@
               },
               {
                 "$ref": "#/definitions/JsonPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/JsonPathExistenceAssertion"
               },
               {
                 "$ref": "#/definitions/JsonPathCountAssertion"
