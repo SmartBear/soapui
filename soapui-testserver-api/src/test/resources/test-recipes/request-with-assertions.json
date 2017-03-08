@@ -59,6 +59,12 @@
           "allowWildcards": true
         },
         {
+          "type": "JsonPath Existence Match",
+          "name" : "JsonPathExistenceAssertion",
+          "jsonPath": "$.actors",
+          "expectedContent": "true"
+        },
+        {
           "type": "Script Assertion",
           "name" : "ScriptAssertion",
           "script": "if (messageExchange.response.contentType != 'text/plain') fail('Wrong content type!')"

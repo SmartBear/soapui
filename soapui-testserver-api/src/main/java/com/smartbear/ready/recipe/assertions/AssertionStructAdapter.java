@@ -11,6 +11,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcStatusAssertio
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcTimeoutAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathContentAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathCountAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathExistenceAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
 import com.eviware.soapui.security.assertion.InvalidHttpStatusCodesAssertion;
@@ -76,6 +77,11 @@ public class AssertionStructAdapter implements JsonDeserializer<AssertionStruct>
                         assertionObject.get("jsonPath").getAsString(),
                         assertionObject.get("expectedCount").getAsString(),
                         nullSafeGetBoolean(assertionObject, "allowWildcards"));
+            case JsonPathExistenceAssertion.LABEL:
+                JsonElement expectedContentElement = assertionObject.get("expectedContent");
+                return new JsonPathExistenceAssertionStruct(assertionName,
+                        assertionObject.get("jsonPath").getAsString(),
+                        expectedContentElement == null ? "true" : expectedContentElement.getAsString());
             case GroovyScriptAssertion.LABEL:
                 return new GroovyScriptAssertionStruct(assertionName,
                         assertionObject.get("script").getAsString()
