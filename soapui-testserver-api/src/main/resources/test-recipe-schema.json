@@ -1274,6 +1274,9 @@
       "type": "boolean",
       "default": true
     },
+    "name": {
+        "type": "string"
+    },
     "discardOkResults": {
       "type": "boolean",
       "default": true

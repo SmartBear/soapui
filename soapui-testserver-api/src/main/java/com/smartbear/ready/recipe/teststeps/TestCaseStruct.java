@@ -14,6 +14,7 @@ import static com.smartbear.ready.recipe.NullChecker.checkNotNull;
  */
 @ApiModel(value = "TestCase", description = "Test case definition")
 public class TestCaseStruct {
+    public String name;
     public Boolean searchProperties;
     public boolean maintainSession;
     public boolean abortOnError;
@@ -43,6 +44,7 @@ public class TestCaseStruct {
             @JsonProperty("maintainSession") boolean maintainSession,
             @JsonProperty("abortOnError") boolean abortOnError,
             @JsonProperty("failTestCaseOnError") Boolean failTestCaseOnError,
+            @JsonProperty("name") String name,
             @JsonProperty("discardOkResults") Boolean discardOkResults,
             @JsonProperty("socketTimeout") String socketTimeout,
             @JsonProperty("testCaseTimeout") int testCaseTimeout,
@@ -57,6 +59,7 @@ public class TestCaseStruct {
         this.maintainSession = maintainSession;
         this.abortOnError = abortOnError;
         this.failTestCaseOnError = failTestCaseOnError;
+        this.name = name;
         this.discardOkResults = discardOkResults;
         this.socketTimeout = socketTimeout;
         this.testCaseTimeout = testCaseTimeout;

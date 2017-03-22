@@ -15,6 +15,7 @@ public class TestCaseOptionsParsingTest extends RecipeParserTestBase {
 
         WsdlTestCase testCase = project.getTestSuiteAt(0).getTestCaseAt(0);
 
+        assertThat(testCase.getName(), is("RecipeTestCase"));
         assertThat(testCase.getSearchProperties(), is(true));
         assertThat(testCase.getKeepSession(), is(true));
         assertThat(testCase.getFailOnError(), is(true));
