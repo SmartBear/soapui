@@ -99,6 +99,9 @@ public class JsonRecipeParser implements ObjectRecipeParser {
         testCase.setSearchProperties(testCaseStruct.isSearchProperties());
         testCase.setKeepSession(testCaseStruct.maintainSession);
         testCase.setFailOnError(testCaseStruct.abortOnError);
+        if (testCaseStruct.name != null) {
+            testCase.setName(testCaseStruct.name);
+        }
         testCase.setFailTestCaseOnErrors(testCaseStruct.isFailTestCaseOnError());
         testCase.setDiscardOkResults(testCaseStruct.isDiscardOkResults());
         testCase.setTimeout(testCaseStruct.testCaseTimeout);
