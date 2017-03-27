@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
 import static com.smartbear.ready.recipe.WsdlExtractor.getWsdlInterface;
 
 /**
@@ -38,7 +39,7 @@ class SoapRequestTestStepParser extends HttpRequestTestStepParser {
                     "] in binding [" + wsdlInterface.getBindingName().toString() + "]");
         }
 
-        String testStepName = operation.getName();
+        String testStepName = createUniqueName(testCase, operation.getName());
         WsdlTestRequestStep requestTestStep = (WsdlTestRequestStep) testCase.addTestStep(
                 WsdlTestRequestStepFactory.createConfig(operation, testStepName));
 

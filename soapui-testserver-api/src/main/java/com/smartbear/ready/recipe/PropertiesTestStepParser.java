@@ -10,11 +10,15 @@ import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 
 import java.util.Map;
 
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
+
 public class PropertiesTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct testStepElement, StringToObjectMap context) throws ParseException {
         PropertiesTestStepStruct testStepStruct = (PropertiesTestStepStruct) testStepElement;
         String testStepName = testStepStruct.name == null ? ModelItemNamer.createName("Properties", testCase.getTestStepList()) : testStepStruct.name;
+        testStepName = createUniqueName(testCase, testStepName);
+
         WsdlTestStep propertiesTestStep = testCase.addTestStep(PropertiesStepFactory.PROPERTIES_TYPE, testStepName);
         if (testStepStruct.properties != null) {
             for (Map.Entry<String, String> property : testStepStruct.properties.entrySet()) {

@@ -11,11 +11,14 @@ import com.smartbear.ready.recipe.teststeps.PropertyTransferStruct;
 import com.smartbear.ready.recipe.teststeps.PropertyTransferTestStepStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
+
 public class PropertyTransferTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct struct, StringToObjectMap context) {
         PropertyTransferTestStepStruct propertyTransferTestStepElement = (PropertyTransferTestStepStruct)struct;
         String testStepName = propertyTransferTestStepElement.name == null ? ModelItemNamer.createName("Property Transfer", testCase.getTestStepList()) : propertyTransferTestStepElement.name;
+        testStepName = createUniqueName(testCase, testStepName);
         PropertyTransfersTestStep transfersTestStep = (PropertyTransfersTestStep) testCase.insertTestStep(PropertyTransfersStepFactory.TRANSFER_TYPE, testStepName, propertyTransferTestStepElement.index);
         for (PropertyTransferStruct transfer : propertyTransferTestStepElement.transfers) {
             PropertyTransfer propertyTransfer = transfersTestStep.addTransfer(transfer.transferName);
