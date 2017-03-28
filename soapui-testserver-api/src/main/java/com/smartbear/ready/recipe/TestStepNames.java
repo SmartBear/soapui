@@ -20,14 +20,12 @@ public class TestStepNames {
             return testStepName;
         }
 
-        String orgName = testStepName;
-        int cnt = 1;
-
+        String originalName = testStepName;
+        int count = 2;
         while (testCase.getTestStepByName(testStepName) != null) {
-            testStepName = orgName + " " + String.valueOf(cnt);
-            cnt++;
+            testStepName = originalName + " " + String.valueOf(count);
+            count++;
         }
-
         return testStepName;
     }
 }
