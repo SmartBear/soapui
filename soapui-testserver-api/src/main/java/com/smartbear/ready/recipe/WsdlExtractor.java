@@ -47,5 +47,4 @@ public class WsdlExtractor {
                 iface.getWsdlContext().getUrl().equalsIgnoreCase(wsdlUrl)) ||
                 iface.getName().equalsIgnoreCase(binding);
     }
-
 }

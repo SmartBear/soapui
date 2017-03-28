@@ -10,15 +10,18 @@ import com.smartbear.ready.recipe.assertions.AssertionStruct;
 import com.smartbear.ready.recipe.teststeps.JdbcRequestTestStepStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
+
 public class JdbcRequestTestStepParser implements TestStepJsonParser {
 
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct testStepStruct, StringToObjectMap context) {
-
         JdbcRequestTestStepStruct jdbcRequestTestStepStruct = (JdbcRequestTestStepStruct) testStepStruct;
 
         JdbcRequestTestStepFactory factory = new JdbcRequestTestStepFactory();
-        TestStepConfig config = factory.createNewTestStep(testCase, jdbcRequestTestStepStruct.name);
+        String testStepName = createUniqueName(testCase, jdbcRequestTestStepStruct.name);
+
+        TestStepConfig config = factory.createNewTestStep(testCase, testStepName);
         JdbcRequestTestStep jdbcRequestTestStep = (JdbcRequestTestStep) testCase.addTestStep(config);
 
         jdbcRequestTestStep.setDriver(jdbcRequestTestStepStruct.driver);

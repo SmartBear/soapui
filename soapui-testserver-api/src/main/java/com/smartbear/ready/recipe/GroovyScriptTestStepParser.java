@@ -8,11 +8,14 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 import com.smartbear.ready.recipe.teststeps.GroovyScriptTestStepStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
+
 public class GroovyScriptTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct struct, StringToObjectMap context) {
         GroovyScriptTestStepStruct groovyScriptTestStepStruct = (GroovyScriptTestStepStruct) struct;
         String testStepName = groovyScriptTestStepStruct.name == null ? ModelItemNamer.createName("Groovy Script", testCase.getTestStepList()) : groovyScriptTestStepStruct.name;
+        testStepName = createUniqueName(testCase, testStepName);
         WsdlGroovyScriptTestStep groovyScriptTestStep = (WsdlGroovyScriptTestStep) testCase.addTestStep(GroovyScriptStepFactory.GROOVY_TYPE, testStepName);
         groovyScriptTestStep.setScript(groovyScriptTestStepStruct.script);
     }

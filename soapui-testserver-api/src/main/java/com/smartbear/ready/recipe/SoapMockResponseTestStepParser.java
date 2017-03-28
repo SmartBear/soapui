@@ -12,6 +12,7 @@ import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 import com.smartbear.ready.recipe.teststeps.WsdlMockResponseStepStruct;
 
 import static com.eviware.soapui.support.ModelItemNamer.createName;
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
 import static com.smartbear.ready.recipe.WsdlExtractor.getWsdlInterface;
 
 public class SoapMockResponseTestStepParser implements TestStepJsonParser {
@@ -37,8 +38,9 @@ public class SoapMockResponseTestStepParser implements TestStepJsonParser {
                                             WsdlOperation operation) {
         TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
         testStepConfig.setType(WsdlMockResponseStepFactory.MOCKRESPONSE_TYPE);
-        String name = stepStruct.name == null ? createName("WsdlMockResponse", testCase.getTestStepList()) : stepStruct.name;
-        testStepConfig.setName(name);
+        String testStepName = stepStruct.name == null ? createName("WsdlMockResponse", testCase.getTestStepList()) : stepStruct.name;
+        testStepName = createUniqueName(testCase, testStepName);
+        testStepConfig.setName(testStepName);
 
         MockResponseStepConfig config = MockResponseStepConfig.Factory.newInstance();
         config.setInterface(stepStruct.binding);

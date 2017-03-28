@@ -8,11 +8,14 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 import com.smartbear.ready.recipe.teststeps.DelayTestStepStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
+
 public class DelayTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct testStepStruct, StringToObjectMap context) throws ParseException {
         DelayTestStepStruct delayTestStepStruct = (DelayTestStepStruct) testStepStruct;
         String testStepName = delayTestStepStruct.name == null ? ModelItemNamer.createName("Delay", testCase.getTestStepList()) : delayTestStepStruct.name;
+        testStepName = createUniqueName(testCase, testStepName);
         WsdlDelayTestStep delayTestStep = (WsdlDelayTestStep) testCase.addTestStep(DelayStepFactory.DELAY_TYPE, testStepName);
         delayTestStep.setDelay(delayTestStepStruct.delay);
     }

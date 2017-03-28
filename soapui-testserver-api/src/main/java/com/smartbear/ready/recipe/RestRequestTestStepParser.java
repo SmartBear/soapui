@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.util.UUID;
 
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import static com.smartbear.ready.recipe.TestStepNames.createUniqueName;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
@@ -48,12 +49,15 @@ class RestRequestTestStepParser extends HttpRequestTestStepParser {
         String requestName = createRequestName(httpMethod, testCase);
         restRequest.setMethod(httpMethod);
         String testStepName = StringUtils.isNotBlank(requestTestStepElement.name) ? requestTestStepElement.name : requestName;
+        testStepName = createUniqueName(testCase, testStepName);
+
         RestTestRequestStep requestTestStep = (RestTestRequestStep) testCase.addTestStep(
                 RestRequestStepFactory.createConfig(restRequest, testStepName));
         RestTestRequest testRequest = requestTestStep.getTestRequest();
         if (StringUtils.isNotEmpty(requestTestStepElement.clientCertificateFileName)) {
             testRequest.setSslKeystore(requestTestStepElement.clientCertificateFileName);
         }
+
         addParameters(requestTestStepElement, testRequest);
         addHeaders(requestTestStepElement, testRequest);
         addAuthentication(requestTestStepElement, testRequest);
