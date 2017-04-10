@@ -1377,7 +1377,7 @@ public class SoapUI {
 
     private class SavePreferencesAction extends AbstractAction {
         public SavePreferencesAction() {
-            super("Save Preferences");
+            super("Save All");
             putValue(Action.SHORT_DESCRIPTION, "Saves all global preferences");
         }
 
