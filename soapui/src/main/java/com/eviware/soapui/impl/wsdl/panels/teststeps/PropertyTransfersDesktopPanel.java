@@ -333,7 +333,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         runAllButton.setEnabled(transferStep.getTransferCount() > 0);
         toolbar.addFixed(runAllButton);
 
-        declareButton = UISupport.createToolbarButton(new DeclareNamespacesAction());
+        declareButton = new JButton(new DeclareNamespacesAction());
         declareButton.setEnabled(false);
         toolbar.addFixed(declareButton);
         toolbar.addGlue();
@@ -1099,7 +1099,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
     private final class DeclareNamespacesAction extends AbstractAction {
         public DeclareNamespacesAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/declareNs.gif"));
+            super ("Declare");
             putValue(Action.SHORT_DESCRIPTION,
                     "Declare available response/request namespaces in source/target expressions");
         }
