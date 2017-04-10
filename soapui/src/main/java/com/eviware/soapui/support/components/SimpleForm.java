@@ -401,7 +401,7 @@ public class SimpleForm {
         JButton button = new JButton(text);
         button.addActionListener(actionListener);
 
-        addComponentWithoutLabel(button, "right,bottom");
+        addComponentWithoutLabel(button, "left,bottom");
 
         return button;
     }
