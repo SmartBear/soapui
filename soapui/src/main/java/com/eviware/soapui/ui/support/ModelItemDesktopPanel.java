@@ -16,17 +16,6 @@
 
 package com.eviware.soapui.ui.support;
 
-import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.tree.TreePath;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -34,6 +23,16 @@ import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.nodes.support.EmptyModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
+
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.tree.TreePath;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Base class for DesktopPanels..
@@ -55,26 +54,32 @@ public abstract class ModelItemDesktopPanel<T extends ModelItem> extends JPanel 
         return true;
     }
 
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
+    @Override
     final public T getModelItem() {
         return modelItem;
     }
 
+    @Override
     public Icon getIcon() {
         return modelItem.getIcon();
     }
 
+    @Override
     public boolean dependsOn(ModelItem modelItem) {
         return ModelSupport.dependsOn(getModelItem(), modelItem);
     }
 
+    @Override
     public String getTitle() {
         return modelItem.getName();
     }
 
+    @Override
     public final String getDescription() {
         TreePath treePath = SoapUI.getNavigator().getTreePath(modelItem);
 
@@ -112,6 +117,7 @@ public abstract class ModelItemDesktopPanel<T extends ModelItem> extends JPanel 
         firePropertyChange(propertyName, oldValue, newValue);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(ModelItem.NAME_PROPERTY)) {
             notifyPropertyChange(DesktopPanel.TITLE_PROPERTY, null, getTitle());

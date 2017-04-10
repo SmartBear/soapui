@@ -17,10 +17,12 @@
 package com.eviware.soapui.support.components;
 
 import com.sun.java.swing.plaf.windows.WindowsTabbedPaneUI;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 import javax.swing.*;
 import java.awt.*;
 
+@IgnoreJRERequirement
 public class VerticalWindowsTabbedPaneUI extends WindowsTabbedPaneUI {
     protected void installDefaults() {
         super.installDefaults();
