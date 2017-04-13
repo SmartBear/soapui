@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.monitor;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunContext;
@@ -39,6 +40,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import com.eviware.soapui.settings.HttpSettings;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 /**
  *
@@ -46,8 +51,13 @@ import static org.mockito.Mockito.when;
  */
 public class JettyMockEngineTest {
     
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+    
     private static final String baseContext = "/" + JettyMockEngineTest.class.getName();
     private static final int port = 18080;
+    
+    private JettyMockEngine mockEngine = new JettyMockEngine();
     
     protected void callMockService(int index, int statusCode) throws IOException {
         HttpClient client = new DefaultHttpClient();
@@ -86,7 +96,7 @@ public class JettyMockEngineTest {
         when(service.getPath())
                 .thenReturn(path);
         when(service.getPort())
-                .thenReturn(18080);
+                .thenReturn(port);
         
         return service;
     }
@@ -122,9 +132,38 @@ public class JettyMockEngineTest {
                 .dispatchRequest(argThat(new HttpServletRequestArgumentMatcher(JettyMockEngineTest.class.getName())), any());
     }
     
+    @BeforeClass
+    public static void beforeClass() {
+        SoapUI.getSettings().setBoolean(HttpSettings.LEAVE_MOCKENGINE, false);
+    }
+    
+    @Test
+    public void testServerHandlerWithOneUniquePathAndOneRunner() throws Exception {
+        assertEquals(0, mockEngine.getMockRunners().length);
+        
+        MockResult result1 = getMockedMockResult();
+        
+        MockRunner runner1 = setUpMockRunner(mockEngine, 4, result1);
+        
+        try {
+            mockEngine.startMockService(runner1);
+            
+            assertNotNull(mockEngine.getMockRunners());
+            assertEquals(1, mockEngine.getMockRunners().length);
+            
+            callMockService(4, 200);
+            
+            verifyMockedMockRunner(runner1, 1);
+            
+            verify(result1, times(1)).finish();
+        } finally {
+            mockEngine.stopMockService(runner1);
+        }
+    }
+    
     @Test
     public void testServerHandlerWithTwoUniquePathsAndThreeRunners() throws Exception {
-        JettyMockEngine mockEngine = new JettyMockEngine();
+        assertEquals(0, mockEngine.getMockRunners().length);
         
         MockResult result2 = getMockedMockResult();
         MockResult result3 = getMockedMockResult();
@@ -152,6 +191,33 @@ public class JettyMockEngineTest {
             mockEngine.stopMockService(runner3);
             mockEngine.stopMockService(runner2);
             mockEngine.stopMockService(runner1);
+        }
+    }
+    
+    @Test
+    public void testServerHandlerWithException() throws Exception {
+        assertEquals(0, mockEngine.getMockRunners().length);
+        
+        MockResult result6 = getMockedMockResult();
+        
+        MockRunner runner5 = setUpMockRunner(mockEngine, 5, null);
+        MockRunner runner6 = setUpMockRunner(mockEngine, 6, result6);
+        
+        try {
+            mockEngine.startMockService(runner5);
+            mockEngine.startMockService(runner6);
+            
+            assertNotNull(mockEngine.getMockRunners());
+            assertEquals(2, mockEngine.getMockRunners().length);
+            
+            callMockService(5, 500);
+            callMockService(6, 200);
+            
+            verifyMockedMockRunner(runner5, 1);
+            verifyMockedMockRunner(runner6, 1);
+        } finally {
+            mockEngine.stopMockService(runner5);
+            mockEngine.stopMockService(runner6);
         }
     }
     
