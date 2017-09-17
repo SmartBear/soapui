@@ -35,15 +35,21 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProjectRunContext> implements ProjectRunner {
+
+    private final ReentrantLock lock = new ReentrantLock();
+    private final AtomicInteger runCount = new AtomicInteger(-1);
+    private volatile boolean running;
+
     private ProjectRunListener[] listeners;
-    private Set<TestSuiteRunner> finishedRunners = new HashSet<TestSuiteRunner>();
-    private Set<TestSuiteRunner> activeRunners = new HashSet<TestSuiteRunner>();
+    private final HashSet<TestSuiteRunner> finishedRunners = new HashSet<>();
+    private final HashSet<TestSuiteRunner> activeRunners = new HashSet<>();
     private int currentTestSuiteIndex;
     private WsdlTestSuite currentTestSuite;
-    private TestSuiteRunListener internalTestRunListener = new InternalTestSuiteRunListener();
+    private final TestSuiteRunListener internalTestRunListener = new InternalTestSuiteRunListener();
 
     public WsdlProjectRunner(WsdlProject project, StringToObjectMap properties) {
         super(project, properties);
@@ -54,33 +60,49 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
     }
 
     public void onCancel(String reason) {
-        for (TestSuiteRunner runner : activeRunners.toArray(new TestSuiteRunner[activeRunners.size()])) {
-            runner.cancel(reason);
+        try {
+            lock.lock();
+            for (TestSuiteRunner runner : activeRunners.toArray(new TestSuiteRunner[activeRunners.size()])) {
+                runner.cancel(reason);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     public void onFail(String reason) {
-        for (TestSuiteRunner runner : activeRunners.toArray(new TestSuiteRunner[activeRunners.size()])) {
-            runner.fail(reason);
+        try {
+            lock.lock();
+            for (TestSuiteRunner runner : activeRunners.toArray(new TestSuiteRunner[activeRunners.size()])) {
+                runner.fail(reason);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     public void internalRun(WsdlProjectRunContext runContext) throws Exception {
         WsdlProject project = getTestRunnable();
 
-        listeners = project.getProjectRunListeners();
-        project.runBeforeRunScript(runContext, this);
-        if (!isRunning()) {
-            return;
-        }
+        try {
+            lock.lock();
 
-        if (project.getTimeout() > 0) {
-            startTimeoutTimer(project.getTimeout());
-        }
+            listeners = project.getProjectRunListeners();
+            project.runBeforeRunScript(runContext, this);
+            if (!isRunning()) {
+                return;
+            }
 
-        notifyBeforeRun();
-        if (!isRunning()) {
-            return;
+            if (project.getTimeout() > 0) {
+                startTimeoutTimer(project.getTimeout());
+            }
+
+            notifyBeforeRun();
+            if (!isRunning()) {
+                return;
+            }
+        } finally {
+            lock.unlock();
         }
 
         if (project.getRunType() == TestSuiteRunType.SEQUENTIAL) {
@@ -91,23 +113,34 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
     }
 
     private void runParallel(WsdlProject project, WsdlProjectRunContext runContext) {
-        currentTestSuiteIndex = -1;
-        currentTestSuite = null;
+        try {
+            lock.lock();
+            currentTestSuiteIndex = -1;
+            currentTestSuite = null;
 
-        for (TestSuite testSuite : project.getTestSuiteList()) {
-            if (!testSuite.isDisabled()) {
-                testSuite.addTestSuiteRunListener(internalTestRunListener);
-                notifyBeforeRunTestSuite(testSuite);
-                runTestSuite((WsdlTestSuite) testSuite, true);
+            int i = 0;
+            for (TestSuite testSuite : project.getTestSuiteList()) {
+                if (!testSuite.isDisabled()) {
+                    i++;
+                    testSuite.addTestSuiteRunListener(internalTestRunListener);
+                    notifyBeforeRunTestSuite(testSuite);
+                    runTestSuite((WsdlTestSuite) testSuite, true);
+                }
             }
+            runCount.set(i);
+            running = true;
+        } finally {
+            lock.unlock();
         }
 
-        try {
-            synchronized (activeRunners) {
-                activeRunners.wait();
+        while (runCount.get() != 0) {
+            synchronized (runCount) {
+                try {
+                    runCount.wait(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -128,6 +161,7 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
     }
 
     private void updateStatus() {
+        activeRunners.clear();
         for (TestSuiteRunner runner : finishedRunners) {
             if (runner.getStatus() == Status.FAILED) {
                 setStatus(Status.FAILED);
@@ -153,21 +187,29 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
     }
 
     protected void internalFinally(WsdlProjectRunContext runContext) {
-        WsdlProject project = getTestRunnable();
-
         try {
-            project.runAfterRunScript(runContext, this);
-        } catch (Exception e) {
-            SoapUI.logError(e);
+            lock.lock();
+
+            WsdlProject project = getTestRunnable();
+
+            try {
+                project.runAfterRunScript(runContext, this);
+            } catch (Exception e) {
+                SoapUI.logError(e);
+            }
+
+            notifyAfterRun();
+
+            runContext.clear();
+            listeners = null;
+        } finally {
+            lock.unlock();
         }
-
-        notifyAfterRun();
-
-        runContext.clear();
-        listeners = null;
     }
 
     private void notifyAfterRun() {
+        try {
+            lock.lock();
         if (listeners == null || listeners.length == 0) {
             return;
         }
@@ -175,63 +217,95 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
         for (int i = 0; i < listeners.length; i++) {
             listeners[i].afterRun(this, getRunContext());
         }
+        } finally {
+            lock.unlock();
+        }
     }
 
     private void notifyBeforeRun() {
-        if (listeners == null || listeners.length == 0) {
-            return;
-        }
+        try {
+            lock.lock();
+            if (listeners == null || listeners.length == 0) {
+                return;
+            }
 
-        for (int i = 0; i < listeners.length; i++) {
-            listeners[i].beforeRun(this, getRunContext());
+            for (int i = 0; i < listeners.length; i++) {
+                listeners[i].beforeRun(this, getRunContext());
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     private void notifyAfterRunTestSuite(TestSuiteRunner testSuiteRunner) {
-        if (listeners == null || listeners.length == 0) {
-            return;
-        }
+        try {
+            lock.lock();
+            if (listeners == null || listeners.length == 0) {
+                return;
+            }
 
-        for (int i = 0; i < listeners.length; i++) {
-            listeners[i].afterTestSuite(this, getRunContext(), testSuiteRunner);
+            for (int i = 0; i < listeners.length; i++) {
+                listeners[i].afterTestSuite(this, getRunContext(), testSuiteRunner);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     private void notifyBeforeRunTestSuite(TestSuite testSuite) {
-        if (listeners == null || listeners.length == 0) {
-            return;
-        }
+        try {
+            lock.lock();
+            if (listeners == null || listeners.length == 0) {
+                return;
+            }
 
-        for (int i = 0; i < listeners.length; i++) {
-            listeners[i].beforeTestSuite(this, getRunContext(), testSuite);
+            for (int i = 0; i < listeners.length; i++) {
+                listeners[i].beforeTestSuite(this, getRunContext(), testSuite);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
     public List<TestSuiteRunner> getResults() {
-        return Arrays.asList(finishedRunners.toArray(new TestSuiteRunner[finishedRunners.size()]));
-    }
-
-    protected void finishRunner(TestSuiteRunner testRunner) {
-        notifyAfterRunTestSuite(testRunner);
-
-        activeRunners.remove(testRunner);
-        finishedRunners.add(testRunner);
-
-        testRunner.getTestSuite().removeTestSuiteRunListener(internalTestRunListener);
-
-        if (activeRunners.isEmpty()) {
-            updateStatus();
-
-            synchronized (activeRunners) {
-                activeRunners.notify();
-            }
+        try {
+            lock.lock();
+            return Arrays.asList(finishedRunners.toArray(new TestSuiteRunner[finishedRunners.size()]));
+        } finally {
+            lock.unlock();
         }
     }
 
     private class InternalTestSuiteRunListener extends TestSuiteRunListenerAdapter {
         @Override
         public void afterRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
-            finishRunner(testRunner);
+            try {
+                while (!running) {
+                    try {
+                        Thread.sleep(100L);
+                    } catch (InterruptedException cause) {
+                        cause.printStackTrace();
+                    }
+                }
+
+                try {
+                    lock.lock();
+                    notifyAfterRunTestSuite(testRunner);
+
+                    finishedRunners.add(testRunner);
+
+                    testRunner.getTestSuite().removeTestSuiteRunListener(internalTestRunListener);
+
+
+                } finally {
+                    lock.unlock();
+                }
+            } finally {
+                runCount.decrementAndGet();
+                if (runCount.get() == 0) {
+                    updateStatus();
+                }
+            }
         }
     }
 
