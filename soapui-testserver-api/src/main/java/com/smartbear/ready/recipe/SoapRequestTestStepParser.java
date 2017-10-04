@@ -39,7 +39,13 @@ class SoapRequestTestStepParser extends HttpRequestTestStepParser {
                     "] in binding [" + wsdlInterface.getBindingName().toString() + "]");
         }
 
-        String testStepName = createUniqueName(testCase, operation.getName());
+        String testStepName = testStepStruct.name;
+        if (StringUtils.isEmpty(testStepName)) {
+            testStepName = operation.getName();
+        }
+
+        testStepName = createUniqueName(testCase, testStepName);
+
         WsdlTestRequestStep requestTestStep = (WsdlTestRequestStep) testCase.addTestStep(
                 WsdlTestRequestStepFactory.createConfig(operation, testStepName));
 
