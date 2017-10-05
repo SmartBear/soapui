@@ -19,7 +19,7 @@ public class JdbcRequestTestStepParser implements TestStepJsonParser {
         JdbcRequestTestStepStruct jdbcRequestTestStepStruct = (JdbcRequestTestStepStruct) testStepStruct;
 
         JdbcRequestTestStepFactory factory = new JdbcRequestTestStepFactory();
-        String testStepName = createUniqueName(testCase, jdbcRequestTestStepStruct.name);
+        String testStepName = createUniqueName(testCase, jdbcRequestTestStepStruct.name, "JDBC Request");
 
         TestStepConfig config = factory.createNewTestStep(testCase, testStepName);
         JdbcRequestTestStep jdbcRequestTestStep = (JdbcRequestTestStep) testCase.addTestStep(config);
