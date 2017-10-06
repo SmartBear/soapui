@@ -46,10 +46,8 @@ class RestRequestTestStepParser extends HttpRequestTestStepParser {
             throw new RuntimeException("Unable to create REST service for " + requestUri, e);
         }
 
-        String requestName = createRequestName(httpMethod, testCase);
         restRequest.setMethod(httpMethod);
-        String testStepName = StringUtils.isNotBlank(requestTestStepElement.name) ? requestTestStepElement.name : requestName;
-        testStepName = createUniqueName(testCase, testStepName);
+        String testStepName = createUniqueName(testCase, testStepStruct.name, createRequestName(httpMethod, testCase));
 
         RestTestRequestStep requestTestStep = (RestTestRequestStep) testCase.addTestStep(
                 RestRequestStepFactory.createConfig(restRequest, testStepName));

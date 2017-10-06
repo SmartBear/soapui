@@ -5,7 +5,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.PathLanguage;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.PropertyTransfersStepFactory;
-import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.smartbear.ready.recipe.teststeps.PropertyTransferStruct;
 import com.smartbear.ready.recipe.teststeps.PropertyTransferTestStepStruct;
@@ -17,8 +16,7 @@ public class PropertyTransferTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct struct, StringToObjectMap context) {
         PropertyTransferTestStepStruct propertyTransferTestStepElement = (PropertyTransferTestStepStruct)struct;
-        String testStepName = propertyTransferTestStepElement.name == null ? ModelItemNamer.createName("Property Transfer", testCase.getTestStepList()) : propertyTransferTestStepElement.name;
-        testStepName = createUniqueName(testCase, testStepName);
+        String testStepName = createUniqueName(testCase, struct.name, "Property Transfer");
         PropertyTransfersTestStep transfersTestStep = (PropertyTransfersTestStep) testCase.insertTestStep(PropertyTransfersStepFactory.TRANSFER_TYPE, testStepName, propertyTransferTestStepElement.index);
         for (PropertyTransferStruct transfer : propertyTransferTestStepElement.transfers) {
             PropertyTransfer propertyTransfer = transfersTestStep.addTransfer(transfer.transferName);

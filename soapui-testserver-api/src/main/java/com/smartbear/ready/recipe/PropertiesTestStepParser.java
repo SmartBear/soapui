@@ -3,7 +3,6 @@ package com.smartbear.ready.recipe;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.PropertiesStepFactory;
-import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.smartbear.ready.recipe.teststeps.PropertiesTestStepStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStruct;
@@ -16,8 +15,7 @@ public class PropertiesTestStepParser implements TestStepJsonParser {
     @Override
     public void createTestStep(WsdlTestCase testCase, TestStepStruct testStepElement, StringToObjectMap context) throws ParseException {
         PropertiesTestStepStruct testStepStruct = (PropertiesTestStepStruct) testStepElement;
-        String testStepName = testStepStruct.name == null ? ModelItemNamer.createName("Properties", testCase.getTestStepList()) : testStepStruct.name;
-        testStepName = createUniqueName(testCase, testStepName);
+        String testStepName = createUniqueName(testCase, testStepStruct.name, "Properties");
 
         WsdlTestStep propertiesTestStep = testCase.addTestStep(PropertiesStepFactory.PROPERTIES_TYPE, testStepName);
         if (testStepStruct.properties != null) {

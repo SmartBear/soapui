@@ -17,7 +17,7 @@ public class GroovyScriptParsingTest extends RecipeParserTestBase {
         WsdlProject project = buildProjectFromRecipe("groovy-script.json");
 
         WsdlGroovyScriptTestStep groovyScriptTestStep = getSingleTestStepIn(project, WsdlGroovyScriptTestStep.class);
-        assertThat(groovyScriptTestStep.getName(), is("Groovy Script 1"));
+        assertThat(groovyScriptTestStep.getName(), is("Groovy Script"));
         assertThat(groovyScriptTestStep.getScript(), is("println 'Hello World!'"));
     }
 }
