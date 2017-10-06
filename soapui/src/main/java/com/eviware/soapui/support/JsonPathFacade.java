@@ -47,7 +47,8 @@ public class JsonPathFacade {
     }
 
     public String readStringValue(String jsonPathExpression) {
-        return String.valueOf(readObjectValue(jsonPathExpression));
+        Object data = readObjectValue(jsonPathExpression);
+        return String.valueOf(data);
     }
 
     public void writeValue(String jsonPathExpression, Object value) {
