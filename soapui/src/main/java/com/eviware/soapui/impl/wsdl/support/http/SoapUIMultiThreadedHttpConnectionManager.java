@@ -45,6 +45,9 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
+import javax.net.ssl.SNIHostName;
+import javax.net.ssl.SNIServerName;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -52,7 +55,9 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 /**
  * Manages a set of HttpConnections for various HostConfigurations. Modified to
@@ -254,7 +259,19 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
                 try {
                     // hostname is required by web server with virtual hosts and one IP (TLS-SNI)
                     if (sock instanceof SSLSocket) {
-                        PropertyUtils.setProperty(sock, "host", target.getHostName());
+                        String hostName = target.getHostName();
+                        PropertyUtils.setProperty(sock, "host", hostName);
+
+                        // http://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#SNIExtension
+                        SNIHostName serverName = new SNIHostName(hostName);
+                        List<SNIServerName> serverNames = new ArrayList<>(1);
+                        serverNames.add(serverName);
+
+                        SSLSocket sslSocket = (SSLSocket)sock;
+                        SSLParameters sslParams = sslSocket.getSSLParameters();
+                        sslParams.setServerNames(serverNames);
+                        sslSocket.setSSLParameters(sslParams);
+
                     }
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     SoapUI.logError(e);
