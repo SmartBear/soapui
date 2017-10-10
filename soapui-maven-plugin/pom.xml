@@ -15,6 +15,13 @@
     <description>Documentation: http://www.soapui.org/Test-Automation/maven-2x.html</description>
     <packaging>maven-plugin</packaging>
 
+    <repositories>
+        <repository>
+            <id>smartbear-sweden-repository</id>
+            <url>http://www.soapui.org/repository/maven2</url>
+        </repository>
+    </repositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

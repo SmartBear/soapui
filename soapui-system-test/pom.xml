@@ -14,6 +14,13 @@
     <name>SoapUI system test</name>
     <packaging>jar</packaging>
 
+    <repositories>
+        <repository>
+            <id>smartbear-sweden-repository</id>
+            <url>http://www.soapui.org/repository/maven2</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
