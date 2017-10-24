@@ -68,7 +68,7 @@ public interface Plugin {
      * additional information.
      *
      * NOTE: this is currently not used by SoapUI Open Source and is only present to ensure binary compatibility
-     * between SoapUI OS and Ready! API.
+     * between SoapUI OS and ReadyAPI.
      *
      * @return a collection of API importer classes
      */

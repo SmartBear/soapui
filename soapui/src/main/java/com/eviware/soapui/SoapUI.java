@@ -359,7 +359,7 @@ public class SoapUI {
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
                 "Opens the SoapUI Forum in a browser", "/forum.png"));
         mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI NG Pro Trial License",
+        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
                 "/Trial.png"));
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
@@ -496,8 +496,8 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI NG Pro Trial License", "/SoapUI-OS-5.2_16-16.png"));
+        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
+                "Apply for SoapUI Pro Trial License", "/SoapUI-OS-5.2_16-16.png"));
         helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org"+HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
