@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -92,16 +93,7 @@ public class PluginManager {
             }
         });
         if (pluginFiles != null) {
-            List<File> pluginFileList = new ArrayList<>();
-            ProductBodyguard productBodyguard = new ProductBodyguard();
-            for (File f:pluginFiles) {
-                if (!productBodyguard.isKnown(f)) {
-                    SoapUI.log.warn("Plugin '" + f.getName() + "' is not loaded because it hasn't been signed by SmartBear Software.");
-                } else {
-                    pluginFileList.add(f);
-                }
-            }
-
+            List<File> pluginFileList = Arrays.asList(pluginFiles);
             resolver = null;
             try {
                 resolver = new PluginDependencyResolver(pluginLoader, pluginFileList);
@@ -113,7 +105,7 @@ public class PluginManager {
 
             getForkJoinPool().invoke(new LoadPluginsTask(pluginFileList));
             long timeTaken = System.currentTimeMillis() - startTime;
-            log.info(pluginFileList.size() + " plugins loaded in " + timeTaken + " ms");
+            log.info(pluginFiles.length + " plugins loaded in " + timeTaken + " ms");
         }
     }
 
