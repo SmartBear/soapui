@@ -17,7 +17,7 @@
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.Analytics;
+import com.smartbear.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;

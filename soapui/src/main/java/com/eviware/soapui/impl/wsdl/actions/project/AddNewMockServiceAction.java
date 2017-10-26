@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import com.eviware.soapui.analytics.Analytics;
+import com.smartbear.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;

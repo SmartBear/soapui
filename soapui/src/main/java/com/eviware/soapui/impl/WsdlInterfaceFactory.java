@@ -17,7 +17,7 @@
 package com.eviware.soapui.impl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.Analytics;
+import com.smartbear.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;

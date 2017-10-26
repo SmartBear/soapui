@@ -23,8 +23,8 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SumbitUserInfoAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.AnalyticsHelper;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -118,6 +118,7 @@ import com.eviware.x.impl.swing.SwingDialogs;
 import com.google.common.base.Objects;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
+import com.smartbear.analytics.Analytics;
 import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -189,6 +190,7 @@ public class SoapUI {
     public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
     public final static Logger log = Logger.getLogger(SoapUI.class);
     public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
+    public final static String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
     public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
@@ -350,9 +352,9 @@ public class SoapUI {
         mainToolbar.setRollover(true);
         mainToolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
         mainToolbar.addSpace(20);
-        mainToolbar.add(new NewProjectActionDelegate("/new-empty-project-icon.png","Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID));
-        mainToolbar.add(new NewProjectActionDelegate("/new-soap-project-icon.png","SOAP", NewWsdlProjectAction.SOAPUI_ACTION_ID));
-        mainToolbar.add(new NewProjectActionDelegate("/new-rest-project-icon.png","REST", NewRestProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/new-empty-project-icon.png", "Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/new-soap-project-icon.png", "SOAP", NewWsdlProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/new-rest-project-icon.png", "REST", NewRestProjectAction.SOAPUI_ACTION_ID));
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
@@ -498,7 +500,7 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
                 "Apply for SoapUI NG Pro Trial License", "/SoapUI-OS-5.2_16-16.png"));
-        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org"+HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
+        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
         helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
@@ -1216,6 +1218,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction(SoapUIActions.EXIT.getActionName());
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1371,6 +1374,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = false;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction(SoapUIActions.EXIT_WITHOUT_SAVE.getActionName());
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1451,12 +1455,13 @@ public class SoapUI {
 
     static class NewProjectActionDelegate extends AbstractAction {
         String actionId;
+
         public NewProjectActionDelegate(String icon, String name, String actionId) {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon(icon));
-            if(name.equals("Empty")){
+            if (name.equals("Empty")) {
                 putValue(Action.SHORT_DESCRIPTION, "Creates an empty project");
-            }else{
-               putValue(Action.SHORT_DESCRIPTION, "Creates a new "+name+" project");
+            } else {
+                putValue(Action.SHORT_DESCRIPTION, "Creates a new " + name + " project");
             }
             putValue(Action.NAME, name);
             this.actionId = actionId;

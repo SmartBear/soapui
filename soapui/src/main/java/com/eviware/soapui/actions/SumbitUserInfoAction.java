@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.actions;
 
-import com.eviware.soapui.analytics.Analytics;
+import com.smartbear.analytics.Analytics;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFriendlyTextField;
@@ -232,7 +232,7 @@ public class SumbitUserInfoAction {
             if (!validateFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(getUserName(), getUserEMail());
+            //Analytics.trackOSUser(getUserName(), getUserEMail());
             return true;
         }
 
