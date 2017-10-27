@@ -16,6 +16,34 @@
 
 package com.eviware.soapui.ui.desktop.standalone;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.PanelBuilder;
+import com.eviware.soapui.model.util.PanelBuilderRegistry;
+import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
+import com.eviware.soapui.ui.desktop.DesktopPanel;
+import com.eviware.soapui.ui.desktop.SoapUIDesktop;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.DesktopManager;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -38,35 +66,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DesktopManager;
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.PanelBuilder;
-import com.eviware.soapui.model.util.PanelBuilderRegistry;
-import com.eviware.soapui.model.workspace.Workspace;
-import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
-import com.eviware.soapui.ui.desktop.DesktopPanel;
-import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 
 /**
  * The default standalone SoapUI desktop using a JDesktopPane
