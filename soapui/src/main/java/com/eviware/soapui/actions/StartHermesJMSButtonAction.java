@@ -17,6 +17,7 @@
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.UISupport;
@@ -26,6 +27,8 @@ import javax.swing.Action;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Map;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_HERMES_JMS_TOOL;
 
 /**
  * this class represents toolbar button for starting HermesJMS
@@ -62,6 +65,7 @@ public class StartHermesJMSButtonAction extends AbstractAction {
             Map<String, String> env = pb.environment();
             env.put("JAVA_HOME", System.getProperty("java.home"));
             pb.start();
+            Analytics.trackAction(USE_HERMES_JMS_TOOL);
         } catch (Throwable t) {
             SoapUI.logError(t);
         }

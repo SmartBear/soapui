@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -52,7 +52,11 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite> {
         }
 
         WsdlTestCase testCase = testSuite.addNewTestCase(name);
-        Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE.getActionName());
+        if (param != null && param instanceof SoapUIActions) {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL);
+        } else {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE_FROM_CONTEXT_MENU);
+        }
         UISupport.showDesktopPanel(testCase);
     }
 }

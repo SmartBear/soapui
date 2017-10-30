@@ -18,6 +18,8 @@ package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.MessageSupport;
@@ -64,6 +66,11 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
             WsdlProject project = (WsdlProject) workspace.importProject(fileName);
             if (project != null) {
                 UISupport.select(project);
+            }
+            if (param != null && param instanceof SoapUIActions) {
+                Analytics.trackAction((SoapUIActions) param);
+            } else {
+                Analytics.trackAction(SoapUIActions.IMPORT_PROJECT);
             }
         } catch (Exception ex) {
             UISupport.showErrorMessage(ex);

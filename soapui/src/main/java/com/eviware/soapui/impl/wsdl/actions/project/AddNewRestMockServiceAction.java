@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.mock.MockService;
@@ -32,7 +32,7 @@ public class AddNewRestMockServiceAction extends AbstractSoapUIAction<WsdlProjec
 
     public void perform(WsdlProject target, Object param) {
         if (createRestMockService(target) != null) {
-            Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK.getActionName());
+            Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK_FROM_CONTEXT_MENU);
         }
     }
 

@@ -17,6 +17,8 @@
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.integration.exporter.ProjectExporter;
 import com.eviware.soapui.support.UISupport;
@@ -51,6 +53,7 @@ public class ExportProjectAction extends AbstractSoapUIAction<WsdlProject> {
                 }
 
                 exporter.exportProject(fileName);
+                Analytics.trackAction(SoapUIActions.EXPORT_PROJECT);
             }
         } catch (Exception e1) {
             SoapUI.logError(e1, "Failed to export project");

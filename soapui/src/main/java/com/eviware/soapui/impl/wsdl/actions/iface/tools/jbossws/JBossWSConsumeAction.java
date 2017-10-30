@@ -17,6 +17,8 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
@@ -34,6 +36,8 @@ import com.eviware.x.form.XFormFactory;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_JBOSSWS_JAXWS_ARTIFACTS_TOOL;
 
 /**
  * Invokes JBossWS-specific JAX-WS WSImport
@@ -103,6 +107,7 @@ public class JBossWSConsumeAction extends AbstractToolsAction<Interface> {
         builder.directory(new File(wsimportDir));
 
         toolHost.run(new ProcessToolRunner(builder, "JBossWS wsconsume", modelItem));
+        Analytics.trackAction(USE_JBOSSWS_JAXWS_ARTIFACTS_TOOL);
     }
 
     private ArgumentBuilder buildArgs(StringToStringMap values, boolean isWindows, Interface modelItem)

@@ -17,7 +17,7 @@
 package com.eviware.soapui.security.panels;
 
 import com.eviware.soapui.SoapUI;
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
@@ -417,7 +417,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
                 }
             }
             if (shouldRun) {
-                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST.getActionName());
+                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL);
                 runSecurityTest();
             } else {
                 UISupport.showInfoMessage("No Security Scans available to run.", "Security Test Warning");

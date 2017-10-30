@@ -24,7 +24,7 @@ import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 
 public class NewEmptyProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     public static final String SOAPUI_ACTION_ID = "NewEmptyProjectAction";
@@ -39,7 +39,6 @@ public class NewEmptyProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
         try {
             WsdlProject project = target.createProject(ModelItemNamer.createName("Project", target.getProjectList()), null);
             UISupport.selectAndShow(project);
-            Analytics.trackAction();
         } catch (SoapUIException e) {
             UISupport.showErrorMessage(e);
         }

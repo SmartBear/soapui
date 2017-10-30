@@ -88,7 +88,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlError;
@@ -1215,8 +1215,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         addWsdlMockService(mockService);
         fireMockServiceAdded(mockService);
 
-        Analytics.trackAction(SoapUIActions.CREATE_SOAP_MOCK.getActionName());
-
         return mockService;
     }
 
@@ -1229,8 +1227,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         mockService.setName(name);
         addRestMockService(mockService);
         fireMockServiceAdded(mockService);
-
-        Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK.getActionName());
 
         return mockService;
     }

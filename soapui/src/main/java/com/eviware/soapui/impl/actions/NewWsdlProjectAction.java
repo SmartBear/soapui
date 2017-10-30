@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.actions;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
@@ -121,7 +121,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
 
                             importWsdl(project, url);
                         }
-                        Analytics.trackAction(SoapUIActions.CREATE_SOAP_PROJECT.getActionName());
 
                         break;
                     }

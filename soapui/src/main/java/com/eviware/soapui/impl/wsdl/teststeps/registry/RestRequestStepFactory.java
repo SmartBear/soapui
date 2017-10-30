@@ -82,7 +82,6 @@ public class RestRequestStepFactory extends WsdlTestStepFactory {
         testStep.setType(RESTREQUEST_TYPE);
         testStep.setConfig(requestStepConfig);
         testStep.setName(stepName);
-
         return testStep;
     }
 
@@ -176,7 +175,6 @@ public class RestRequestStepFactory extends WsdlTestStepFactory {
         testStepConfig.setType(RESTREQUEST_TYPE);
         testStepConfig.setConfig(requestStepConfig);
         testStepConfig.setName(name);
-
         return testStepConfig;
     }
 

@@ -18,7 +18,7 @@ package com.eviware.soapui.actions;
 
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -86,11 +86,11 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
             mockAsWar.createMockAsWarArchive();
 
             if (project.getRestMockServiceCount() > 0) {
-                Analytics.trackAction(SoapUIActions.DEPLOY_REST_MOCK_AS_WAR.getActionName());
+                Analytics.trackAction(SoapUIActions.DEPLOY_REST_MOCK_AS_WAR);
             }
 
             if (project.getMockServiceCount() > 0) {
-                Analytics.trackAction(SoapUIActions.DEPLOY_SOAP_MOCK_AS_WAR.getActionName());
+                Analytics.trackAction(SoapUIActions.DEPLOY_SOAP_MOCK_AS_WAR);
             }
         }
     }

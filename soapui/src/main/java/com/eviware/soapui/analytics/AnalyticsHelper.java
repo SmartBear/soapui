@@ -21,7 +21,6 @@ import com.eviware.soapui.Version;
 import com.eviware.soapui.analytics.providers.StatisticsCollectionConfirmationDialog;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
-import com.smartbear.analytics.Analytics;
 import com.smartbear.analytics.AnalyticsManager;
 import com.smartbear.analytics.impl.GoogleAnalyticsProviderFactory;
 
@@ -53,7 +52,7 @@ public class AnalyticsHelper {
         }
         initialized = true;
 
-        AnalyticsManager manager = Analytics.getAnalyticsManager();
+        AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         //manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
         manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(SoapUIProductInfo.getInstance(), GA_ID));

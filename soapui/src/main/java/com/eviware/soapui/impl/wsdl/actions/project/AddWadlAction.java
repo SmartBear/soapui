@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -108,7 +108,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject> {
             UISupport.showErrorMessage(e);
         }
 
-        Analytics.trackAction(SoapUIActions.IMPORT_WADL.getActionName());
+        Analytics.trackAction(SoapUIActions.IMPORT_WADL);
 
         return restService;
     }

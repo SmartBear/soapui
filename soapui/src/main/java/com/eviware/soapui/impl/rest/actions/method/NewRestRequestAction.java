@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.rest.actions.method;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -62,7 +62,7 @@ public class NewRestRequestAction extends AbstractSoapUIAction<RestMethod> {
                 UISupport.showDesktopPanel(request);
             }
 
-            Analytics.trackAction(SoapUIActions.CREATE_REQUEST.getActionName(), "RequestType", "REST");
+            Analytics.trackAction(SoapUIActions.CREATE_REQUEST_FOR_METHOD, "RequestType", "REST");
         }
     }
 

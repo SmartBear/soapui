@@ -17,7 +17,7 @@
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
 import com.eviware.soapui.SoapUI;
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -75,6 +75,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.analytics.SoapUIActions.RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL;
 
 /**
  * Desktop panel for LoadTests
@@ -393,7 +395,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
             runButton.setEnabled(false);
             runner = loadtest.run();
-            Analytics.trackAction(SoapUIActions.RUN_LOAD_TEST.getActionName());
+            Analytics.trackAction(RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL);
         }
     }
 

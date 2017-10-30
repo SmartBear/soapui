@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -86,7 +86,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
     @Override
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR.getActionName(), "Type", "REST");
+        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR, "Type", "REST");
         return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
     }
 

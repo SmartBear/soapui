@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import com.smartbear.analytics.Analytics;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
@@ -278,7 +278,7 @@ public class JLoadTestAssertionsTable extends JPanel {
             String type = (String) UISupport.prompt("Select assertion type to add", "Add Assertion", types);
             if (type != null) {
                 loadTest.addAssertion(type, LoadTestAssertion.ANY_TEST_STEP, true);
-                Analytics.trackAction(SoapUIActions.ADD_LOAD_TEST_ASSERTION.getActionName());
+                Analytics.trackAction(SoapUIActions.ADD_LOAD_TEST_ASSERTION);
             }
         }
     }

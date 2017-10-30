@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
@@ -41,6 +42,8 @@ import com.sun.java.xml.ns.jaxRpc.ri.config.WsdlType;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_JAX_RPC_ARTIFACTS_TOOL;
 
 /**
  * Invokes JWSDP wscompile
@@ -179,6 +182,7 @@ public class WSCompileAction extends AbstractToolsAction<Interface> {
         builder.directory(new File(wscompileDir));
 
         toolHost.run(new ProcessToolRunner(builder, "JAX-RPC wscompile", modelItem));
+        Analytics.trackAction(USE_JAX_RPC_ARTIFACTS_TOOL);
     }
 
     private ArgumentBuilder buildArgs(StringToStringMap values, boolean isWindows, Interface modelItem)
