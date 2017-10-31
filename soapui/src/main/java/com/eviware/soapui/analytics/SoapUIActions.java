@@ -33,9 +33,9 @@ public enum SoapUIActions {
     ADD_ASSERTION("AddAssertion", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 
     //Run actions
-    RUN_TEST_CASE_FROM_TOOLBAR("TestCasePanelRunTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    RUN_TEST_SUITE_FROM_TOOLBAR("TestSuitePanelRunTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    RUN_PROJECT_FROM_TOOLBAR("ProjectPanelRunProject", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_TEST_STEP_FROM_TOOLBAR("TestCasePanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_TEST_CASE_FROM_TOOLBAR("TestSuitePanelRunTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_TEST_SUITE_FROM_TOOLBAR("ProjectPanelRunTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     RUN_TEST_STEP_FROM_PANEL("TestStepPanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 

@@ -280,7 +280,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             runProject();
-            Analytics.trackAction(SoapUIActions.RUN_PROJECT_FROM_TOOLBAR);
+            Analytics.trackAction(SoapUIActions.RUN_TEST_SUITE_FROM_TOOLBAR);
         }
     }
 

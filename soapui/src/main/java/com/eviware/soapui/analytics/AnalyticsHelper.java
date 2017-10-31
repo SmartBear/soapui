@@ -22,12 +22,13 @@ import com.eviware.soapui.analytics.providers.StatisticsCollectionConfirmationDi
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
 import com.smartbear.analytics.AnalyticsManager;
+import com.smartbear.analytics.api.AnalyticsProviderFactory;
 import com.smartbear.analytics.impl.GoogleAnalyticsProviderFactory;
+import com.smartbear.analytics.impl.SoapUIOSMixpanelProviderFactory;
 
 import javax.swing.JOptionPane;
 
 public class AnalyticsHelper {
-    private static final String GA_ID = "UA-92447-22";
     private static boolean initialized = false;
 
     private static boolean isAnalyticsDisabled() {
@@ -52,13 +53,14 @@ public class AnalyticsHelper {
         }
         initialized = true;
 
-        AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
-        manager.setExecutorService(SoapUI.getThreadPool());
-        //manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
-        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(SoapUIProductInfo.getInstance(), GA_ID));
         if (isAnalyticsDisabled()) {
             return;
         }
-
+        UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
+        AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
+        manager.setExecutorService(SoapUI.getThreadPool());
+        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(SoapUIProductInfo.getInstance(), userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
+        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(SoapUIProductInfo.getInstance()));
+        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(SoapUIProductInfo.getInstance(), userIdentifier, AnalyticsProviderFactory.HandleType.USER_ALLOWED));
     }
 }

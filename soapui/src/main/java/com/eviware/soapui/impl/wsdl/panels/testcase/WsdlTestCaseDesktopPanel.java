@@ -540,7 +540,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
         public void actionPerformed(ActionEvent e) {
             canceled = false;
             runTestCase();
-            Analytics.trackAction(SoapUIActions.RUN_TEST_CASE_FROM_TOOLBAR);
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_TOOLBAR);
         }
     }
 

@@ -335,7 +335,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         public void actionPerformed(ActionEvent e) {
             runTestSuite();
-            Analytics.trackAction(SoapUIActions.RUN_TEST_SUITE_FROM_TOOLBAR, "RunType", getModelItem().getRunType().name());
+            Analytics.trackAction(SoapUIActions.RUN_TEST_CASE_FROM_TOOLBAR, "RunType", getModelItem().getRunType().name());
         }
     }
 

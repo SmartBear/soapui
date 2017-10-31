@@ -41,7 +41,6 @@ public class UserPreferences {
     static final String EXTENDED_STATE = "SoapUIExtendedState";
     static final String INSTALLATION_TYPE = "SoapUIInstallationType";
     private static final Preferences unifiedPreferences = Preferences.userRoot().node(UserIdentificationInformation.UNIQUE_ID_SETTINGS_NODE_NAME);
-    private UniqueUserIdentifier uniqueUserIdentifier = UniqueUserIdentifier.initialize(this);
 
     private Preferences preferences = Preferences.userRoot().node(ROOT_NODE_NAME);
 

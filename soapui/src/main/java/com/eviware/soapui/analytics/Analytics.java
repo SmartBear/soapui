@@ -2,7 +2,10 @@ package com.eviware.soapui.analytics;
 
 import com.smartbear.analytics.AnalyticsManager;
 
+import java.util.Map;
+
 public class Analytics {
+    private static final String SOURCE_MODULE_PARAM_NAME = "SourceModule";
     private static final String PRODUCT_AREA_PARAM_NAME = "ProductArea";
 
     public static void trackAction(SoapUIActions action) {
@@ -10,17 +13,20 @@ public class Analytics {
     }
 
     public static void trackAction(SoapUIActions action, String... args) {
-        String[] updatedArgs = new String[((args != null) ? args.length : 0) + 2]; // 2 is an amount of ProductArea + Value
-        updatedArgs[0] = PRODUCT_AREA_PARAM_NAME;
-        updatedArgs[1] = action.getProductArea().getProductArea();
+        String[] updatedArgs = new String[((args != null) ? args.length : 0) + 4]; // 4 is an amount of "SourceModule" + value and ProductArea + Value
+        updatedArgs[0] = SOURCE_MODULE_PARAM_NAME;
+        updatedArgs[1] = (action.getModuleType() != null) ? action.getModuleType().toString() : "Any";
+        updatedArgs[2] = PRODUCT_AREA_PARAM_NAME;
+        updatedArgs[3] = action.getProductArea().getProductArea();
         for (int i = 0; i < ((args != null) ? args.length : 0); i++) {
-            updatedArgs[i + 2] = args[i];
+            updatedArgs[i + 4] = args[i];
         }
         com.smartbear.analytics.Analytics.trackAction(action.getCategory(), action.getActionName(), updatedArgs);
     }
 
     public static void trackAction(AnalyticsManager.Category analyticsCategory, SoapUIActions action, String... args) {
         com.smartbear.analytics.Analytics.trackAction(analyticsCategory, action.getActionName(), args);
+
     }
 
     public static void trackError(Throwable error) {
@@ -33,5 +39,9 @@ public class Analytics {
 
     public static boolean trackSessionStop() {
         return com.smartbear.analytics.Analytics.trackSessionStop();
+    }
+
+    public static void trackAction(AnalyticsManager.Category category, String actionName, Map<String, String> params) {
+        com.smartbear.analytics.Analytics.getAnalyticsManager().trackAction(category, actionName, params);
     }
 }

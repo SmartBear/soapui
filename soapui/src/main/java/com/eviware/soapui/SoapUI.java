@@ -26,6 +26,7 @@ import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.analytics.SoapUIActions;
+import com.eviware.soapui.analytics.UniqueUserIdentifier;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -119,6 +120,7 @@ import com.eviware.x.impl.swing.SwingDialogs;
 import com.google.common.base.Objects;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
+import com.smartbear.analytics.AnalyticsManager;
 import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -1093,6 +1095,7 @@ public class SoapUI {
         }
 
         Analytics.trackSessionStop();
+        Analytics.trackAction(AnalyticsManager.Category.MIXPANEL_PROFILE, null, UniqueUserIdentifier.getInstance().prepareUserProfile());
 
         shutdown();
 
