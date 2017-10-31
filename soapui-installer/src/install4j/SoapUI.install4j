@@ -1561,6 +1561,13 @@ return "";</string>
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                      <void property="arguments">
+                         <array class="java.lang.String" length="1">
+                           <void index="0">
+                             <string>${compiler:sys.version}</string>
+                           </void>
+                         </array>
+                      </void>
                       <void property="executable">
                         <object class="java.io.File">
                           <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}updateinstallation.${installer:EXTENSION}</string>
@@ -1828,6 +1835,13 @@ return "";</string>
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                      <void property="arguments">
+                        <array class="java.lang.String" length="1">
+                           <void index="0">
+                              <string>${compiler:sys.version}</string>
+                           </void>
+                        </array>
+                      </void>
                       <void property="executable">
                         <object class="java.io.File">
                           <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}uninstallactiontrack.${installer:EXTENSION}</string>
