@@ -46,7 +46,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
     public void perform(WorkspaceImpl workspace, Object param) {
         File file = null;
 
-        if (param == null) {
+        if (param == null || param instanceof SoapUIActions) {
             file = UISupport.getFileDialogs().openXML(this, messages.get("prompt.title"));
         } else {
             file = new File(param.toString());

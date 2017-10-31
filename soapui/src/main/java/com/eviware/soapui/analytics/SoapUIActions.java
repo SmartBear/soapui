@@ -99,7 +99,7 @@ public enum SoapUIActions {
 
     //Functional testing actions
     ASSIGN_O_AUTH("AssignOAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    ADD_PROPERTY_TRASNFER_IN_PROPERTY_TRANSFER_TEST_STEP("AddPropertyTransferInPropertyTransferTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP("AddPropertyTransferInPropertyTransferTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 
     //Definitions Import/Export
     IMPORT_WADL("ImportWADL", ModuleType.PROJECTS, ProductArea.NO),
