@@ -1,5 +1,6 @@
 package com.eviware.soapui.analytics;
 
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.preferences.UserPreferences;
 import com.smartbear.analytics.api.UserIdentificationInformation;
 
@@ -11,7 +12,7 @@ public class UniqueUserIdentifier implements UserIdentificationInformation {
 
     private UniqueUserIdentifier(UserPreferences prefs) {
         userId = prefs.getAnalyticsUserId();
-        if (userId == null || userId.length() == 0) {
+        if (StringUtils.isNullOrEmpty(userId)) {
             userId = UUID.randomUUID().toString();
             prefs.setAnalyticsUserId(userId);
         }
