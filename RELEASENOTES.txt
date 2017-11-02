@@ -91,7 +91,7 @@ Many thanks to Stanislaw and Marc for their efforts!
 
 ### Improvements ###
 
-* New look inspired by Ready! API.
+* New look inspired by ReadyAPI.
 * Support for Java 6 has been dropped. 
   To run SoapUI, now you need to have Java 7 on your computer.
   The SoapUI installation package includes Java 7 modules, 

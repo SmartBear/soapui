@@ -89,7 +89,7 @@ public class PluginLoader extends LoaderBase {
             Version installedReadyApiVersion = Version.fromString(SoapUI.SOAPUI_VERSION);
             if (minimumReadyApiVersion.compareTo(installedReadyApiVersion) > 0) {
                 throw new InvalidPluginException("Plugin " + configurationAnnotation.name() + " requires version " +
-                        minimumReadyApiVersion + " of Ready!API. Current application version: " + installedReadyApiVersion);
+                        minimumReadyApiVersion + " of ReadyAPI. Current application version: " + installedReadyApiVersion);
             }
             Plugin plugin;
             if (Plugin.class.isAssignableFrom(pluginClass)) {
