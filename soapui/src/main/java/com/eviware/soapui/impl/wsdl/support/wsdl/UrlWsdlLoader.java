@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -50,6 +51,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -178,7 +180,14 @@ public class UrlWsdlLoader extends WsdlLoader {
     }
 
     protected void createGetMethod(String url) {
-        getMethod = new HttpGet(url);
+        URI uri = URI.create(url);
+        String authority = uri.getAuthority();
+        if ((uri.getUserInfo() == null) && authority != null) {
+            String userInfo = authority.substring(0, authority.lastIndexOf("@"));
+            String encodedUserInfo = HttpUtils.urlEncodeWithUtf8(getUsername()) + ":" + HttpUtils.urlEncodeWithUtf8(getPassword());
+            uri = URI.create(url.replace(userInfo, encodedUserInfo));
+        }
+        getMethod = new HttpGet(uri);
         getMethod.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, true);
         state.setAttribute(ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider());
 
