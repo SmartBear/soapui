@@ -40,13 +40,10 @@ public class WsdlProjectRunContext extends AbstractSubmitContext<WsdlProject> im
     }
 
     public TestRunner getTestRunner() {
-        // TODO Auto-generated method stub
-        return null;
+        return testScenarioRunner;
     }
 
     public Object getProperty(String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return get(name);
     }
-
 }

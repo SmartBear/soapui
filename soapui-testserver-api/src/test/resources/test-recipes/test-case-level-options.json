@@ -1,0 +1,27 @@
+{
+  "name": "RecipeTestCase",
+  "searchProperties": true,
+  "maintainSession": true,
+  "abortOnError": true,
+  "failTestCaseOnError": true,
+  "discardOkResults": true,
+  "socketTimeout": "0",
+  "testCaseTimeout": 0,
+  "properties": {
+    "test": "test",
+    "test2": "test2"
+  },
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://our.api.com/artistfacts",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "Madonna"
+        }
+      ]
+    }
+  ]
+}

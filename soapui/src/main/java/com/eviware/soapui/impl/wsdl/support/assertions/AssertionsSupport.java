@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import org.apache.xmlbeans.XmlObject;
@@ -281,7 +282,11 @@ public class AssertionsSupport implements PropertyChangeListener {
                                 + (getAssertionsOfType(TestAssertionRegistry.getInstance().getAssertionClassType(
                                 assertionConfig)).size()));
                 if (name == null) {
-                    return null;
+                    if (UISupport.isUsingConsoleDialogs()) {
+                        name = ModelItemNamer.createName(assertionLabel, assertions);
+                    } else {
+                        return null;
+                    }
                 }
             }
             WsdlMessageAssertion assertion = addWsdlAssertion(assertionConfig);
@@ -292,9 +297,7 @@ public class AssertionsSupport implements PropertyChangeListener {
             assertionConfig.setName(name);
             assertion.updateConfig(assertionConfig);
 
-            if (assertion != null) {
-                fireAssertionAdded(assertion);
-            }
+            fireAssertionAdded(assertion);
 
             return assertion;
         } catch (Exception e) {

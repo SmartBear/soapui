@@ -1,0 +1,14 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://our.api.com/car/{carId}",
+      "parameters": [
+        {"name" : "carId", "value": "153", "type": "PATH"},
+        {"name" : "X-Car-Auth", "value": "ABC", "type": "HEADER"},
+        {"name" : "session", "value": "123456", "type": "MATRIX"}
+      ]
+    }
+  ]
+}

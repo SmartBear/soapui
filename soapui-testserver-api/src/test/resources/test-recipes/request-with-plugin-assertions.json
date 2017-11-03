@@ -1,0 +1,25 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://petstore.swagger.io/v2/pet/findByTag",
+      "assertions": [
+        {
+          "type": "Swagger Compliance Assertion",
+          "configuration": {
+            "swaggerUrl": "http://petstore.swagger.io/v2/swagger.json",
+            "strictMode": "true"
+          }
+        },
+        {
+          "type": "Valid HTTP Status Codes",
+          "validStatusCodes": [
+            "200",
+            "201"
+          ]
+        }
+      ]
+    }
+  ]
+}
