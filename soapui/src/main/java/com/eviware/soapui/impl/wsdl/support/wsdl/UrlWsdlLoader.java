@@ -183,9 +183,12 @@ public class UrlWsdlLoader extends WsdlLoader {
         URI uri = URI.create(url);
         String authority = uri.getAuthority();
         if ((uri.getUserInfo() == null) && authority != null) {
-            String userInfo = authority.substring(0, authority.lastIndexOf("@"));
-            String encodedUserInfo = HttpUtils.urlEncodeWithUtf8(getUsername()) + ":" + HttpUtils.urlEncodeWithUtf8(getPassword());
-            uri = URI.create(url.replace(userInfo, encodedUserInfo));
+            int userInfoIndex = authority.lastIndexOf("@");
+            if (userInfoIndex != -1) {
+                String userInfo = authority.substring(0, userInfoIndex);
+                String encodedUserInfo = HttpUtils.urlEncodeWithUtf8(getUsername()) + ":" + HttpUtils.urlEncodeWithUtf8(getPassword());
+                uri = URI.create(url.replace(userInfo, encodedUserInfo));
+            }
         }
         getMethod = new HttpGet(uri);
         getMethod.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, true);
