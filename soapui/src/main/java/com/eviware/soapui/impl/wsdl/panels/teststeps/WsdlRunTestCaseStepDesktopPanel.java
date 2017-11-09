@@ -199,7 +199,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
         }
 
         public void actionPerformed(ActionEvent e) {
-            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "RunTestCase");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "RunTestCase");
 
             runAction.setEnabled(false);
             cancelAction.setEnabled(true);

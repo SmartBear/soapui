@@ -720,7 +720,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             throw new SubmitException("AMF request is not initialised properly !");
         }
 
-        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "AMF");
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "AMF");
 
         return amfRequestTestStep.getAMFRequest().submit(submitContext, true);
     }

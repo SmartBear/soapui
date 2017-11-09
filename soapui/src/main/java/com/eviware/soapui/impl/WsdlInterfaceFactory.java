@@ -103,7 +103,7 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface> {
             throw new SoapUIException("Error creating requests", e);
         }
 
-        Analytics.trackAction(SoapUIActions.IMPORT_WSDL.getActionName());
+        Analytics.trackAction(SoapUIActions.IMPORT_WSDL);
 
         return result;
     }

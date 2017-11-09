@@ -17,6 +17,8 @@
 package com.eviware.soapui.tools;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -53,6 +55,9 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_FUNCTIONAL_TEST_RUNNER;
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_SECURITY_TEST_RUNNER;
 
 /**
  * Standalone security test-runner used from maven-plugin, can also be used from
@@ -117,6 +122,10 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
     }
 
     public boolean runRunner() throws Exception {
+        AnalyticsHelper.initializeAnalytics();
+        Analytics.trackSessionStart();
+        Analytics.trackAction(LAUNCH_SECURITY_TEST_RUNNER);
+
         initGroovyLog();
         getAssertions().clear();
         String projectFile = getProjectFile();

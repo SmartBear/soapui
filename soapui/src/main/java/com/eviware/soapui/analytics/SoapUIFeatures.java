@@ -20,21 +20,17 @@ package com.eviware.soapui.analytics;
  *
  */
 public enum SoapUIFeatures {
+    INSTALL("InstallProduct"),
     SERVICE_VIRTUALIZATION("ServiceVirtualization"),
     FUNCTIONAL_TESTING("FunctionalTesting"),
     PERFORMANCE_TESTING("PerformanceTesting"),
     SECURITY_TESTING("SecurityTesting"),
     SOAP("SOAP"),
     REST("REST"),
-    PLUGINS("Plugins"),
-    DISCOVERY("Discovery"),
-    INSTALL("Install"),
     MONITORING("Monitoring"),
     AUTOMATE_SOAP_UI("AutomateSoapUI"),
     USE_SOAP_UI("UseSoapUI"),
-    REPORTS("Reports"),
-    TOOL("Tool"),
-    LICENSE("License");
+    TOOL("Tool");
 
     private String featureName;
 

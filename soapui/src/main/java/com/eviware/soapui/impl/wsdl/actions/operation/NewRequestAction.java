@@ -59,6 +59,6 @@ public class NewRequestAction extends AbstractSoapUIAction<WsdlOperation> {
 
         UISupport.showDesktopPanel(newRequest);
 
-        Analytics.trackAction(SoapUIActions.CREATE_REQUEST.getActionName(), "RequestType", "SOAP");
+        Analytics.trackAction(SoapUIActions.CREATE_REQUEST_FOR_OPERATION);
     }
 }

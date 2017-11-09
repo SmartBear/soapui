@@ -25,6 +25,8 @@ import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.AnalyticsHelper;
+import com.eviware.soapui.analytics.SoapUIActions;
+import com.eviware.soapui.analytics.UniqueUserIdentifier;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -118,6 +120,7 @@ import com.eviware.x.impl.swing.SwingDialogs;
 import com.google.common.base.Objects;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
+import com.smartbear.analytics.AnalyticsManager;
 import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -178,6 +181,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 
+import static com.eviware.soapui.analytics.SoapUIActions.CREATE_EMPTY_PROJECT_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.CREATE_REST_PROJECT_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.CREATE_SOAP_PROJECT_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.IMPORT_PREFERENCES;
+import static com.eviware.soapui.analytics.SoapUIActions.IMPORT_PROJECT_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.OPEN_PREFERENCES_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.SAVE_PREFERENCES;
+import static com.eviware.soapui.analytics.SoapUIActions.TURN_OFF_PROXY_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.TURN_ON_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 
 /**
@@ -189,6 +201,7 @@ public class SoapUI {
     public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
     public final static Logger log = Logger.getLogger(SoapUI.class);
     public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
+    public final static String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
     public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
@@ -350,9 +363,9 @@ public class SoapUI {
         mainToolbar.setRollover(true);
         mainToolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
         mainToolbar.addSpace(20);
-        mainToolbar.add(new NewProjectActionDelegate("/new-empty-project-icon.png","Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID));
-        mainToolbar.add(new NewProjectActionDelegate("/new-soap-project-icon.png","SOAP", NewWsdlProjectAction.SOAPUI_ACTION_ID));
-        mainToolbar.add(new NewProjectActionDelegate("/new-rest-project-icon.png","REST", NewRestProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/new-empty-project-icon.png", "Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID, CREATE_EMPTY_PROJECT_FROM_TOOLBAR));
+        mainToolbar.add(new NewProjectActionDelegate("/new-soap-project-icon.png", "SOAP", NewWsdlProjectAction.SOAPUI_ACTION_ID, CREATE_SOAP_PROJECT_FROM_TOOLBAR));
+        mainToolbar.add(new NewProjectActionDelegate("/new-rest-project-icon.png", "REST", NewRestProjectAction.SOAPUI_ACTION_ID, CREATE_REST_PROJECT_FROM_TOOLBAR));
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
@@ -731,7 +744,7 @@ public class SoapUI {
                 }
 
                 if (isCommandLine()) {
-                    Analytics.trackAction("CmdLine");
+                    Analytics.trackAction(SoapUIActions.PRODUCT_STARTED_FROM_CMD);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -867,7 +880,7 @@ public class SoapUI {
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
         if (isDebug) {
-            Analytics.trackAction("DebuggingMode");
+            Analytics.trackAction(SoapUIActions.PRODUCT_STARTED_IN_DEBUGGING_MODE);
         }
 
         SoapUI soapUI = new SoapUI();
@@ -1072,16 +1085,17 @@ public class SoapUI {
                 SoapUI.logError(e1);
             }
 
-            Analytics.trackAction("Exit");
+            Analytics.trackAction(SoapUIActions.EXIT);
         } else {
             if (!UISupport.confirm("Exit SoapUI without saving?", "Question")) {
                 saveOnExit = true;
                 return false;
             }
-            Analytics.trackAction("ExitWithoutSave");
+            Analytics.trackAction(SoapUIActions.EXIT_WITHOUT_SAVE);
         }
 
         Analytics.trackSessionStop();
+        Analytics.trackAction(AnalyticsManager.Category.MIXPANEL_PROFILE, null, UniqueUserIdentifier.getInstance().prepareUserProfile());
 
         shutdown();
 
@@ -1216,6 +1230,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction(SoapUIActions.EXIT);
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1229,11 +1244,13 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             if (ProxyUtils.isProxyEnabled()) {
                 SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, false);
+                Analytics.trackAction(TURN_OFF_PROXY_FROM_TOOLBAR);
             } else {
                 if (!ProxyUtils.isAutoProxy() && emptyManualSettings()) {
                     SoapUI.getSettings().setBoolean(ProxySettings.AUTO_PROXY, true);
                 }
                 SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, true);
+                Analytics.trackAction(TURN_ON_PROXY_FROM_TOOLBAR);
             }
 
             updateProxyFromSettings();
@@ -1371,6 +1388,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = false;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction(SoapUIActions.EXIT_WITHOUT_SAVE);
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1384,6 +1402,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             try {
                 soapUICore.saveSettings();
+                Analytics.trackAction(SAVE_PREFERENCES);
             } catch (Exception e1) {
                 SoapUI.logError(e1, "There was an error when attempting to save your preferences");
                 UISupport.showErrorMessage(e1);
@@ -1451,15 +1470,22 @@ public class SoapUI {
 
     static class NewProjectActionDelegate extends AbstractAction {
         String actionId;
+        private SoapUIActions analyticAction;
+
         public NewProjectActionDelegate(String icon, String name, String actionId) {
+            this(icon, name, actionId, null);
+        }
+
+        public NewProjectActionDelegate(String icon, String name, String actionId, SoapUIActions analyticAction) {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon(icon));
-            if(name.equals("Empty")){
+            if (name.equals("Empty")) {
                 putValue(Action.SHORT_DESCRIPTION, "Creates an empty project");
-            }else{
-               putValue(Action.SHORT_DESCRIPTION, "Creates a new "+name+" project");
+            } else {
+                putValue(Action.SHORT_DESCRIPTION, "Creates a new " + name + " project");
             }
             putValue(Action.NAME, name);
             this.actionId = actionId;
+            this.analyticAction = analyticAction;
         }
 
         public void setShortDescription(String description) {
@@ -1472,6 +1498,9 @@ public class SoapUI {
 
         public void actionPerformed(ActionEvent e) {
             SoapUI.getActionRegistry().getAction(actionId).perform(workspace, null);
+            if (analyticAction != null) {
+                Analytics.trackAction(analyticAction);
+            }
         }
     }
 
@@ -1483,7 +1512,7 @@ public class SoapUI {
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(ImportWsdlProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
+            SoapUI.getActionRegistry().getAction(ImportWsdlProjectAction.SOAPUI_ACTION_ID).perform(workspace, IMPORT_PROJECT_FROM_TOOLBAR);
         }
     }
 
@@ -1508,6 +1537,7 @@ public class SoapUI {
 
         public void actionPerformed(ActionEvent e) {
             SoapUIPreferencesAction.getInstance().actionPerformed(null);
+            Analytics.trackAction(OPEN_PREFERENCES_FROM_TOOLBAR);
         }
     }
 
@@ -1526,6 +1556,7 @@ public class SoapUI {
                         ".xml", "SoapUI Settings XML (*.xml)", null);
                 if (file != null) {
                     soapUICore.importSettings(file);
+                    Analytics.trackAction(IMPORT_PREFERENCES);
                 }
             } catch (Exception e1) {
                 UISupport.showErrorMessage(e1);

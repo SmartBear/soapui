@@ -62,7 +62,7 @@ public class NewRestRequestAction extends AbstractSoapUIAction<RestMethod> {
                 UISupport.showDesktopPanel(request);
             }
 
-            Analytics.trackAction(SoapUIActions.CREATE_REQUEST.getActionName(), "RequestType", "REST");
+            Analytics.trackAction(SoapUIActions.CREATE_REQUEST_FOR_METHOD, "RequestType", "REST");
         }
     }
 

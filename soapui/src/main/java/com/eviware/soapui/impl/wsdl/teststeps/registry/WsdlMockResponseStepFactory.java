@@ -195,7 +195,6 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
             }
 
             testStepConfig.addNewConfig().set(config);
-
             return testStepConfig;
         }
     }

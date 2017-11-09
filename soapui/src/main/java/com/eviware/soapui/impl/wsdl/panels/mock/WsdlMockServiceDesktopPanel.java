@@ -545,9 +545,9 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         public void actionPerformed(ActionEvent arg0) {
 
             if (getModelItem() instanceof WsdlMockService) {
-                Analytics.trackAction(SoapUIActions.START_SOAP_MOCK.getActionName());
+                Analytics.trackAction(SoapUIActions.START_SOAP_MOCK_FROM_MOCK_PANEL);
             } else if (getModelItem() instanceof RestMockService) {
-                Analytics.trackAction(SoapUIActions.START_REST_MOCK.getActionName());
+                Analytics.trackAction(SoapUIActions.START_REST_MOCK_FROM_MOCK_PANEL);
             }
 
             startMockService();

@@ -248,7 +248,7 @@ public class TestOnDemandPanel extends JPanel {
                     openURLSafely(redirectUrl);
                 }
 
-                Analytics.trackAction(SoapUIActions.TEST_ON_DEMAND.getActionName());
+                Analytics.trackAction(SoapUIActions.TEST_ON_DEMAND);
             }
         }
     }

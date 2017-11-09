@@ -17,6 +17,8 @@
 package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
@@ -81,6 +83,7 @@ public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     workspace.switchWorkspace(newPath);
                     SoapUI.getSettings().setString(SoapUI.CURRENT_SOAPUI_WORKSPACE, newPath.getAbsolutePath());
                     UISupport.select(workspace);
+                    Analytics.trackAction(SoapUIActions.SWITCH_WORKSPACE);
                 } catch (SoapUIException e) {
                     UISupport.showErrorMessage(e);
                 }

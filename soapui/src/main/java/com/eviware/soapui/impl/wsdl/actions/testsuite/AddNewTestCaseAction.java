@@ -52,7 +52,11 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite> {
         }
 
         WsdlTestCase testCase = testSuite.addNewTestCase(name);
-        Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE.getActionName());
+        if (param != null && param instanceof SoapUIActions) {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL);
+        } else {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE_FROM_CONTEXT_MENU);
+        }
         UISupport.showDesktopPanel(testCase);
     }
 }

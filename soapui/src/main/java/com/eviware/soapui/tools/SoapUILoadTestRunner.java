@@ -17,6 +17,8 @@
 package com.eviware.soapui.tools;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.data.actions.ExportLoadTestLogAction;
@@ -43,6 +45,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_LOAD_TEST_RUNNER;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -230,6 +234,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
      */
 
     public boolean runRunner() throws Exception {
+        AnalyticsHelper.initializeAnalytics();
+        Analytics.trackSessionStart();
+        Analytics.trackAction(LAUNCH_LOAD_TEST_RUNNER);
+
         if (SoapUI.getSettings().getBoolean(UISettings.DONT_DISABLE_GROOVY_LOG)) {
             initGroovyLog();
         }

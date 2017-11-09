@@ -86,11 +86,11 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
             mockAsWar.createMockAsWarArchive();
 
             if (project.getRestMockServiceCount() > 0) {
-                Analytics.trackAction(SoapUIActions.DEPLOY_REST_MOCK_AS_WAR.getActionName());
+                Analytics.trackAction(SoapUIActions.DEPLOY_REST_MOCK_AS_WAR);
             }
 
             if (project.getMockServiceCount() > 0) {
-                Analytics.trackAction(SoapUIActions.DEPLOY_SOAP_MOCK_AS_WAR.getActionName());
+                Analytics.trackAction(SoapUIActions.DEPLOY_SOAP_MOCK_AS_WAR);
             }
         }
     }

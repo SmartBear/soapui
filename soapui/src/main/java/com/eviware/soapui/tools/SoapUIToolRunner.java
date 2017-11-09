@@ -148,7 +148,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
     public void run(ToolRunner runner) throws Exception {
         status = RunnerStatus.RUNNING;
         runner.setContext(this);
-        Analytics.trackAction(SoapUIActions.RUN_TOOL_FROM_COMMAND_LINE.getActionName(), "Tool", runner.getName());
+        Analytics.trackAction(SoapUIActions.RUN_TOOL_FROM_COMMAND_LINE, "Tool", runner.getName());
 
         runner.run();
     }

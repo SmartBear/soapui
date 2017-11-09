@@ -108,7 +108,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject> {
             UISupport.showErrorMessage(e);
         }
 
-        Analytics.trackAction(SoapUIActions.IMPORT_WADL.getActionName());
+        Analytics.trackAction(SoapUIActions.IMPORT_WADL);
 
         return restService;
     }

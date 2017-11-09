@@ -137,7 +137,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
     }
 
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR.getActionName(), "Type", "SOAP");
+        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR, "Type", "SOAP");
         return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
     }
 

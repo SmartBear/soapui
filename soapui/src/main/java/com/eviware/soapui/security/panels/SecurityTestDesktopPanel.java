@@ -417,7 +417,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
                 }
             }
             if (shouldRun) {
-                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST.getActionName());
+                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL);
                 runSecurityTest();
             } else {
                 UISupport.showInfoMessage("No Security Scans available to run.", "Security Test Warning");

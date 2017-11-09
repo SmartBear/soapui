@@ -45,7 +45,6 @@ public class SwingToolHost implements ToolHost {
             UISupport.showErrorMessage(ex);
             throw ex;
         } finally {
-            Analytics.trackAction(SoapUIActions.RUN_TOOL.getActionName(), "Tool", runner.getName());
             if (processDialog != null) {
                 processDialog.setVisible(false);
             }

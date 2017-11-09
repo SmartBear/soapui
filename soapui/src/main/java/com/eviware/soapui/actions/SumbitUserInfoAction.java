@@ -17,9 +17,11 @@
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.UniqueUserIdentifier;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFriendlyTextField;
+import com.smartbear.analytics.AnalyticsManager;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -82,7 +84,7 @@ public class SumbitUserInfoAction {
             setBackground(Color.WHITE);
 
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
-            jBasePanel.setBorder(new LineBorder(new Color(170,170, 170), 2));
+            jBasePanel.setBorder(new LineBorder(new Color(170, 170, 170), 2));
             setBackgroundColor(jBasePanel);
             this.add(jBasePanel);
 
@@ -232,7 +234,10 @@ public class SumbitUserInfoAction {
             if (!validateFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(getUserName(), getUserEMail());
+            UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
+            userIdentifier.setEmail(getUserEMail());
+            userIdentifier.setName(getUserName());
+            Analytics.trackAction(AnalyticsManager.Category.MIXPANEL_PROFILE, null, UniqueUserIdentifier.getInstance().prepareUserProfile());
             return true;
         }
 

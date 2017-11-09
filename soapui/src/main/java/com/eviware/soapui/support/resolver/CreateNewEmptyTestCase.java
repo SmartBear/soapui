@@ -53,8 +53,6 @@ public class CreateNewEmptyTestCase implements Resolver {
         testStep.setTargetTestCase(tCase);
         resolved = true;
 
-        Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE.getActionName());
-
         return resolved;
     }
 

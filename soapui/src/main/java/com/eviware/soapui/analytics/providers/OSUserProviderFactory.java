@@ -16,14 +16,29 @@
 
 package com.eviware.soapui.analytics.providers;
 
-import com.eviware.soapui.analytics.AnalyticsProvider;
-import com.eviware.soapui.analytics.AnalyticsProviderFactory;
+
+import com.smartbear.analytics.api.AnalyticsProvider;
+import com.smartbear.analytics.api.AnalyticsProviderFactory;
 
 /**
  * Created by avdeev on 02.02.2015.
  */
 public class OSUserProviderFactory implements AnalyticsProviderFactory {
     @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public AnalyticsProvider allocateProvider() {
+        return null;
+    }
+   /* @Override
     public String getName() {
         return "OS User Contact Info Provider";
     }
@@ -36,6 +51,6 @@ public class OSUserProviderFactory implements AnalyticsProviderFactory {
     @Override
     public AnalyticsProvider allocateProvider() {
         return new OSUserProvider();
-    }
+    }*/
 
 }

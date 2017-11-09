@@ -51,6 +51,10 @@ public class AddNewSecurityTestAction extends AbstractSoapUIAction<WsdlTestCase>
 
         SecurityTest securityTest = testCase.addNewSecurityTest(name);
         UISupport.selectAndShow(securityTest);
-        Analytics.trackAction(SoapUIActions.CREATE_SECURITY_TEST.getActionName());
+        if (param != null && param instanceof SoapUIActions) {
+            Analytics.trackAction((SoapUIActions) param);
+        } else {
+            Analytics.trackAction(SoapUIActions.CREATE_SECURITY_TEST_FROM_CONTEXT_MENU);
+        }
     }
 }

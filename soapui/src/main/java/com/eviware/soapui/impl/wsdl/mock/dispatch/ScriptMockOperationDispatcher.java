@@ -210,7 +210,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
         }
 
         public void actionPerformed(ActionEvent e) {
-            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "GroovyScript");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "GroovyScript");
 
             MockResult lastMockResult = getMockOperation().getLastMockResult();
             MockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();

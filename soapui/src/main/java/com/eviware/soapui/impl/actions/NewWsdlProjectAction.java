@@ -121,7 +121,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
 
                             importWsdl(project, url);
                         }
-                        Analytics.trackAction(SoapUIActions.CREATE_SOAP_PROJECT.getActionName());
 
                         break;
                     }

@@ -76,6 +76,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static com.eviware.soapui.analytics.SoapUIActions.RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL;
+
 /**
  * Desktop panel for LoadTests
  *
@@ -393,7 +395,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
             runButton.setEnabled(false);
             runner = loadtest.run();
-            Analytics.trackAction(SoapUIActions.RUN_LOAD_TEST.getActionName());
+            Analytics.trackAction(RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL);
         }
     }
 

@@ -16,115 +16,159 @@
 
 package com.eviware.soapui.analytics;
 
+import com.smartbear.analytics.AnalyticsManager;
+
 /**
  *
  */
 public enum SoapUIActions {
 
-    //Start SoapUI pro
-    START_SOAPUI_FROM_COMAND_LINE("StartSoapUIFromCommandLine", SoapUIFeatures.AUTOMATE_SOAP_UI),
-    START_SOAPUI_PRO("StartSoapUIPro", SoapUIFeatures.USE_SOAP_UI),
-    DEBUG_MODE("DebugMode", SoapUIFeatures.USE_SOAP_UI),
-    EXIT("Exit", SoapUIFeatures.USE_SOAP_UI),
-    EXIT_WITHOUT_SAVE("ExitWithoutSave", SoapUIFeatures.USE_SOAP_UI),
+    //Common actions
+    PRODUCT_STARTED_FROM_CMD("ProductStartedFromCmd", null, ProductArea.NO),
+    PRODUCT_STARTED_IN_DEBUGGING_MODE("ProductStartedInDebuggingMode", null, ProductArea.NO),
+    EXIT("Exit", null, ProductArea.NO),
+    EXIT_WITHOUT_SAVE("ExitWithoutSave", null, ProductArea.NO),
 
-    //Plugin
-    INSTALL_PLUGIN("InstallPlugin", SoapUIFeatures.PLUGINS),
+    //Assertions
+    ADD_ASSERTION("AddAssertion", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+
+    //Run actions
+    RUN_TEST_STEP_FROM_TOOLBAR("TestCasePanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_TEST_CASE_FROM_TOOLBAR("TestSuitePanelRunTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_TEST_SUITE_FROM_TOOLBAR("ProjectPanelRunTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_TEST_STEP_FROM_PANEL("TestStepPanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+
+    //Create Functional Model Items
+    CREATE_TEST_SUITE_FROM_PROJECT_PANEL("ProjectPanelCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    CREATE_TEST_SUITE_FROM_CONTEXT_MENU("ContextMenuCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL("TestSuitePanelCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    CREATE_TEST_CASE_FROM_CONTEXT_MENU("ContextMenuCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    ADD_NEW_TEST_STEP_FROM_CONTEXT_MENU("ContextMenuAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    ADD_NEW_TEST_STEP_FROM_TEST_CASE_PANEL("TestCasePanelAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    CREATE_REQUEST_FOR_OPERATION("ContextMenuCreateSoapRequestForOperation", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
+    CREATE_REQUEST_FOR_METHOD("ContextMenuCreateRestRequestForMethod", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
+    ADD_REQUEST_TO_TEST_CASE_FROM_REQUEST_PANEL("TestCasePanelAddRequest", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+
+    //Static Toolbar Actions
+    CREATE_EMPTY_PROJECT_FROM_TOOLBAR("StaticToolbarCreateEmptyProject", null, ProductArea.STATIC_MAIN_TOOLBAR),
+    CREATE_SOAP_PROJECT_FROM_TOOLBAR("StaticToolbarCreateSoapProject", ModuleType.SOAPUI_NG, ProductArea.STATIC_MAIN_TOOLBAR),
+    CREATE_REST_PROJECT_FROM_TOOLBAR("StaticToolbarCreateRestProject", ModuleType.SOAPUI_NG, ProductArea.STATIC_MAIN_TOOLBAR),
+    IMPORT_PROJECT_FROM_TOOLBAR("StaticToolbarImportProject", ModuleType.SOAPUI_NG, ProductArea.STATIC_MAIN_TOOLBAR),
+    SAVE_ALL_PROJECTS_FROM_TOOLBAR("StaticToolbarSaveAllProjects", null, ProductArea.STATIC_MAIN_TOOLBAR),
+    OPEN_FORUM_FROM_TOOLBAR("StaticToolbarOpenForum", null, ProductArea.STATIC_MAIN_TOOLBAR),
+    APPLY_TRIAL_FROM_TOOLBAR("StaticToolbarApplyTrial", null, ProductArea.STATIC_MAIN_TOOLBAR),
+    OPEN_PREFERENCES_FROM_TOOLBAR("StaticToolbarOpenPreferences", null, ProductArea.STATIC_MAIN_TOOLBAR),
+    TURN_ON_PROXY_FROM_TOOLBAR("StaticToolbarTurnOnProxy", null, ProductArea.STATIC_MAIN_TOOLBAR),
+    TURN_OFF_PROXY_FROM_TOOLBAR("StaticToolbarTurnOffProxy", null, ProductArea.STATIC_MAIN_TOOLBAR),
+
+    //Tools
+    USE_JBOSSWS_ARTIFACTS_TOOL("ToolsMenuUseJBossWSArtifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_JBOSSWS_JAXWS_ARTIFACTS_TOOL("ToolsMenuUseJBossWSJaxWSArtifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_JAX_RPC_ARTIFACTS_TOOL("ToolsMenuUseJaxRpcArtifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_JAX_WS_ARTIFACTS_TOOL("ToolsMenuUseJaxWsArtifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_AXIS_1_ARTIFACTS_TOOL("ToolsMenuUseAxis1Artifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_AXIS_2_ARTIFACTS_TOOL("ToolsMenuUseAxis2Artifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_APACHE_CXF_TOOL("ToolsMenuUseApacheCxf", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_XFIRE_1_STUBS_TOOL("ToolsMenuUseXFire1Stubs", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_ORACLE_PROXY_ARTIFACTS_TOOL("ToolsMenuUseOracleProxyArtifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_XML_BEANS_CLASSES_TOOL("ToolsMenuUseXmlBeansClasses", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_JAXB_2_ARTIFACTS_TOOL("ToolsMenuUseJaxb2Artifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_DOT_NET_2_ARTIFACTS_TOOL("ToolsMenuUseDotNet2Artifact", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_GSOAP_ARTIFACTS_TOOL("UseGSoapArtifacts", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_TCP_MON_TOOL("ToolsMenuUseTcpMon", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+    USE_HERMES_JMS_TOOL("ToolsMenuUseHermesJMS", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
+
+    //Launch TestRunners From UI
+    LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI("LaunchFunctionalTestRunnerFromUI", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    LAUNCH_SECURITY_TEST_RUNNER_FROM_UI("LaunchSecurityTestRunnerFromUI", ModuleType.SECURE, ProductArea.NAVIGATOR_TREE),
+    LAUNCH_LOAD_TEST_RUNNER_FROM_UI("LaunchLoadTestRunnerFromUI", ModuleType.LOADUI_NG, ProductArea.NAVIGATOR_TREE),
+
+    //Launch TestRunners
+    LAUNCH_FUNCTIONAL_TEST_RUNNER("LaunchFunctionalTestRunner", ModuleType.SOAPUI_NG, ProductArea.NO),
+    LAUNCH_SECURITY_TEST_RUNNER("LaunchSecurityTestRunner", ModuleType.SECURE, ProductArea.NO),
+    LAUNCH_LOAD_TEST_RUNNER("LaunchLoadTestRunner", ModuleType.LOADUI_NG, ProductArea.NO),
 
     //Service virtualization actions
-    CREATE_REST_MOCK("CreateRestMock", SoapUIFeatures.SERVICE_VIRTUALIZATION),
-    START_REST_MOCK("StartRestMock", SoapUIFeatures.SERVICE_VIRTUALIZATION),
-    CREATE_SOAP_MOCK("CreateSOAPMock", SoapUIFeatures.SERVICE_VIRTUALIZATION),
-    START_SOAP_MOCK("StartSOAPMock", SoapUIFeatures.SERVICE_VIRTUALIZATION),
-    USE_MOCK_FROM_TEST("UseMockFromTest", SoapUIFeatures.SERVICE_VIRTUALIZATION),
-    DEPLOY_REST_MOCK_AS_WAR("DeployRestMockAsWar", SoapUIFeatures.SERVICE_VIRTUALIZATION),
-    DEPLOY_SOAP_MOCK_AS_WAR("DeploySoapMockAsWar", SoapUIFeatures.SERVICE_VIRTUALIZATION),
+    CREATE_REST_MOCK_FROM_CONTEXT_MENU("ContextMenuCreateRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    START_REST_MOCK_FROM_MOCK_PANEL("MockPanelStartRestMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
+    CREATE_SOAP_MOCK_FROM_CONTEXT_MENU("ContextMenuCreateSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    START_SOAP_MOCK_FROM_MOCK_PANEL("MockPanelStartSOAPMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
+    DEPLOY_REST_MOCK_AS_WAR("DeployRestMockAsWar", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    DEPLOY_SOAP_MOCK_AS_WAR("DeploySoapMockAsWar", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
 
     //Functional testing actions
-    CREATE_GENERIC_PROJECT("CreateGenericProject", SoapUIFeatures.FUNCTIONAL_TESTING),
-    CREATE_REQUEST("CreateRequest", SoapUIFeatures.FUNCTIONAL_TESTING),
-    RUN_REQUEST_FROM_REQUEST_EDITOR("RunRequestFromRequestEditor", SoapUIFeatures.FUNCTIONAL_TESTING),
-    CREATE_TEST_CASE("CreateTestCase", SoapUIFeatures.FUNCTIONAL_TESTING),
-    RUN_TEST_CASE("RunTestCase", SoapUIFeatures.FUNCTIONAL_TESTING),
-    RUN_TEST_SUITE("RunTestSuite", SoapUIFeatures.FUNCTIONAL_TESTING),
-    RUN_PROJECT("RunProject", SoapUIFeatures.FUNCTIONAL_TESTING),
-    CREATE_TEST_STEP("CreateTestStep", SoapUIFeatures.FUNCTIONAL_TESTING),
-    RUN_TEST_STEP("RunTestStep", SoapUIFeatures.FUNCTIONAL_TESTING),
-    RUN_REQUEST_FROM_TEST_STEP_EDITOR("RunRequestFromTestStepEditor", SoapUIFeatures.FUNCTIONAL_TESTING),
-    ASSIGN_O_AUTH("AssignOAuth", SoapUIFeatures.FUNCTIONAL_TESTING),
-    ENABLE_COVERAGE("EnableCoverage", SoapUIFeatures.FUNCTIONAL_TESTING),
-    USE_COVERAGE("UseCoverage", SoapUIFeatures.FUNCTIONAL_TESTING),
-    ADD_POINT_AND_CLICK_ASSERTION("AddPointAndClickAssertion", SoapUIFeatures.FUNCTIONAL_TESTING),
-    ADD_POINT_AND_CLICK_PROPERTY_TRANFER("AddPointAndClickPropertyTransfer", SoapUIFeatures.FUNCTIONAL_TESTING),
-    ADD_PROPERTY_TRASNFER_IN_PROPERTY_TRANSFER_TEST_STEP("AddPropertyTransferInPropertyTransferTestStep",
-            SoapUIFeatures.FUNCTIONAL_TESTING),
+    ASSIGN_O_AUTH("AssignOAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP("AddPropertyTransferInPropertyTransferTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 
-    //REST Discovery actions
-    START_REST_DISCOVERY("StartRestDiscovery", SoapUIFeatures.DISCOVERY),
-    GENERATE_REST_REQ_FROM_REST_DISCOVERY("GenerateRequestFromRestDiscovery", SoapUIFeatures.DISCOVERY),
-    GENERATE_TEST_SUITE_FROM_REST_DISCOVERY("GenerateTestSuiteFromRequestDiscovery", SoapUIFeatures.DISCOVERY),
+    //Definitions Import/Export
+    IMPORT_WADL("ImportWADL", ModuleType.PROJECTS, ProductArea.NO),
+    IMPORT_WSDL("ImportWSDL", ModuleType.PROJECTS, ProductArea.NO),
+    IMPORT_SWAGGER("ImportSwagger", ModuleType.PROJECTS, ProductArea.NO),
+    EXPORT_SWAGGER("ExportSwagger", ModuleType.PROJECTS, ProductArea.NO),
+    IMPORT_RAML("ImportRAML", ModuleType.PROJECTS, ProductArea.NO),
+    EXPORT_RAML("ExportRAML", ModuleType.PROJECTS, ProductArea.NO),
+    ADD_REST_SERVICE_FROM_URI_CONTEXT_MENU("ContextMenuAddRestServiceFromUri", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
 
-    //REST
-    CREATE_REST_PROJECT("CreateRESTProject", SoapUIFeatures.REST),
-    IMPORT_WADL("ImportWADL", SoapUIFeatures.REST),
-    IMPORT_SWAGGER("ImportSwagger", SoapUIFeatures.REST),
-    EXPORT_SWAGGER("ExportSwagger", SoapUIFeatures.REST),
-    IMPORT_RAML("ImportRAML", SoapUIFeatures.REST),
-    EXPORT_RAML("ExportRAML", SoapUIFeatures.REST),
-
-    //SOAP
-    CREATE_SOAP_PROJECT("CreateSOAPProject", SoapUIFeatures.SOAP),
-    IMPORT_WSDL("ImportWSDL", SoapUIFeatures.SOAP),
+    //Project Import/Export
+    IMPORT_PROJECT("MainMenuImportProject", null, ProductArea.MAIN_MENU),
+    IMPORT_PACKED_PROJECT("MainMenuImportPackedProject", null, ProductArea.MAIN_MENU),
+    IMPORT_REMOTE_PROJECT("MainMenuImportRemoteProject", null, ProductArea.MAIN_MENU),
+    EXPORT_PROJECT("MainMenuExportProject", null, ProductArea.MAIN_MENU),
 
     //Security testing actions
-    CREATE_SECURITY_TEST("CreateSecurityTest", SoapUIFeatures.SECURITY_TESTING),
-    RUN_SECURITY_TEST("RunSecurityTest", SoapUIFeatures.SECURITY_TESTING),
+    CREATE_SECURITY_TEST_FROM_CONTEXT_MENU("ContextMenuCreateSecurityTest", ModuleType.SECURE, ProductArea.NAVIGATOR_TREE),
+    CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
+    RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL("SecurityTestPanelRunSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
 
-    //load testing actions
-    CREATE_LOAD_TEST("CreateLoadTest", SoapUIFeatures.PERFORMANCE_TESTING),
-    RUN_LOAD_TEST("RunLoadTest", SoapUIFeatures.PERFORMANCE_TESTING),
-    ADD_LOAD_TEST_ASSERTION("AddLoadTestAssertion", SoapUIFeatures.PERFORMANCE_TESTING),
+    //Load testing actions
+    CREATE_LOAD_TEST_FROM_CONTEXT_MENU("ContextMenuCreateLoadTest", ModuleType.LOADUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_LOAD_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateLoadTest", ModuleType.LOADUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL("LoadTestPanelRunLoadTest", ModuleType.LOADUI_NG, ProductArea.MAIN_EDITOR),
+    ADD_LOAD_TEST_ASSERTION("AddLoadTestAssertion", ModuleType.LOADUI_NG, ProductArea.MAIN_EDITOR),
 
     //Monitoring
-    TEST_ON_DEMAND("TestOnDemand", SoapUIFeatures.MONITORING),
+    TEST_ON_DEMAND("TestCasePanelTestOnDemand", ModuleType.PROJECTS, ProductArea.MAIN_EDITOR),
+    LAUNCH_HTTP_MONITOR("ContextMenuLaunchHttpMonitor", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
 
+    //Workspace actions
+    SWITCH_WORKSPACE("MainMenuSwitchWorkspace", null, ProductArea.MAIN_MENU),
+    NEW_WORKSPACE("MainMenuNewWorkspace", null, ProductArea.MAIN_MENU),
+    RENAME_WORKSPACE("MainMenuRenameWorkspace", null, ProductArea.MAIN_MENU),
 
-    //Install/Uninstall actions
-    INSTALL_SOFTWARE("InstallSoftware", SoapUIFeatures.INSTALL),
-    UNINSTALL_SOFTWARE("UninstallSoftware", SoapUIFeatures.INSTALL),
-    REINSTALL_SOFTWARE("ReInstallSoftware", SoapUIFeatures.INSTALL),
-
-    //Licensing
-    INSTALL_LICENSE("InstallLicense", SoapUIFeatures.LICENSE),
-    LICENSE_UPDATED("LicenseUpdated", SoapUIFeatures.LICENSE),
-    LICENSE_EXPIRED("LicenseExpired", SoapUIFeatures.LICENSE),
-    DEACTIVATE_LICENSE("DeactivateLicense", SoapUIFeatures.LICENSE),
-    SHOW_RENEWAL_PAGE("ShowRenewalPage", SoapUIFeatures.LICENSE),
-    SHOW_LICENSE_EXPIRED_PAGE("ShowLicenseExpiredPage", SoapUIFeatures.LICENSE),
-    SHOW_PRO_LICENSE_INSTALLED_PAGE("ShowProLicenseInstalledPage", SoapUIFeatures.LICENSE),
-    SHOW_TRIAL_LICENSE_INSTALLED_PAGE("ShowTrialInstalledPage", SoapUIFeatures.LICENSE),
+    //Preferences
+    SAVE_PREFERENCES("MainMenuSavePreferences", null, ProductArea.MAIN_MENU),
+    IMPORT_PREFERENCES("MainMenuImportPreferences", null, ProductArea.MAIN_MENU),
 
     //Tool
-    RUN_TOOL("RunTool", SoapUIFeatures.TOOL),
-    RUN_TOOL_FROM_COMMAND_LINE("RunToolFromCmdLine", SoapUIFeatures.TOOL),
-
-    //Reporting
-    CREATE_REPORT("CreateReport", SoapUIFeatures.REPORTS);
+    RUN_TOOL_FROM_COMMAND_LINE("RunToolFromCmdLine", ModuleType.PROJECTS, ProductArea.NO);
 
     private String actionName;
-    private SoapUIFeatures feature;
+    private ModuleType moduleType;
+    private ProductArea productArea;
+    private final AnalyticsManager.Category category;
 
-    SoapUIActions(String actionName, SoapUIFeatures feature) {
+    SoapUIActions(String actionName, ModuleType moduleType, ProductArea productArea) {
         this.actionName = actionName;
-        this.feature = feature;
+        this.moduleType = moduleType;
+        this.productArea = productArea;
+        this.category = AnalyticsManager.Category.ACTION;
     }
 
-    public SoapUIFeatures getFeature() {
-        return feature;
+    public ModuleType getModuleType() {
+        return moduleType;
     }
 
     public String getActionName() {
         return actionName;
+    }
+
+    public AnalyticsManager.Category getCategory() {
+        return category;
+    }
+
+    public ProductArea getProductArea() {
+        return productArea;
     }
 
     public static SoapUIActions getByActionName(String actionName) {

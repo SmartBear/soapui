@@ -977,7 +977,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
         public void actionPerformed(ActionEvent e) {
 
-            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRASNFER_IN_PROPERTY_TRANSFER_TEST_STEP.getActionName());
+            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP);
 
             String name = UISupport.prompt("Specify name for value transfer", "Add Transfer", "");
             if (name == null || name.trim().length() == 0) {
@@ -1167,7 +1167,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
                 return;
             }
 
-            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "RequestType", "PropertyTransfer");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "RequestType", "PropertyTransfer");
 
             MockTestRunner mockRunner = new MockTestRunner(transferStep.getTestCase());
             MockTestRunContext context = new MockTestRunContext(mockRunner, transferStep);

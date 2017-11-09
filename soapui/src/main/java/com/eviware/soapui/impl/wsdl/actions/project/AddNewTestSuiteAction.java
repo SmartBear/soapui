@@ -16,6 +16,8 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.support.UISupport;
@@ -36,6 +38,11 @@ public class AddNewTestSuiteAction extends AbstractSoapUIAction<WsdlProject> {
 
     public void perform(WsdlProject target, Object param) {
         createTestSuite(target);
+        if (param != null && param instanceof SoapUIActions) {
+            Analytics.trackAction((SoapUIActions) param);
+        } else {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_SUITE_FROM_CONTEXT_MENU);
+        }
     }
 
     public WsdlTestSuite createTestSuite(WsdlProject project) {

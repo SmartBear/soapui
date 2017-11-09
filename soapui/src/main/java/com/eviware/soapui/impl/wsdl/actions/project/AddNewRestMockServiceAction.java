@@ -32,7 +32,7 @@ public class AddNewRestMockServiceAction extends AbstractSoapUIAction<WsdlProjec
 
     public void perform(WsdlProject target, Object param) {
         if (createRestMockService(target) != null) {
-            Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK.getActionName());
+            Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK_FROM_CONTEXT_MENU);
         }
     }
 

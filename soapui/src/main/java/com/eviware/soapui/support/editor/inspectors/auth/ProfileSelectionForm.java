@@ -236,7 +236,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
             cardPanel.add(oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL);
             changeAuthorizationType(OAUTH_2_FORM_LABEL, selectedOption);
 
-            Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH.getActionName(), "OAuth2Flow",
+            Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH, "OAuth2Flow",
                     oAuth2Form.getProfile().getOAuth2Flow().name());
         } else if (isRestRequest(request) && getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(selectedOption)) {
             setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
