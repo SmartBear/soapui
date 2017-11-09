@@ -1,0 +1,78 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "name": "REST Request Test Step",
+      "method": "GET",
+      "URI": "http://our.api.com/artistfacts",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "Madonna"
+        }
+      ]
+    },
+    {
+      "type": "Property Transfer",
+      "name": "Property Transfers",
+      "transfers": [
+        {
+          "transferName": "TransferUserName",
+          "source": {
+            "sourceName": "REST Request Test Step",
+            "property": "Response",
+            "path": "declare namespace sam='http://www.soapui.org/sample/'; //sam:response/username",
+            "pathLanguage": "XPath"
+          },
+          "target": {
+            "targetName": "REST Request Test Step 2",
+            "property": "Username",
+            "path": "declare namespace sam='http://www.soapui.org/sample/'; //sam:login/Username",
+            "pathLanguage": "XPath"
+          },
+          "failTransferOnError": true,
+          "setNullOnMissingSource": true,
+          "transferTextContent": true,
+          "ignoreEmptyValue": false,
+          "transferToAll": false,
+          "transferChildNodes": false,
+          "entitizeTransferredValues": false
+        },
+        {
+          "transferName": "TransferPassword",
+          "source": {
+            "sourceName": "REST Request Test Step",
+            "property": "Response",
+            "path": "declare namespace sam='http://www.soapui.org/sample/'; //sam:response/Password",
+            "pathLanguage": "XPath"
+          },
+          "target": {
+            "targetName": "REST Request Test Step 2",
+            "property": "Password",
+            "path": "declare namespace sam='http://www.soapui.org/sample/'; //sam:login/Password",
+            "pathLanguage": "XPath"
+          },
+          "failTransferOnError": true,
+          "setNullOnMissingSource": true,
+          "transferTextContent": true,
+          "ignoreEmptyValue": false,
+          "transferToAll": false,
+          "transferChildNodes": false,
+          "entitizeTransferredValues": false
+        }
+      ]
+    },
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "name": "REST Request Test Step 2",
+      "URI": "http://our.api.com/artistfacts",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "Avicii"
+        }
+      ]
+    }
+  ]
+}

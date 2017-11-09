@@ -172,7 +172,8 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 
     public PropertyTransfer addTransfer(String name) {
         PropertyTransfer transfer = new PropertyTransfer(this, transferStepConfig.addNewTransfers());
-        transfer.setName(name);
+        String transferName = name == null ? "Transfer " + (getTransferCount() + 1) : name;
+        transfer.setName(transferName);
         transfer.setFailOnError(true);
         transfer.getConfig().setUpgraded(true);
         transfers.add(transfer);

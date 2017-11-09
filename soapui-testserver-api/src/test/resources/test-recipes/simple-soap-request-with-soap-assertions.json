@@ -1,0 +1,27 @@
+{
+  "testSteps": [
+    {
+      "type": "SOAP Request",
+      "wsdl": "globalweather.wsdl",
+      "binding": "GlobalWeatherSoap",
+      "operation": "GetCitiesByCountry",
+      "parameters": [
+        {
+          "name": "CountryName",
+          "value": "Sweden"
+        }
+      ],
+      "assertions": [
+        {
+          "type": "Schema Compliance"
+        },
+        {
+          "type": "SOAP Fault"
+        },
+        {
+          "type": "Not SOAP Fault"
+        }
+      ]
+    }
+  ]
+}

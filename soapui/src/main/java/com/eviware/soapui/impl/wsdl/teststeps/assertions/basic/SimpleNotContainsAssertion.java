@@ -81,6 +81,15 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
         useRegEx = reader.readBoolean("useRegEx", false);
     }
 
+    public void setUseRegEx(boolean useRegEx) {
+        this.useRegEx = useRegEx;
+        setConfiguration(createConfiguration());
+    }
+
+    public boolean isUseRegEx() {
+        return useRegEx;
+    }
+
     public String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
             throws AssertionException {
         return assertContent(context, messageExchange.getResponseContent(), "Response");

@@ -66,6 +66,15 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
         init();
     }
 
+    public void setCodes(String codes) {
+        this.codes = codes;
+        setConfiguration(createConfiguration());
+    }
+
+    public String getCodes() {
+        return codes;
+    }
+
     private void init() {
         XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
         codes = reader.readString(CODES, "");
@@ -163,15 +172,6 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 
         setConfiguration(createConfiguration());
         return true;
-    }
-
-    public void setCodes(String codes) {
-        this.codes = codes;
-        setConfiguration(createConfiguration());
-    }
-
-    public String getCodes() {
-        return codes;
     }
 
     private void buildDialog() {

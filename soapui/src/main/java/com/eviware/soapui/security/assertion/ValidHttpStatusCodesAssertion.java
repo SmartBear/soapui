@@ -71,6 +71,15 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
         codes = reader.readString(CODES, "");
     }
 
+    public void setCodes(String codes) {
+        this.codes = codes;
+        setConfiguration(createConfiguration());
+    }
+
+    public String getCodes() {
+        return codes;
+    }
+
     @Override
     protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
             throws AssertionException {
@@ -163,15 +172,6 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 
         setConfiguration(createConfiguration());
         return true;
-    }
-
-    public void setCodes(String codes) {
-        this.codes = codes;
-        setConfiguration(createConfiguration());
-    }
-
-    public String getCodes() {
-        return codes;
     }
 
     private void buildDialog() {
