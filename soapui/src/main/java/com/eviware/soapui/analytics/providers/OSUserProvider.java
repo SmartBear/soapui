@@ -39,5 +39,5 @@ public class OSUserProvider {
         sb.append("&email=");
         sb.append(HttpUtils.urlEncodeWithUtf8(osUserDescription.getEmail()));
         return sb.toString();
-    }
+    }*/
 }
