@@ -247,7 +247,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
                     BorderFactory.createEmptyBorder(4, 4, 4, 4)));
         } else if (!UISupport.isMac()) {
-            frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3));
         }
         return frame;
     }
