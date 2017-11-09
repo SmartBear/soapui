@@ -52,11 +52,10 @@ public class AnalyticsHelper {
             return;
         }
         initialized = true;
-
+        UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
         if (isAnalyticsDisabled()) {
             return;
         }
-        UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
         AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(SoapUIProductInfo.getInstance(), userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
