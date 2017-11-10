@@ -1497,10 +1497,7 @@ public class SoapUI {
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(actionId).perform(workspace, null);
-            if (analyticAction != null) {
-                Analytics.trackAction(analyticAction);
-            }
+            SoapUI.getActionRegistry().getAction(actionId).perform(workspace, analyticAction);
         }
     }
 

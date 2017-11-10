@@ -17,6 +17,8 @@
 package com.eviware.soapui.impl.actions;
 
 
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.MessageSupport;
@@ -24,14 +26,13 @@ import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.eviware.soapui.analytics.Analytics;
 
 public class NewEmptyProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     public static final String SOAPUI_ACTION_ID = "NewEmptyProjectAction";
     public static final MessageSupport messages = MessageSupport.getMessages(NewEmptyProjectAction.class);
 
     public NewEmptyProjectAction() {
-        super(messages.get("Title"),messages.get("Description"));
+        super(messages.get("Title"), messages.get("Description"));
     }
 
     @Override
@@ -39,6 +40,9 @@ public class NewEmptyProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
         try {
             WsdlProject project = target.createProject(ModelItemNamer.createName("Project", target.getProjectList()), null);
             UISupport.selectAndShow(project);
+            if (param != null && param instanceof SoapUIActions) {
+                Analytics.trackAction((SoapUIActions) param);
+            }
         } catch (SoapUIException e) {
             UISupport.showErrorMessage(e);
         }
