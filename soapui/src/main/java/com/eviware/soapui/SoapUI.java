@@ -511,7 +511,7 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
                 "Apply for SoapUI Pro Trial License", "/SoapUI-OS-5.2_16-16.png"));
-        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org"+HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
+        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
         helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
@@ -881,6 +881,8 @@ public class SoapUI {
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
         if (isDebug) {
             Analytics.trackAction(SoapUIActions.PRODUCT_STARTED_IN_DEBUGGING_MODE);
+        } else {
+            Analytics.trackAction(SoapUIActions.PRODUCT_STARTED);
         }
 
         SoapUI soapUI = new SoapUI();
