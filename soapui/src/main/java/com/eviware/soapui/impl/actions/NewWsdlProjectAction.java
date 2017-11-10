@@ -122,6 +122,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                             importWsdl(project, url);
                         }
 
+                        if (param != null && param instanceof SoapUIActions) {
+                            Analytics.trackAction((SoapUIActions) param);
+                        }
+
                         break;
                     }
                 }

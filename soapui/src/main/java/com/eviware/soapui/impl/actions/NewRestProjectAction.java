@@ -70,6 +70,9 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     serviceBuilder.createRestService(project, uri);
                 }
                 // If there is no exception or error we break out
+                if (param != null && param instanceof SoapUIActions) {
+                    Analytics.trackAction((SoapUIActions) param);
+                }
                 break;
 
             } catch (Exception ex) {
