@@ -25,6 +25,7 @@ public enum SoapUIActions {
 
     //Common actions
     PRODUCT_STARTED_FROM_CMD("ProductStartedFromCmd", null, ProductArea.NO),
+    PRODUCT_STARTED("ProductStarted", null, ProductArea.NO),
     PRODUCT_STARTED_IN_DEBUGGING_MODE("ProductStartedInDebuggingMode", null, ProductArea.NO),
     EXIT("Exit", null, ProductArea.NO),
     EXIT_WITHOUT_SAVE("ExitWithoutSave", null, ProductArea.NO),
