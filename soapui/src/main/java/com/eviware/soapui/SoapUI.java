@@ -1388,7 +1388,6 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = false;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
-            Analytics.trackAction(SoapUIActions.EXIT_WITHOUT_SAVE);
             frame.dispatchEvent(windowEvent);
         }
     }
