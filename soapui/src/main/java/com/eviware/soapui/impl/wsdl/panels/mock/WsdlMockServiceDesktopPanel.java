@@ -578,7 +578,25 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
             } else {
                 mockRunner.stop();
                 mockRunner.release();
+                trackStopMockService(mockRunner);
                 mockRunner = null;
+            }
+        }
+    }
+
+    private void trackStopMockService(WsdlMockRunner mockRunner) {
+        if (mockRunner != null) {
+            try {
+                MockService mockService = mockRunner.getMockContext().getMockService();
+                if (mockService != null) {
+                    if (mockService instanceof WsdlMockService) {
+                        Analytics.trackAction(SoapUIActions.STOP_SOAP_MOCK_FROM_MOCK_PANEL);
+                    } else if (mockService instanceof RestMockService) {
+                        Analytics.trackAction(SoapUIActions.STOP_REST_MOCK_FROM_MOCK_PANEL);
+                    }
+                }
+            } catch (Exception e) {
+                //ignore
             }
         }
     }
