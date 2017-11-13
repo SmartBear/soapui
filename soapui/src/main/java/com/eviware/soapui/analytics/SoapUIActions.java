@@ -104,6 +104,12 @@ public enum SoapUIActions {
     STOP_SOAP_MOCK_FROM_NAVIGATOR("ContextMenuStopSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
     START_REST_MOCK_FROM_NAVIGATOR("ContextMenuStartRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
     START_SOAP_MOCK_FROM_NAVIGATOR("ContextMenuStartSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    GENERATE_REST_MOCK_FROM_NAVIGATOR("ContextMenuGenerateRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    GENERATE_SOAP_MOCK_FROM_NAVIGATOR("ContextMenuGenerateSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    ADD_SOAP_REQUEST_TO_SOAP_MOCK_SERVICE("ContextMenuAddSoapRequestToSoapMockService", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    ADD_REST_REQUEST_TO_REST_MOCK_SERVICE("ContextMenuAddRestRequestToRestMockService", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    ADD_OPERATION_AS_MOCK_RESPONSE_STEP("ContextMenuAddOperationAsMockResponseStep", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    ADD_REQUEST_AS_MOCK_RESPONSE_STEP("ContextMenuAddRequestAsMockResponseStep", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
 
     //Functional testing actions
     ASSIGN_O_AUTH("AssignOAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),

@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.request;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
@@ -27,6 +28,8 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import static com.eviware.soapui.analytics.SoapUIActions.ADD_SOAP_REQUEST_TO_SOAP_MOCK_SERVICE;
 
 /**
  * Adds a WsdlRequest to a WsdlMockService, will create required
@@ -130,5 +133,6 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
         if (UISupport.confirm("Open MockResponse editor?", title)) {
             SoapUI.getDesktop().showDesktopPanel(mockResponse);
         }
+        Analytics.trackAction(ADD_SOAP_REQUEST_TO_SOAP_MOCK_SERVICE);
     }
 }
