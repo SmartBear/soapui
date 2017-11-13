@@ -124,7 +124,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
     public boolean runRunner() throws Exception {
         AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
-        if(System.getProperty(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
+        if(System.getenv(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
             Analytics.trackAction(LAUNCH_SECURITY_TEST_RUNNER);
         }
 

@@ -238,7 +238,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
         AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
 
-        if(System.getProperty(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
+        if(System.getenv(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
             Analytics.trackAction(LAUNCH_LOAD_TEST_RUNNER);
         }
 

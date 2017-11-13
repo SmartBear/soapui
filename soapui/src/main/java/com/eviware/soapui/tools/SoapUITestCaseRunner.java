@@ -333,7 +333,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
     public boolean runRunner() throws Exception {
         AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
-        if(System.getProperty(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
+        if(System.getenv(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
             Analytics.trackAction(LAUNCH_FUNCTIONAL_TEST_RUNNER);
         }
 
