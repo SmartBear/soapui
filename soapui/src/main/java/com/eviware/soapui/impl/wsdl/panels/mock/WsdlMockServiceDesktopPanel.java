@@ -92,6 +92,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.eviware.soapui.analytics.SoapUIActions.STOP_REST_MOCK_FROM_MOCK_PANEL;
+import static com.eviware.soapui.analytics.SoapUIActions.STOP_SOAP_MOCK_FROM_MOCK_PANEL;
+
 /**
  * DesktopPanel for WsdlMockServices
  *
@@ -590,9 +593,9 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
                 MockService mockService = mockRunner.getMockContext().getMockService();
                 if (mockService != null) {
                     if (mockService instanceof WsdlMockService) {
-                        Analytics.trackAction(SoapUIActions.STOP_SOAP_MOCK_FROM_MOCK_PANEL);
+                        Analytics.trackAction(STOP_SOAP_MOCK_FROM_MOCK_PANEL);
                     } else if (mockService instanceof RestMockService) {
-                        Analytics.trackAction(SoapUIActions.STOP_REST_MOCK_FROM_MOCK_PANEL);
+                        Analytics.trackAction(STOP_REST_MOCK_FROM_MOCK_PANEL);
                     }
                 }
             } catch (Exception e) {
