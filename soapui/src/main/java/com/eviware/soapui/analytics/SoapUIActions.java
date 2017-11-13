@@ -98,6 +98,12 @@ public enum SoapUIActions {
     START_SOAP_MOCK_FROM_MOCK_PANEL("MockPanelStartSOAPMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
     DEPLOY_REST_MOCK_AS_WAR("DeployRestMockAsWar", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
     DEPLOY_SOAP_MOCK_AS_WAR("DeploySoapMockAsWar", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    STOP_REST_MOCK_FROM_MOCK_PANEL("MockPanelStopRestMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
+    STOP_SOAP_MOCK_FROM_MOCK_PANEL("MockPanelStopSOAPMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
+    STOP_REST_MOCK_FROM_NAVIGATOR("ContextMenuStopRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    STOP_SOAP_MOCK_FROM_NAVIGATOR("ContextMenuStopSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    START_REST_MOCK_FROM_NAVIGATOR("ContextMenuStartRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    START_SOAP_MOCK_FROM_NAVIGATOR("ContextMenuStartSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
 
     //Functional testing actions
     ASSIGN_O_AUTH("AssignOAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
