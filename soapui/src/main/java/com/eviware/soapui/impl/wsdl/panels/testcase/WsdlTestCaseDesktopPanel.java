@@ -342,7 +342,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
         SwingActionDelegate createSecurityTestDelegate = SwingActionDelegate.createDelegate(
                 AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/security_test.png");
-        createLoadTestDelegate.getMapping().setParam(CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL);
+        createSecurityTestDelegate.getMapping().setParam(CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL);
         createSecurityTestButton = UISupport.createToolbarButton(createSecurityTestDelegate);
 
         addToolbarActions(toolbar);
