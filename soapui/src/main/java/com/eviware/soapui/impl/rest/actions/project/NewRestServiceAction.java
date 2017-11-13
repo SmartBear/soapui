@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.rest.actions.project;
 
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.actions.RestServiceBuilder;
 import com.eviware.soapui.impl.actions.RestUriDialogHandler;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -26,7 +25,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 
-import static com.eviware.soapui.analytics.SoapUIActions.ADD_REST_SERVICE_FROM_URI_CONTEXT_MENU;
+import static com.eviware.soapui.analytics.SoapUIActions.ADD_REST_SERVICE_FROM_URI;
 
 /**
  * Actions for importing an existing SoapUI project file into the current
@@ -56,7 +55,7 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject> {
                     serviceBuilder.createRestService(project, uri);
                 }
                 // If there is no exception or error we break out
-                Analytics.trackAction(ADD_REST_SERVICE_FROM_URI_CONTEXT_MENU);
+                Analytics.trackAction(ADD_REST_SERVICE_FROM_URI);
                 break;
 
             } catch (Exception ex) {
