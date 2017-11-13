@@ -109,7 +109,7 @@ public enum SoapUIActions {
     EXPORT_SWAGGER("ExportSwagger", ModuleType.PROJECTS, ProductArea.NO),
     IMPORT_RAML("ImportRAML", ModuleType.PROJECTS, ProductArea.NO),
     EXPORT_RAML("ExportRAML", ModuleType.PROJECTS, ProductArea.NO),
-    ADD_REST_SERVICE_FROM_URI_CONTEXT_MENU("ContextMenuAddRestServiceFromUri", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
+    ADD_REST_SERVICE_FROM_URI("AddRestServiceFromUri", ModuleType.PROJECTS, ProductArea.NO),
 
     //Project Import/Export
     IMPORT_PROJECT("MainMenuImportProject", null, ProductArea.MAIN_MENU),
