@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.wsdl.actions.testcase;
 
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -65,8 +64,8 @@ public class AddWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestCase> {
             WsdlTestStep testStep = testCase.addTestStep(newTestStepConfig);
             if (testStep != null) {
                 UISupport.selectAndShow(testStep);
+                Analytics.trackAction(ADD_NEW_TEST_STEP_FROM_CONTEXT_MENU, "Type", testStep.getClass().getSimpleName());
             }
         }
-        Analytics.trackAction(ADD_NEW_TEST_STEP_FROM_CONTEXT_MENU);
     }
 }
