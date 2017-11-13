@@ -187,6 +187,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.CREATE_SOAP_PROJECT_FRO
 import static com.eviware.soapui.analytics.SoapUIActions.IMPORT_PREFERENCES;
 import static com.eviware.soapui.analytics.SoapUIActions.IMPORT_PROJECT_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.OPEN_PREFERENCES_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.SAVE_ALL_PROJECTS_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.SAVE_PREFERENCES;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_OFF_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_ON_PROXY_FROM_TOOLBAR;
@@ -1522,7 +1523,7 @@ public class SoapUI {
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(SaveAllProjectsAction.SOAPUI_ACTION_ID).perform(workspace, null);
+            SoapUI.getActionRegistry().getAction(SaveAllProjectsAction.SOAPUI_ACTION_ID).perform(workspace, SAVE_ALL_PROJECTS_FROM_TOOLBAR);
         }
     }
 

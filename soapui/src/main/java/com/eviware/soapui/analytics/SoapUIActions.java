@@ -29,6 +29,7 @@ public enum SoapUIActions {
     PRODUCT_STARTED_IN_DEBUGGING_MODE("ProductStartedInDebuggingMode", null, ProductArea.NO),
     EXIT("Exit", null, ProductArea.NO),
     EXIT_WITHOUT_SAVE("ExitWithoutSave", null, ProductArea.NO),
+    SAVE_ALL_PROJECTS("MainMenuSaveAllProjects", null, ProductArea.MAIN_MENU),
 
     //Assertions
     ADD_ASSERTION("AddAssertion", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
