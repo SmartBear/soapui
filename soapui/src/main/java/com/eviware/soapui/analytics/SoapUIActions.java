@@ -112,7 +112,7 @@ public enum SoapUIActions {
     ADD_REST_SERVICE_FROM_URI("AddRestServiceFromUri", ModuleType.PROJECTS, ProductArea.NO),
 
     //Project Import/Export
-    IMPORT_PROJECT("MainMenuImportProject", null, ProductArea.MAIN_MENU),
+    IMPORT_PROJECT("ImportProject", null, ProductArea.NO),
     IMPORT_PACKED_PROJECT("MainMenuImportPackedProject", null, ProductArea.MAIN_MENU),
     IMPORT_REMOTE_PROJECT("MainMenuImportRemoteProject", null, ProductArea.MAIN_MENU),
     EXPORT_PROJECT("MainMenuExportProject", null, ProductArea.MAIN_MENU),
