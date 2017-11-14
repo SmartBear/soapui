@@ -38,7 +38,7 @@ public enum SoapUIActions {
     RUN_TEST_STEP_FROM_TOOLBAR("TestCasePanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     RUN_TEST_CASE_FROM_TOOLBAR("TestSuitePanelRunTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     RUN_TEST_SUITE_FROM_TOOLBAR("ProjectPanelRunTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", ModuleType.PROJECTS, ProductArea.MAIN_EDITOR),
     RUN_TEST_STEP_FROM_PANEL("TestStepPanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 
     //Create Functional Model Items
