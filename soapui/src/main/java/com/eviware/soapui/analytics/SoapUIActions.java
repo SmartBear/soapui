@@ -131,7 +131,7 @@ public enum SoapUIActions {
     EXPORT_PROJECT("MainMenuExportProject", null, ProductArea.MAIN_MENU),
 
     //Security testing actions
-    CREATE_SECURITY_TEST_FROM_CONTEXT_MENU("ContextMenuCreateSecurityTest", ModuleType.SECURE, ProductArea.NAVIGATOR_TREE),
+    CREATE_SECURITY_TEST("CreateSecurityTest", ModuleType.SECURE, ProductArea.NO),
     CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
     RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL("SecurityTestPanelRunSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
 
