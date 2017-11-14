@@ -43,7 +43,7 @@ public enum SoapUIActions {
 
     //Create Functional Model Items
     CREATE_TEST_SUITE_FROM_PROJECT_PANEL("ProjectPanelCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    CREATE_TEST_SUITE_FROM_CONTEXT_MENU("ContextMenuCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_TEST_SUITE("CreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.NO),
     CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL("TestSuitePanelCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     CREATE_TEST_CASE_FROM_CONTEXT_MENU("ContextMenuCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
     ADD_NEW_TEST_STEP_FROM_CONTEXT_MENU("ContextMenuAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
