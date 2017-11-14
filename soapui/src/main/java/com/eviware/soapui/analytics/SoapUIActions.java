@@ -81,9 +81,9 @@ public enum SoapUIActions {
     USE_HERMES_JMS_TOOL("ToolsMenuUseHermesJMS", ModuleType.PROJECTS, ProductArea.MAIN_MENU),
 
     //Launch TestRunners From UI
-    LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI("LaunchFunctionalTestRunnerFromUI", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
-    LAUNCH_SECURITY_TEST_RUNNER_FROM_UI("LaunchSecurityTestRunnerFromUI", ModuleType.SECURE, ProductArea.NAVIGATOR_TREE),
-    LAUNCH_LOAD_TEST_RUNNER_FROM_UI("LaunchLoadTestRunnerFromUI", ModuleType.LOADUI_NG, ProductArea.NAVIGATOR_TREE),
+    LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI("LaunchFunctionalTestRunnerFromUI", ModuleType.SOAPUI_NG, ProductArea.NO),
+    LAUNCH_SECURITY_TEST_RUNNER_FROM_UI("LaunchSecurityTestRunnerFromUI", ModuleType.SECURE, ProductArea.NO),
+    LAUNCH_LOAD_TEST_RUNNER_FROM_UI("LaunchLoadTestRunnerFromUI", ModuleType.LOADUI_NG, ProductArea.NO),
 
     //Launch TestRunners
     LAUNCH_FUNCTIONAL_TEST_RUNNER("LaunchFunctionalTestRunner", ModuleType.SOAPUI_NG, ProductArea.NO),
