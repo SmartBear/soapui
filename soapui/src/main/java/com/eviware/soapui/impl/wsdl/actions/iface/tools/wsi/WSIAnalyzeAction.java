@@ -270,6 +270,7 @@ public class WSIAnalyzeAction extends AbstractToolsAction<Interface> {
 
         @Override
         protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context) {
+            super.beforeProcess(processBuilder, context);
             processBuilder.environment().put(WSI_HOME_ENV_VAR_NAME, wsiDir);
         }
     }

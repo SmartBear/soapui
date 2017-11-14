@@ -325,6 +325,7 @@ public class WSIValidateRequestAction extends AbstractToolsAction<WsdlRequest> {
 
         @Override
         protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context) {
+            super.beforeProcess(processBuilder, context);
             processBuilder.environment().put(WSIAnalyzeAction.WSI_HOME_ENV_VAR_NAME, wsiDir);
         }
     }

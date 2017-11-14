@@ -28,6 +28,7 @@ import java.io.InputStream;
  */
 
 public class ProcessToolRunner implements ToolRunner {
+    public static final String DO_NOT_SEND_ANALYTICS_PARAMETER = "doNotSendAnalytics";
 
     private final ProcessBuilder[] builders;
     private boolean running;
@@ -150,6 +151,7 @@ public class ProcessToolRunner implements ToolRunner {
     }
 
     protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context) {
+        processBuilder.environment().put(DO_NOT_SEND_ANALYTICS_PARAMETER, "true");
     }
 
     protected void afterProcess(Process process2, RunnerContext context) {
