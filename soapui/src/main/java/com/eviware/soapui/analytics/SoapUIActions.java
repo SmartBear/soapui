@@ -146,9 +146,9 @@ public enum SoapUIActions {
     LAUNCH_HTTP_MONITOR("ContextMenuLaunchHttpMonitor", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
 
     //Workspace actions
-    SWITCH_WORKSPACE("MainMenuSwitchWorkspace", null, ProductArea.MAIN_MENU),
-    NEW_WORKSPACE("MainMenuNewWorkspace", null, ProductArea.MAIN_MENU),
-    RENAME_WORKSPACE("MainMenuRenameWorkspace", null, ProductArea.MAIN_MENU),
+    SWITCH_WORKSPACE("SwitchWorkspace", null, ProductArea.NO),
+    NEW_WORKSPACE("NewWorkspace", null, ProductArea.NO),
+    RENAME_WORKSPACE("RenameWorkspace", null, ProductArea.NO),
 
     //Preferences
     SAVE_PREFERENCES("MainMenuSavePreferences", null, ProductArea.MAIN_MENU),
