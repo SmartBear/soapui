@@ -112,7 +112,12 @@ public enum SoapUIActions {
     ADD_REQUEST_AS_MOCK_RESPONSE_STEP("ContextMenuAddRequestAsMockResponseStep", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
 
     //Functional testing actions
-    ASSIGN_O_AUTH("AssignOAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ASSIGN_O_AUTH20("AssignOAuth20", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ASSIGN_O_AUTH10("AssignOAuth10", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ASSIGN_NTLM_AUTH("AssignNTLMAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ASSIGN_SPNEGO_KERBEROS_AUTH("AssignSPNEGOKerberosAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ASSIGN_WSS_AUTH("AssignWssAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    ASSIGN_BASIC_AUTH("AssignBasicAuth", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP("AddPropertyTransferInPropertyTransferTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 
     //Definitions Import/Export
