@@ -45,7 +45,7 @@ public enum SoapUIActions {
     CREATE_TEST_SUITE_FROM_PROJECT_PANEL("ProjectPanelCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     CREATE_TEST_SUITE("CreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.NO),
     CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL("TestSuitePanelCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    CREATE_TEST_CASE_FROM_CONTEXT_MENU("ContextMenuCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_TEST_CASE("CreateTestCase", ModuleType.SOAPUI_NG, ProductArea.NO),
     ADD_NEW_TEST_STEP_FROM_CONTEXT_MENU("ContextMenuAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
     ADD_NEW_TEST_STEP_FROM_TEST_CASE_PANEL("TestCasePanelAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     CREATE_REQUEST_FOR_OPERATION("ContextMenuCreateSoapRequestForOperation", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
