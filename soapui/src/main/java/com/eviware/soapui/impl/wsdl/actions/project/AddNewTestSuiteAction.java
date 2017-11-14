@@ -41,7 +41,7 @@ public class AddNewTestSuiteAction extends AbstractSoapUIAction<WsdlProject> {
         if (param != null && param instanceof SoapUIActions) {
             Analytics.trackAction((SoapUIActions) param);
         } else {
-            Analytics.trackAction(SoapUIActions.CREATE_TEST_SUITE_FROM_CONTEXT_MENU);
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_SUITE);
         }
     }
 

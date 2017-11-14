@@ -38,14 +38,14 @@ public enum SoapUIActions {
     RUN_TEST_STEP_FROM_TOOLBAR("TestCasePanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     RUN_TEST_CASE_FROM_TOOLBAR("TestSuitePanelRunTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     RUN_TEST_SUITE_FROM_TOOLBAR("ProjectPanelRunTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
+    RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", ModuleType.PROJECTS, ProductArea.MAIN_EDITOR),
     RUN_TEST_STEP_FROM_PANEL("TestStepPanelRunTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
 
     //Create Functional Model Items
     CREATE_TEST_SUITE_FROM_PROJECT_PANEL("ProjectPanelCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    CREATE_TEST_SUITE_FROM_CONTEXT_MENU("ContextMenuCreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_TEST_SUITE("CreateTestSuite", ModuleType.SOAPUI_NG, ProductArea.NO),
     CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL("TestSuitePanelCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
-    CREATE_TEST_CASE_FROM_CONTEXT_MENU("ContextMenuCreateTestCase", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_TEST_CASE("CreateTestCase", ModuleType.SOAPUI_NG, ProductArea.NO),
     ADD_NEW_TEST_STEP_FROM_CONTEXT_MENU("ContextMenuAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.NAVIGATOR_TREE),
     ADD_NEW_TEST_STEP_FROM_TEST_CASE_PANEL("TestCasePanelAddNewTestStep", ModuleType.SOAPUI_NG, ProductArea.MAIN_EDITOR),
     CREATE_REQUEST_FOR_OPERATION("ContextMenuCreateSoapRequestForOperation", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
@@ -96,8 +96,8 @@ public enum SoapUIActions {
     START_REST_MOCK_FROM_MOCK_PANEL("MockPanelStartRestMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
     CREATE_SOAP_MOCK_FROM_CONTEXT_MENU("ContextMenuCreateSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
     START_SOAP_MOCK_FROM_MOCK_PANEL("MockPanelStartSOAPMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
-    DEPLOY_REST_MOCK_AS_WAR("DeployRestMockAsWar", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
-    DEPLOY_SOAP_MOCK_AS_WAR("DeploySoapMockAsWar", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    DEPLOY_REST_MOCK_AS_WAR("DeployRestMockAsWar", ModuleType.SERVICE_V, ProductArea.NO),
+    DEPLOY_SOAP_MOCK_AS_WAR("DeploySoapMockAsWar", ModuleType.SERVICE_V, ProductArea.NO),
     STOP_REST_MOCK_FROM_MOCK_PANEL("MockPanelStopRestMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
     STOP_SOAP_MOCK_FROM_MOCK_PANEL("MockPanelStopSOAPMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
     STOP_REST_MOCK_FROM_NAVIGATOR("ContextMenuStopRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
@@ -131,7 +131,7 @@ public enum SoapUIActions {
     EXPORT_PROJECT("MainMenuExportProject", null, ProductArea.MAIN_MENU),
 
     //Security testing actions
-    CREATE_SECURITY_TEST_FROM_CONTEXT_MENU("ContextMenuCreateSecurityTest", ModuleType.SECURE, ProductArea.NAVIGATOR_TREE),
+    CREATE_SECURITY_TEST("CreateSecurityTest", ModuleType.SECURE, ProductArea.NO),
     CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
     RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL("SecurityTestPanelRunSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
 
@@ -146,9 +146,9 @@ public enum SoapUIActions {
     LAUNCH_HTTP_MONITOR("ContextMenuLaunchHttpMonitor", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
 
     //Workspace actions
-    SWITCH_WORKSPACE("MainMenuSwitchWorkspace", null, ProductArea.MAIN_MENU),
-    NEW_WORKSPACE("MainMenuNewWorkspace", null, ProductArea.MAIN_MENU),
-    RENAME_WORKSPACE("MainMenuRenameWorkspace", null, ProductArea.MAIN_MENU),
+    SWITCH_WORKSPACE("SwitchWorkspace", null, ProductArea.NO),
+    NEW_WORKSPACE("NewWorkspace", null, ProductArea.NO),
+    RENAME_WORKSPACE("RenameWorkspace", null, ProductArea.NO),
 
     //Preferences
     SAVE_PREFERENCES("MainMenuSavePreferences", null, ProductArea.MAIN_MENU),
