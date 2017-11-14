@@ -976,9 +976,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         }
 
         public void actionPerformed(ActionEvent e) {
-
-            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP);
-
             String name = UISupport.prompt("Specify name for value transfer", "Add Transfer", "");
             if (name == null || name.trim().length() == 0) {
                 return;
@@ -986,6 +983,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
             transferStep.addTransfer(name);
             transferList.setSelectedIndex(listModel.getSize() - 1);
+
+            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP);
         }
     }
 
