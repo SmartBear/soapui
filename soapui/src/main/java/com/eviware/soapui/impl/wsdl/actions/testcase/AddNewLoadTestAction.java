@@ -49,7 +49,7 @@ public class AddNewLoadTestAction extends AbstractSoapUIAction<WsdlTestCase> {
         if (param != null && param instanceof SoapUIActions) {
             Analytics.trackAction((SoapUIActions) param);
         } else {
-            Analytics.trackAction(SoapUIActions.CREATE_LOAD_TEST_FROM_CONTEXT_MENU);
+            Analytics.trackAction(SoapUIActions.CREATE_LOAD_TEST);
         }
     }
 }
