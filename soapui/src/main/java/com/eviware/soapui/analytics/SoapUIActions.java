@@ -136,14 +136,14 @@ public enum SoapUIActions {
     RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL("SecurityTestPanelRunSecurityTest", ModuleType.SECURE, ProductArea.MAIN_EDITOR),
 
     //Load testing actions
-    CREATE_LOAD_TEST_FROM_CONTEXT_MENU("ContextMenuCreateLoadTest", ModuleType.LOADUI_NG, ProductArea.NAVIGATOR_TREE),
+    CREATE_LOAD_TEST("CreateLoadTest", ModuleType.LOADUI_NG, ProductArea.NO),
     CREATE_LOAD_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateLoadTest", ModuleType.LOADUI_NG, ProductArea.MAIN_EDITOR),
     RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL("LoadTestPanelRunLoadTest", ModuleType.LOADUI_NG, ProductArea.MAIN_EDITOR),
     ADD_LOAD_TEST_ASSERTION("AddLoadTestAssertion", ModuleType.LOADUI_NG, ProductArea.MAIN_EDITOR),
 
     //Monitoring
     TEST_ON_DEMAND("TestCasePanelTestOnDemand", ModuleType.PROJECTS, ProductArea.MAIN_EDITOR),
-    LAUNCH_HTTP_MONITOR("ContextMenuLaunchHttpMonitor", ModuleType.PROJECTS, ProductArea.NAVIGATOR_TREE),
+    LAUNCH_HTTP_MONITOR("LaunchHttpMonitor", ModuleType.PROJECTS, ProductArea.NO),
 
     //Workspace actions
     SWITCH_WORKSPACE("SwitchWorkspace", null, ProductArea.NO),
