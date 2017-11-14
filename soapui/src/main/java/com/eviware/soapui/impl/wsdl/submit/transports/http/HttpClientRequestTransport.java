@@ -319,21 +319,18 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
 		}
 	}
     
-    private boolean isPostMethod(EntityEnclosingRequestWrapper httpRequestWrapper, org.apache.http.HttpResponse httpResponse) {
+    private boolean isPostMethod(ExtendedHttpMethod httpMethod, org.apache.http.HttpResponse httpResponse) {
 		int statusCode = httpResponse.getStatusLine().getStatusCode();
 		return (statusCode != HttpServletResponse.SC_SEE_OTHER && 
-				httpRequestWrapper != null &&
-				httpRequestWrapper.getMethod()
+				httpMethod != null &&
+				httpMethod.getMethod()
 				.equals(RestRequestInterface.HttpMethod.POST.toString()));
 	}
 
     private ExtendedHttpMethod followRedirects(HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
     										   org.apache.http.HttpResponse httpResponse, HttpContext httpContext, SubmitContext submitContext) throws Exception {
-    	EntityEnclosingRequestWrapper httpRequestWrapper = (EntityEnclosingRequestWrapper)httpContext
-			.getAttribute(org.apache.http.protocol.ExecutionContext.HTTP_REQUEST);
-
 		ExtendedHttpMethod getMethod;
-		if(isPostMethod(httpRequestWrapper, httpResponse))
+		if(isPostMethod(httpMethod, httpResponse))
 			getMethod = new ExtendedPostMethod();
 		else {
 			getMethod = new ExtendedGetMethod();
