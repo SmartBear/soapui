@@ -92,9 +92,9 @@ public enum SoapUIActions {
     LAUNCH_LOAD_TEST_RUNNER("LaunchLoadTestRunner", ModuleType.LOADUI_NG, ProductArea.NO),
 
     //Service virtualization actions
-    CREATE_REST_MOCK_FROM_CONTEXT_MENU("ContextMenuCreateRestMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    CREATE_REST_MOCK("CreateRestMock", ModuleType.SERVICE_V, ProductArea.NO),
     START_REST_MOCK_FROM_MOCK_PANEL("MockPanelStartRestMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
-    CREATE_SOAP_MOCK_FROM_CONTEXT_MENU("ContextMenuCreateSOAPMock", ModuleType.SERVICE_V, ProductArea.NAVIGATOR_TREE),
+    CREATE_SOAP_MOCK("CreateSOAPMock", ModuleType.SERVICE_V, ProductArea.NO),
     START_SOAP_MOCK_FROM_MOCK_PANEL("MockPanelStartSOAPMock", ModuleType.SERVICE_V, ProductArea.MAIN_EDITOR),
     DEPLOY_REST_MOCK_AS_WAR("DeployRestMockAsWar", ModuleType.SERVICE_V, ProductArea.NO),
     DEPLOY_SOAP_MOCK_AS_WAR("DeploySoapMockAsWar", ModuleType.SERVICE_V, ProductArea.NO),
