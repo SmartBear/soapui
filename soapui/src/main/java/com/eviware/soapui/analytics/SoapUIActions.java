@@ -144,7 +144,7 @@ public enum SoapUIActions {
     IMPORT_PROJECT("ImportProject", null, NO),
     IMPORT_PACKED_PROJECT("ImportPackedProject", null, NO),
     IMPORT_REMOTE_PROJECT("MainMenuImportRemoteProject", null, MAIN_MENU),
-    EXPORT_PROJECT("MainMenuExportProject", null, MAIN_MENU),
+    EXPORT_PROJECT("ExportProject", null, NO),
 
     //Security testing actions
     CREATE_SECURITY_TEST("CreateSecurityTest", SECURE, NO),
