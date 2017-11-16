@@ -95,6 +95,8 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
         if (!new File(projectFile).exists()) {
             throw new Exception("SoapUI project file [" + projectFile + "] not found");
         }
+        AnalyticsHelper.initializeAnalytics();
+        Analytics.trackAction(SoapUIActions.RUN_TOOL_FROM_COMMAND_LINE, "Tool", tool);
 
         // WsdlProject project = new WsdlProject( projectFile,
         // getProjectPassword() );
@@ -149,8 +151,6 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
     public void run(ToolRunner runner) throws Exception {
         status = RunnerStatus.RUNNING;
         runner.setContext(this);
-        AnalyticsHelper.initializeAnalytics();
-        Analytics.trackAction(SoapUIActions.RUN_TOOL_FROM_COMMAND_LINE, "Tool", runner.getName());
 
         runner.run();
     }
