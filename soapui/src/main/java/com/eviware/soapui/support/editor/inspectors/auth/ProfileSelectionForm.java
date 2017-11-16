@@ -30,6 +30,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -60,9 +61,13 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_BASIC_AUTH;
+import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_BASIC_AUTH_FOR_TEST_REQUEST;
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_NTLM_AUTH;
+import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_NTLM_AUTH_FOR_TEST_REQUEST;
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_O_AUTH10;
+import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_O_AUTH10_FOR_TEST_REQUEST;
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_SPNEGO_KERBEROS_AUTH;
+import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_SPNEGO_KERBEROS_AUTH_FOR_TEST_REQUEST;
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.NTLM;
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.SPNEGO_KERBEROS;
 
@@ -245,15 +250,24 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
             cardPanel.add(oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL);
             changeAuthorizationType(OAUTH_2_FORM_LABEL, selectedOption);
 
-            Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH20, "OAuth2Flow",
-                    oAuth2Form.getProfile().getOAuth2Flow().name());
+            if (request instanceof TestRequest) {
+                Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH20_FOR_TEST_REQUEST, "OAuth2Flow",
+                        oAuth2Form.getProfile().getOAuth2Flow().name());
+            } else {
+                Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH20, "OAuth2Flow",
+                        oAuth2Form.getProfile().getOAuth2Flow().name());
+            }
         } else if (isRestRequest(request) && getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(selectedOption)) {
             setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
             request.setSelectedAuthProfileAndAuthType(selectedOption, CredentialsConfig.AuthType.O_AUTH_1_0);
             oAuth1Form = new OAuth1Form(getOAuth1ProfileContainer().getProfileByName(selectedOption), this);
             cardPanel.add(oAuth1Form.getComponent(), OAUTH_1_FORM_LABEL);
             changeAuthorizationType(OAUTH_1_FORM_LABEL, selectedOption);
-            Analytics.trackAction(ASSIGN_O_AUTH10);
+            if (request instanceof TestRequest) {
+                Analytics.trackAction(ASSIGN_O_AUTH10_FOR_TEST_REQUEST);
+            } else {
+                Analytics.trackAction(ASSIGN_O_AUTH10);
+            }
         } else if (selectedOption.equals(OPTIONS_SEPARATOR)) {
             profileSelectionComboBox.setSelectedIndex(0);
         } else    //selectedItem : No Authorization
@@ -267,11 +281,23 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
     private void trackBasicTypes(String selectedOption) {
         if (selectedOption.equals(NTLM.toString())) {
-            Analytics.trackAction(ASSIGN_NTLM_AUTH);
+            if (request instanceof TestRequest) {
+                Analytics.trackAction(ASSIGN_NTLM_AUTH_FOR_TEST_REQUEST);
+            } else {
+                Analytics.trackAction(ASSIGN_NTLM_AUTH);
+            }
         } else if (selectedOption.equals(SPNEGO_KERBEROS.toString())) {
-            Analytics.trackAction(ASSIGN_SPNEGO_KERBEROS_AUTH);
+            if (request instanceof TestRequest) {
+                Analytics.trackAction(ASSIGN_SPNEGO_KERBEROS_AUTH_FOR_TEST_REQUEST);
+            } else {
+                Analytics.trackAction(ASSIGN_SPNEGO_KERBEROS_AUTH);
+            }
         } else if (selectedOption.equals("Basic")) {
-            Analytics.trackAction(ASSIGN_BASIC_AUTH);
+            if (request instanceof TestRequest) {
+                Analytics.trackAction(ASSIGN_BASIC_AUTH_FOR_TEST_REQUEST);
+            } else {
+                Analytics.trackAction(ASSIGN_BASIC_AUTH);
+            }
         }
     }
 
