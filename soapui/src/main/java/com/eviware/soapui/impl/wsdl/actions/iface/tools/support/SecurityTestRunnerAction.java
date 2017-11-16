@@ -17,8 +17,6 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction;
@@ -45,8 +43,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_SECURITY_TEST_RUNNER_FROM_UI;
 
 public class SecurityTestRunnerAction extends TestRunnerAction {
     private static final String SH = ".sh";
@@ -367,7 +363,6 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
         }
 
         toolHost.run(new ProcessToolRunner(builder, "SoapUI TestRunner", modelItem, args));
-        Analytics.trackAction(LAUNCH_SECURITY_TEST_RUNNER_FROM_UI);
     }
 
 }

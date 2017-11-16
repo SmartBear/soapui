@@ -67,7 +67,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_FUNCTIONAL_TEST_RUNNER;
-import static com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner.DO_NOT_SEND_ANALYTICS_PARAMETER;
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI;
+import static com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner.STARTED_FROM_GUI;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -333,8 +334,10 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
     public boolean runRunner() throws Exception {
         AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
-        if(System.getenv(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
+        if (System.getenv(STARTED_FROM_GUI) == null) {
             Analytics.trackAction(LAUNCH_FUNCTIONAL_TEST_RUNNER);
+        } else {
+            Analytics.trackAction(LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI);
         }
 
         initGroovyLog();

@@ -28,7 +28,7 @@ import java.io.InputStream;
  */
 
 public class ProcessToolRunner implements ToolRunner {
-    public static final String DO_NOT_SEND_ANALYTICS_PARAMETER = "doNotSendAnalytics";
+    public static final String STARTED_FROM_GUI = "startedFromGUI";
 
     private final ProcessBuilder[] builders;
     private boolean running;
@@ -151,7 +151,7 @@ public class ProcessToolRunner implements ToolRunner {
     }
 
     protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context) {
-        processBuilder.environment().put(DO_NOT_SEND_ANALYTICS_PARAMETER, "true");
+        processBuilder.environment().put(STARTED_FROM_GUI, "true");
     }
 
     protected void afterProcess(Process process2, RunnerContext context) {

@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
@@ -49,8 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI;
 
 /**
  * Invokes SoapUI TestRunner tool
@@ -318,7 +315,6 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
         }
 
         toolHost.run(new ProcessToolRunner(builder, "SoapUI TestRunner", modelItem, args));
-        Analytics.trackAction(LAUNCH_FUNCTIONAL_TEST_RUNNER_FROM_UI);
     }
 
     protected ArgumentBuilder buildArgs(WsdlProject modelItem) throws IOException {
