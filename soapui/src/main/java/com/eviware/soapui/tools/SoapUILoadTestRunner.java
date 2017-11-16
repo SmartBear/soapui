@@ -47,7 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_LOAD_TEST_RUNNER;
-import static com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner.DO_NOT_SEND_ANALYTICS_PARAMETER;
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_LOAD_TEST_RUNNER_FROM_UI;
+import static com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner.STARTED_FROM_GUI;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -238,8 +239,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
         AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
 
-        if(System.getenv(DO_NOT_SEND_ANALYTICS_PARAMETER) == null) {
+        if (System.getenv(STARTED_FROM_GUI) == null) {
             Analytics.trackAction(LAUNCH_LOAD_TEST_RUNNER);
+        } else {
+            Analytics.trackAction(LAUNCH_LOAD_TEST_RUNNER_FROM_UI);
         }
 
         if (SoapUI.getSettings().getBoolean(UISettings.DONT_DISABLE_GROOVY_LOG)) {
