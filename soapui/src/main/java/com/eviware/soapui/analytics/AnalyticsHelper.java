@@ -57,8 +57,8 @@ public class AnalyticsHelper {
         AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         SoapUIProductInfo productInfo = SoapUIProductInfo.getInstance();
+        manager.registerAnalyticsProviderFactory(new OSUserProviderFactory(productInfo));
         if (isAnalyticsDisabled()) {
-            manager.registerAnalyticsProviderFactory(new OSUserProviderFactory(productInfo));
             return;
         }
         manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
