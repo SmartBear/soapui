@@ -21,7 +21,7 @@ import com.eviware.soapui.analytics.UniqueUserIdentifier;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFriendlyTextField;
-import com.smartbear.analytics.AnalyticsManager;
+import com.smartbear.analytics.OSUserDescription;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -235,9 +235,8 @@ public class SumbitUserInfoAction {
                 return false;
             }
             UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
-            userIdentifier.setEmail(getUserEMail());
-            userIdentifier.setName(getUserName());
-            Analytics.trackAction(AnalyticsManager.Category.MIXPANEL_PROFILE, null, UniqueUserIdentifier.getInstance().prepareUserProfile());
+            OSUserDescription osUserDescription = new OSUserDescription(getUserName(), getUserEMail(), userIdentifier.getUserId());
+            Analytics.trackUserInfo(osUserDescription);
             return true;
         }
 
