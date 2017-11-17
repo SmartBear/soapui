@@ -1,6 +1,7 @@
 package com.eviware.soapui.analytics;
 
 import com.smartbear.analytics.AnalyticsManager;
+import com.smartbear.analytics.OSUserDescription;
 
 import java.util.Map;
 
@@ -43,5 +44,9 @@ public class Analytics {
 
     public static void trackAction(AnalyticsManager.Category category, String actionName, Map<String, String> params) {
         com.smartbear.analytics.Analytics.getAnalyticsManager().trackAction(category, actionName, params);
+    }
+
+    public static void trackUserInfo(OSUserDescription osUserDescription) {
+        com.smartbear.analytics.Analytics.getAnalyticsManager().trackUserInfo(osUserDescription);
     }
 }

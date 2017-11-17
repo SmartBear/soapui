@@ -18,6 +18,7 @@ package com.eviware.soapui.analytics;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.Version;
+import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
 import com.eviware.soapui.analytics.providers.StatisticsCollectionConfirmationDialog;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
@@ -53,13 +54,15 @@ public class AnalyticsHelper {
         }
         initialized = true;
         UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
+        AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
+        manager.setExecutorService(SoapUI.getThreadPool());
+        SoapUIProductInfo productInfo = SoapUIProductInfo.getInstance();
+        manager.registerAnalyticsProviderFactory(new OSUserProviderFactory(productInfo));
         if (isAnalyticsDisabled()) {
             return;
         }
-        AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
-        manager.setExecutorService(SoapUI.getThreadPool());
-        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(SoapUIProductInfo.getInstance(), userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
-        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(SoapUIProductInfo.getInstance()));
-        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(SoapUIProductInfo.getInstance(), userIdentifier, AnalyticsProviderFactory.HandleType.USER_ALLOWED));
+        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
+        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(productInfo));
+        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.USER_ALLOWED));
     }
 }
