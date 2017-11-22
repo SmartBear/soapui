@@ -49,4 +49,8 @@ public class Analytics {
     public static void trackUserInfo(OSUserDescription osUserDescription) {
         com.smartbear.analytics.Analytics.getAnalyticsManager().trackUserInfo(osUserDescription);
     }
+
+    public static void trackAction(String action) {
+        com.smartbear.analytics.Analytics.trackAction(action);
+    }
 }
