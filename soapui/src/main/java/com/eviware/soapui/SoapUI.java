@@ -740,10 +740,6 @@ public class SoapUI {
                     });
                 }
 
-                if (isFirstLaunch) {
-                    Tools.openURL(HelpUrls.SOAPUI_WELCOME_PAGE);
-                }
-
                 if (isCommandLine()) {
                     Analytics.trackAction(SoapUIActions.PRODUCT_STARTED_FROM_CMD);
                 }
