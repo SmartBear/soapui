@@ -8,6 +8,8 @@
 
 * SoapUI now supports Java 1.8.
 
+* An improvement by DonnyDepp: The window borders are now thicker, so it is easier to resize windows by dragging their borders.
+
 ### Bug Fixes ###
 
 * A bug fix by vimil: When a response returned redirect status codes, SoapUI always simulated a GET request to the new address. Now, if the initial request uses the POST method, SoapUI simulates a POST request.
