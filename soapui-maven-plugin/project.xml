@@ -264,9 +264,9 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov</artifactId>
-			<version>jdk15-144</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.58</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>

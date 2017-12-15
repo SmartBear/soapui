@@ -41,7 +41,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/xalan/jars/xalan-2.7.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/wss4j/jars/wss4j-1.5.8.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/bouncycastle/jars/bcprov-jdk15-144.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/org/bouncycastle/jars/bcprov-jdk15on-1.58.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jtidy/jars/jtidy-r872-jdk15.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/javax.jms/jars/jms-1.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/hermesjms/jars/hermes-1.14.jar"/>

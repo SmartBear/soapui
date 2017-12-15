@@ -1,4 +1,16 @@
-﻿# SoapUI Open Source 5.4.0
+﻿# SoapUI Open Source NEXT
+
+### Overall Improvements ###
+
+* SoapUI NEXT uses Bouncy Castle JCE Provider 1.58.
+
+### Bug Fixes ###
+
+### Discontinued Support ###
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.4.0
 
 #### Released 2017-11-29 ####
 
