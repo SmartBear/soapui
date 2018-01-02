@@ -18,11 +18,11 @@ public class RestMockResultMessageExchange extends AbstractRestMessageExchange<M
     private final MockResponse mockResponse;
     private final MockRequest mockRequest;
     
-	public RestMockResultMessageExchange(MockResult mockResult, MockResponse mockResponse) {
-		super(mockResponse);
+	public RestMockResultMessageExchange(MockResult mockResult) {
+		super(mockResult.getMockResponse());
 		
         this.mockResult = mockResult;
-        this.mockResponse = mockResponse;
+        this.mockResponse = (RestMockResponse) mockResult.getMockResponse();
         this.mockRequest = mockResult.getMockRequest();
 	}
 
@@ -71,12 +71,10 @@ public class RestMockResultMessageExchange extends AbstractRestMessageExchange<M
     }
 
     public RestResource getResource() {
-    	//TODO:
     	return null;
     }
 
     public RestRequestInterface getRestRequest() {
-    	//TODO:
     	return null;
     }
 
@@ -102,6 +100,8 @@ public class RestMockResultMessageExchange extends AbstractRestMessageExchange<M
     
     @Override
     public byte[] getRawRequestData() {
+    	if(getRequestContent() == null)
+    		return null;
     	return mockRequest.getRawRequestData();
     }
     

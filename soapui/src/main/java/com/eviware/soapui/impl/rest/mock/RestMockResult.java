@@ -34,9 +34,15 @@ public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockActi
 	public ActionList getActions() {
 		
 		ActionList actionList = super.getActions();
+		if(!mockResultContainsResponse())
+			return actionList;
+		
 		actionList.setDefaultAction(createMessageExchangeAction());
+		return actionList;
+	}
 
-        return actionList;
+	private boolean mockResultContainsResponse() {
+		return getMockResponse() != null;
 	}
 
 	private Action createMessageExchangeAction() {
@@ -44,9 +50,7 @@ public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockActi
 	}
 
 	private RestMockResultMessageExchange createMessageExchange() {
-		
-		RestMockResponse mockResponse = (RestMockResponse) getMockResponse();
-        return new RestMockResultMessageExchange(this, mockResponse);
+		return new RestMockResultMessageExchange(this);
     }
 
 }
