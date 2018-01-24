@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -264,8 +264,10 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
     private Component buildTestCaseListToolbar() {
         JXToolBar toolbar = UISupport.createToolbar();
-        toolbar.add(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testcase.png")));
+        SwingActionDelegate testCaseDelegate = SwingActionDelegate.createDelegate(
+                AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testcase.png");
+        testCaseDelegate.getMapping().setParam(SoapUIActions.CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL);
+        toolbar.add(UISupport.createToolbarButton(testCaseDelegate));
         toolbar.addGlue();
         toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITEEDITOR_HELP_URL)));
         return toolbar;
@@ -333,7 +335,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         public void actionPerformed(ActionEvent e) {
             runTestSuite();
-            Analytics.trackAction(SoapUIActions.RUN_TEST_SUITE.getActionName(), "RunType", getModelItem().getRunType().name());
+            Analytics.trackAction(SoapUIActions.RUN_TEST_CASE_FROM_TOOLBAR, "RunType", getModelItem().getRunType().name());
         }
     }
 

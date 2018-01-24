@@ -1,0 +1,1300 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "definitions": {
+    "NonNegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "StringOrNonNegativeInteger": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/NonNegativeInteger"
+        }
+      ]
+    },
+    "RequestAttachment": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "contentId": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "required": [
+        "contentType",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "OAuth2AccessTokenPosition": {
+      "type": "string",
+      "enum": [
+        "HEADER",
+        "QUERY"
+      ],
+      "default": "HEADER"
+    },
+    "ScriptAssertion": {
+      "type": "object",
+      "title": "Script Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Script Assertion"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "script": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "script"
+      ],
+      "additionalProperties": false
+    },
+    "JdbcStatusAssertion": {
+      "type": "object",
+      "title": "JDBC Status Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JDBC Status"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "JdbcTimeoutAssertion": {
+      "type": "object",
+      "title": "JDBC Timeout Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JDBC Timeout"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "timeout": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "timeout"
+      ],
+      "additionalProperties": false
+    },
+    "ValidHTTPStatusCodesAssertion": {
+      "type": "object",
+      "title": "Valid HTTP Status Codes Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Valid HTTP Status Codes"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "validStatusCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "validStatusCodes"
+      ],
+      "additionalProperties": false
+    },
+    "PluginProvidedAssertion": {
+      "type": "object",
+      "title": "Plugin Provided Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "not": {
+            "enum": [
+              "Valid HTTP Status Codes",
+              "Invalid HTTP Status Codes",
+              "Contains",
+              "Not Contains",
+              "XPath Match",
+              "XQuery Match",
+              "JsonPath Match",
+              "JsonPath Count",
+              "JsonPath Existence Match",
+              "Script Assertion",
+              "Response SLA",
+              "JDBC Status",
+              "JDBC Timeout",
+              "Schema Compliance",
+              "SOAP Fault",
+              "Not SOAP Fault"
+            ]
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "InvalidHTTPStatusCodesAssertion": {
+      "type": "object",
+      "title": "Invalid HTTP Status Codes Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Invalid HTTP Status Codes"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "invalidStatusCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "invalidStatusCodes"
+      ],
+      "additionalProperties": false
+    },
+    "ContainsAssertion": {
+      "type": "object",
+      "title": "Contains Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Contains"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "useRegexp": {
+          "type": "boolean"
+        },
+        "ignoreCase": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "token"
+      ],
+      "additionalProperties": false
+    },
+    "NotContainsAssertion": {
+      "type": "object",
+      "title": "Not Contains Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Not Contains"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "useRegexp": {
+          "type": "boolean"
+        },
+        "ignoreCase": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "token"
+      ],
+      "additionalProperties": false
+    },
+    "XPathMatchAssertion": {
+      "type": "object",
+      "title": "XPath Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "XPath Match"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "xpath": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        },
+        "ignoreNamespaces": {
+          "type": "boolean"
+        },
+        "ignoreComments": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "xpath",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "XQueryMatchAssertion": {
+      "type": "object",
+      "title": "XQuery Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "XQuery Match"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "xquery": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "xquery",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "JsonPathExistenceAssertion": {
+      "type": "object",
+      "title": "JsonPath Existence Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JsonPath Existence Match"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "jsonPath": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string",
+          "default": "true"
+        }
+      },
+      "required": [
+        "type",
+        "jsonPath",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "JsonPathMatchAssertion": {
+      "type": "object",
+      "title": "JsonPath Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JsonPath Match"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "jsonPath": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "jsonPath",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "JsonPathCountAssertion": {
+      "type": "object",
+      "title": "JsonPath Count Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JsonPath Count"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "jsonPath": {
+          "type": "string"
+        },
+        "expectedCount": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "jsonPath",
+        "expectedCount"
+      ],
+      "additionalProperties": false
+    },
+    "ResponseSLAAssertion": {
+      "type": "object",
+      "title": "Response SLA Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Response SLA"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "maxResponseTime": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "maxResponseTime"
+      ],
+      "additionalProperties": false
+    },
+    "SchemaComplianceAssertion": {
+      "type": "object",
+      "title": "Schema Compliance Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Schema Compliance"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SoapFaultAssertion": {
+      "type": "object",
+      "title": "SOAP Fault Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SOAP Fault"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NotSoapFaultAssertion": {
+      "type": "object",
+      "title": "Not SOAP Fault Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Not SOAP Fault"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PropertyTransfer": {
+      "type": "object",
+      "properties": {
+        "transferName": {
+          "type": "string"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "sourceName": {
+              "type": "string"
+            },
+            "property": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pathLanguage": {
+              "type": "string",
+              "enum": [
+                "XPath",
+                "XQuery",
+                "JSONPath"
+              ],
+              "default": "XPath"
+            }
+          },
+          "required": [
+            "sourceName",
+            "property"
+          ],
+          "additionalProperties": false
+        },
+        "target": {
+          "type": "object",
+          "properties": {
+            "targetName": {
+              "type": "string"
+            },
+            "property": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pathLanguage": {
+              "type": "string",
+              "enum": [
+                "XPath",
+                "XQuery",
+                "JSONPath"
+              ],
+              "default": "XPath"
+            }
+          },
+          "required": [
+            "targetName",
+            "property"
+          ],
+          "additionalProperties": false
+        },
+        "failTransferOnError": {
+          "type": "boolean"
+        },
+        "setNullOnMissingSource": {
+          "type": "boolean"
+        },
+        "transferTextContent": {
+          "type": "boolean"
+        },
+        "ignoreEmptyValue": {
+          "type": "boolean"
+        },
+        "transferToAll": {
+          "type": "boolean"
+        },
+        "transferChildNodes": {
+          "type": "boolean"
+        },
+        "entitizeTransferredValues": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "additionalProperties": false
+    },
+    "TestSteps": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/RestRequestTestStep"
+          },
+          {
+            "$ref": "#/definitions/SoapRequestTestStep"
+          },
+          {
+            "$ref": "#/definitions/SOAPMockResponseTestStep"
+          },
+          {
+            "$ref": "#/definitions/PropertyTransferTestStep"
+          },
+          {
+            "$ref": "#/definitions/GroovyScriptTestStep"
+          },
+          {
+            "$ref": "#/definitions/JdbcRequestTestStep"
+          },
+          {
+            "$ref": "#/definitions/DelayTestStep"
+          },
+          {
+            "$ref": "#/definitions/PropertiesTestStep"
+          },
+          {
+            "$ref": "#/definitions/PluginTestStep"
+          }
+        ]
+      }
+    },
+    "SimpleAuthentication": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Basic",
+            "NTLM",
+            "SPNEGO/Kerberos"
+          ]
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "OAuth2AccessTokenAuthentication": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "OAuth 2.0"
+          ]
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "accessTokenPosition": {
+          "$ref": "#/definitions/OAuth2AccessTokenPosition"
+        }
+      },
+      "required": [
+        "type",
+        "accessToken"
+      ],
+      "additionalProperties": false
+    },
+    "OAuth2RefreshTokenAuthentication": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "OAuth 2.0"
+          ]
+        },
+        "accessTokenUri": {
+          "type": "string"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "clientSecret": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        },
+        "accessTokenPosition": {
+          "$ref": "#/definitions/OAuth2AccessTokenPosition"
+        }
+      },
+      "required": [
+        "type",
+        "accessTokenUri",
+        "clientId",
+        "clientSecret",
+        "refreshToken"
+      ],
+      "additionalProperties": false
+    },
+    "JdbcRequestTestStep": {
+      "type": "object",
+      "required": [
+        "type",
+        "driver",
+        "connectionString",
+        "sqlQuery"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JDBC Request"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "driver": {
+          "type": "string"
+        },
+        "connectionString": {
+          "type": "string"
+        },
+        "sqlQuery": {
+          "type": "string"
+        },
+        "storedProcedure": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ScriptAssertion"
+              },
+              {
+                "$ref": "#/definitions/ContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/XPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/XQueryMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/ResponseSLAAssertion"
+              },
+              {
+                "$ref": "#/definitions/JdbcStatusAssertion"
+              },
+              {
+                "$ref": "#/definitions/JdbcTimeoutAssertion"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "PluginTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "not": {
+            "enum": [
+              "REST Request",
+              "SOAP Request",
+              "SOAPMockResponse",
+              "Property Transfer",
+              "Groovy",
+              "JDBC Request",
+              "Delay",
+              "Properties"
+            ]
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "PropertiesTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Properties"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SOAPMockResponseTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SOAPMockResponse"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "wsdl": {
+          "type": "string"
+        },
+        "binding": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "port": {
+          "$ref": "#/definitions/NonNegativeInteger"
+        },
+        "createResponse": {
+          "type": "boolean"
+        }
+      }
+    },
+    "SoapRequestTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SOAP Request"
+          ]
+        },
+        "wsdl": {
+          "type": "string"
+        },
+        "binding": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "URI": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "timeout": {
+          "$ref": "#/definitions/StringOrNonNegativeInteger"
+        },
+        "requestBody": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "followRedirects": {
+          "type": "boolean"
+        },
+        "entitizeParameters": {
+          "type": "boolean"
+        },
+        "authentication": {
+          "type": "object",
+          "title": "Authentication",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SimpleAuthentication"
+            }
+          ]
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestAttachment"
+          }
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ScriptAssertion"
+              },
+              {
+                "$ref": "#/definitions/ContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/ValidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/InvalidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/XPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/XQueryMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/ResponseSLAAssertion"
+              },
+              {
+                "$ref": "#/definitions/SchemaComplianceAssertion"
+              },
+              {
+                "$ref": "#/definitions/SoapFaultAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotSoapFaultAssertion"
+              },
+              {
+                "$ref": "#/definitions/PluginProvidedAssertion"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "wsdl",
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "RestRequestTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "REST Request"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "HEAD",
+            "OPTIONS",
+            "TRACE",
+            "PATCH"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "URI": {
+          "type": "string"
+        },
+        "timeout": {
+          "$ref": "#/definitions/StringOrNonNegativeInteger"
+        },
+        "requestBody": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "followRedirects": {
+          "type": "boolean"
+        },
+        "entitizeParameters": {
+          "type": "boolean"
+        },
+        "postQueryString": {
+          "type": "boolean"
+        },
+        "authentication": {
+          "type": "object",
+          "title": "Authentication",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SimpleAuthentication"
+            },
+            {
+              "$ref": "#/definitions/OAuth2AccessTokenAuthentication"
+            },
+            {
+              "$ref": "#/definitions/OAuth2RefreshTokenAuthentication"
+            }
+          ]
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "QUERY",
+                  "PATH",
+                  "MATRIX",
+                  "HEADER",
+                  "PLAIN"
+                ],
+                "default": "QUERY"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestAttachment"
+          }
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ScriptAssertion"
+              },
+              {
+                "$ref": "#/definitions/ContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/ValidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/InvalidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/XPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/XQueryMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/JsonPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/JsonPathExistenceAssertion"
+              },
+              {
+                "$ref": "#/definitions/JsonPathCountAssertion"
+              },
+              {
+                "$ref": "#/definitions/ResponseSLAAssertion"
+              },
+              {
+                "$ref": "#/definitions/PluginProvidedAssertion"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "method",
+        "URI"
+      ],
+      "additionalProperties": false
+    },
+    "PropertyTransferTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Property Transfer"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "transfers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyTransfer"
+          }
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "GroovyScriptTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Groovy"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "script": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "script"
+      ],
+      "additionalProperties": false
+    },
+    "DelayTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Delay"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "delay": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": 1000
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "title": "SoapUI Test",
+  "type": "object",
+  "properties": {
+    "properties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "clientCertFileName": {
+      "type": "string",
+      "default": ""
+    },
+    "clientCertPassword": {
+      "type": "string",
+      "default": ""
+    },
+    "searchProperties": {
+      "type": "boolean",
+      "default": true
+    },
+    "maintainSession": {
+      "type": "boolean",
+      "default": false
+    },
+    "abortOnError": {
+      "type": "boolean",
+      "default": false
+    },
+    "failTestCaseOnError": {
+      "type": "boolean",
+      "default": true
+    },
+    "name": {
+        "type": "string"
+    },
+    "discardOkResults": {
+      "type": "boolean",
+      "default": true
+    },
+    "socketTimeout": {
+      "type": "string",
+      "default": ""
+    },
+    "testCaseTimeout": {
+      "$ref": "#/definitions/NonNegativeInteger",
+      "default": 0
+    },
+    "testSteps": {
+      "$ref": "#/definitions/TestSteps"
+    }
+  },
+  "required": [
+    "testSteps"
+  ],
+  "additionalProperties": false
+}

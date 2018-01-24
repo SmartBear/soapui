@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -69,6 +69,15 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
     private void init() {
         XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
         codes = reader.readString(CODES, "");
+    }
+
+    public void setCodes(String codes) {
+        this.codes = codes;
+        setConfiguration(createConfiguration());
+    }
+
+    public String getCodes() {
+        return codes;
     }
 
     @Override
@@ -163,15 +172,6 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 
         setConfiguration(createConfiguration());
         return true;
-    }
-
-    public void setCodes(String codes) {
-        this.codes = codes;
-        setConfiguration(createConfiguration());
-    }
-
-    public String getCodes() {
-        return codes;
     }
 
     private void buildDialog() {

@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -28,6 +28,7 @@ import java.io.InputStream;
  */
 
 public class ProcessToolRunner implements ToolRunner {
+    public static final String STARTED_FROM_GUI = "startedFromGUI";
 
     private final ProcessBuilder[] builders;
     private boolean running;
@@ -150,6 +151,7 @@ public class ProcessToolRunner implements ToolRunner {
     }
 
     protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context) {
+        processBuilder.environment().put(STARTED_FROM_GUI, "true");
     }
 
     protected void afterProcess(Process process2, RunnerContext context) {

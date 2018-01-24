@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -278,7 +278,7 @@ public class JLoadTestAssertionsTable extends JPanel {
             String type = (String) UISupport.prompt("Select assertion type to add", "Add Assertion", types);
             if (type != null) {
                 loadTest.addAssertion(type, LoadTestAssertion.ANY_TEST_STEP, true);
-                Analytics.trackAction(SoapUIActions.ADD_LOAD_TEST_ASSERTION.getActionName());
+                Analytics.trackAction(SoapUIActions.ADD_LOAD_TEST_ASSERTION);
             }
         }
     }

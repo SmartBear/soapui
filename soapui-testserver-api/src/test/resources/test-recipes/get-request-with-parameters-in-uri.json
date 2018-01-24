@@ -1,0 +1,9 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://maps.googleapis.com/maps/api/geocode/xml;mat1=val1;mat2=val2?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&sensor=false"
+    }
+  ]
+}

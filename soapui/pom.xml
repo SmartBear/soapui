@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>5.3.0</version>
+        <version>5.4.0</version>
     </parent>
 
     <artifactId>soapui</artifactId>
@@ -176,7 +176,7 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
+            <version>3.2.2</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -207,13 +207,13 @@
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>analytics-core</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>out-app-analytics-provider</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0</version>
         </dependency>
 
         <!-- JGoodies -->
@@ -405,7 +405,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.1.7</version>
+            <version>2.4.4</version>
         </dependency>
         <dependency>
             <groupId>rhino</groupId>
@@ -529,11 +529,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>gnu.cajo</groupId>
-            <artifactId>cajo</artifactId>
-            <version>1.142</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.ws.commons.util</groupId>
             <artifactId>ws-commons-util</artifactId>
             <version>1.0.2</version>
@@ -563,11 +558,6 @@
             <version>5.1.14</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.sonatype.install4j</groupId>
-            <artifactId>i4jruntime</artifactId>
-            <version>5.1.14</version>
-        </dependency>
 
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
@@ -584,21 +574,4 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>javafx.dependency</id>
-            <activation>
-                <jdk>[1.6,1.8]</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>javafx</groupId>
-                    <artifactId>jfxrt</artifactId>
-                    <version>${javafx.version}</version>
-                    <scope>system</scope>
-                    <systemPath>${javafx.runtime.lib.jar}</systemPath>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

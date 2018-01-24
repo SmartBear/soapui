@@ -1,0 +1,87 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://google.com/",
+      "assertions": [
+        {
+          "type": "Valid HTTP Status Codes",
+          "name" : "ValidStatusCodeAssertion",
+          "validStatusCodes": [
+            "200",
+            "201"
+          ]
+        },
+        {
+          "type": "Invalid HTTP Status Codes",
+          "name" : "InvalidStatusCodeAssertion",
+          "invalidStatusCodes": [
+            "500",
+            "404"
+          ]
+        },
+        {
+          "type": "Contains",
+          "name" : "ContainsAssertion",
+          "token": "Blaha",
+          "useRegexp": true,
+          "ignoreCase": true
+        },
+        {
+          "type": "XPath Match",
+          "name" : "XPathMatchAssertion",
+          "xpath": "//name",
+          "expectedContent": "Waheed",
+          "allowWildcards": true,
+          "ignoreNamespaces": true,
+          "ignoreComments": true
+        },
+        {
+          "type": "XQuery Match",
+          "name" : "XQueryMatchAssertion",
+          "xquery": ".//actors[0]",
+          "expectedContent": "Branagh",
+          "allowWildcards": true
+        },
+        {
+          "type": "JsonPath Match",
+          "name" : "JsonPathMatchAssertion",
+          "jsonPath": "$.actors[0]",
+          "expectedContent": "Branagh",
+          "allowWildcards": true
+        },
+        {
+          "type": "JsonPath Count",
+          "name" : "JsonPathCountAssertion",
+          "jsonPath": "$.actors",
+          "expectedCount": "5",
+          "allowWildcards": true
+        },
+        {
+          "type": "JsonPath Existence Match",
+          "name" : "JsonPathExistenceAssertion",
+          "jsonPath": "$.actors",
+          "expectedContent": "true"
+        },
+        {
+          "type": "Script Assertion",
+          "name" : "ScriptAssertion",
+          "script": "if (messageExchange.response.contentType != 'text/plain') fail('Wrong content type!')"
+        },
+        {
+          "type": "Response SLA",
+          "name" : "ResponseSlaAssertion",
+          "maxResponseTime": "500"
+        },
+        {
+          "type": "Not Contains",
+          "name" : "NotContainsAssertion",
+          "token": "Silent Force",
+          "useRegexp": true,
+          "ignoreCase": true
+        }
+      ]
+    }
+  ]
+}

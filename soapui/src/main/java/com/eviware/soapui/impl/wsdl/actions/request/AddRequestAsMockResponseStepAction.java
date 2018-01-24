@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.request;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.CompressedStringConfig;
 import com.eviware.soapui.config.MockResponseStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -37,6 +38,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+
+import static com.eviware.soapui.analytics.SoapUIActions.ADD_REQUEST_AS_MOCK_RESPONSE_STEP;
 
 public class AddRequestAsMockResponseStepAction extends AbstractAddToTestCaseAction<WsdlRequest> {
     public static final String SOAPUI_ACTION_ID = "AddRequestAsMockResponseStepAction";
@@ -103,6 +106,7 @@ public class AddRequestAsMockResponseStepAction extends AbstractAddToTestCaseAct
         }
 
         UISupport.selectAndShow(testStep);
+        Analytics.trackAction(ADD_REQUEST_AS_MOCK_RESPONSE_STEP);
 
         if (dialog.getBooleanValue(Form.CLOSE_REQUEST) && desktop != null) {
             desktop.closeDesktopPanel(request);

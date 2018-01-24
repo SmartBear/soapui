@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -199,7 +199,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
         }
 
         public void actionPerformed(ActionEvent e) {
-            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "RunTestCase");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "RunTestCase");
 
             runAction.setEnabled(false);
             cancelAction.setEnabled(true);

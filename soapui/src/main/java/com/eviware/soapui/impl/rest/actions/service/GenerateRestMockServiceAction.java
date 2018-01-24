@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.rest.actions.service;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
@@ -33,6 +34,8 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 
 import java.util.List;
+
+import static com.eviware.soapui.analytics.SoapUIActions.GENERATE_REST_MOCK_FROM_NAVIGATOR;
 
 public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestService> {
     XFormDialog dialog = null;
@@ -54,6 +57,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
                 restService.addEndpoint(mockService.getLocalEndpoint());
 
                 UISupport.showDesktopPanel(mockService);
+                Analytics.trackAction(GENERATE_REST_MOCK_FROM_NAVIGATOR);
                 maybeStart(mockService);
             }
         }

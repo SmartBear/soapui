@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -91,6 +91,9 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.eviware.soapui.analytics.SoapUIActions.STOP_REST_MOCK_FROM_MOCK_PANEL;
+import static com.eviware.soapui.analytics.SoapUIActions.STOP_SOAP_MOCK_FROM_MOCK_PANEL;
 
 /**
  * DesktopPanel for WsdlMockServices
@@ -545,9 +548,9 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         public void actionPerformed(ActionEvent arg0) {
 
             if (getModelItem() instanceof WsdlMockService) {
-                Analytics.trackAction(SoapUIActions.START_SOAP_MOCK.getActionName());
+                Analytics.trackAction(SoapUIActions.START_SOAP_MOCK_FROM_MOCK_PANEL);
             } else if (getModelItem() instanceof RestMockService) {
-                Analytics.trackAction(SoapUIActions.START_REST_MOCK.getActionName());
+                Analytics.trackAction(SoapUIActions.START_REST_MOCK_FROM_MOCK_PANEL);
             }
 
             startMockService();
@@ -578,7 +581,25 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
             } else {
                 mockRunner.stop();
                 mockRunner.release();
+                trackStopMockService(mockRunner);
                 mockRunner = null;
+            }
+        }
+    }
+
+    private void trackStopMockService(WsdlMockRunner mockRunner) {
+        if (mockRunner != null) {
+            try {
+                MockService mockService = mockRunner.getMockContext().getMockService();
+                if (mockService != null) {
+                    if (mockService instanceof WsdlMockService) {
+                        Analytics.trackAction(STOP_SOAP_MOCK_FROM_MOCK_PANEL);
+                    } else if (mockService instanceof RestMockService) {
+                        Analytics.trackAction(STOP_REST_MOCK_FROM_MOCK_PANEL);
+                    }
+                }
+            } catch (Exception e) {
+                //ignore
             }
         }
     }

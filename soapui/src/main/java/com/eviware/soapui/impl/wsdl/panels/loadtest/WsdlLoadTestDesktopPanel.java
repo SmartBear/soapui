@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -75,6 +75,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.analytics.SoapUIActions.RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL;
 
 /**
  * Desktop panel for LoadTests
@@ -393,7 +395,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
             runButton.setEnabled(false);
             runner = loadtest.run();
-            Analytics.trackAction(SoapUIActions.RUN_LOAD_TEST.getActionName());
+            Analytics.trackAction(RUN_LOAD_TEST_FROM_LOAD_TEST_PANEL);
         }
     }
 

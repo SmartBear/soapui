@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -89,7 +89,7 @@ public class PluginLoader extends LoaderBase {
             Version installedReadyApiVersion = Version.fromString(SoapUI.SOAPUI_VERSION);
             if (minimumReadyApiVersion.compareTo(installedReadyApiVersion) > 0) {
                 throw new InvalidPluginException("Plugin " + configurationAnnotation.name() + " requires version " +
-                        minimumReadyApiVersion + " of Ready!API. Current application version: " + installedReadyApiVersion);
+                        minimumReadyApiVersion + " of ReadyAPI. Current application version: " + installedReadyApiVersion);
             }
             Plugin plugin;
             if (Plugin.class.isAssignableFrom(pluginClass)) {

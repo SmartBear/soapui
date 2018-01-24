@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,9 +17,11 @@
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.UniqueUserIdentifier;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFriendlyTextField;
+import com.smartbear.analytics.OSUserDescription;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -82,7 +84,7 @@ public class SumbitUserInfoAction {
             setBackground(Color.WHITE);
 
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
-            jBasePanel.setBorder(new LineBorder(new Color(170,170, 170), 2));
+            jBasePanel.setBorder(new LineBorder(new Color(170, 170, 170), 2));
             setBackgroundColor(jBasePanel);
             this.add(jBasePanel);
 
@@ -232,7 +234,9 @@ public class SumbitUserInfoAction {
             if (!validateFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(getUserName(), getUserEMail());
+            UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
+            OSUserDescription osUserDescription = new OSUserDescription(getUserName(), getUserEMail(), userIdentifier.getUserId());
+            Analytics.trackUserInfo(osUserDescription);
             return true;
         }
 

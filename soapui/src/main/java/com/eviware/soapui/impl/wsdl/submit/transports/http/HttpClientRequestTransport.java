@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -51,10 +52,12 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.EntityEnclosingRequestWrapper;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import javax.annotation.CheckForNull;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -174,10 +177,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
         submitContext.setProperty(WSDL_REQUEST, httpRequest);
         submitContext.setProperty(RESPONSE_PROPERTIES, new StringToStringMap());
 
-
-        for (RequestFilter filter : filters) {
-            filter.filterRequest(submitContext, httpRequest);
-        }
+        filterRequest(submitContext, httpRequest);
 
         try {
             Settings settings = httpRequest.getSettings();
@@ -239,7 +239,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
                     EntityUtils.consume(httpResponse.getEntity());
                 }
 
-                httpMethod = followRedirects(httpClient, 0, httpMethod, httpResponse, httpContext);
+                httpMethod = followRedirects(httpClient, 0, httpMethod, httpResponse, httpContext, submitContext);
                 submitContext.setProperty(HTTP_METHOD, httpMethod);
             }
         } catch (Throwable t) {
@@ -312,10 +312,33 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
 
         return false;
     }
+    
+    private void filterRequest(SubmitContext submitContext, AbstractHttpRequestInterface<?> httpRequest) {
+		for(RequestFilter filter: filters) {
+			filter.filterRequest(submitContext, httpRequest);
+		}
+	}
+    
+    private boolean isPostMethod(ExtendedHttpMethod httpMethod, org.apache.http.HttpResponse httpResponse) {
+		int statusCode = httpResponse.getStatusLine().getStatusCode();
+		return (statusCode != HttpServletResponse.SC_SEE_OTHER && 
+				httpMethod != null &&
+				httpMethod.getMethod()
+				.equals(RestRequestInterface.HttpMethod.POST.toString()));
+	}
 
-    private ExtendedGetMethod followRedirects(HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
-                                              org.apache.http.HttpResponse httpResponse, HttpContext httpContext) throws Exception {
-        ExtendedGetMethod getMethod = new ExtendedGetMethod();
+    private ExtendedHttpMethod followRedirects(HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
+    										   org.apache.http.HttpResponse httpResponse, HttpContext httpContext, SubmitContext submitContext) throws Exception {
+		ExtendedHttpMethod getMethod;
+		if(isPostMethod(httpMethod, httpResponse))
+			getMethod = new ExtendedPostMethod();
+		else {
+			getMethod = new ExtendedGetMethod();
+		}
+
+		submitContext.setProperty("httpMethod", getMethod);
+		AbstractHttpRequestInterface<?> httpRequest = (AbstractHttpRequestInterface<?>)submitContext.getProperty(WSDL_REQUEST);
+		filterRequest(submitContext, httpRequest);
 
         getMethod
                 .getMetrics()
@@ -342,7 +365,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
             }
 
             try {
-                getMethod = followRedirects(httpClient, redirectCount + 1, getMethod, response, httpContext);
+                getMethod = followRedirects(httpClient, redirectCount + 1, getMethod, response, httpContext, 
+								submitContext);
             } finally {
                 //TODO: check if this is necessary!
                 //getMethod.releaseConnection();

@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -18,6 +18,8 @@ package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.MessageSupport;
@@ -44,7 +46,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
     public void perform(WorkspaceImpl workspace, Object param) {
         File file = null;
 
-        if (param == null) {
+        if (param == null || param instanceof SoapUIActions) {
             file = UISupport.getFileDialogs().openXML(this, messages.get("prompt.title"));
         } else {
             file = new File(param.toString());
@@ -64,6 +66,11 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
             WsdlProject project = (WsdlProject) workspace.importProject(fileName);
             if (project != null) {
                 UISupport.select(project);
+            }
+            if (param != null && param instanceof SoapUIActions) {
+                Analytics.trackAction((SoapUIActions) param);
+            } else {
+                Analytics.trackAction(SoapUIActions.IMPORT_PROJECT);
             }
         } catch (Exception ex) {
             UISupport.showErrorMessage(ex);

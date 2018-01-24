@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -32,14 +32,29 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.support.StringUtils;
 
 public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion {
     public static final String ID = "JDBC Timeout";
     public static final String LABEL = "JDBC Timeout";
     public static final String DESCRIPTION = "Validates that the JDBC statement of the target TestStep did not take longer than the specified duration. Applicable to JDBC TestSteps only.";
+    private static long DEFAULT_QUERY_TIEMOUT = 100;
+
 
     public JdbcTimeoutAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, false, false, false, true);
+    }
+
+    public void setQueryTimeoutProperty(String queryTimeoutProperty) {
+        ((JdbcRequestTestStep) getAssertable().getModelItem()).setQueryTimeout(queryTimeoutProperty);
+    }
+
+    public Long getQueryTimeoutProperty() {
+        String queryTimeoutProperty = ((JdbcRequestTestStep) getAssertable().getModelItem()).getQueryTimeout();
+        if (StringUtils.isNullOrEmpty(queryTimeoutProperty)) {
+            return DEFAULT_QUERY_TIEMOUT;
+        }
+        return Long.parseLong(queryTimeoutProperty);
     }
 
     @Override

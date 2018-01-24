@@ -7,7 +7,7 @@
     <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-project</artifactId>
     <name>SoapUI project</name>
-    <version>5.3.0</version>
+    <version>5.4.0</version>
     <packaging>pom</packaging>
 
     <repositories>
@@ -41,6 +41,7 @@
         <module>soapui-installer</module>
         <module>soapui-maven-plugin-tester</module>
         <module>soapui-system-test</module>
+        <module>soapui-testserver-api</module>
     </modules>
 
     <build>
@@ -66,8 +67,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -97,7 +98,7 @@
                             <rules>
                                 <!-- http://mojo.codehaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
                                 <enforceBytecodeVersion>
-                                    <maxJdkVersion>1.7</maxJdkVersion>
+                                    <maxJdkVersion>1.8</maxJdkVersion>
                                 </enforceBytecodeVersion>
                             </rules>
                             <fail>true</fail>
@@ -115,15 +116,19 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>1.9</version>
+                <version>1.15</version>
                 <configuration>
                     <signature>
                         <groupId>org.codehaus.mojo.signature</groupId>
                         <!-- currently, we cannot use java16 1.1 because some classes depends on the sun specific
                         implementation (com.sun.java.swing.plaf.windows) -->
-                        <artifactId>java17</artifactId>
+                        <artifactId>java18</artifactId>
                         <version>1.0</version>
                     </signature>
+                    <ignores>
+                        <ignore>javafx.*</ignore>
+                        <ignore>netscape.*</ignore>
+                    </ignores>
                 </configuration>
                 <executions>
                     <execution>

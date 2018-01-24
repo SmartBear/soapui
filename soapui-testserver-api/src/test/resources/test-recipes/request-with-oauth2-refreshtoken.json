@@ -1,0 +1,16 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "https://www.googleapis.com/tasks/v1/users/@me/lists",
+      "authentication": {
+        "type": "OAuth 2.0",
+        "accessTokenUri": "https://accounts.google.com/o/oauth2/token",
+        "clientId": "669184148999-uvb9iqhnaq6h0gju1qhdraf5ds0asaeo.apps.googleusercontent.com",
+        "clientSecret": "vRl0LylcL1eg4baB7Hcpw5I5",
+        "refreshToken": "1/86vz0skA9Qvzo1i_zikBxcJgvw-eZqGVEc_TiS6ST_pIgOrJDtdun6zK6XiATCKT"
+      }
+    }
+  ]
+}

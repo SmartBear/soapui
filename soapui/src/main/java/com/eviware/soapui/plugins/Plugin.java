@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -68,7 +68,7 @@ public interface Plugin {
      * additional information.
      *
      * NOTE: this is currently not used by SoapUI Open Source and is only present to ensure binary compatibility
-     * between SoapUI OS and Ready! API.
+     * between SoapUI OS and ReadyAPI.
      *
      * @return a collection of API importer classes
      */

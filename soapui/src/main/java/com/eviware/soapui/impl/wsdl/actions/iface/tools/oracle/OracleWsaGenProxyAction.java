@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.oracle;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
@@ -35,6 +36,8 @@ import com.eviware.x.form.XFormFactory;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_ORACLE_PROXY_ARTIFACTS_TOOL;
 
 /**
  * Invokes oracle genproxy
@@ -86,6 +89,7 @@ public class OracleWsaGenProxyAction extends AbstractToolsAction<Interface> {
         builder.directory(new File(wsaDir));
 
         toolHost.run(new ProcessToolRunner(builder, "Oracle wsa.jar", modelItem));
+        Analytics.trackAction(USE_ORACLE_PROXY_ARTIFACTS_TOOL);
     }
 
     private ArgumentBuilder buildArgs(StringToStringMap values, Interface modelItem) throws IOException {

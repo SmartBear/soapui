@@ -1,2 +1,2 @@
 #!/bin/sh
-java -cp "../lib/*" TrackOutAppAction UninstallSoftwareOS success true
+java -cp "../lib/*" TrackOutAppAction UninstallSoftware Product SoapUIOS Version $1 success true

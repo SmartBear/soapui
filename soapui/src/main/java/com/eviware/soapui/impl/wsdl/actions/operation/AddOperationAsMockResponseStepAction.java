@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -16,6 +16,8 @@
 
 package com.eviware.soapui.impl.wsdl.actions.operation;
 
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.MockResponseStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -33,6 +35,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+
+import static com.eviware.soapui.analytics.SoapUIActions.ADD_OPERATION_AS_MOCK_RESPONSE_STEP;
 
 public class AddOperationAsMockResponseStepAction extends AbstractAddToTestCaseAction<WsdlOperation> {
     private XFormDialog dialog;
@@ -81,6 +85,7 @@ public class AddOperationAsMockResponseStepAction extends AbstractAddToTestCaseA
         }
 
         UISupport.selectAndShow(testStep);
+        Analytics.trackAction(ADD_OPERATION_AS_MOCK_RESPONSE_STEP);
 
         if (dialog.getBooleanValue(Form.SHOW_TESTCASE)) {
             UISupport.selectAndShow(testCase);

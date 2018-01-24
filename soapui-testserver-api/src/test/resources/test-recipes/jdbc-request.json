@@ -1,0 +1,31 @@
+{
+  "testSteps": [
+    {
+      "type": "JDBC Request",
+      "name": "A JDBC request test step",
+      "properties": {
+        "property1": "value1",
+        "property2": "value2"
+      },
+      "driver": "some.Driver",
+      "connectionString": "someuri",
+      "sqlQuery": "select * from whatever",
+      "storedProcedure": false,
+      "assertions": [
+        {
+          "type": "Contains",
+          "token": "Blaha",
+          "useRegexp": true,
+          "ignoreCase": true
+        },
+        {
+          "type": "JDBC Status"
+        },
+        {
+          "type": "JDBC Timeout",
+          "timeout": "1000"
+        }
+      ]
+    }
+  ]
+}

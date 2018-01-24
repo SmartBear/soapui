@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -52,8 +52,6 @@ public class CreateNewEmptyTestCase implements Resolver {
         WsdlTestCase tCase = testStep.getTestCase().getTestSuite().addNewTestCase("New Test Case");
         testStep.setTargetTestCase(tCase);
         resolved = true;
-
-        Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE.getActionName());
 
         return resolved;
     }
