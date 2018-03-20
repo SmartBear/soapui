@@ -113,8 +113,8 @@ public class SoapUIExtensionClassLoader extends URLClassLoader {
     /**
      * method used for hermes classloading
      *
-     * @param u
-     * @param classLoader
+     * @param u URL
+     * @param classLoader class loader
      * @throws IOException
      */
     public static void addUrlToClassLoader(URL u, ClassLoader classLoader) throws IOException {
