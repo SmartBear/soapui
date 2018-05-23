@@ -19,7 +19,7 @@ package com.eviware.soapui.impl;
 
 /**
  * URIParser should parse the URI based on ths standard syntax components referred
- * in {@link http://www.ietf.org/rfc/rfc3986.txt} as [scheme:][//authority][path][?query][#fragment]
+ * in {@see <a href="http://www.ietf.org/rfc/rfc3986.txt">} as [scheme:][//authority][path][?query][#fragment]
  *
  * @author Shadid Chowdhury
  * @since 4.5.6
