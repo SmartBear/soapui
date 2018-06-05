@@ -171,7 +171,7 @@ public abstract class AbstractMockOperation
 
         notifyPropertyChanged(DISPATCH_STYLE_PROPERTY, old, dispatchStyle);
 
-        return dispatcher;
+        return dispatcher;//getDispatcher();
     }
 
 }
