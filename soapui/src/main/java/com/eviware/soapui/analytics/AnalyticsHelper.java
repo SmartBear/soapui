@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -18,12 +18,14 @@ package com.eviware.soapui.analytics;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.Version;
-import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
-import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
 import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
 import com.eviware.soapui.analytics.providers.StatisticsCollectionConfirmationDialog;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
+import com.smartbear.analytics.AnalyticsManager;
+import com.smartbear.analytics.api.AnalyticsProviderFactory;
+import com.smartbear.analytics.impl.GoogleAnalyticsProviderFactory;
+import com.smartbear.analytics.impl.SoapUIOSMixpanelProviderFactory;
 
 import javax.swing.JOptionPane;
 
@@ -51,17 +53,16 @@ public class AnalyticsHelper {
             return;
         }
         initialized = true;
-
-        AnalyticsManager manager = Analytics.getAnalyticsManager();
+        UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
+        AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
-        manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
+        SoapUIProductInfo productInfo = SoapUIProductInfo.getInstance();
+        manager.registerAnalyticsProviderFactory(new OSUserProviderFactory(productInfo));
         if (isAnalyticsDisabled()) {
             return;
         }
-
-        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory());
-        if (System.getProperty("soapui.analytics.logtab", "false").equals("true")) {
-            manager.registerAnalyticsProviderFactory(new LogTabAnalyticsProvider.LogTabAnalyticsProviderFactory());
-        }
+        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
+        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(productInfo));
+        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.USER_ALLOWED));
     }
 }

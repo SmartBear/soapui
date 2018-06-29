@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,8 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
@@ -36,6 +38,8 @@ import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 
 import java.io.File;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_XML_BEANS_CLASSES_TOOL;
 
 /**
  * Generates XMLBeans for given interface
@@ -132,6 +136,7 @@ public class XmlBeans2Action extends AbstractToolsAction<Interface> {
         builder.directory(new File(xbDir + File.separatorChar + "bin"));
 
         toolHost.run(new ProcessToolRunner(builder, "XmlBeans", modelItem));
+        Analytics.trackAction(USE_XML_BEANS_CLASSES_TOOL);
     }
 
     private ArgumentBuilder buildArgs(StringToStringMap values, Interface modelItem) {

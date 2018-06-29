@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -219,8 +219,12 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
 
     private Component buildTestCaseListToolbar() {
         JXToolBar toolbar = UISupport.createToolbar();
-        toolbar.add(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, "/test_suite.png")));
+        SwingActionDelegate addTestSuiteDelegate = SwingActionDelegate.createDelegate(
+                AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, "/test_suite.png");
+        addTestSuiteDelegate.getMapping().setParam(SoapUIActions.CREATE_TEST_SUITE_FROM_PROJECT_PANEL);
+
+        toolbar.add(UISupport.createToolbarButton(addTestSuiteDelegate));
+
         toolbar.addGlue();
         toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITELIST_HELP_URL)));
         return toolbar;
@@ -276,7 +280,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             runProject();
-            Analytics.trackAction(SoapUIActions.RUN_PROJECT.getActionName());
+            Analytics.trackAction(SoapUIActions.RUN_TEST_SUITE_FROM_TOOLBAR);
         }
     }
 

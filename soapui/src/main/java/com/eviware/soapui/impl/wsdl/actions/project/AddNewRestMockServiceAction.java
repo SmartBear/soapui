@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -32,7 +32,7 @@ public class AddNewRestMockServiceAction extends AbstractSoapUIAction<WsdlProjec
 
     public void perform(WsdlProject target, Object param) {
         if (createRestMockService(target) != null) {
-            Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK.getActionName());
+            Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK);
         }
     }
 

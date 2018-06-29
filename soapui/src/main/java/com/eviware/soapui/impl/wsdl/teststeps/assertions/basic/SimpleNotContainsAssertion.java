@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -79,6 +79,15 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
         token = reader.readString("token", null);
         ignoreCase = reader.readBoolean("ignoreCase", false);
         useRegEx = reader.readBoolean("useRegEx", false);
+    }
+
+    public void setUseRegEx(boolean useRegEx) {
+        this.useRegEx = useRegEx;
+        setConfiguration(createConfiguration());
+    }
+
+    public boolean isUseRegEx() {
+        return useRegEx;
     }
 
     public String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)

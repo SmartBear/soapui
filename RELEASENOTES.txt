@@ -1,4 +1,26 @@
-﻿# SoapUI Open Source 5.3.0
+﻿# SoapUI Open Source 5.4.0
+
+#### Released 2017-11-29 ####
+
+### Overall Improvements ###
+
+* SoapUI 5.4 uses Apache Commons Collections library version 3.2.2 that fixes a security vulnerability.
+
+* SoapUI now supports Java 1.8.
+
+* An improvement by DonnyDepp: The window borders are now thicker, so it is easier to resize windows by dragging their borders.
+
+### Bug Fixes ###
+
+* A bug fix by vimil: When a response returned redirect status codes, SoapUI always simulated a GET request to the new address. Now, if the initial request uses the POST method, SoapUI simulates a POST request.
+
+### Discontinued Support ###
+
+* LoadUI integration has been removed from SoapUI. To integrate your functional tests with LoadUI, use ReadyAPI. Learn more about LoadUI in ReadyAPI at https://smartbear.com/product/ready-api/loadui/overview/.
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.3.0
 
 #### Released 2016-11-30 ####
 
@@ -91,7 +113,7 @@ Many thanks to Stanislaw and Marc for their efforts!
 
 ### Improvements ###
 
-* New look inspired by Ready! API.
+* New look inspired by ReadyAPI.
 * Support for Java 6 has been dropped. 
   To run SoapUI, now you need to have Java 7 on your computer.
   The SoapUI installation package includes Java 7 modules, 

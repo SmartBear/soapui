@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -976,9 +976,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         }
 
         public void actionPerformed(ActionEvent e) {
-
-            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRASNFER_IN_PROPERTY_TRANSFER_TEST_STEP.getActionName());
-
             String name = UISupport.prompt("Specify name for value transfer", "Add Transfer", "");
             if (name == null || name.trim().length() == 0) {
                 return;
@@ -986,6 +983,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
             transferStep.addTransfer(name);
             transferList.setSelectedIndex(listModel.getSize() - 1);
+
+            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRANSFER_IN_PROPERTY_TRANSFER_TEST_STEP);
         }
     }
 
@@ -1167,7 +1166,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
                 return;
             }
 
-            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "RequestType", "PropertyTransfer");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "RequestType", "PropertyTransfer");
 
             MockTestRunner mockRunner = new MockTestRunner(transferStep.getTestCase());
             MockTestRunContext context = new MockTestRunContext(mockRunner, transferStep);

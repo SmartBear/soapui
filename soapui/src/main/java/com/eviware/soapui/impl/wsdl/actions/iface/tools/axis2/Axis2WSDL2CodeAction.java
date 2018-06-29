@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
@@ -42,6 +43,8 @@ import javax.wsdl.Service;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.util.Map;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_AXIS_2_ARTIFACTS_TOOL;
 
 /**
  * Invokes axis 2 WSDL2Code
@@ -181,6 +184,7 @@ public class Axis2WSDL2CodeAction extends AbstractToolsAction<Interface> {
         builder.directory(new File(axis2Dir + File.separatorChar + "bin"));
 
         toolHost.run(new ProcessToolRunner(builder, "Axis2 wsdl2java", modelItem));
+        Analytics.trackAction(USE_AXIS_2_ARTIFACTS_TOOL);
     }
 
     private ArgumentBuilder buildArgs(StringToStringMap values, WsdlInterface modelItem) {

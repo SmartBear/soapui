@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -210,7 +210,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
         }
 
         public void actionPerformed(ActionEvent e) {
-            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "GroovyScript");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "GroovyScript");
 
             MockResult lastMockResult = getMockOperation().getLastMockResult();
             MockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();

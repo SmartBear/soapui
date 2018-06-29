@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -40,13 +40,10 @@ public class WsdlProjectRunContext extends AbstractSubmitContext<WsdlProject> im
     }
 
     public TestRunner getTestRunner() {
-        // TODO Auto-generated method stub
-        return null;
+        return testScenarioRunner;
     }
 
     public Object getProperty(String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return get(name);
     }
-
 }

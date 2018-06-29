@@ -1,0 +1,18 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "POST",
+      "URI": "http://google.com/",
+      "headers": {
+        "Pragma" : "nocache",
+        "X-Custom" : ["first", "second"]
+      },
+      "encoding": "ISO-8859-1",
+      "followRedirects": false,
+      "timeout": 60,
+      "entitizeParameters": true,
+      "mediaType": "application/pdf"
+    }
+  ]
+}

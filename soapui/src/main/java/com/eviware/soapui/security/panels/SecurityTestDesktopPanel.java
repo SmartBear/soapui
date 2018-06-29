@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -417,7 +417,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
                 }
             }
             if (shouldRun) {
-                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST.getActionName());
+                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST_FROM_SECURITY_TEST_PANEL);
                 runSecurityTest();
             } else {
                 UISupport.showInfoMessage("No Security Scans available to run.", "Security Test Warning");

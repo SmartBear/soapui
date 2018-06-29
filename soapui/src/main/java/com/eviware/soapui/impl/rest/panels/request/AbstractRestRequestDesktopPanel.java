@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -86,7 +86,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
     @Override
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR.getActionName(), "Type", "REST");
+        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR, "Type", "REST");
         return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
     }
 

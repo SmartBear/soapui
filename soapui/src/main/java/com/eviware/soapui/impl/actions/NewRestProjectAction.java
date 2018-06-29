@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -59,7 +59,6 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
             public void actionPerformed(ActionEvent e) {
                 dialog.setVisible(false);
                 SoapUI.getActionRegistry().getAction(NewWadlProjectAction.SOAPUI_ACTION_ID).perform(SoapUI.getWorkspace(), null);
-                Analytics.trackAction(SoapUIActions.IMPORT_WADL.getActionName());
             }
         });
         while (dialog.show()) {
@@ -71,8 +70,9 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     serviceBuilder.createRestService(project, uri);
                 }
                 // If there is no exception or error we break out
-
-                Analytics.trackAction(SoapUIActions.CREATE_REST_PROJECT.getActionName());
+                if (param != null && param instanceof SoapUIActions) {
+                    Analytics.trackAction((SoapUIActions) param);
+                }
                 break;
 
             } catch (Exception ex) {

@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -45,7 +45,6 @@ public class SwingToolHost implements ToolHost {
             UISupport.showErrorMessage(ex);
             throw ex;
         } finally {
-            Analytics.trackAction(SoapUIActions.RUN_TOOL.getActionName(), "Tool", runner.getName());
             if (processDialog != null) {
                 processDialog.setVisible(false);
             }

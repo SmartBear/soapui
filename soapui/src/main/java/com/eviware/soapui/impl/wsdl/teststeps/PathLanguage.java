@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -15,6 +15,8 @@
  */
 
 package com.eviware.soapui.impl.wsdl.teststeps;
+
+import com.eviware.soapui.support.StringUtils;
 
 import static com.eviware.soapui.support.JsonUtil.seemsToBeJson;
 import static com.eviware.soapui.support.xml.XmlUtils.seemsToBeXml;
@@ -34,6 +36,19 @@ public enum PathLanguage {
             }
         }
 
+        return null;
+    }
+
+    public static PathLanguage fromDisplayName(String displayName) {
+        if (!StringUtils.hasContent(displayName)) {
+            return null;
+        }
+
+        for (PathLanguage pathLanguage : PathLanguage.values()) {
+            if (pathLanguage.displayName.toLowerCase().equals(displayName.toLowerCase())) {
+                return pathLanguage;
+            }
+        }
         return null;
     }
 

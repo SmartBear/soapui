@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,8 @@
 package com.eviware.soapui.tools;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -53,6 +55,10 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_SECURITY_TEST_RUNNER;
+import static com.eviware.soapui.analytics.SoapUIActions.LAUNCH_SECURITY_TEST_RUNNER_FROM_UI;
+import static com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner.STARTED_FROM_GUI;
 
 /**
  * Standalone security test-runner used from maven-plugin, can also be used from
@@ -117,6 +123,14 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
     }
 
     public boolean runRunner() throws Exception {
+        AnalyticsHelper.initializeAnalytics();
+        Analytics.trackSessionStart();
+        if (System.getenv(STARTED_FROM_GUI) == null) {
+            Analytics.trackAction(LAUNCH_SECURITY_TEST_RUNNER);
+        } else {
+            Analytics.trackAction(LAUNCH_SECURITY_TEST_RUNNER_FROM_UI);
+        }
+
         initGroovyLog();
         getAssertions().clear();
         String projectFile = getProjectFile();

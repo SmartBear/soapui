@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -172,7 +172,8 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
 
     public PropertyTransfer addTransfer(String name) {
         PropertyTransfer transfer = new PropertyTransfer(this, transferStepConfig.addNewTransfers());
-        transfer.setName(name);
+        String transferName = name == null ? "Transfer " + (getTransferCount() + 1) : name;
+        transfer.setName(transferName);
         transfer.setFailOnError(true);
         transfer.getConfig().setUpgraded(true);
         transfers.add(transfer);

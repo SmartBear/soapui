@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -20,21 +20,17 @@ package com.eviware.soapui.analytics;
  *
  */
 public enum SoapUIFeatures {
+    INSTALL("InstallProduct"),
     SERVICE_VIRTUALIZATION("ServiceVirtualization"),
     FUNCTIONAL_TESTING("FunctionalTesting"),
     PERFORMANCE_TESTING("PerformanceTesting"),
     SECURITY_TESTING("SecurityTesting"),
     SOAP("SOAP"),
     REST("REST"),
-    PLUGINS("Plugins"),
-    DISCOVERY("Discovery"),
-    INSTALL("Install"),
     MONITORING("Monitoring"),
     AUTOMATE_SOAP_UI("AutomateSoapUI"),
     USE_SOAP_UI("UseSoapUI"),
-    REPORTS("Reports"),
-    TOOL("Tool"),
-    LICENSE("License");
+    TOOL("Tool");
 
     private String featureName;
 

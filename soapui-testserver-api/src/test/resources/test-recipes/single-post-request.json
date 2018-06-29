@@ -1,0 +1,10 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "POST",
+      "URI": "http://our.api.com/register",
+      "requestBody": "Smokin' hot body"
+    }
+  ]
+}

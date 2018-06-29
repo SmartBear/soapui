@@ -1,22 +1,23 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.wsdl.panels.assertions;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -36,6 +37,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
+import com.eviware.soapui.analytics.Analytics;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -311,6 +313,7 @@ public class AddAssertionPanel extends SimpleDialog {
             UISupport.showErrorMessage("Failed to add assertion");
             return false;
         }
+        Analytics.trackAction(SoapUIActions.ADD_ASSERTION, "Type", assertion.getLabel());
 
         recentAssertionHandler.add(selection);
 
@@ -398,6 +401,10 @@ public class AddAssertionPanel extends SimpleDialog {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                                                        int row, int column) {
 
+            if (value == null) {
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+
             boldFont = getFont().deriveFont(Font.BOLD);
 
             AssertionListEntry entry = (AssertionListEntry) value;
@@ -465,10 +472,16 @@ public class AddAssertionPanel extends SimpleDialog {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                                                        int row, int column) {
+
+            if (value == null) {
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+
             String categoryName = (String) value;
             boolean disabled = true;
             Font boldFont = getFont().deriveFont(Font.BOLD);
             SortedSet<AssertionListEntry> assertions = categoriesAssertionsMap.get(categoryName);
+
             for (AssertionListEntry assertionListEntry : assertions) {
                 if (isAssertionApplicable(assertionListEntry.getTypeId())) {
                     disabled = false;

@@ -1,2 +1,2 @@
 #!/bin/sh
-java -cp "../lib/*" TrackOutAppAction UpdateSoftwareOS success true
+java -cp "../lib/*" TrackOutAppAction UpdateSoftware Product SoapUIOS Version $1 success true

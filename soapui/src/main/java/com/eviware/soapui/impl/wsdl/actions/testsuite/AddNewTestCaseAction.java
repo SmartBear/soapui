@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -52,7 +52,11 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite> {
         }
 
         WsdlTestCase testCase = testSuite.addNewTestCase(name);
-        Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE.getActionName());
+        if (param != null && param instanceof SoapUIActions) {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE_FROM_TEST_TEST_SUITE_PANEL);
+        } else {
+            Analytics.trackAction(SoapUIActions.CREATE_TEST_CASE);
+        }
         UISupport.showDesktopPanel(testCase);
     }
 }

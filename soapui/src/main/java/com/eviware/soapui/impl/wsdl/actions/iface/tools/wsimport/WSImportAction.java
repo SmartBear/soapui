@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
@@ -35,6 +36,8 @@ import com.eviware.x.form.XFormFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static com.eviware.soapui.analytics.SoapUIActions.USE_JAX_WS_ARTIFACTS_TOOL;
 
 /**
  * Invokes JAX-WS WSImport
@@ -114,6 +117,7 @@ public class WSImportAction extends AbstractToolsAction<Interface> {
         builder.directory(new File(wsimportDir));
 
         toolHost.run(new ProcessToolRunner(builder, "JAX-WS wsimport", modelItem));
+        Analytics.trackAction(USE_JAX_WS_ARTIFACTS_TOOL);
     }
 
     private ArgumentBuilder buildArgs(StringToStringMap values, boolean isWindows, Interface modelItem)

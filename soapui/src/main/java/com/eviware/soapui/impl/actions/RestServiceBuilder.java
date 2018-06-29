@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -38,7 +38,31 @@ import org.apache.commons.lang.ArrayUtils;
 
 import java.net.MalformedURLException;
 
+import static com.eviware.soapui.impl.actions.RestServiceBuilder.ModelCreationStrategy.REUSE_MODEL;
+
 public class RestServiceBuilder {
+
+    public enum ModelCreationStrategy {
+        CREATE_NEW_MODEL, REUSE_MODEL
+    }
+
+    public static class RequestInfo {
+        private final String uri;
+        private final RestRequestInterface.HttpMethod requestMethod;
+
+        public RequestInfo(String uri, RestRequestInterface.HttpMethod requestMethod) {
+            this.uri = uri;
+            this.requestMethod = requestMethod;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public RestRequestInterface.HttpMethod getRequestMethod() {
+            return requestMethod;
+        }
+    }
 
     public void createRestService(WsdlProject project, String URI) throws MalformedURLException {
         if (StringUtils.isNullOrEmpty(URI)) {
@@ -51,6 +75,14 @@ public class RestServiceBuilder {
         UISupport.select(restRequest);
         UISupport.showDesktopPanel(restRequest);
 
+    }
+
+    public RestRequest createRestServiceHeadlessFromUri(WsdlProject project, RequestInfo requestInfo, ModelCreationStrategy methodReuseStrategy) throws MalformedURLException {
+        RestResource restResource = createResource(REUSE_MODEL, project, requestInfo.getUri());
+        RestMethod restMethod = addNewMethod(methodReuseStrategy, restResource, requestInfo.getRequestMethod());
+        RestRequest restRequest = addNewRequest(restMethod);
+        copyParametersWithDefaultsOnResource(extractParams(requestInfo.getUri()), restMethod.getParams(), restRequest.getParams());
+        return restRequest;
     }
 
     protected RestParamsPropertyHolder extractParams(String URI) {
@@ -132,7 +164,4 @@ public class RestServiceBuilder {
         return restMethod.addNewRequest("Request " + (restMethod.getRequestCount() + 1));
     }
 
-    protected static enum ModelCreationStrategy {
-        CREATE_NEW_MODEL, REUSE_MODEL
-    }
 }
