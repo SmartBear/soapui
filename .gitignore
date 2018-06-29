@@ -5,6 +5,8 @@
 .classpath
 .project
 *-ide-plugin.xml
+*.ipr
+*.iws
 
 # Logs
 *.log
