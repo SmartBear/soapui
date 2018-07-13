@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2017 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.support.definition.export;
@@ -30,11 +30,20 @@ import org.apache.xmlbeans.XmlObject;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public abstract class AbstractDefinitionExporter<T extends Interface> implements DefinitionExporter {
+    @FunctionalInterface
+    private interface XmlObjectExporter{
+        void export(String fileName, XmlObject obj) throws Exception;
+    }
+
     private InterfaceDefinition<T> definition;
 
     public AbstractDefinitionExporter(InterfaceDefinition<T> definition) {
@@ -49,17 +58,12 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
         this.definition = definition;
     }
 
-    public String export(String folderName) throws Exception {
+    private Map<String, String> export(XmlObjectExporter exporter) throws Exception{
         if (definition.getDefinitionCache() == null || !definition.getDefinitionCache().validate()) {
             throw new Exception("Definition is not cached for export");
         }
 
-        File outFolder = new File(folderName);
-        if (!outFolder.exists() && !outFolder.mkdirs()) {
-            throw new Exception("Failed to create directory [" + folderName + "]");
-        }
-
-        Map<String, String> urlToFileMap = new HashMap<String, String>();
+        Map<String, String> urlToFileMap = new HashMap<>();
 
         setFilenameForPart(definition.getDefinitionCache().getRootPart(), urlToFileMap, null);
 
@@ -73,11 +77,34 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
             XmlObject obj = XmlUtils.createXmlObject(part.getContent());
             replaceImportsAndIncludes(obj, urlToFileMap, part.getUrl());
             postProcessing(obj, part);
-            obj.save(new File(outFolder, urlToFileMap.get(part.getUrl())));
+            exporter.export(urlToFileMap.get(part.getUrl()), obj);
         }
 
+        return urlToFileMap;
+    }
+
+    public String export(String folderName) throws Exception {
+        File outFolder = new File(folderName);
+        if (!outFolder.exists() && !outFolder.mkdirs()) {
+            throw new Exception("Failed to create directory [" + folderName + "]");
+        }
+        Map<String, String> urlToFileMap = export((fileName, part) -> part.save(new File(outFolder, fileName)));
         return folderName + File.separatorChar
                 + urlToFileMap.get(definition.getDefinitionCache().getRootPart().getUrl());
+    }
+
+    public void export(ZipOutputStream output) throws Exception {
+        export((fileName, part) -> {
+            ZipEntry entry = new ZipEntry(fileName);
+            entry.setCreationTime(FileTime.from(Instant.now()));
+            output.putNextEntry(entry);
+            part.save(output);
+            output.closeEntry();
+        });
+    }
+
+    public void export(Map<String, XmlObject> output) throws Exception {
+        export(output::put);
     }
 
     public StringToStringMap createFilesForExport(String urlPrefix) throws Exception {
