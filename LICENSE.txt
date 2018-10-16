@@ -1,5 +1,5 @@
 ﻿-----------------
-SoapUI, copyright (C) 2004-2014 smartbear.com
+SoapUI, copyright (C) 2004-2018 smartbear.com
 Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
 versions of the EUPL (the "Licence");
 You may not use this work except in compliance with the Licence.
