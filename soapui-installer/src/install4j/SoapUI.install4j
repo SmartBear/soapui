@@ -387,7 +387,7 @@ return xx;</string>
                       <void method="put">
                         <string>en</string>
                         <object class="com.install4j.api.beans.ExternalFile">
-                          <string>${compiler:DIST_ROOT}/SmartBear License Terms of Use.txt</string>
+                          <string>${compiler:DIST_ROOT}/LICENSE.txt</string>
                         </object>
                       </void>
                     </void>
