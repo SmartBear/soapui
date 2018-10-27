@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
+import com.eviware.soapui.impl.wsdl.support.wss.ImprovedWSSecSignature;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
@@ -36,7 +37,6 @@ import org.apache.ws.security.WSEncryptionPart;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.message.DOMCallbackLookup;
 import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.message.WSSecSignature;
 import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.w3c.dom.Document;
@@ -66,6 +66,7 @@ public class SignatureEntry extends WssEntryBase {
     private int keyIdentifierType = 0;
     private String signatureAlgorithm;
     private boolean useSingleCert;
+    private boolean prependSignature = true;
     private String signatureCanonicalization;
     private String digestAlgorithm;
     private String customTokenValueType;
@@ -130,6 +131,8 @@ public class SignatureEntry extends WssEntryBase {
                 "Set the digest algorithm to use");
 
         form.appendCheckBox("useSingleCert", "Use Single Certificate", "Use single certificate for signing");
+        form.appendCheckBox("prependSignature", "Prepend Signature Element",
+                "Prepend signature element to security header (non-strict layout)");
 
         customTokenIdField = form.appendTextField("customTokenId", "Custom Key Identifier", "Use a custom key identifier for signing");
         customTokenValueTypeField = form.appendTextField("customTokenValueType", "Custom Key Identifier ValueType", "Specify the custom key identifier value type");
@@ -160,6 +163,7 @@ public class SignatureEntry extends WssEntryBase {
         signatureAlgorithm = reader.readString("signatureAlgorithm", null);
         signatureCanonicalization = reader.readString("signatureCanonicalization", null);
         useSingleCert = reader.readBoolean("useSingleCert", false);
+        prependSignature = reader.readBoolean("prependSignature", true);
 
         digestAlgorithm = reader.readString("digestAlgorithm", null);
 
@@ -176,6 +180,7 @@ public class SignatureEntry extends WssEntryBase {
         builder.add("signatureAlgorithm", signatureAlgorithm);
         builder.add("signatureCanonicalization", signatureCanonicalization);
         builder.add("useSingleCert", useSingleCert);
+        builder.add("prependSignature", prependSignature);
 
         builder.add("digestAlgorithm", digestAlgorithm);
 
@@ -194,7 +199,7 @@ public class SignatureEntry extends WssEntryBase {
                 throw new Exception("Missing crypto [" + crypto + "] for signature entry");
             }
 
-            WSSecSignature wssSign = new WSSecSignature();
+            ImprovedWSSecSignature wssSign = new ImprovedWSSecSignature();
             wssSign.setUserInfo(context.expand(getUsername()), context.expand(getPassword()));
 
             // default is
@@ -212,6 +217,8 @@ public class SignatureEntry extends WssEntryBase {
             }
 
             wssSign.setUseSingleCertificate(useSingleCert);
+
+            wssSign.setPrependSignature(prependSignature);
 
             if (StringUtils.hasContent(digestAlgorithm)) {
                 wssSign.setDigestAlgo(digestAlgorithm);
@@ -322,6 +329,15 @@ public class SignatureEntry extends WssEntryBase {
         saveConfig();
     }
 
+    public boolean isPrependSignature() {
+        return prependSignature;
+    }
+
+    public void setPrependSignature(boolean prependSignature) {
+        this.prependSignature = prependSignature;
+        saveConfig();
+    }
+
     public String getCustomTokenId() {
         return customTokenId;
     }
@@ -360,9 +376,9 @@ public class SignatureEntry extends WssEntryBase {
      */
     private static class BinarySecurityTokenDOMCallbackLookup extends DOMCallbackLookup {
 
-        private final WSSecSignature wssSign;
+        private final ImprovedWSSecSignature wssSign;
 
-        public BinarySecurityTokenDOMCallbackLookup(Document doc, WSSecSignature wssSign) {
+        public BinarySecurityTokenDOMCallbackLookup(Document doc, ImprovedWSSecSignature wssSign) {
             super(doc);
             this.wssSign = wssSign;
         }
