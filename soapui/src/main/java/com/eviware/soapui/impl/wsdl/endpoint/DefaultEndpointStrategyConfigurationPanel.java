@@ -227,8 +227,13 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
                 return;
             }
 
+            boolean specialEndpoint = endpoint.equals(ALL_REQUESTS)
+                    || endpoint.equals(ALL_TEST_REQUESTS)
+                    || endpoint.equals(ALL_REQUESTS_AND_TEST_REQUESTS)
+                    || endpoint.equals(ALL_REQUESTS_WITH_NO_ENDPOINT);
+
             if (endpoint.equals(ALL_REQUESTS) || endpoint.equals(ALL_REQUESTS_WITH_NO_ENDPOINT)
-                    || endpoint.equals(ALL_REQUESTS_AND_TEST_REQUESTS)) {
+                    || endpoint.equals(ALL_REQUESTS_AND_TEST_REQUESTS) || !specialEndpoint) {
                 for (Operation operation : iface.getAllOperations()) {
                     for (int i = 0; i < operation.getRequestCount(); i++) {
                         AbstractHttpRequest<?> request = (AbstractHttpRequest<?>) operation.getRequestAt(i);
@@ -254,13 +259,15 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
                 }
             }
 
-            if (endpoint.equals(ALL_REQUESTS_AND_TEST_REQUESTS) || endpoint.equals(ALL_TEST_REQUESTS)) {
+            if (endpoint.equals(ALL_REQUESTS_AND_TEST_REQUESTS) || endpoint.equals(ALL_TEST_REQUESTS) || !specialEndpoint) {
                 for (TestSuite testSuite : iface.getProject().getTestSuiteList()) {
                     for (TestCase testCase : testSuite.getTestCaseList()) {
                         for (TestStep testStep : testCase.getTestStepList()) {
                             if (testStep instanceof HttpRequestTestStep) {
                                 AbstractHttpRequest<?> httpRequest = ((HttpRequestTestStep) testStep).getHttpRequest();
-                                if (httpRequest.getOperation() != null && httpRequest.getOperation().getInterface() == iface) {
+                                String ep = httpRequest.getEndpoint();
+                                if (httpRequest.getOperation() != null && httpRequest.getOperation().getInterface() == iface
+                                        && (specialEndpoint || ep.equals(endpoint))) {
                                     httpRequest.setEndpoint(selectedEndpoint);
 
                                     httpRequest.setUsername(defaults.getUsername());
