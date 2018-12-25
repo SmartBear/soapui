@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2018 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -19,7 +19,7 @@ package com.eviware.soapui.impl;
 
 /**
  * URIParser should parse the URI based on ths standard syntax components referred
- * in {@link http://www.ietf.org/rfc/rfc3986.txt} as [scheme:][//authority][path][?query][#fragment]
+ * in {@see <a href="http://www.ietf.org/rfc/rfc3986.txt">} as [scheme:][//authority][path][?query][#fragment]
  *
  * @author Shadid Chowdhury
  * @since 4.5.6
