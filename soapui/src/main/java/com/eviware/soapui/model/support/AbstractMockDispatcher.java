@@ -65,6 +65,31 @@ public abstract class AbstractMockDispatcher implements MockDispatcher {
         throw new DispatchException("Unsupported HTTP Method: PATCH");
     }
 
+    public MockResult dispatchPropfindRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException {
+        throw new DispatchException("Unsupported HTTP Method: PROPFIND");
+    }
+
+    public MockResult dispatchLockRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException {
+        throw new DispatchException("Unsupported HTTP Method: LOCK");
+    }
+
+    public MockResult dispatchUnlockRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException {
+        throw new DispatchException("Unsupported HTTP Method: UNLOCK");
+    }
+
+    public MockResult dispatchCopyRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException {
+        throw new DispatchException("Unsupported HTTP Method: COPY");
+    }
+
+    public MockResult dispatchPurgeRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException {
+        throw new DispatchException("Unsupported HTTP Method: PURGE");
+    }
+
     public MockResult dispatchRequest(HttpServletRequest request, HttpServletResponse response)
             throws DispatchException {
         String method = request.getMethod();
@@ -81,6 +106,16 @@ public abstract class AbstractMockDispatcher implements MockDispatcher {
             return dispatchDeleteRequest(request, response);
         } else if (method.equals("PATCH")) {
             return dispatchPatchRequest(request, response);
+        } else if (method.equals("PROPFIND")) {
+            return dispatchPropfindRequest(request, response);
+        } else if (method.equals("LOCK")) {
+            return dispatchLockRequest(request, response);
+        } else if (method.equals("UNLOCK")) {
+            return dispatchUnlockRequest(request, response);
+        } else if (method.equals("COPY")) {
+            return dispatchCopyRequest(request, response);
+        } else if (method.equals("PURGE")) {
+            return dispatchPurgeRequest(request, response);
         }
 
         throw new DispatchException("Unsupported HTTP Method: " + method);

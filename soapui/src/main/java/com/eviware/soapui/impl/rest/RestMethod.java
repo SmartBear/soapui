@@ -172,7 +172,8 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
     public boolean hasRequestBody() {
         RestRequestInterface.HttpMethod method = getMethod();
         return method == RestRequestInterface.HttpMethod.POST || method == RestRequestInterface.HttpMethod.PUT
-                || method == RestRequestInterface.HttpMethod.PATCH || method == RestRequestInterface.HttpMethod.DELETE;
+                || method == RestRequestInterface.HttpMethod.PATCH || method == RestRequestInterface.HttpMethod.DELETE
+                || method == RestRequestInterface.HttpMethod.PROPFIND || method == RestRequestInterface.HttpMethod.LOCK;
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {

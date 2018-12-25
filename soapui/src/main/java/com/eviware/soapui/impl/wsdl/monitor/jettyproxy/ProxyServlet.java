@@ -24,14 +24,20 @@ import com.eviware.soapui.impl.wsdl.monitor.ContentTypes;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedCopyMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedDeleteMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGenericMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedLockMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPropFindMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPurgeMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.settings.Settings;
@@ -129,6 +135,8 @@ public class ProxyServlet implements Servlet {
             method = new ExtendedPostMethod();
         } else if (httpRequest.getMethod().equals("PUT")) {
             method = new ExtendedPutMethod();
+        } else if (httpRequest.getMethod().equals("DELETE")) {
+            method = new ExtendedDeleteMethod();
         } else if (httpRequest.getMethod().equals("HEAD")) {
             method = new ExtendedHeadMethod();
         } else if (httpRequest.getMethod().equals("OPTIONS")) {
@@ -137,6 +145,16 @@ public class ProxyServlet implements Servlet {
             method = new ExtendedTraceMethod();
         } else if (httpRequest.getMethod().equals("PATCH")) {
             method = new ExtendedPatchMethod();
+        } else if (httpRequest.getMethod().equals("PROPFIND")) {
+            method = new ExtendedPropFindMethod();
+        } else if (httpRequest.getMethod().equals("LOCK")) {
+            method = new ExtendedLockMethod();
+        } else if (httpRequest.getMethod().equals("UNLOCK")) {
+            method = new ExtendedUnlockMethod();
+        } else if (httpRequest.getMethod().equals("COPY")) {
+            method = new ExtendedCopyMethod();
+        } else if (httpRequest.getMethod().equals("PURGE")) {
+            method = new ExtendedPurgeMethod();
         } else {
             method = new ExtendedGenericMethod(httpRequest.getMethod());
         }
