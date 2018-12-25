@@ -807,8 +807,7 @@ Be sure to have write permissions for this directory.</string>
                       <void property="validationScript">
                         <object class="com.install4j.api.beans.ScriptProperty">
                           <void property="value">
-                            <string>InstallationComponentSetup component =context.getInstallationComponentById("2393");
-return component.isSelected();</string>
+                            <string>return context.getInstallationComponentById("2393").isSelected();</string>
                           </void>
                         </object>
                       </void>
