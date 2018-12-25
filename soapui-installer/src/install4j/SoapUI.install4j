@@ -3814,7 +3814,7 @@ if (context.isUnattended()) {
         <customAttributes />
       </autoUpdate>
     </windows>
-    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="SoapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="linux-x86-1.8.0_152" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
+    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="SoapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="linux-x86-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -3888,7 +3888,7 @@ if (context.isUnattended()) {
         <customAttributes />
       </autoUpdate>
     </windows>
-    <unixInstaller name="Unix Installer x64" id="4755" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="linux-amd64-1.8.0_152" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
+    <unixInstaller name="Unix Installer x64" id="4755" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="linux-amd64-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
