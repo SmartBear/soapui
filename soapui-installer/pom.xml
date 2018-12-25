@@ -39,6 +39,14 @@
                     </descriptors>
                     <finalName>${project.name.full}</finalName>
                 </configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
             </plugin>
 
             <plugin>
