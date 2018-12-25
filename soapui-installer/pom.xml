@@ -98,14 +98,14 @@
                         </property>
                     </variables>
                 </configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
+		<executions>
+		    <execution>
+			<phase>package</phase>
+			<goals>
+				<goal>compile</goal>
+			</goals>
+		    </execution>
+		</executions>
             </plugin>
 
             <plugin>
