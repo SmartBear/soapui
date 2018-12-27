@@ -230,7 +230,7 @@
   </files>
   <launchers>
     <launcher name="SoapUI GUI" id="64" customizedId="" external="false" excludeFromMenu="false" unixMode="755" unixAutoStart="true" menuName="SoapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="" checkUpdater="false" updateExecutionMode="unattendedProgress" unattendedUpdateTitle="${i18n:updater.WindowTitle(&quot;${compiler:sys.fullName}&quot;)}">
-      <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
+      <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
       <splashScreen show="true" width="0" height="0" bitmapFile="${compiler:DIST_ROOT}/bin/SoapUI-Spashscreen.png" textOverlay="false">
@@ -260,11 +260,11 @@
         <content />
       </infoPlist>
       <iconImageFiles>
-        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_16-16.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_24-24.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_32-32.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_48-48.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_256-256.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_16-16.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_24-24.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_48-48.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_256-256.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -276,19 +276,19 @@
       <customAttributes />
     </autoUpdate>
     <applications>
-      <application name="" id="installer" customizedId="" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" styleId="7375" fileset="" customIcnsFile="" customIcoFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2.ico" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
+      <application name="" id="installer" customizedId="" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" styleId="7375" fileset="" customIcnsFile="" customIcoFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
         <serializedBean>
           <java class="java.beans.XMLDecoder">
             <object class="com.install4j.runtime.beans.applications.InstallerApplication" id="InstallerApplication0">
               <void property="customIconImageFiles">
                 <void method="add">
                   <object class="com.install4j.api.beans.ExternalFile">
-                    <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_16-16.png</string>
+                    <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_16-16.png</string>
                   </object>
                 </void>
                 <void method="add">
                   <object class="com.install4j.api.beans.ExternalFile">
-                    <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_32-32.png</string>
+                    <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png</string>
                   </object>
                 </void>
               </void>
@@ -323,7 +323,7 @@
                     </void>
                     <void property="imageFile">
                       <object class="com.install4j.api.beans.ExternalFile">
-                        <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2_32-32.png</string>
+                        <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png</string>
                       </object>
                     </void>
                   </object>
@@ -1174,7 +1174,7 @@ if (Util.isMacOS()) {
                           <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
                             <void property="iconFile">
                               <object class="com.install4j.api.beans.ExternalFile">
-                                <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2.ico</string>
+                                <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
                               </object>
                             </void>
                             <void property="name">
@@ -1214,7 +1214,7 @@ if (Util.isMacOS()) {
                     <object class="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction">
                       <void property="icon">
                         <object class="com.install4j.api.beans.ExternalFile">
-                          <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2.ico</string>
+                          <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
                         </object>
                       </void>
                       <void property="iconSource">
@@ -1683,7 +1683,7 @@ return false;</condition>
                       </void>
                       <void property="winIconFile">
                         <object class="com.install4j.api.beans.ExternalFile">
-                          <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS-5.2.ico</string>
+                          <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
                         </object>
                       </void>
                     </object>
