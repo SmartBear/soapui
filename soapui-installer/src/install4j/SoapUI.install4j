@@ -400,11 +400,17 @@ return xx;</string>
                   <serializedBean>
                     <java class="java.beans.XMLDecoder">
                       <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                        <void property="imageAnchor">
+                          <object class="java.lang.Enum" method="valueOf">
+                            <class>com.install4j.api.beans.Anchor</class>
+                            <string>WEST</string>
+                          </object>
+                        </void>
                         <void property="imageEdgeBackgroundColor">
                           <object class="java.awt.Color">
-                            <int>25</int>
-                            <int>143</int>
-                            <int>220</int>
+                            <int>239</int>
+                            <int>240</int>
+                            <int>240</int>
                             <int>255</int>
                           </object>
                         </void>
