@@ -18,6 +18,7 @@ package com.eviware.soapui.plugins;
 
 import com.eviware.soapui.SoapUI;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,32 +34,51 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 public final class ProductBodyguard extends Provider {
-    private X509Certificate providerCert = null;
+    private X509Certificate[] acceptedCerts = null;
 
     public ProductBodyguard() {
         super("SoapUIOSPluginSignChecker", 1.0, "Plugin signature validity checker");
     }
 
-    private static X509Certificate setupProviderCert()
+    private static X509Certificate[] setupProviderCert()
             throws IOException, CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        return (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.key"));
+        return new X509Certificate[]{
+                (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.key")),
+                (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKeySB.key"))
+        };
     }
 
     public final synchronized boolean isKnown(File plugin) {
         JarVerifier jv = new JarVerifier(plugin);
 
         try {
-            if (providerCert == null) {
-                providerCert = setupProviderCert();
+            if (acceptedCerts == null) {
+                acceptedCerts = setupProviderCert();
             }
-            jv.verify(providerCert);
         } catch (Exception e) {
             SoapUI.logError(e);
             return false;
         }
 
-        return true;
+        for (X509Certificate certificate:acceptedCerts) {
+            if (isCertificateAccepted(jv, certificate)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isCertificateAccepted (@Nonnull JarVerifier jarVerifier, @Nonnull X509Certificate certificate) {
+        boolean passed = true;
+        try {
+            jarVerifier.verify(certificate);
+        } catch (IOException e) {
+            passed = false;
+        }
+
+        return passed;
     }
 
     private class JarVerifier {
