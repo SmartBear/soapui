@@ -25,14 +25,19 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedCopyMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedDeleteMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedLockMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPropFindMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPurgeMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HeaderRequestInterceptor;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -52,7 +57,6 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.EntityEnclosingRequestWrapper;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
@@ -419,6 +423,17 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
                     return new ExtendedTraceMethod();
                 case PATCH:
                     return new ExtendedPatchMethod();
+                case PROPFIND:
+                    return new ExtendedPropFindMethod();
+                case LOCK:
+                    return new ExtendedLockMethod();
+                case UNLOCK:
+                    return new ExtendedUnlockMethod();
+                case COPY:
+                    return new ExtendedCopyMethod();
+                case PURGE:
+                    return new ExtendedPurgeMethod();
+
             }
         }
 

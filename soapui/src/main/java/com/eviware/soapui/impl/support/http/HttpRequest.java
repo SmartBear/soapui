@@ -101,7 +101,8 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
     public boolean hasRequestBody() {
         RestRequestInterface.HttpMethod method = getMethod();
         return method == RestRequestInterface.HttpMethod.POST || method == RestRequestInterface.HttpMethod.PUT
-                || method == RestRequestInterface.HttpMethod.PATCH;
+                || method == RestRequestInterface.HttpMethod.PATCH || method == RestRequestInterface.HttpMethod.DELETE
+                || method == RestRequestInterface.HttpMethod.PROPFIND || method == RestRequestInterface.HttpMethod.LOCK;
     }
 
     @Override
@@ -209,7 +210,10 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
         if (getMethod() == RestRequestInterface.HttpMethod.POST
                 || getMethod() == RestRequestInterface.HttpMethod.PUT
-                || getMethod() == RestRequestInterface.HttpMethod.PATCH) {
+                || getMethod() == RestRequestInterface.HttpMethod.PATCH
+                || getMethod() == RestRequestInterface.HttpMethod.DELETE
+                || getMethod() == RestRequestInterface.HttpMethod.PROPFIND
+                || getMethod() == RestRequestInterface.HttpMethod.LOCK) {
             result.add(new HttpContentPart());
         }
 

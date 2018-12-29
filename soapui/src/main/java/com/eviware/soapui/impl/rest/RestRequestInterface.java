@@ -30,15 +30,16 @@ public interface RestRequestInterface extends HttpRequestInterface<RestRequestCo
      * Each value in this enumeration represents an officially supported HTTP method ("verb").
      */
     enum HttpMethod {
-        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH;
+        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH, PROPFIND, LOCK, UNLOCK, COPY, PURGE;
 
         public static String[] getMethodsAsStringArray() {
             return new String[]{GET.toString(), POST.toString(), PUT.toString(), DELETE.toString(), HEAD.toString(),
-                    OPTIONS.toString(), TRACE.toString(), PATCH.toString()};
+                    OPTIONS.toString(), TRACE.toString(), PATCH.toString(), PROPFIND.toString(), LOCK.toString(), UNLOCK.toString(),
+                    COPY.toString(), PURGE.toString()};
         }
 
         public static HttpMethod[] getMethods() {
-            return new HttpMethod[]{GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH};
+            return new HttpMethod[]{GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH, PROPFIND, LOCK, UNLOCK, COPY, PURGE};
         }
     }
 
