@@ -1870,9 +1870,9 @@ return installTutorials;</condition>
                       <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
                         <void property="imageEdgeBackgroundColor">
                           <object class="java.awt.Color">
-                            <int>25</int>
-                            <int>143</int>
-                            <int>220</int>
+                            <int>239</int>
+                            <int>240</int>
+                            <int>240</int>
                             <int>255</int>
                           </object>
                         </void>
