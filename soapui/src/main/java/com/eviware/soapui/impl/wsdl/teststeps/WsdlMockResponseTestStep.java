@@ -1181,10 +1181,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                 if (startTestStep instanceof WsdlMockResponseTestStep) {
                     // do nothing - this is done in the StartStepMockRunListener instead
                 } else {
-                    try {
-                        startListening(runContext);
-                    } catch (Exception e) {
-                        SoapUI.logError(e);
+                    if (!isDisabled()) {
+                        try {
+                            startListening(runContext);
+                        } catch (Exception e) {
+                            SoapUI.logError(e);
+                        }
                     }
                 }
             }
@@ -1208,10 +1210,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            try {
-                startListening(runContext);
-            } catch (Exception e) {
-                SoapUI.logError(e);
+            if (!isDisabled()) {
+                try {
+                    startListening(runContext);
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
             }
         }
     }
