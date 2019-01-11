@@ -230,7 +230,9 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
     }
 
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "REST");
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "REST",
+                "HTTPMethod", getRequest().getMethod().name());
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP, "HTTPMethod", getRequest().getMethod().name());
 
         return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
     }

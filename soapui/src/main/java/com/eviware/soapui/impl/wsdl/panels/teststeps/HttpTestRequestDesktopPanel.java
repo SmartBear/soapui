@@ -324,7 +324,9 @@ public class HttpTestRequestDesktopPanel extends
 
     @Override
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "HTTP");
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "HTTP",
+                "HTTPMethod", getRequest().getMethod().name());
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP, "HTTPMethod", getRequest().getMethod().name());
 
         return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
     }
