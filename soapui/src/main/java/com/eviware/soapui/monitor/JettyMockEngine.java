@@ -635,7 +635,7 @@ public class JettyMockEngine implements MockEngine {
         }
 
         private void printMockServiceList(HttpServletResponse response) throws IOException {
-            response.setStatus(HttpServletResponse.SC_OK);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.setContentType("text/html");
 
             MockRunner[] mockRunners = getMockRunners();
