@@ -51,6 +51,9 @@ public enum SoapUIActions {
     RUN_TEST_SUITE_FROM_TOOLBAR("ProjectPanelRunTestSuite", SOAPUI_NG, MAIN_EDITOR),
     RUN_REQUEST_FROM_REQUEST_EDITOR("RequestEditorRunRequest", PROJECTS, MAIN_EDITOR),
     RUN_TEST_STEP_FROM_PANEL("TestStepPanelRunTestStep", SOAPUI_NG, MAIN_EDITOR),
+    SEND_REQUEST("SendRequest", PROJECTS, MAIN_EDITOR),
+    RUN_TEST_STEP("RunTestStep", SOAPUI_NG, MAIN_EDITOR),
+
 
     //Create Functional Model Items
     CREATE_TEST_SUITE_FROM_PROJECT_PANEL("ProjectPanelCreateTestSuite", SOAPUI_NG, MAIN_EDITOR),
