@@ -92,10 +92,7 @@ public class ShowMessageExchangeAction extends AbstractAction {
         messageTabs.addTab("Response Message", buildResponseTab());
         messageTabs.addTab("Properties", buildPropertiesTab());
 
-        String[] messages = messageExchange.getMessages();
-        if (messages != null && messages.length > 0) {
-            messageTabs.addTab("Messages", buildMessagesTab());
-        }
+        messageTabs.addTab("Messages", buildMessagesTab());
 
         if (getAssertedXPaths().size() > 0) {
             messageTabs.addTab("XPath Assertions", buildAssertionsTab());
@@ -168,9 +165,7 @@ public class ShowMessageExchangeAction extends AbstractAction {
     }
 
     private Component buildMessagesTab() {
-        String[] messages = messageExchange.getMessages();
-        return messages == null || messages.length == 0 ? new JLabel("No messages to display") : new JScrollPane(
-                new JList(messages));
+        return hasMessages() ? new JScrollPane(new JList<>(messageExchange.getMessages())) : new JLabel("No messages to display");
     }
 
     private Component buildResponseTab() {
@@ -181,6 +176,10 @@ public class ShowMessageExchangeAction extends AbstractAction {
     private Component buildRequestTab() {
         requestMessageEditor = new MessageExchangeRequestMessageEditor(messageExchange);
         return requestMessageEditor;
+    }
+
+    private boolean hasMessages() {
+        return messageExchange != null && messageExchange.getMessages() != null && messageExchange.getMessages().length > 0;
     }
 
     private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel {

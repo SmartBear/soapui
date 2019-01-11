@@ -34,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockRequestMessageExchange;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
@@ -433,11 +434,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                 mockRunner.stop();
             }
 
-            AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange(
-                    mockRunListener.getLastResult());
-            result.setMessageExchange(messageExchange);
-
             if (mockRunListener.getLastResult() != null) {
+                AssertedWsdlMockResultMessageExchange messageExchange = new AssertedWsdlMockResultMessageExchange(
+                        mockRunListener.getLastResult());
+                result.setMessageExchange(messageExchange);
+
                 lastResult = mockRunListener.getLastResult();
                 mockResponse.setMockResult(lastResult);
 
