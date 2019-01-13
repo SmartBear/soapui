@@ -1,7 +1,7 @@
 #!/bin/sh
 ### ====================================================================== ###
 ##                                                                          ##
-##  SoapUI LoadTestRunner Bootstrap Script                                  ##
+##  SoapUI Pro LoadTestRunner Bootstrap Script                                  ##
 ##                                                                          ##
 ### ====================================================================== ###
 
@@ -18,12 +18,25 @@ case "`uname`" in
 esac
 
 # Setup SOAPUI_HOME
-if [ "x$SOAPUI_HOME" = "x" ]
+if [ -d $SOAPUI_HOME ]
 then
     # get the full path (without any relative bits)
     SOAPUI_HOME=`cd $DIRNAME/..; pwd`
 fi
+
 export SOAPUI_HOME
+
+if [ -f "$SOAPUI_HOME/jre/bin/java" ]
+then
+  JAVA=$SOAPUI_HOME/jre/bin/java
+else
+    if [ -f "$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java" ]
+    then
+        JAVA=$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java
+    else
+        JAVA=java
+    fi
+fi
 
 SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
 JFXRTPATH=`$JAVA -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
@@ -31,8 +44,9 @@ SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin"
+JAVA=$SOAPUI_HOME/jre/bin/java
 
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin"
 if [ $SOAPUI_HOME != "" ] 
 then
     JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.libraries=$SOAPUI_HOME/bin/ext"
@@ -41,9 +55,8 @@ then
 fi
 
 export JAVA_OPTS
-
 # For Cygwin, switch paths to Windows format before running java
-if [ $cygwin = "true" ]
+if $cygwin
 then
     SOAPUI_HOME=`cygpath --path --dos "$SOAPUI_HOME"`
     SOAPUI_CLASSPATH=`cygpath --path --dos "$SOAPUI_CLASSPATH"`
@@ -55,4 +68,4 @@ echo = SOAPUI_HOME = $SOAPUI_HOME
 echo =
 echo ================================
 
-java $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUILoadTestRunner "$@"
+$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUILoadTestRunner "$@"

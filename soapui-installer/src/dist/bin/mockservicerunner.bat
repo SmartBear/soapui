@@ -1,17 +1,23 @@
 @echo off
 
 set SOAPUI_HOME=%~dp0
+if exist "%SOAPUI_HOME%..\jre\bin" goto SET_BUNDLED_JAVA
 
-set JAVA=%JAVA_HOME%\bin\java
-
-if not "%JAVA_HOME%" == "" goto SET_CLASSPATH
-
-set JAVA=java
+if exist "%JAVA_HOME%" goto SET_SYSTEM_JAVA
 
 echo JAVA_HOME is not set, unexpected results may occur.
 echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
+goto SET_SYSTEM_JAVA
 
-:SET_CLASSPATH
+:SET_BUNDLED_JAVA
+set JAVA=%SOAPUI_HOME%..\jre\bin\java
+goto END_SETTING_JAVA
+
+:SET_SYSTEM_JAVA
+set JAVA=java
+
+:END_SETTING_JAVA
+
 
 rem init classpath
 
@@ -31,6 +37,6 @@ if "%SOAPUI_HOME%\" == "" goto START
 
 :START
 
-rem ********* run soapui testcase runner ***********
+rem ********* run soapui loadtest runner ***********
 
-"%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.tools.SoapUIMockServiceRunner %*
+"%JAVA%" %JAVA_OPTS% com.eviware.soapui.tools.SoapUIMockServiceRunner %*

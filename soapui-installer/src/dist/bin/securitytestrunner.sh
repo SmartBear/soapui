@@ -25,8 +25,20 @@ then
 fi
 export SOAPUI_HOME
 
+if [ -f "$SOAPUI_HOME/jre/bin/java" ]
+then
+  JAVA=$SOAPUI_HOME/jre/bin/java
+else
+    if [ -f "$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java" ]
+    then
+        JAVA=$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java
+    else
+        JAVA=java
+    fi
+fi
+
 SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
-JFXRTPATH=`java -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
+JFXRTPATH=`$JAVA -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
 SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 export SOAPUI_HOME
@@ -54,4 +66,4 @@ echo = SOAPUI_HOME = $SOAPUI_HOME
 echo =
 echo ================================
 
-java $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUISecurityTestRunner "$@"
+$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUISecurityTestRunner "$@"

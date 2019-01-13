@@ -3,17 +3,17 @@
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
     <id>dist</id>
     <formats>
-      <format>dir</format>
+        <format>dir</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
         <dependencySet>
-          <outputDirectory>lib</outputDirectory>
-          <useProjectArtifact>false</useProjectArtifact>
-          <scope>runtime</scope>
-          <excludes>
-              <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
-          </excludes>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <scope>runtime</scope>
+            <excludes>
+                <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
+            </excludes>
         </dependencySet>
         <dependencySet>
             <outputDirectory>bin</outputDirectory>
@@ -25,7 +25,7 @@
             </includes>
             <outputFileNameMapping>${project.src.artifactId}-${project.version}.jar</outputFileNameMapping>
         </dependencySet>
-      </dependencySets>
+    </dependencySets>
     <fileSets>
         <fileSet>
             <directory>${project.parent.basedir}</directory>
@@ -89,7 +89,7 @@
             <outputDirectory>wsi-test-tools</outputDirectory>
         </fileSet>
 
-          <!-- TODO Ugly hack to create the empty listeners and actions directories -->
+        <!-- TODO Ugly hack to create the empty listeners and actions directories -->
         <fileSet>
             <!-- This must be a directory without sub directories -->
             <directory>src/dist/bin/ext</directory>
