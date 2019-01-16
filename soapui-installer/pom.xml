@@ -38,6 +38,7 @@
                 <argument>SoapUI ${project.version}</argument>
                 <argument>${basedir}/src/main/resources/SoapUI-Spashscreen.png</argument>
                 <argument>${basedir}/target/SoapUI-Spashscreen.png</argument>
+                <argument>${basedir}/src/dist/bin/SoapUI-Spashscreen-lined.png</argument>
               </arguments>
             </configuration>
           </plugin>

@@ -30,6 +30,7 @@ public class SplashScreenStomper {
         String version = arg[0];
         String inputFilePath = arg[1];
         String outputFilePath = arg[2];
+        String outputFilePathBat = arg[3];
 
         String fullText = String.format("%s\n\nCopyright SmartBear Software\n\nwww.soapui.org\nwww.smartbear.com", version);
         BufferedImage bufferedImage = ImageIO.read(new File(inputFilePath));
@@ -45,6 +46,7 @@ public class SplashScreenStomper {
         }
 
         ImageIO.write(bufferedImage, "png", new File(outputFilePath));
+        ImageIO.write(bufferedImage, "png", new File(outputFilePathBat));
 
     }
 }

@@ -233,7 +233,7 @@
       <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
-      <splashScreen show="true" width="0" height="0" bitmapFile="${compiler:DIST_ROOT}/bin/SoapUI-Spashscreen.png" textOverlay="false">
+      <splashScreen show="true" width="0" height="0" bitmapFile="../../target/SoapUI-Spashscreen.png" textOverlay="false">
         <text>
           <statusLine x="20" y="20" text="" fontSize="8" fontColor="0,0,0" bold="false" />
           <versionLine x="20" y="40" text="" fontSize="8" fontColor="0,0,0" bold="false" />
