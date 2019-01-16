@@ -21,5 +21,5 @@ DIRNAME=`dirname $EXECUTABLE`
 
 MAIN_CLASS="com.eviware.soapui.SoapUI"
 JAVA_OPTS="$JAVA_OPTS -splash:SoapUI-Spashscreen.png"
-cd "$DIRNAME"
+cd "$DIRNAME" && DIRNAME=`pwd` # make sure DIRNAME is absolute
 . ./baserunner.sh
