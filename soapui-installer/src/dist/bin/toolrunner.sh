@@ -1,70 +1,23 @@
 #!/bin/sh
 ### ====================================================================== ###
 ##                                                                          ##
-##  SoapUI Pro ToolRunner Bootstrap Script                                      ##
+##  SoapUI ToolRunner Bootstrap Script                                      ##
 ##                                                                          ##
 ### ====================================================================== ###
 
 ### $Id$ ###
-
-DIRNAME=`dirname $0`
-
-# OS specific support (must be 'true' or 'false').
-cygwin=false;
-case "`uname`" in
-    CYGWIN*)
-        cygwin=true
-        ;;
-esac
-
-# Setup SOAPUI_HOME
-if [ -d $SOAPUI_HOME ]
+EXECUTABLE=`dirname "$0"`/`basename "$0"`
+LS_LD=`ls -ld "${EXECUTABLE}"`
+SYM_LINK_INDICATOR="->"
+if [ "$LS_LD" != "${LS_LD%$SYM_LINK_INDICATOR*}" ]
 then
-    # get the full path (without any relative bits)
-    SOAPUI_HOME=`cd $DIRNAME/..; pwd`
+  EXECUTABLE=`ls -ld "${EXECUTABLE}" | sed -e 's|.*-> ||' -e 's|.* ${EXECUTABLE}|${EXECUTABLE}|'`
+  case "$EXECUTABLE" in
+    /*);;
+    *)EXECUTABLE=`dirname $0`/$EXECUTABLE
+  esac
 fi
+DIRNAME=`dirname $EXECUTABLE`
 
-export SOAPUI_HOME
-
-if [ -f "$SOAPUI_HOME/jre/bin/java" ]
-then
-  JAVA=$SOAPUI_HOME/jre/bin/java
-else
-    if [ -f "$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java" ]
-    then
-        JAVA=$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java
-    else
-        JAVA=java
-    fi
-fi
-
-SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
-JFXRTPATH=`$JAVA -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
-SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
-
-export SOAPUI_CLASSPATH
-
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin"
-if [ $SOAPUI_HOME != "" ] 
-then
-    JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.libraries=$SOAPUI_HOME/bin/ext"
-    JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.listeners=$SOAPUI_HOME/bin/listeners"
-    JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.actions=$SOAPUI_HOME/bin/actions"
-fi
-
-export JAVA_OPTS
-
-# For Cygwin, switch paths to Windows format before running java
-if $cygwin
-then
-    SOAPUI_HOME=`cygpath --path --dos "$SOAPUI_HOME"`
-    SOAPUI_CLASSPATH=`cygpath --path --dos "$SOAPUI_CLASSPATH"`
-fi
-
-echo ================================
-echo =
-echo = SOAPUI_HOME = $SOAPUI_HOME
-echo =
-echo ================================
-
-$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUIToolRunner "$@"
+MAIN_CLASS="com.eviware.soapui.tools.SoapUIToolRunner"
+. "$DIRNAME/baserunner.sh"
