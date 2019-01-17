@@ -67,24 +67,17 @@ public class RestServiceBuilder {
         }
     }
 
-    public RestRequest createRestService(WsdlProject project, String URI) throws MalformedURLException {
-        return createRestService(project, URI, true);
-    }
-
-    public RestRequest createRestService(WsdlProject project, String URI, boolean showRequest) throws MalformedURLException {
+    public void createRestService(WsdlProject project, String URI) throws MalformedURLException {
         if (StringUtils.isNullOrEmpty(URI)) {
-            throw  new MalformedURLException("The URL is null or empty");
+            return;
         }
 
         RestResource restResource = createResource(ModelCreationStrategy.CREATE_NEW_MODEL, project, URI);
         RestRequest restRequest = addNewRequest(addNewMethod(ModelCreationStrategy.CREATE_NEW_MODEL,
                 restResource, RestRequestInterface.HttpMethod.GET));
         copyParameters(extractParams(URI), restResource.getParams());
-        if (showRequest) {
-            UISupport.select(restRequest);
-            UISupport.showDesktopPanel(restRequest);
-        }
-        return restRequest;
+        UISupport.select(restRequest);
+        UISupport.showDesktopPanel(restRequest);
     }
 
     public RestRequest createRestServiceHeadlessFromUri(WsdlProject project, RequestInfo requestInfo,

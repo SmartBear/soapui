@@ -33,9 +33,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SaveRequestAction extends AbstractAction {
-    public static final MessageSupport messages = MessageSupport.getMessages(SaveRequestAction.class);
+    private static final MessageSupport messages = MessageSupport.getMessages(SaveRequestAction.class);
     private static final String NEW_PROJECT_OPTION = "[new project]";
     private static final String DEFAULT_PROJECT_NAME = "Project";
     private static final int DIALOG_WIDTH = 520;
@@ -43,9 +44,9 @@ public class SaveRequestAction extends AbstractAction {
     private static final Dimension PROJECTS_FORM_SIZE = new Dimension(400, 100);
     private XFormDialog dialog;
     private ProjectListItem selectedProject;
-    private HashMap<String, Object> context;
+    private Map<String, Object> context;
 
-    public SaveRequestAction(HashMap<String, Object> context) {
+    public SaveRequestAction(Map<String, Object> context) {
         this.context = context;
     }
 
@@ -112,7 +113,7 @@ public class SaveRequestAction extends AbstractAction {
         return container;
     }
 
-    private RestRequest addRequest(HashMap<String, Object> context, String requestName) {
+    private RestRequest addRequest(Map<String, Object> context, String requestName) {
         RestServiceBuilder serviceBuilder = new RestServiceBuilder();
         WsdlProject project = null;
         RestRequest restRequest = null;
