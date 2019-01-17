@@ -74,7 +74,7 @@ public final class ProductBodyguard extends Provider {
         boolean passed = true;
         try {
             jarVerifier.verify(certificate);
-        } catch (IOException e) {
+        } catch (Exception e) {
             passed = false;
         }
 
@@ -87,7 +87,7 @@ public final class ProductBodyguard extends Provider {
         JarVerifier(File jarURL) {
             try {
                 jarFile = new JarFile(jarURL);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 SoapUI.logError(e);
             }
         }
