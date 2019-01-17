@@ -192,6 +192,12 @@ public class OAuth2TokenExtractor {
         OAuthToken oAuthToken = oAuthClient.accessToken(accessTokenRequest, OAuthJSONAccessTokenResponse.class).getOAuthToken();
         parameters.applyRetrievedAccessToken(oAuthToken.getAccessToken());
         parameters.setAccessTokenIssuedTimeInProfile(TimeUtils.getCurrentTimeInSeconds());
+	// Due to RFC6749 6. the client MUST discard the old refresh token if the server issues a new token
+	// and replace it with the new one.
+	String newRefreshToken = oAuthToken.getRefreshToken();
+	if (newRefreshToken!=null && !newRefreshToken.equals(parameters.refreshToken)) {
+           parameters.setRefreshTokenInProfile(newRefreshToken);
+	}
     }
 
     public void addBrowserListener(BrowserListener listener) {
