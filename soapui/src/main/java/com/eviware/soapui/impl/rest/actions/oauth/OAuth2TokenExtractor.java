@@ -195,7 +195,7 @@ public class OAuth2TokenExtractor {
 	// Due to RFC6749 6. the client MUST discard the old refresh token if the server issues a new token
 	// and replace it with the new one.
 	String newRefreshToken = oAuthToken.getRefreshToken();
-	if (newRefreshToken!=null && newRefreshToken!=parameters.refreshToken) {
+	if (newRefreshToken!=null && !newRefreshToken.equals(parameters.refreshToken)) {
            parameters.setRefreshTokenInProfile(newRefreshToken);
 	}
     }
