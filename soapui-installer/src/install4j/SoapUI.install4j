@@ -2169,9 +2169,9 @@ return "";</string>
           </java>
         </serializedBean>
         <styleOverrides />
-                <customScript mode="1" file="">
-                  <content />
-                </customScript>
+            <customScript mode="1" file="">
+                <content />
+            </customScript>
         <styleOverrides>
           <styleOverride name="Customize title bar" enabled="true">
             <group name="" id="7598" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
