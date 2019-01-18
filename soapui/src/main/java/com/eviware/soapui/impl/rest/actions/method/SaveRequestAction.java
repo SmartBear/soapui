@@ -76,7 +76,7 @@ public class SaveRequestAction extends AbstractAction {
     }
 
     private JPanel getProjectListComponent() {
-        ObservableList<ProjectListItem> projects = FXCollections.observableArrayList();
+        /*ObservableList<ProjectListItem> projects = FXCollections.observableArrayList();
         projects.add(new ProjectListItem(NEW_PROJECT_OPTION, null));
         for (Project project : SoapUI.getWorkspace().getProjectList()) {
             if (project.isOpen()) {
@@ -107,9 +107,9 @@ public class SaveRequestAction extends AbstractAction {
         JFXPanel panel = new JFXPanel();
         Platform.runLater(() -> {
             panel.setScene(scene);
-        });
+        });*/
         JPanel container = new JPanel(new BorderLayout());
-        container.add(panel, BorderLayout.CENTER);
+        //container.add(panel, BorderLayout.CENTER);
         return container;
     }
 
