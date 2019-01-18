@@ -1,0 +1,106 @@
+﻿.section a {
+    margin: 0px;
+    font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
+
+div.right-panel {
+    position: relative;
+    display: inline-block;
+    float: right;
+    width: 200px;
+    height: 100%;
+    background-color: #e8e8e8;
+    border-left: 1px solid;
+    border-color: #878787;
+    margin: 0px;
+    z-index: 100;
+    padding: 16px;
+}
+
+div.right-panel div.section-content {
+    border-bottom: 2px solid #dbdbdb;
+    padding-bottom: 3px;
+    margin-bottom: 25px;
+}
+
+div.right-panel div.section-content:last-child {
+    border: none;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+div.right-panel div.section-content .section {
+    margin: 0;
+    padding: 0;
+}
+
+div.right-panel div.section-content .section li {
+    margin: 10px 0;
+    padding: 0;
+}
+
+div.right-panel div.section-content .section li:first-child {
+    margin-top: 6px;
+}
+
+div.right-panel div.section-content .section li a {
+    color: #333333;
+    background-color: transparent;
+    font-size: 12px;
+}
+
+div.right-panel div.section-content.links .section li a {
+    color: #0058c5;
+}
+
+div.right-panel div.section-content.recent .section li a:before {
+    font-family: FontAwesome;
+    margin: 1px 5px 0 0;
+    font-size: 12px;
+}
+
+div.right-panel div.section-content.recent .section li.testCase a:before {
+    content: '\f00c';
+    color: #2cb14a;
+}
+
+div.right-panel div.section-content.recent .section li.testSuite a:before {
+    content: '\f009';
+    color: #707070;
+}
+
+div.section-caption {
+    font-size: 11px;
+    font-weight: bolder;
+    font-family: "Lucida Sans", Geneva, Verdana, sans-serif;
+}
+
+.section li {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    list-style-type: none;
+}
+
+.section li.recent_item {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.section a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #4A494D;
+    background: white;
+}
+
+@media (max-width: 1370px) {
+     div.section-caption {
+        font-size: 12px;
+    }
+
+    .section a {
+        font-size: 12px;
+    }
+}

@@ -29,11 +29,13 @@ import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.analytics.UniqueUserIdentifier;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
+import com.eviware.soapui.impl.RoundButton;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewEmptyProjectAction;
 import com.eviware.soapui.impl.actions.NewRestProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
+import com.eviware.soapui.impl.rest.actions.explorer.EndpointExplorerAction;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -131,6 +133,7 @@ import org.apache.log4j.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -139,9 +142,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -164,6 +169,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -265,6 +272,9 @@ public class SoapUI {
     private static JXToolBar mainToolbar;
     private static String[] mainArgs;
     private static GCTimerTask gcTimerTask;
+
+    private static JPanel endpointExplorerButtonPanel;
+    private static JButton endpointExplorerButton;
 
     private final static ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(
             getMaxThreadpoolSize(), new SoapUIThreadCreator());
@@ -378,6 +388,10 @@ public class SoapUI {
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
+        mainToolbar.addSpace(30);
+        createEndpointExplorerButton();
+        endpointExplorerButtonPanel.add(endpointExplorerButton);
+        mainToolbar.add(endpointExplorerButtonPanel);
 
         mainToolbar.addGlue();
         searchField = new JTextField(20) {
@@ -434,6 +448,49 @@ public class SoapUI {
         }
     }
 
+    private void createEndpointExplorerButton() {
+        endpointExplorerButtonPanel = new JPanel(new BorderLayout());
+        endpointExplorerButtonPanel.setPreferredSize(new Dimension(130, 32));
+        endpointExplorerButtonPanel.setMaximumSize(new Dimension(130, 32));
+//        endpointExplorerButtonPanel.setBackground(Color.blue); //TODO: delete
+
+        endpointExplorerButton = new RoundButton(6);
+        endpointExplorerButton.setForeground(Color.WHITE);
+        endpointExplorerButton.setBackground(new Color(52, 137, 209));
+        endpointExplorerButton.setText("Endpoint Explorer");
+        if (UISupport.isMac()) {
+            endpointExplorerButton.setOpaque(true);
+        }
+        EndpointExplorerAction action = new EndpointExplorerAction();
+        endpointExplorerButton.addActionListener(action);
+        endpointExplorerButton.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                endpointExplorerButton.setBackground(new Color(39, 104, 158));
+                endpointExplorerButton.repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                endpointExplorerButton.setBackground(new Color(52, 137, 209));
+                endpointExplorerButton.repaint();
+            }
+
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+            }
+        });
+    }
+
+    private void drawVerticalLines() {
+
+    }
 
     private JMenuBar buildMainMenu() {
         menuBar = new JMenuBar() {
