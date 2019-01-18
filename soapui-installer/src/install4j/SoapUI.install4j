@@ -416,7 +416,7 @@ return xx;</string>
                         </void>
                         <void property="imageFile">
                           <object class="com.install4j.api.beans.ExternalFile">
-                            <string>./resources/images/smartbear-logo.png</string>
+                            <string>./resources/images/panel_164x321_soapUI-CORE.png</string>
                           </object>
                         </void>
                       </object>
@@ -2315,7 +2315,7 @@ return "";</string>
                         </void>
                         <void property="imageFile">
                           <object class="com.install4j.api.beans.ExternalFile">
-                            <string>./resource/images/smartbear-logo.png</string>
+                            <string>./resources/images/panel_164x321_soapUI-CORE.png</string>
                           </object>
                         </void>
                         <void property="insets">
