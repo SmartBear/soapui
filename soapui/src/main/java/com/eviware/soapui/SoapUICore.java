@@ -1,17 +1,17 @@
 /*
- * SoapUI, Copyright (C) 2004-2018 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui;
@@ -26,24 +26,25 @@ import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import java.io.File;
 
 public interface SoapUICore {
-    public final static String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
+    String SOAPUI_VERSION = "5.5.0-SNAPSHOT";
 
-    public Settings getSettings();
+    String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
 
-    public MockEngine getMockEngine();
+    Settings getSettings();
 
-    public SoapUIListenerRegistry getListenerRegistry();
+    MockEngine getMockEngine();
 
-    public SoapUIActionRegistry getActionRegistry();
+    SoapUIListenerRegistry getListenerRegistry();
 
-    public SoapUIFactoryRegistry getFactoryRegistry();
+    SoapUIActionRegistry getActionRegistry();
 
-    public String saveSettings() throws Exception;
+    SoapUIFactoryRegistry getFactoryRegistry();
 
-    public Settings importSettings(File file) throws Exception;
+    String saveSettings() throws Exception;
 
-    public SoapUIExtensionClassLoader getExtensionClassLoader();
+    Settings importSettings(File file) throws Exception;
 
-    public SecurityScanRegistry getSecurityScanRegistry();
+    SoapUIExtensionClassLoader getExtensionClassLoader();
 
+    SecurityScanRegistry getSecurityScanRegistry();
 }

@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2018 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.SoapUIActions;
+import com.eviware.soapui.autoupdate.SoapUIVersionInfo;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.MockServiceDocumentConfig;
@@ -2016,8 +2017,19 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         environmentListeners.remove(listener);
     }
 
+    public boolean isFromNewerVersion() {
+        if (projectDocument.getSoapuiProject().getSoapuiVersion() == null) {
+            return false;
+        }
+        String versionWithoutTimeStamp = StringUtils.getSubstringBeforeFirstWhitespace(projectDocument.getSoapuiProject().getSoapuiVersion());
+        return (SoapUIVersionInfo.currentVersion.isNewerThanCurrent(new SoapUIVersionInfo(versionWithoutTimeStamp)));
+    }
+
     public enum ProjectEncryptionStatus {
         NOT_ENCRYPTED, ENCRYPTED_BAD_OR_NO_PASSWORD, ENCRYPTED_GOOD_PASSWORD;
     }
 
+    public boolean isFromReady() {
+        return StringUtils.hasContent(getConfig().getUpdated());
+    }
 }

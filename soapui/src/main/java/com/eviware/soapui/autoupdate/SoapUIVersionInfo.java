@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2018 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -16,12 +16,15 @@
 
 package com.eviware.soapui.autoupdate;
 
+import com.eviware.soapui.SoapUICore;
+
 import java.util.Comparator;
 
 /**
  * Created by avdeev on 27.08.2014.
  */
 public class SoapUIVersionInfo implements Comparator<SoapUIVersionInfo> {
+    public static final SoapUIVersionInfo currentVersion = new SoapUIVersionInfo(SoapUICore.SOAPUI_VERSION);
     private int majorVersion;
     private int minorVersion;
     private int middleVersion;
@@ -112,5 +115,9 @@ public class SoapUIVersionInfo implements Comparator<SoapUIVersionInfo> {
     @Override
     public String toString() {
         return asString;
+    }
+
+    public boolean isNewerThanCurrent(SoapUIVersionInfo version) {
+        return compare(version, currentVersion) > 0;
     }
 }
