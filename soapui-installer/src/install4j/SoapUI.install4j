@@ -2193,6 +2193,64 @@ return "";</string>
                 <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" />
               </java>
             </serializedBean>
+                <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                        <void property="backgroundColor">
+                          <object class="java.awt.Color">
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="borderSides">
+                          <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                            <void property="bottom">
+                              <boolean>true</boolean>
+                            </void>
+                          </object>
+                        </void>
+                        <void property="imageAnchor">
+                          <object class="java.lang.Enum" method="valueOf">
+                            <class>com.install4j.api.beans.Anchor</class>
+                            <string>WEST</string>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBackgroundColor">
+                          <object class="java.awt.Color">
+                            <int>239</int>
+                            <int>240</int>
+                            <int>240</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBorder">
+                          <boolean>true</boolean>
+                        </void>
+                        <void property="imageFile">
+                          <object class="com.install4j.api.beans.ExternalFile">
+                            <string>./resources/images/panel_164x321_ready-api.png</string>
+                          </object>
+                        </void>
+                        <void property="insets">
+                          <object class="java.awt.Insets">
+                            <int>5</int>
+                            <int>10</int>
+                            <int>10</int>
+                            <int>10</int>
+                          </object>
+                        </void>
+                      </object>
+                    </java>
+                  </serializedBean>
+                  <beans />
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
             <styleOverrides />
             <condition />
             <validation />
@@ -2480,6 +2538,68 @@ return console.askYesNo(message, true);
                 <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen" />
               </java>
             </serializedBean>
+            <styleOverrides>
+              <styleOverride name="Customize banner image" enabled="true">
+                <group name="" id="9303" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
+                  <serializedBean>
+                    <java class="java.beans.XMLDecoder">
+                      <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                        <void property="backgroundColor">
+                          <object class="java.awt.Color">
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="borderSides">
+                          <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                            <void property="bottom">
+                              <boolean>true</boolean>
+                            </void>
+                          </object>
+                        </void>
+                        <void property="imageAnchor">
+                          <object class="java.lang.Enum" method="valueOf">
+                            <class>com.install4j.api.beans.Anchor</class>
+                            <string>WEST</string>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBackgroundColor">
+                          <object class="java.awt.Color">
+                            <int>239</int>
+                            <int>240</int>
+                            <int>240</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBorder">
+                          <boolean>true</boolean>
+                        </void>
+                        <void property="imageFile">
+                          <object class="com.install4j.api.beans.ExternalFile">
+                            <string>./resources/images/panel_164x321_soapUI-CORE.png</string>
+                          </object>
+                        </void>
+                        <void property="insets">
+                          <object class="java.awt.Insets">
+                            <int>5</int>
+                            <int>10</int>
+                            <int>10</int>
+                            <int>10</int>
+                          </object>
+                        </void>
+                      </object>
+                    </java>
+                  </serializedBean>
+                  <beans />
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
             <styleOverrides />
             <condition />
             <validation />
