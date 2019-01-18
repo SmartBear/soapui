@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2018 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.RestURIParser;
+import com.eviware.soapui.impl.rest.actions.explorer.RequestInspectionData;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
@@ -37,7 +38,9 @@ import com.eviware.soapui.support.UISupport;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.net.MalformedURLException;
+import java.util.Map;
 
+import static com.eviware.soapui.impl.actions.RestServiceBuilder.ModelCreationStrategy.CREATE_NEW_MODEL;
 import static com.eviware.soapui.impl.actions.RestServiceBuilder.ModelCreationStrategy.REUSE_MODEL;
 
 public class RestServiceBuilder {
@@ -70,18 +73,63 @@ public class RestServiceBuilder {
         }
 
         RestResource restResource = createResource(ModelCreationStrategy.CREATE_NEW_MODEL, project, URI);
-        RestRequest restRequest = addNewRequest(addNewMethod(ModelCreationStrategy.CREATE_NEW_MODEL, restResource, RestRequestInterface.HttpMethod.GET));
+        RestRequest restRequest = addNewRequest(addNewMethod(ModelCreationStrategy.CREATE_NEW_MODEL,
+                restResource, RestRequestInterface.HttpMethod.GET));
         copyParameters(extractParams(URI), restResource.getParams());
         UISupport.select(restRequest);
         UISupport.showDesktopPanel(restRequest);
-
     }
 
-    public RestRequest createRestServiceHeadlessFromUri(WsdlProject project, RequestInfo requestInfo, ModelCreationStrategy methodReuseStrategy) throws MalformedURLException {
+    public RestRequest createRestServiceHeadlessFromUri(WsdlProject project, RequestInfo requestInfo,
+                                                        ModelCreationStrategy methodReuseStrategy) throws MalformedURLException {
         RestResource restResource = createResource(REUSE_MODEL, project, requestInfo.getUri());
         RestMethod restMethod = addNewMethod(methodReuseStrategy, restResource, requestInfo.getRequestMethod());
         RestRequest restRequest = addNewRequest(restMethod);
         copyParametersWithDefaultsOnResource(extractParams(requestInfo.getUri()), restMethod.getParams(), restRequest.getParams());
+        return restRequest;
+    }
+
+    public RestRequest createRestServiceWithMethod(WsdlProject project, String URI,
+                                                   RestRequestInterface.HttpMethod method,
+                                                   boolean showDesktopPanel,
+                                                   String requestName) throws MalformedURLException {
+        if (StringUtils.isNullOrEmpty(URI)) {
+            throw new MalformedURLException("The URL is null or empty");
+        }
+        RestResource restResource = createResource(REUSE_MODEL, project, URI);
+        ModelCreationStrategy methodReuseStrategy = CREATE_NEW_MODEL;
+        for (RestMethod restMethod : restResource.getRestMethodList()) {
+            if (restMethod.getMethod() == method) {
+                methodReuseStrategy = REUSE_MODEL;
+            }
+        }
+        RestMethod restMethod = addNewMethod(methodReuseStrategy, restResource, method);
+        RestRequest restRequest;
+        if (requestName != null) {
+            restRequest = restMethod.addNewRequest(requestName);
+        } else {
+            restRequest = addNewRequest(restMethod);
+        }
+        copyParameters(extractParams(URI), restMethod.getParams());
+        if (showDesktopPanel) {
+            UISupport.select(restRequest);
+            UISupport.showDesktopPanel(restRequest);
+        }
+        return restRequest;
+    }
+
+    public RestRequest createRestServiceFromInspectionData(WsdlProject project, String URI,
+                                                           RestRequestInterface.HttpMethod method,
+                                                           RequestInspectionData inspectionData,
+                                                           boolean showDesktopPanel,
+                                                           String requestName) throws MalformedURLException {
+        RestRequest restRequest = createRestServiceWithMethod(project, URI, method, showDesktopPanel, requestName);
+        if (inspectionData.getHeaders() != null) {
+            applyHeaders(restRequest, inspectionData.getHeaders());
+        }
+        if (StringUtils.hasContent(inspectionData.getRequestBody())) {
+            restRequest.setRequestContent(inspectionData.getRequestBody());
+        }
         return restRequest;
     }
 
@@ -162,6 +210,15 @@ public class RestServiceBuilder {
 
     protected RestRequest addNewRequest(RestMethod restMethod) {
         return restMethod.addNewRequest("Request " + (restMethod.getRequestCount() + 1));
+    }
+
+    private void applyHeaders(RestRequest restRequest, Map<String, String> headers) {
+        RestParamsPropertyHolder requestPropertyHolder = restRequest.getRestMethod().getParams();
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            RestParamProperty property = requestPropertyHolder.addProperty(header.getKey());
+            property.setStyle(RestParamsPropertyHolder.ParameterStyle.HEADER);
+            property.setValue(header.getValue());
+        }
     }
 
 }
