@@ -1868,6 +1868,12 @@ return installTutorials;</condition>
                   <serializedBean>
                     <java class="java.beans.XMLDecoder">
                       <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                        <void property="imageAnchor">
+                          <object class="java.lang.Enum" method="valueOf">
+                            <class>com.install4j.api.beans.Anchor</class>
+                            <string>WEST</string>
+                          </object>
+                        </void>
                         <void property="imageEdgeBackgroundColor">
                           <object class="java.awt.Color">
                             <int>239</int>
@@ -2131,15 +2137,30 @@ return "";</string>
           </screen>
         </screens>
       </application>
-      <application name="" id="uninstaller" customizedId="" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" styleId="" fileset="" customIcnsFile="" customIcoFile="" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
+      <application name="" id="uninstaller" customizedId="" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" styleId="7375" fileset="" customIcnsFile="" customIcoFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
         <serializedBean>
           <java class="java.beans.XMLDecoder">
-            <object class="com.install4j.runtime.beans.applications.UninstallerApplication">
+            <object class="com.install4j.runtime.beans.applications.UninstallerApplication" id="UninstallerApplication0">
+              <void property="customIconImageFiles">
+                <void method="add">
+                  <object class="com.install4j.api.beans.ExternalFile">
+                    <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_16-16.png</string>
+                  </object>
+                </void>
+                <void method="add">
+                  <object class="com.install4j.api.beans.ExternalFile">
+                    <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png</string>
+                  </object>
+                </void>
+              </void>
               <void property="customMacosExecutableName">
                 <string>${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</string>
               </void>
               <void property="frameSizeClientArea">
                 <boolean>false</boolean>
+              </void>
+              <void property="useCustomIcon">
+                <boolean>true</boolean>
               </void>
               <void property="useCustomMacosExecutableName">
                 <boolean>true</boolean>
@@ -2147,10 +2168,71 @@ return "";</string>
             </object>
           </java>
         </serializedBean>
-        <styleOverrides />
-        <customScript mode="1" file="">
-          <content />
-        </customScript>
+        <styleOverrides>
+          <styleOverride name="Customize title bar" enabled="true">
+            <group name="" id="7598" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
+              <serializedBean>
+                <java class="java.beans.XMLDecoder">
+                  <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                    <void property="backgroundColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                    </void>
+                    <void property="borderSides">
+                      <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                        <void property="bottom">
+                          <boolean>true</boolean>
+                        </void>
+                      </object>
+                    </void>
+                    <void property="imageAnchor">
+                      <object class="java.lang.Enum" method="valueOf">
+                        <class>com.install4j.api.beans.Anchor</class>
+                        <string>NORTHEAST</string>
+                      </object>
+                    </void>
+                    <void property="imageEdgeBorderWidth">
+                      <int>2</int>
+                    </void>
+                    <void property="imageFile">
+                      <object class="com.install4j.api.beans.ExternalFile">
+                        <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png</string>
+                      </object>
+                    </void>
+                    <void property="imageInsets">
+                      <object class="java.awt.Insets">
+                        <int>0</int>
+                        <int>5</int>
+                        <int>1</int>
+                        <int>1</int>
+                      </object>
+                    </void>
+                    <void property="insets">
+                      <object class="java.awt.Insets">
+                        <int>0</int>
+                        <int>20</int>
+                        <int>0</int>
+                        <int>10</int>
+                      </object>
+                    </void>
+                  </object>
+                </java>
+              </serializedBean>
+              <beans />
+              <externalParametrizationPropertyNames>
+                <propertyName>backgroundColor</propertyName>
+                <propertyName>foregroundColor</propertyName>
+                <propertyName>imageAnchor</propertyName>
+                <propertyName>imageFile</propertyName>
+                <propertyName>imageOverlap</propertyName>
+              </externalParametrizationPropertyNames>
+            </group>
+          </styleOverride>
+        </styleOverrides>
         <launcherIds />
         <variables />
         <startup>
@@ -2193,7 +2275,69 @@ return "";</string>
                 <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" />
               </java>
             </serializedBean>
-            <styleOverrides />
+            <styleOverrides>
+              <styleOverride name="Customize banner image" enabled="true">
+                <group name="" id="7599" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
+                  <serializedBean>
+                    <java class="java.beans.XMLDecoder">
+                      <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                        <void property="backgroundColor">
+                          <object class="java.awt.Color">
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="borderSides">
+                          <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                            <void property="bottom">
+                              <boolean>true</boolean>
+                            </void>
+                          </object>
+                        </void>
+                        <void property="imageAnchor">
+                          <object class="java.lang.Enum" method="valueOf">
+                            <class>com.install4j.api.beans.Anchor</class>
+                            <string>WEST</string>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBackgroundColor">
+                          <object class="java.awt.Color">
+                            <int>239</int>
+                            <int>240</int>
+                            <int>240</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBorder">
+                          <boolean>true</boolean>
+                        </void>
+                        <void property="imageFile">
+                          <object class="com.install4j.api.beans.ExternalFile">
+                            <string>./resource/images/smartbear-logo.png</string>
+                          </object>
+                        </void>
+                        <void property="insets">
+                          <object class="java.awt.Insets">
+                            <int>5</int>
+                            <int>10</int>
+                            <int>10</int>
+                            <int>10</int>
+                          </object>
+                        </void>
+                      </object>
+                    </java>
+                  </serializedBean>
+                  <beans />
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
+            </styleOverrides>
             <condition />
             <validation />
             <preActivation />
@@ -2480,7 +2624,69 @@ return console.askYesNo(message, true);
                 <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen" />
               </java>
             </serializedBean>
-            <styleOverrides />
+            <styleOverrides>
+              <styleOverride name="Customize banner image" enabled="true">
+                <group name="" id="7600" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
+                  <serializedBean>
+                    <java class="java.beans.XMLDecoder">
+                      <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+                        <void property="backgroundColor">
+                          <object class="java.awt.Color">
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="borderSides">
+                          <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                            <void property="bottom">
+                              <boolean>true</boolean>
+                            </void>
+                          </object>
+                        </void>
+                        <void property="imageAnchor">
+                          <object class="java.lang.Enum" method="valueOf">
+                            <class>com.install4j.api.beans.Anchor</class>
+                            <string>WEST</string>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBackgroundColor">
+                          <object class="java.awt.Color">
+                            <int>239</int>
+                            <int>240</int>
+                            <int>240</int>
+                            <int>255</int>
+                          </object>
+                        </void>
+                        <void property="imageEdgeBorder">
+                          <boolean>true</boolean>
+                        </void>
+                        <void property="imageFile">
+                          <object class="com.install4j.api.beans.ExternalFile">
+                            <string>./resources/images/panel_164x321_soapUI-CORE.png</string>
+                          </object>
+                        </void>
+                        <void property="insets">
+                          <object class="java.awt.Insets">
+                            <int>5</int>
+                            <int>10</int>
+                            <int>10</int>
+                            <int>10</int>
+                          </object>
+                        </void>
+                      </object>
+                    </java>
+                  </serializedBean>
+                  <beans />
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
+            </styleOverrides>
             <condition />
             <validation />
             <preActivation />
