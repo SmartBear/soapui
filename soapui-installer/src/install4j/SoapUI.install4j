@@ -504,7 +504,7 @@ return console.askOkCancel(message, true);
               </formComponent>
             </formComponents>
           </screen>
-          <screen name="Display SoapUI license agreement" id="410" customizedId="" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" styleId="" rollbackBarrier="false" rollbackBarrierExitCode="1" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+          <screen name="Display SoapUI license agreement" id="410" customizedId="" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="false" commentSet="false" comment="" actionElevationType="inherit" styleId="" rollbackBarrier="false" rollbackBarrierExitCode="1" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
                 <object class="com.install4j.runtime.beans.screens.LicenseScreen" />
@@ -2170,73 +2170,8 @@ return "";</string>
         </serializedBean>
         <styleOverrides />
         <customScript mode="1" file="">
-            <content />
+          <content />
         </customScript>
-        <styleOverrides>
-          <styleOverride name="Customize title bar" enabled="true">
-            <group name="" id="7598" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
-              <serializedBean>
-                <java class="java.beans.XMLDecoder">
-                  <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
-                    <void property="backgroundColor">
-                      <object class="java.awt.Color">
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                      </object>
-                    </void>
-                    <void property="borderSides">
-                      <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
-                        <void property="bottom">
-                          <boolean>true</boolean>
-                        </void>
-                      </object>
-                    </void>
-                    <void property="imageAnchor">
-                      <object class="java.lang.Enum" method="valueOf">
-                        <class>com.install4j.api.beans.Anchor</class>
-                        <string>NORTHEAST</string>
-                      </object>
-                    </void>
-                    <void property="imageEdgeBorderWidth">
-                      <int>2</int>
-                    </void>
-                    <void property="imageFile">
-                      <object class="com.install4j.api.beans.ExternalFile">
-                        <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png</string>
-                      </object>
-                    </void>
-                    <void property="imageInsets">
-                      <object class="java.awt.Insets">
-                        <int>0</int>
-                        <int>5</int>
-                        <int>1</int>
-                        <int>1</int>
-                      </object>
-                    </void>
-                    <void property="insets">
-                      <object class="java.awt.Insets">
-                        <int>0</int>
-                        <int>20</int>
-                        <int>0</int>
-                        <int>10</int>
-                      </object>
-                    </void>
-                  </object>
-                </java>
-              </serializedBean>
-              <beans />
-              <externalParametrizationPropertyNames>
-                <propertyName>backgroundColor</propertyName>
-                <propertyName>foregroundColor</propertyName>
-                <propertyName>imageAnchor</propertyName>
-                <propertyName>imageFile</propertyName>
-                <propertyName>imageOverlap</propertyName>
-              </externalParametrizationPropertyNames>
-            </group>
-          </styleOverride>
-        </styleOverrides>
         <launcherIds />
         <variables />
         <startup>
