@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2018 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.actions;
@@ -32,6 +32,7 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -39,11 +40,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class SumbitUserInfoAction {
-    private static final String NAME_HINT = "Enter your name *";
+    private static final String FIRST_NAME_HINT = "Enter your first name *";
+    private static final String LAST_NAME_HINT = "Enter your last name *";
     private static final String EMAIL_HINT = "Enter e-mail *";
     private static final String DIALOG_CAPTION = "Stay Tuned!";
     private static final String DIALOG_MAIN_TEXT = "Want to stay in the loop?";
-    private static final String DIALOG_DESCRIPTION = "Provide your email to stay current on SoapUI updates, no advertisements or promotions!";
+    private static final String DIALOG_DESCRIPTION = "We will use this information to help you get started, and provide you with best practices we’ve learned from over 7.5 Million development, quality and operations experts just like you.";
     private static final String OK_BTN_CAPTION = "Yes, I want to know";
     private static final String SKIP_BTN_CAPTION = "Skip";
 
@@ -58,7 +60,8 @@ public class SumbitUserInfoAction {
     private class CollectUserInfoDialog extends JDialog {
         private JLabel title;
         private JLabel description;
-        private JFriendlyTextField textFieldName;
+        private JFriendlyTextField textFieldFirstName;
+        private JFriendlyTextField textFieldLastName;
         private JFriendlyTextField textFieldEmail;
         private static final String VALID_EMAIL_PATTERN =
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -80,7 +83,7 @@ public class SumbitUserInfoAction {
             setResizable(false);
             setUndecorated(true);
             setModal(true);
-            setSize(430, 250);
+            setSize(430, 265);
             setBackground(Color.WHITE);
 
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
@@ -148,20 +151,26 @@ public class SumbitUserInfoAction {
         }
 
         private JPanel buildUserInfoPanel() {
-            textFieldName = new JFriendlyTextField(NAME_HINT);
-            textFieldName.setPreferredSize(new Dimension(300, 24));
+            textFieldFirstName = new JFriendlyTextField(FIRST_NAME_HINT);
+            textFieldFirstName.setPreferredSize(new Dimension(300, 24));
+            textFieldLastName = new JFriendlyTextField(LAST_NAME_HINT);
+            textFieldLastName.setPreferredSize(new Dimension(300, 24));
+
+            JPanel namePanel = new JPanel(new GridLayout(1, 2, 8, 8));
+            setBackgroundColor(namePanel);
+            namePanel.add(textFieldFirstName);
+            namePanel.add(textFieldLastName);
 
             textFieldEmail = new JFriendlyTextField(EMAIL_HINT);
             textFieldEmail.setPreferredSize(new Dimension(300, 24));
             JPanel jHelpEmail = new JPanel(new BorderLayout());
             setBackgroundColor(jHelpEmail);
-            jHelpEmail.setBorder(new EmptyBorder(8, 0, 0, 0));
             jHelpEmail.add(textFieldEmail, BorderLayout.NORTH);
 
-            JPanel userInfoContent = new JPanel(new BorderLayout());
+            JPanel userInfoContent = new JPanel(new BorderLayout(8, 8));
             setBackgroundColor(userInfoContent);
-            userInfoContent.add(textFieldName, BorderLayout.NORTH);
-            userInfoContent.add(jHelpEmail);
+            userInfoContent.add(namePanel, BorderLayout.NORTH);
+            userInfoContent.add(jHelpEmail, BorderLayout.CENTER);
 
             return userInfoContent;
         }
@@ -218,9 +227,15 @@ public class SumbitUserInfoAction {
             super.setVisible(b);
         }
 
-        private String getUserName() {
-            String name = textFieldName.getText();
-            name = name.replace(NAME_HINT, "");
+        private String getUserFirstName() {
+            String name = textFieldFirstName.getText();
+            name = name.replace(FIRST_NAME_HINT, "");
+            return name;
+        }
+
+        private String getUserLastname() {
+            String name = textFieldLastName.getText();
+            name = name.replace(LAST_NAME_HINT, "");
             return name;
         }
 
@@ -235,15 +250,19 @@ public class SumbitUserInfoAction {
                 return false;
             }
             UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
-            OSUserDescription osUserDescription = new OSUserDescription(getUserName(), getUserEMail(), userIdentifier.getUserId());
+            OSUserDescription osUserDescription = new OSUserDescription(
+                    getUserFirstName(), getUserLastname(), getUserEMail(), userIdentifier.getUserId());
             Analytics.trackUserInfo(osUserDescription);
             return true;
         }
 
         private boolean validateFormValues() {
             List<String> fieldErrors = new ArrayList<String>();
-            if (StringUtils.isNullOrEmpty(getUserName())) {
-                fieldErrors.add("your name");
+            if (StringUtils.isNullOrEmpty(getUserFirstName())) {
+                fieldErrors.add("your first name");
+            }
+            if (StringUtils.isNullOrEmpty(getUserLastname())) {
+                fieldErrors.add("your last name");
             }
             if (!isValidEmailAddress(getUserEMail())) {
                 fieldErrors.add("a valid email address");
