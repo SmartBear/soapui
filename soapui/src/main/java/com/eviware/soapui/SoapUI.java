@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2018 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui;
@@ -146,7 +146,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -388,10 +387,14 @@ public class SoapUI {
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
-        mainToolbar.addSpace(30);
+        mainToolbar.addSpace(15);
+        createToolbarSeparator();
+        mainToolbar.addSpace(10);
         createEndpointExplorerButton();
         endpointExplorerButtonPanel.add(endpointExplorerButton);
         mainToolbar.add(endpointExplorerButtonPanel);
+        mainToolbar.addSpace(10);
+        createToolbarSeparator();
 
         mainToolbar.addGlue();
         searchField = new JTextField(20) {
@@ -488,8 +491,16 @@ public class SoapUI {
         });
     }
 
-    private void drawVerticalLines() {
-
+    private void createToolbarSeparator() {
+        JPanel separatorPanel = new JPanel(new BorderLayout());
+        separatorPanel.setPreferredSize(new Dimension(5, 40));
+        separatorPanel.setMaximumSize(new Dimension(5, 40));
+        JSeparator separator = new JSeparator();
+        separator.setOrientation(JSeparator.VERTICAL);
+        separator.setBackground(new Color(112, 112, 112));
+        separator.setLocation(10, 0);
+        separatorPanel.add(separator);
+        mainToolbar.add(separatorPanel);
     }
 
     private JMenuBar buildMainMenu() {

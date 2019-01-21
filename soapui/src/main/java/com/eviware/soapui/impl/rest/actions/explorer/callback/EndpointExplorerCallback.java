@@ -7,7 +7,12 @@ import com.eviware.soapui.impl.rest.actions.explorer.RequestInspectionData;
 import com.eviware.soapui.impl.rest.actions.method.SaveRequestAction;
 import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpPatch;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpCopyMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpDeleteWithBody;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpLockMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpPropFindMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpPurgeMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -22,6 +27,7 @@ import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.util.EntityUtils;
@@ -85,6 +91,11 @@ public class EndpointExplorerCallback {
         });
     }
 
+    private static String sendRequest(HttpUriRequest httpUriRequest) throws IOException {
+        HttpResponse response = HttpClientSupport.getHttpClient().execute(httpUriRequest);
+        return getResponseAsString(response);
+    }
+
     public String sendRequest(String json) {
         // Analytics.trackAction(EXPLORE_API_CLICK_SEND);
 
@@ -105,62 +116,58 @@ public class EndpointExplorerCallback {
 
         try {
             switch (method) {
-                case "GET": {
+                case "GET":
                     HttpGet httpGet = new HttpGet(url);
                     setHeaders(httpGet, headersMap);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpGet);
-
-                    return getResponseAsString(response);
-                }
-                case "POST": {
+                    return sendRequest(httpGet);
+                case "POST":
                     HttpPost httpPost = new HttpPost(url);
                     setHeadersAndPayload(httpPost, headersMap, payload);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpPost);
-
-                    return getResponseAsString(response);
-                }
-                case "PUT": {
+                    return sendRequest(httpPost);
+                case "PUT":
                     HttpPut httpPut = new HttpPut(url);
                     setHeadersAndPayload(httpPut, headersMap, payload);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpPut);
-
-                    return getResponseAsString(response);
-                }
-                case "DELETE": {
-                    HttpDeleteWithBody httpDeleteWithBody = new HttpDeleteWithBody(url);
-                    setHeadersAndPayload(httpDeleteWithBody, headersMap, payload);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpDeleteWithBody);
-
-                    return getResponseAsString(response);
-                }
-                case "HEAD": {
+                    return sendRequest(httpPut);
+                case "DELETE":
+                    HttpDeleteWithBody httpDelete = new HttpDeleteWithBody(url);
+                    setHeadersAndPayload(httpDelete, headersMap, payload);
+                    return sendRequest(httpDelete);
+                case "HEAD":
                     HttpHead httpHead = new HttpHead(url);
                     setHeaders(httpHead, headersMap);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpHead);
-
-                    return getResponseAsString(response);
-                }
-                case "OPTIONS": {
+                    return sendRequest(httpHead);
+                case "OPTIONS":
                     HttpOptions httpOptions = new HttpOptions(url);
                     setHeaders(httpOptions, headersMap);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpOptions);
-
-                    return getResponseAsString(response);
-                }
-                case "TRACE": {
+                    return sendRequest(httpOptions);
+                case "TRACE":
                     HttpTrace httpTrace = new HttpTrace(url);
                     setHeaders(httpTrace, headersMap);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpTrace);
-
-                    return getResponseAsString(response);
-                }
-                case "PATCH": {
+                    return sendRequest(httpTrace);
+                case "PATCH":
                     HttpPatch httpPatch = new HttpPatch(url);
                     setHeadersAndPayload(httpPatch, headersMap, payload);
-                    HttpResponse response = HttpClientSupport.getHttpClient().execute(httpPatch);
-
-                    return getResponseAsString(response);
-                }
+                    return sendRequest(httpPatch);
+                case "PROPFIND":
+                    HttpPropFindMethod httpPropFind = new HttpPropFindMethod(url);
+                    setHeadersAndPayload(httpPropFind, headersMap, payload);
+                    return sendRequest(httpPropFind);
+                case "LOCK":
+                    HttpLockMethod httpLock = new HttpLockMethod(url);
+                    setHeadersAndPayload(httpLock, headersMap, payload);
+                    return sendRequest(httpLock);
+                case "UNLOCK":
+                    HttpUnlockMethod httpUnlock = new HttpUnlockMethod(url);
+                    setHeaders(httpUnlock, headersMap);
+                    return sendRequest(httpUnlock);
+                case "COPY":
+                    HttpCopyMethod httpCopy = new HttpCopyMethod(url);
+                    setHeaders(httpCopy, headersMap);
+                    return sendRequest(httpCopy);
+                case "PURGE":
+                    HttpPurgeMethod httpPurge = new HttpPurgeMethod(url);
+                    setHeaders(httpPurge, headersMap);
+                    return sendRequest(httpPurge);
                 default:
                     return "Unsupported method";
             }
@@ -223,7 +230,7 @@ public class EndpointExplorerCallback {
         return "";
     }
 
-    private String getResponseAsString(HttpResponse response) {
+    private static String getResponseAsString(HttpResponse response) {
         StringBuilder builder = new StringBuilder();
         builder.append(response.getStatusLine().toString());
         builder.append("\r\n");
@@ -272,9 +279,5 @@ public class EndpointExplorerCallback {
     private void setHeadersAndPayload(HttpEntityEnclosingRequestBase request, HashMap<String, String> headersMap, String payload) {
         setHeaders(request, headersMap);
         request.setEntity(new ByteArrayEntity(payload.getBytes()));
-    }
-
-    public void startSaveRequestAction() {
-
     }
 }
