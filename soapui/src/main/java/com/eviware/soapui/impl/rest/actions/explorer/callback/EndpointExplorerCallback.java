@@ -43,6 +43,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_ADD_HEADER;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CHANGE_HTTP_METHOD;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_AUTH_HEADERS_TAB;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_BODY_TAB;
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_SAVE_REQUEST;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_SEND;
 
 public class EndpointExplorerCallback {
@@ -67,6 +68,7 @@ public class EndpointExplorerCallback {
     }
 
     public void createFromInspection(String json) {
+        Analytics.trackAction(EXPLORE_API_CLICK_SAVE_REQUEST);
         JSONObject request;
         try {
             request = new JSONObject(json);

@@ -186,7 +186,8 @@ public enum SoapUIActions {
     EXPLORE_API_ADD_HEADER("ExploreAPIAddHeader", SOAPUI_NG, NO),
     EXPLORE_API_CHANGE_HTTP_METHOD("ExploreAPIchangeHTTPMethod", SOAPUI_NG, NO),
     EXPLORE_API_CLICK_AUTH_HEADERS_TAB("ExploreAPIClickAuthHeadersTab", SOAPUI_NG, NO),
-    EXPLORE_API_CLICK_BODY_TAB("ExploreAPIClickBodyTab", SOAPUI_NG, NO);
+    EXPLORE_API_CLICK_BODY_TAB("ExploreAPIClickBodyTab", SOAPUI_NG, NO),
+    EXPLORE_API_CLICK_SAVE_REQUEST("ExploreAPIClickSaveRequest", SOAPUI_NG, NO);
 
     private String actionName;
     private ModuleType moduleType;
