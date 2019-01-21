@@ -1,10 +1,10 @@
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="jquery-ui.css"/>
-    <link rel="stylesheet" type="text/css" href="jquery-ui.structure.css"/>
-    <link rel="stylesheet" type="text/css" href="jquery-ui.theme.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css"/>
 
-    <link rel="stylesheet" type="text/css" href="starter-page-main-api-inspection.css"/>
+    <link rel="stylesheet" type="text/css" href="css/starter-page-main-api-inspection.css"/>
 
     <!-- Google Analytics/Universal Analytics-->
     <script>
@@ -24,12 +24,14 @@
             ga('create', 'UA-92447-21', 'auto');
             ga('send', 'pagevi1ew');
         }, 1000);
-    </script>
-    <script type="text/javascript" src="recent-items-new.js"></script>
-    <script type="text/javascript" src="jquery-1.11.1min.js"></script>
 
-    <script type="text/javascript" src="jquery-ui.js"></script>
-    <script type="text/javascript" src="common.js"></script>
+
+
+    </script>
+    <script type="text/javascript" src="js/jquery-1.11.1min.js"></script>
+
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
     <script>
         if (!String.prototype.trim) {
             (function () {
@@ -48,21 +50,14 @@
             form: {
                 re_control: 're-control',
                 formAction: 'formAction',
-                formExpand: 'formExpand',
-                formCreate: 'formCreate',
                 tabsContainer: 're-info-params-tabs',
                 formInfoContainer: 're-request-info',
                 formResponseBody: 'formResponseBody',
-                formCollapse: 'formCollapse',
                 methodList: 'methodList',
                 methodListWidth: '90px',
                 fadeOutDelay: 200,
                 fadeInDelay: 200,
                 data: {},
-                mode: {
-                    expand: true,
-                    collapse: false
-                },
                 formSave: 'formSave'
             }
         };
@@ -170,21 +165,6 @@
             }
         });
 
-        var setView = function (mode) {
-            var form = RequestExplorer.strings.form;
-            if (mode == form.mode.expand) {
-                form.data.expandContainer.hide(form.fadeOutDelay);
-                form.data.infoContainer.show(form.fadeOutDelay);
-                form.data.prepareContainer.show(form.fadeOutDelay);
-                form.data.collapseContainer.show(form.fadeInDelay);
-            } else {
-                form.data.expandContainer.show(form.fadeInDelay);
-                form.data.infoContainer.hide(form.fadeInDelay);
-                form.data.prepareContainer.hide(form.fadeInDelay);
-                form.data.collapseContainer.hide(form.fadeOutDelay);
-            }
-        };
-
         var initPage = function () {
             var form = RequestExplorer.strings.form;
             $("#{0}".format(form.methodList)).selectmenu({
@@ -206,7 +186,6 @@
             });
 
             form.data.save = $("#{0}".format(form.formSave));
-            form.data.formContainer = form.data.save.closest('.re-request-item');
             form.data.save.button();
             form.data.save.hide();
 
@@ -225,7 +204,6 @@
                 }
 
                 var form = RequestExplorer.strings.form;
-                setView(form.mode.expand);
 
                 var headerNames = $('.headerName');
                 var headerValues = $('.headerValue');
@@ -250,24 +228,8 @@
                 if (lastRequest.url != null) {
                     document.lastRequest = request;
                     var urlParser = inspectorCallback.getUrlParser(lastRequest.url);
-
-                    var endpoint = urlParser.getEndpoint();
-                    var re_url_part_1 = $(".re-url-part-1");
-                    re_url_part_1.text(endpoint);
-                    re_url_part_1.attr("title", endpoint);
-
-                    var resourcePath = urlParser.getResourcePath();
-                    var re_url_part_2 = $(".re-url-part-2");
-                    re_url_part_2.text(resourcePath);
-                    re_url_part_2.attr("title", resourcePath);
-
-                    var query = urlParser.getQuery();
-                    var re_url_part_3 = $(".re-url-part-3");
-                    re_url_part_3.text(query);
-                    re_url_part_3.attr("title", query);
-
-                    $(".re-method-name").text(lastRequest.method);
                 }
+
                 form.data.save.show();
             });
 
@@ -294,14 +256,12 @@
             };
             var initGET = function () {
                 $("#bodyTab").hide();
-
             };
 
             $("#methodList").on("selectmenuchange", function (event, ui) {
                 inspectorCallback.exploreAPIchangeHTTPMethod(ui.item.value);
                 if (hasPayload(ui.item.value)) {
                     var form = RequestExplorer.strings.form;
-                    setView(form.mode.expand);
                     initPOST();
                 } else {
                     initGET();
@@ -311,38 +271,8 @@
 
             initGET();
 
-            form.data.expand = $("#{0}".format(form.formExpand));
-            form.data.expandContainer = form.data.expand.closest('.re-request-item');
-            <!--form.data.expandContainer.hide();-->
-            form.data.expand.button();
-            form.data.expand.click(function (event) {
-                event.preventDefault();
-                var form = RequestExplorer.strings.form;
-                setView(form.mode.expand);
-            });
-
-            form.data.prepare = $("#{0}".format(form.formCreate));
-            form.data.prepareContainer = form.data.prepare.closest('.re-request-item');
-            form.data.prepareContainer.hide();
-            form.data.prepare.button();
-            form.data.prepare.click(function (event) {
-                event.preventDefault();
-                var form = RequestExplorer.strings.form;
-            });
-
             form.data.infoContainer = $(".{0}".format(form.formInfoContainer));
-            <!--form.data.infoContainer.hide();-->
             form.data.infoBody = $("#{0}".format(form.formResponseBody));
-
-            form.data.collapse = $("#{0}".format(form.formCollapse));
-            form.data.collapseContainer = form.data.collapse.closest('.re-request-item');
-            <!--form.data.collapseContainer.hide();-->
-            form.data.collapse.button();
-            form.data.collapse.click(function (event) {
-                event.preventDefault();
-                var form = RequestExplorer.strings.form;
-                setView(form.mode.collapse);
-            });
 
             form.data.tabs = $("#{0}".format(form.tabsContainer));
             form.data.tabsControl = form.data.tabs.tabs({
@@ -359,27 +289,12 @@
                 renderTo: form.data.paramsTable.tableBody
             });
 
-            setView(form.mode.expand);
-
             $('#methodEndpoint').keypress(function (event) {
                 if (event.which == 13) {
                     var form = RequestExplorer.strings.form;
                     form.data.send.click();
                 }
             });
-
-            $('#formExpand').button({
-                text: true,
-                icons: {
-                    primary: "expand_button_image"
-                }});
-
-            $('#formCollapse').button({
-                text: true,
-                icons: {
-                    primary: "collapse_button_image"
-                }});
-
         };
         $(document).ready(function () {
             initPage();
@@ -392,6 +307,9 @@
                 e.stopPropagation();
             }, false);
         });
+
+
+
     </script>
     <style>
         /* scrollbars */
@@ -399,7 +317,7 @@
             display: block;
             border: none;
             text-align: left;
-            padding: 0px 20px 5px 20px;
+            padding: 0px 18px 5px 20px;
         }
 
         .re-main input,
@@ -446,14 +364,6 @@
             height: 240px;
             border: 1px solid #767676;
             background-color: white;
-            font-size: 12px;
-        }
-
-        .re-request-item.re-request-prepare .re-method {
-            background-color: #e8e8e8;
-        }
-
-        .re-request-prepare {
             font-size: 12px;
         }
 
@@ -539,12 +449,26 @@
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-1] {
             font-weight: bold;
+            padding-left: 5px;
+            padding-right: 5px;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-2],
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-3] {
             padding-left: 10px;
             padding-right: 10px;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea{
+            width: 94%;
+            height: 89%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            resize: none;
+            font-family: monospace;
+            margin: 3%;
+            border: 1px solid #CCCCCC;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-3], [aria-selected=false] {
@@ -561,11 +485,12 @@
             border-top-right-radius: 5px;
         }
 
-        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab a {
-            padding: 2px 2px 0 2px;
+        .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
+            overflow: hidden;
         }
 
-        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-state-disabled {
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab a {
+            padding: 2px 2px 0 2px;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab.ui-tabs-active {
@@ -606,13 +531,6 @@
             margin: 0 10px;
         }
 
-        #methodEndpoint {
-            height: 24px;
-            border-color: #323232;
-            border-radius: 3px;
-            margin-left: 5px;
-        }
-
         .re-main .re-request-item .re-method {
             width: 90px;
             height: 24px;
@@ -620,8 +538,19 @@
             font-size: 12px;
         }
 
-        .re-method .re-method-name {
-            padding-left: 6px;
+        .re-main .re-request-item .re-method .ui-selectmenu-button {
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#d4d4d4));
+            border: 1px solid #707070;
+            border-radius: 3px;
+            color: black;
+        }
+
+        .re-main .re-request-item .re-method .ui-selectmenu-button:hover {
+            border-color: #3489D1;
+        }
+
+        .ui-button .ui-icon {
+            background-image: url("../images/jquery-ui/ui-icons_555555_256x240.png");
         }
 
         .re-main .re-request-item .re-url {
@@ -630,53 +559,25 @@
             font-size: 12px;
         }
 
-        .re-main .re-request-item .re-url > div {
-            display: inline-block;
-            background-color: #e8e8e8;
+        .re-main .re-request-item .re-url label {
+            margin-left: 5px;
+        }
+
+        .re-main .re-request-item .re-url input {
             height: 24px;
-            line-height: 24px;
-            padding-left: 10px;
-            box-sizing: border-box;
-            text-align: left;
-        }
-
-        .re-main .re-request-item .re-url .re-url-part-1 {
-            float: left;
-            width: 40%;
-            overflow: hidden;
-            text-overflow: clip;
-        }
-
-        .re-main .re-request-item .re-url .re-url-part-2 {
-            width: 30%;
-            overflow: hidden;
-            text-overflow: clip;
-        }
-
-        .re-main .re-request-item .re-url .re-url-part-3 {
-            width: 28%;
-            float: right;
-            overflow: hidden;
-            text-overflow: clip;
+            border: 1px solid #707070;
+            border-radius: 3px;
+            margin-left: 5px;
+            width: 100%;
         }
 
         .re-main .re-request-item .re-action {
             width: 90px;
         }
 
-        .re-main .re-request-item .re-empty {
-            width: calc(100% - 180px);
-        }
-
         .ui-button {
             padding: 4px 5px 2px 5px;
             font-size: 12px;
-        }
-
-        input.re-control {
-            width: 100%;
-            line-height: 20px;
-            border: 1px solid #323232;
         }
 
         button.re-control.re-send.ui-button {
@@ -696,6 +597,12 @@
             background-size: 15%;
         }
 
+         button.re-control.re-send.ui-button:hover {
+            background-color: #29A344;
+            border-color: #25963F;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF+mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTAxLTIxVDExOjQ0OjI2KzAzOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wMS0yMVQxMTo0NzoxMCswMzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wMS0yMVQxMTo0NzoxMCswMzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDplY2JiNGVmNS00Zjk2LWM1NGEtOWViYS04Yjc4MDNkYjkxZjQiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDoxOGJlOTBlNC1jMzg5LTIyNGMtODYzYS02Mjk3YzI3NjNhNTkiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo0NzU3NmNmNi03ODM0LTA1NGYtODY4Mi1lYjRkZjZjNWFmOTkiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ3NTc2Y2Y2LTc4MzQtMDU0Zi04NjgyLWViNGRmNmM1YWY5OSIgc3RFdnQ6d2hlbj0iMjAxOS0wMS0yMVQxMTo0NDoyNiswMzowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDplY2JiNGVmNS00Zjk2LWM1NGEtOWViYS04Yjc4MDNkYjkxZjQiIHN0RXZ0OndoZW49IjIwMTktMDEtMjFUMTE6NDc6MTArMDM6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7DahR/AAAAz0lEQVQokWPUXOzCQBxgglDReoEOqtZEKdUWUG03LG6wKSSs9D8DAz8bb6iC5xrf6W7q9viUMjD8Z2BgYGRg1OJXaTEsarQtxqMUAXhYuELlPbYHLPDScCagFALkeaTbjYpb7EoJK2VgYGBgZORh4YLzWHApe/T12ZQbi7dc34NP6Zc/37Y82dd0ZCKaOFQpIwMjAwPD739/Lry7Pv3m0hP3z2IaAVX69/+/599fr3qwbebZJbicBFV64vX5NQ+3X3x0FZc6hNKtN/biUQQBACrUPxJnra7qAAAAAElFTkSuQmCC');
+        }
+
         button.re-control.re-save.ui-button {
             height: 24px;
             background-color: #3489D1;
@@ -706,45 +613,13 @@
             font-size: 12px;
         }
 
-        button.re-control.re-create.ui-button {
-            margin: 0px 2px;
-            height: 24px;
-            background-color: #2698de;
-            color: white;
-            border: transparent;
-            width: 90px;
-        }
-
-        button.re-expand.ui-button {
-            height: 24px;
-            background-color: transparent;
-            color: #2a9ade;
-            border: none;
-            width: 180px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .ui-button .ui-icon.expand_button_image {
-            background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQyIDQyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MiA0MjsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8cGF0aCBkPSJNMzcuMDU5LDE2SDI2VjQuOTQxQzI2LDIuMjI0LDIzLjcxOCwwLDIxLDBzLTUsMi4yMjQtNSw0Ljk0MVYxNkg0Ljk0MUMyLjIyNCwxNiwwLDE4LjI4MiwwLDIxczIuMjI0LDUsNC45NDEsNUgxNnYxMS4wNTkgIEMxNiwzOS43NzYsMTguMjgyLDQyLDIxLDQyczUtMi4yMjQsNS00Ljk0MVYyNmgxMS4wNTlDMzkuNzc2LDI2LDQyLDIzLjcxOCw0MiwyMVMzOS43NzYsMTYsMzcuMDU5LDE2eiIgZmlsbD0iIzJhOWFkZSIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K);
-        }
-
-        button.re-collapse.ui-button {
-            height: 24px;
-            background-color: transparent;
-            color: #2a9ade;
-            border: none;
-            width: 180px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .ui-button .ui-icon.collapse_button_image {
-            background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQyIDQyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0MiA0MjsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8cGF0aCBkPSJNMzcuMDU5LDE2SDI2SDE2SDQuOTQxQzIuMjI0LDE2LDAsMTguMjgyLDAsMjFzMi4yMjQsNSw0Ljk0MSw1SDE2aDEwaDExLjA1OUMzOS43NzYsMjYsNDIsMjMuNzE4LDQyLDIxICBTMzkuNzc2LDE2LDM3LjA1OSwxNnoiIGZpbGw9IiMyYTlhZGUiLz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==);
+        button.re-control.re-save.ui-button:hover {
+            background-color: #3181C4;
+            border-color: #27689E;
         }
 
         .ui-tabs-panel.ui-widget-content {
-            margin: 0px;
+            margin: 0;
             padding: 0;
         }
 
@@ -774,6 +649,12 @@
 
         .re-params-table-row .re-params-table-cell input {
             width: 100%;
+            border: 1px solid #CCCCCC;
+            height: 23px
+        }
+
+        .re-params-table-row .re-params-table-cell input:focus {
+            border: 1px solid #3489D1;
         }
 
         .re-info-params .re-params-table-cell:nth-child(1) {
@@ -792,21 +673,6 @@
         .re-params-table-cell.re-params-actions span {
             font-size: 12px;
             color: #2698de;
-        }
-
-        .re-params-table-row.re-params-table-header .re-params-table-cell {
-        }
-
-        #requestPayload {
-            width: 94%;
-            height: 89%;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            resize: none;
-            font-family: monospace;
-            margin: 3%;
-            border: 1px solid #CCCCCC;
         }
 
         #requestPayload:focus, #methodEndpoint:focus {
@@ -835,17 +701,7 @@
             border-bottom: 1px solid #767676;
         }
 
-        .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
-            overflow: hidden;
-        }
-
-        .re-info-params ul li.ui-state-disabled {
-            border: none;
-            color: black;
-            opacity: initial;
-        }
-
-        ul li.ui-state-disabled a {
+        .re-info-params ul li.ui-state-disabled, ul li.ui-state-disabled a {
             border: none;
             color: black;
             opacity: initial;
@@ -853,10 +709,6 @@
 
         .ui-menu-item {
             font-size: 12px;
-        }
-
-        .ui-button.ui-state-disabled:active {
-            background-color: white;
         }
 
         a {
@@ -889,10 +741,6 @@
             display: inline-flex;
         }
 
-        .re-request-item .ui-button.ui-state-active:hover {
-            border: none;
-        }
-
         .invalid {
             border: 1px solid red;
             background-color: #fd9c9c;
@@ -907,52 +755,8 @@
             font-size: 12px;
         }
 
-        #methodList+.ui-selectmenu-button {
-            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#d4d4d4));
-            border: 1px solid #323232;
-            border-radius: 3px;
-            height: 16px;
-            border-color: #323232;
-        }
-
-        #methodList+.ui-selectmenu-button:hover {
-            border-color: #3489D1;
-        }
-
-        li#authHeadTab {
+        li#authHeadTab, li#bodyTab {
             float: left;
-        }
-
-        li#bodyTab {
-            float: left;
-        }
-
-        li#request-tab {
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        .headerName, .headerValue {
-            border: 1px solid #CCCCCC;
-            height: 23px
-        }
-
-        .headerName:focus, .headerValue:focus {
-            border: 1px solid #3489D1;
-        }
-
-        #formAction:hover {
-            background-color: #29A344;
-            border-color: #25963F;
-        }
-
-        #formSave:hover {
-            background-color: #3181C4;
-            border-color: #27689E;
-        }
-
-        #methodList:hover {
-            border-color: #3489D1;
         }
 
         .closeButton {
@@ -965,9 +769,7 @@
             background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E5E5E5));
         }
 
-        .re-url label {
-            margin-left: 5px;
-        }
+
 
     </style>
 </head>

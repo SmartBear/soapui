@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.actions.explorer.callback;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 import com.eviware.soapui.impl.rest.RestURIParser;
@@ -15,15 +16,12 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpP
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpOptions;
-
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
@@ -41,6 +39,12 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_ADD_HEADER;
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CHANGE_HTTP_METHOD;
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_AUTH_HEADERS_TAB;
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_BODY_TAB;
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_SEND;
+
 public class EndpointExplorerCallback {
 
     public static final String CALLBACK = "inspectorCallback";
@@ -50,15 +54,12 @@ public class EndpointExplorerCallback {
     private static final String PAYLOAD_PROPERTY = "payload";
     private static final String HEADERS_PROPERTY = "headers";
 
-    //private final QuickCreateFunctionalTestAction createFunctionalTestAction = new QuickCreateFunctionalTestAction();
-
-
     public RestURIParser getUrlParser(String url) {
         if (StringUtils.hasContent(url)) {
             try {
                 return new RestURIParserImpl(url);
             } catch (MalformedURLException e) {
-                //Logging.logError(e);
+                SoapUI.logError(e);
                 return null;
             }
         }
@@ -70,7 +71,7 @@ public class EndpointExplorerCallback {
         try {
             request = new JSONObject(json);
         } catch (JSONException e) {
-            //Logging.logError(e);
+            SoapUI.logError(e);
             return;
         }
 
@@ -97,7 +98,7 @@ public class EndpointExplorerCallback {
     }
 
     public String sendRequest(String json) {
-        // Analytics.trackAction(EXPLORE_API_CLICK_SEND);
+        Analytics.trackAction(EXPLORE_API_CLICK_SEND);
 
         String url = "";
         String method = "";
@@ -111,7 +112,7 @@ public class EndpointExplorerCallback {
             headersMap = extractHeaders(request);
             payload = extractPayload(request);
         } catch (JSONException e) {
-            //Logging.logError(e);
+            SoapUI.logError(e);
         }
 
         try {
@@ -172,7 +173,7 @@ public class EndpointExplorerCallback {
                     return "Unsupported method";
             }
         } catch (Exception e) {
-            //Logging.logError(e);
+            SoapUI.logError(e);
             if (StringUtils.hasContent(e.getMessage())) {
                 return e.getMessage();
             } else {
@@ -182,19 +183,19 @@ public class EndpointExplorerCallback {
     }
 
     public void exploreAPIAddHeader() {
-        // Analytics.trackAction(EXPLORE_API_ADD_HEADER);
+        Analytics.trackAction(EXPLORE_API_ADD_HEADER);
     }
 
     public void exploreAPIchangeHTTPMethod(String changeMethodTo) {
-        //   Analytics.trackAction(EXPLORE_API_CHANGE_HTTP_METHOD, "ChangeMethodTo", changeMethodTo);
+        Analytics.trackAction(EXPLORE_API_CHANGE_HTTP_METHOD, "ChangeMethodTo", changeMethodTo);
     }
 
     public void exploreAPIClickAuthHeadersTab() {
-        //  Analytics.trackAction(EXPLORE_API_CLICK_AUTH_HEADERS_TAB);
+        Analytics.trackAction(EXPLORE_API_CLICK_AUTH_HEADERS_TAB);
     }
 
     public void exploreAPIClickBodyTab() {
-        //   Analytics.trackAction(EXPLORE_API_CLICK_BODY_TAB);
+        Analytics.trackAction(EXPLORE_API_CLICK_BODY_TAB);
     }
 
     private String extractUrl(JSONObject request) {
