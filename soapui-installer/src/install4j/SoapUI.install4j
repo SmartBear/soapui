@@ -68,7 +68,6 @@
       <mountPoint id="321" root="" location="bin" mode="755" />
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
-      <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
       <mountPoint id="5461" root="5280" location=".soapuios" mode="755" />
       <mountPoint id="5462" root="5280" location=".soapuios/plugins" mode="755" />
@@ -1255,25 +1254,6 @@ if (Util.isMacOS()) {
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Set JxBrowser location" id="2643" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                      <void property="script">
-                        <object class="com.install4j.api.beans.ScriptProperty">
-                          <void property="value">
-                            <string>return context.getCompilerVariable("SOAPUI_HOME") + context.getVariable("FILE_SEPARATOR") + ".JxBrowser";</string>
-                          </void>
-                        </object>
-                      </void>
-                      <void property="variableName">
-                        <string>jxBrowserInstallLocation</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
               <action name="Set access mode for wsi-test-tools" id="1037" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="3" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -1459,24 +1439,6 @@ if (Util.isMacOS()) {
                           </void>
                           <void index="12">
                             <string>-splash:SoapUI-Spashscreen.png</string>
-                          </void>
-                        </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="" id="2705" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="Error in setting write permissions for jxbrowser">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction">
-                      <void property="files">
-                        <array class="java.io.File" length="1">
-                          <void index="0">
-                            <object class="java.io.File">
-                              <string>.JxBrowser</string>
-                            </object>
                           </void>
                         </array>
                       </void>
@@ -2348,49 +2310,6 @@ return console.askYesNo(message, true);
                       </void>
                       <void property="variableName">
                         <string>FILE_SEPARATOR</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="Set JxBrowser location" id="2645" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                      <void property="script">
-                        <object class="com.install4j.api.beans.ScriptProperty">
-                          <void property="value">
-                            <string>return context.getCompilerVariable("SOAPUI_HOME") + context.getVariable("FILE_SEPARATOR") + ".JxBrowser";</string>
-                          </void>
-                        </object>
-                      </void>
-                      <void property="variableName">
-                        <string>jxBrowserInstallLocation</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="Delete .JxBrowser" id="2615" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
-                      <void property="backupForRollback">
-                        <boolean>false</boolean>
-                      </void>
-                      <void property="files">
-                        <array class="java.io.File" length="1">
-                          <void index="0">
-                            <object class="java.io.File">
-                              <string>${installer:jxBrowserInstallLocation}</string>
-                            </object>
-                          </void>
-                        </array>
-                      </void>
-                      <void property="recursive">
-                        <boolean>true</boolean>
                       </void>
                     </object>
                   </java>
