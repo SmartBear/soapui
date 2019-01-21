@@ -2030,6 +2030,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public boolean isFromReady() {
-        return StringUtils.hasContent(getConfig().getUpdated());
+        return StringUtils.hasContent(getConfig().getUpdated())
+                || "6.0.0".equals(getConfig().getSoapuiVersion());
     }
 }

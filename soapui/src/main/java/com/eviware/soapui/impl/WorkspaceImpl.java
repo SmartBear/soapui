@@ -158,13 +158,13 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
                             wsc.getName(), null);
 
                     projectList.add(project);
-                    ensureProjectsCompatibility(projectList);
                 } catch (Exception e) {
                     UISupport.showErrorMessage(messages.get("FailedToLoadProjectInWorkspace", str) + e.getMessage());
 
                     SoapUI.logError(e);
                 }
             }
+            ensureProjectsCompatibility(projectList);
         } else {
             workspaceConfig = SoapuiWorkspaceDocumentConfig.Factory.newInstance();
             workspaceConfig.addNewSoapuiWorkspace().setName(messages.get("DefaultWorkspaceName"));
@@ -180,20 +180,20 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         List<String> readyProjectsList = new ArrayList<>();
         for (Project project : projects) {
             if (project instanceof WsdlProject) {
-                if (((WsdlProject) project).isFromNewerVersion()) {
-                    ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
-                    newerProjectsList.add(
-                            MessageFormat.format(
-                                    "The project [{0}] was created in a later version of {2} ({1}).",
-                                    config.getName(),
-                                    StringUtils.getSubstringBeforeFirstWhitespace(config.getUpdated()),
-                                    "SoapUI"));
-                } else if (((WsdlProject) project).isFromReady()) {
+                if (((WsdlProject) project).isFromReady()) {
                     ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
                     readyProjectsList.add(
                             MessageFormat.format(
                                     "The project [{0}] was updated in a ReadyAPI",
                                     config.getName()));
+                } else if (((WsdlProject) project).isFromNewerVersion()) {
+                    ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
+                    newerProjectsList.add(
+                            MessageFormat.format(
+                                    "The project [{0}] was created in a later version of {2} ({1}).",
+                                    config.getName(),
+                                    StringUtils.getSubstringBeforeFirstWhitespace(config.getSoapuiVersion()),
+                                    "SoapUI"));
                 }
             }
         }
