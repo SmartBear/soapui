@@ -197,17 +197,17 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
                 }
             }
         }
-        if (!newerProjectsList.isEmpty()) {
-            UISupport.showInfoMessage(String.join("\r\n", newerProjectsList) +
-                            "\r\nIf you save the project in the current version of SoapUI ("
-                            + SoapUICore.SOAPUI_VERSION + "), it may work incorrectly.",
-                    "Load the project from a later version");
-        }
         if (!readyProjectsList.isEmpty()) {
             UISupport.showInfoMessage(String.join("\r\n", readyProjectsList) +
                             "\r\nIf you save the project in SoapUI ("
                             + SoapUICore.SOAPUI_VERSION + "), it may work incorrectly.",
                     "Load the project from ReadyAPI");
+        }
+        if (!newerProjectsList.isEmpty()) {
+            UISupport.showInfoMessage(String.join("\r\n", newerProjectsList) +
+                            "\r\nIf you save the project in the current version of SoapUI ("
+                            + SoapUICore.SOAPUI_VERSION + "), it may work incorrectly.",
+                    "Load the project from a later version");
         }
     }
 
