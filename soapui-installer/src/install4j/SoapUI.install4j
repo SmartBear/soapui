@@ -1230,7 +1230,7 @@ if (Util.isMacOS()) {
                         </object>
                       </void>
                       <void property="itemName">
-                        <string>${compiler:sys.fullName} ${compiler:sys.version}</string>
+                        <string>${compiler:sys.fullName}</string>
                       </void>
                     </object>
                   </java>
