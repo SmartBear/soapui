@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -378,6 +379,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(
                 projectFile.getAbsolutePath(), this);
 
+        ensureProjectsCompatibility(Arrays.asList(project));
+
         afterProjectImport(project);
 
         return project;
@@ -386,6 +389,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
     @Override
     public Project importProject(InputStream inputStream) {
         WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(inputStream, this);
+
+        ensureProjectsCompatibility(Arrays.asList(project));
 
         afterProjectImport(project);
 
