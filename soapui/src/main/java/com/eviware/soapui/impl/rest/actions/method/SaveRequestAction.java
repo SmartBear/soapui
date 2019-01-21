@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.rest.actions.explorer.RequestInspectionData;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
@@ -16,14 +17,12 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 import javax.swing.AbstractAction;
@@ -31,7 +30,6 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +41,7 @@ public class SaveRequestAction extends AbstractAction {
     private static final int DIALOG_HEIGHT = 300;
     private static final Dimension PROJECTS_FORM_SIZE = new Dimension(400, 100);
     private XFormDialog dialog;
-    private ProjectListItem selectedProject;
+    private Project selectedProject;
     private Map<String, Object> context;
 
     public SaveRequestAction(Map<String, Object> context) {
@@ -76,38 +74,25 @@ public class SaveRequestAction extends AbstractAction {
     }
 
     private JPanel getProjectListComponent() {
-        ObservableList<ProjectListItem> projects = FXCollections.observableArrayList();
-        projects.add(new ProjectListItem(NEW_PROJECT_OPTION, null));
-        for (Project project : SoapUI.getWorkspace().getProjectList()) {
+        Workspace workspace = SoapUI.getWorkspace();
+        ObservableList<String> projectNames = FXCollections.observableArrayList();
+        projectNames.add(NEW_PROJECT_OPTION);
+        for (Project project : workspace.getProjectList()) {
             if (project.isOpen()) {
-                projects.add(new ProjectListItem(project.getName(), project));
+                projectNames.add(project.getName());
             }
         }
 
-        ListView<ProjectListItem> projectsListView = new ListView<>(projects);
-        projectsListView.setCellFactory(param -> new ListCell<ProjectListItem>() {
+        ListView<String> projectsListView = new ListView<>(projectNames);
+        projectsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
-            protected void updateItem(ProjectListItem item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null || item.getDisplayValue() == null) {
-                    setText(null);
-                } else {
-                    setText(item.getDisplayValue());
-                }
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                selectedProject = workspace.getProjectByName(newValue);
             }
         });
-        projectsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ProjectListItem>() {
-            @Override
-            public void changed(ObservableValue<? extends ProjectListItem> observable, ProjectListItem oldValue, ProjectListItem newValue) {
-                selectedProject = newValue;
-            }
-        });
-
         Scene scene = new Scene(projectsListView);
         JFXPanel panel = new JFXPanel();
-        Platform.runLater(() -> {
-            panel.setScene(scene);
-        });
+        panel.setScene(scene);
         JPanel container = new JPanel(new BorderLayout());
         container.add(panel, BorderLayout.CENTER);
         return container;
@@ -118,14 +103,17 @@ public class SaveRequestAction extends AbstractAction {
         WsdlProject project = null;
         RestRequest restRequest = null;
         WorkspaceImpl workspace = (WorkspaceImpl) SoapUI.getWorkspace();
+        List<String> urls = (List<String>) context.get("URLs");
+        List<RestRequestInterface.HttpMethod> methods = (List<RestRequestInterface.HttpMethod>) context.get("Methods");
+        List<RequestInspectionData> inspectionDataList = (List<RequestInspectionData>) context.get("InspectionData");
         try {
-            String url = ((List<String>) context.get("URLs")).get(0);
-            RestRequestInterface.HttpMethod method = ((List<RestRequestInterface.HttpMethod>) context.get("Methods")).get(0);
-            RequestInspectionData inspectionData = ((List<RequestInspectionData>) context.get("InspectionData")).get(0);
-            if (selectedProject.project == null) {
+            String url = urls == null ? null : urls.get(0);
+            RestRequestInterface.HttpMethod method = methods == null ? null : methods.get(0);
+            RequestInspectionData inspectionData = inspectionDataList == null ? null : inspectionDataList.get(0);
+            if (selectedProject == null) {
                 project = workspace.createProject(ModelItemNamer.createName(DEFAULT_PROJECT_NAME, workspace.getProjectList()), null);
             } else {
-                project = (WsdlProject) selectedProject.project;
+                project = (WsdlProject) selectedProject;
             }
 
             if (inspectionData == null) {
@@ -142,24 +130,6 @@ public class SaveRequestAction extends AbstractAction {
         }
 
         return restRequest;
-    }
-
-    private class ProjectListItem {
-        String displayValue;
-        Project project;
-
-        ProjectListItem(String displayValue, Project project) {
-            this.project = project;
-            this.displayValue = displayValue;
-        }
-
-        Project getProject() {
-            return project;
-        }
-
-        String getDisplayValue() {
-            return displayValue;
-        }
     }
 
     @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL)
