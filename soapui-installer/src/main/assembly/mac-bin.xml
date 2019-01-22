@@ -53,6 +53,7 @@ bundled or none -->
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>SoapUI-Spashscreen.png</include>
+                <include>SoapUI-Spashscreen@2x.png</include>
             </includes>
         </fileSet>
         <fileSet>
