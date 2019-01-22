@@ -51,11 +51,11 @@ import java.util.regex.Pattern;
 public class Tools {
     public static final int COPY_BUFFER_SIZE = 1000;
 
+    private static final Logger log = Logger.getLogger(Tools.class);
+
     private static final Pattern PROPERTY_EXPANSION_EQUALS_PATTERN = Pattern.compile("^\\$\\{(.*)\\}$");
     private static final Pattern PROPERTY_EXPANSION_CONTAINS_PATTERN =
             Pattern.compile("(\\$\\{(.*)\\})|(%24%7B.*%7D)|(%2524%257B.*%257D)|(%252524%25257B.*%25257D)");
-
-    private static final Logger log = Logger.getLogger(Tools.class);
 
     public static String[] tokenizeArgs(String args) {
         if (args == null || args.trim().length() == 0) {
