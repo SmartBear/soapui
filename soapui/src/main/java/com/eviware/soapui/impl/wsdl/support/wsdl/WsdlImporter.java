@@ -31,6 +31,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Nullable;
 import javax.wsdl.Binding;
 import javax.wsdl.Definition;
 import javax.wsdl.Port;
@@ -75,6 +76,7 @@ public class WsdlImporter {
         return importWsdl(project, wsdlUrl, bindingName, null);
     }
 
+    @Nullable
     public static WsdlInterface[] importWsdl(WsdlProject project, String wsdlUrl, QName bindingName,
                                              WsdlLoader wsdlLoader) throws Exception {
         wsdlUrl = Tools.normalizeFileSeparators(wsdlUrl);

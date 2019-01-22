@@ -38,6 +38,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
@@ -62,8 +63,6 @@ import java.awt.Container;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class PropertyExpansionPopupListener implements PopupMenuListener {
     private final Container targetMenu;
@@ -272,7 +271,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
 
             if (!StringUtils.hasContent(sourceXPath) && StringUtils.hasContent(userSelectedValue)
                     && !property.isReadOnly()) {
-                if (!userInputIsPropertyExpansion(userSelectedValue)) {
+                if (!Tools.isPropertyExpansion(userSelectedValue)) {
                     userSelectedValue = UISupport.prompt("Do you want to update the value of the property? (" + val + ")",
                             "Get Data", userSelectedValue);
                     if (userSelectedValue != null) {
@@ -281,16 +280,6 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
                 }
             }
         }
-    }
-
-    private static final Pattern pattern = Pattern.compile("^\\$\\{(.*)\\}$");
-
-    private static boolean userInputIsPropertyExpansion(String userSelectedValue) {
-        if (userSelectedValue == null) {
-            return false;
-        }
-        Matcher matcher = pattern.matcher(userSelectedValue);
-        return matcher.matches();
     }
 
     public static void addMenu(JPopupMenu popup, String menuName, ModelItem item, PropertyExpansionTarget component) {

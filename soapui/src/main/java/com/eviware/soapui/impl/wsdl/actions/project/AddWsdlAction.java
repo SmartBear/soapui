@@ -37,6 +37,7 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -87,13 +88,14 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject> {
 
                     WsdlInterface[] results = importWsdl(project, expUrl);
 
-                    if (!url.equals(expUrl)) {
-                        for (WsdlInterface iface : results) {
-                            iface.setDefinition(url, false);
+                    if (results != null) {
+                        if (!url.equals(expUrl)) {
+                            for (WsdlInterface iface : results) {
+                                iface.setDefinition(url, false);
+                            }
                         }
+                        break;
                     }
-
-                    break;
                 }
             } catch (InvalidDefinitionException ex) {
                 ex.show();
@@ -103,20 +105,24 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject> {
         }
     }
 
+    @Nullable
     private WsdlInterface[] importWsdl(WsdlProject project, String url) throws SoapUIException {
         WsdlInterface[] results = WsdlInterfaceFactory.importWsdl(project, url, dialog.getValue(Form.CREATEREQUEST)
                 .equals("true"));
-        for (WsdlInterface iface : results) {
-            UISupport.select(iface);
 
-            if (dialog.getValue(Form.GENERATETESTSUITE).equals("true")) {
-                GenerateWsdlTestSuiteAction generateTestSuiteAction = new GenerateWsdlTestSuiteAction();
-                generateTestSuiteAction.generateTestSuite(iface, true);
-            }
+        if (results != null) {
+            for (WsdlInterface iface : results) {
+                UISupport.select(iface);
 
-            if (dialog.getValue(Form.GENERATEMOCKSERVICE).equals("true")) {
-                GenerateMockServiceAction generateMockAction = new GenerateMockServiceAction();
-                generateMockAction.generateMockService(iface, false);
+                if (dialog.getValue(Form.GENERATETESTSUITE).equals("true")) {
+                    GenerateWsdlTestSuiteAction generateTestSuiteAction = new GenerateWsdlTestSuiteAction();
+                    generateTestSuiteAction.generateTestSuite(iface, true);
+                }
+
+                if (dialog.getValue(Form.GENERATEMOCKSERVICE).equals("true")) {
+                    GenerateMockServiceAction generateMockAction = new GenerateMockServiceAction();
+                    generateMockAction.generateMockService(iface, false);
+                }
             }
         }
 

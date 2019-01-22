@@ -35,6 +35,7 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SoapUIException;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.net.URI;
@@ -66,6 +67,7 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface> {
         return importWsdl(project, url, createRequests, null, wsdlLoader);
     }
 
+    @Nullable
     public static WsdlInterface[] importWsdl(WsdlProject project, String url, boolean createRequests,
                                              QName bindingName, WsdlLoader wsdlLoader) throws SoapUIException {
         WsdlInterface[] result;
