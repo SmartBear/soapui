@@ -50,7 +50,6 @@ import javax.swing.ImageIcon;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -183,31 +182,32 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
                 if (((WsdlProject) project).isFromReady()) {
                     ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
                     readyProjectsList.add(
-                            MessageFormat.format(
-                                    "The project [{0}] was updated in a ReadyAPI",
-                                    config.getName()));
+                            messages.get(
+                                    "Compatibility.with.ReadyAPI.one.project",
+                                    config.getName(),
+                                    StringUtils.isNullOrEmpty(config.getUpdated()) ? "" : "(" + StringUtils.getSubstringBeforeFirstWhitespace(config.getUpdated()) + ")"));
                 } else if (((WsdlProject) project).isFromNewerVersion()) {
                     ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
                     newerProjectsList.add(
-                            MessageFormat.format(
-                                    "The project [{0}] was created in a later version of {2} ({1}).",
+                            messages.get(
+                                    "Compatibility.with.SoapUI.one.project",
                                     config.getName(),
-                                    StringUtils.getSubstringBeforeFirstWhitespace(config.getSoapuiVersion()),
-                                    "SoapUI"));
+                                    config.getSoapuiVersion(),
+                                    SoapUI.PRODUCT_NAME));
                 }
             }
         }
+        String message = messages.get(
+                "WorkspaceImpl.Compatibility.Text",
+                SoapUI.PRODUCT_NAME,
+                SoapUICore.SOAPUI_VERSION);
         if (!readyProjectsList.isEmpty()) {
-            UISupport.showInfoMessage(String.join("\r\n", readyProjectsList) +
-                            "\r\nIf you save the project in SoapUI ("
-                            + SoapUICore.SOAPUI_VERSION + "), it may work incorrectly.",
-                    "Load the project from ReadyAPI");
+            UISupport.showInfoMessage(String.join("\r\n", readyProjectsList) + message,
+                    messages.get("Compatibility.with.ReadyAPI.Title"));
         }
         if (!newerProjectsList.isEmpty()) {
-            UISupport.showInfoMessage(String.join("\r\n", newerProjectsList) +
-                            "\r\nIf you save the project in the current version of SoapUI ("
-                            + SoapUICore.SOAPUI_VERSION + "), it may work incorrectly.",
-                    "Load the project from a later version");
+            UISupport.showInfoMessage(String.join("\r\n", newerProjectsList) + message,
+                    messages.get("Compatibility.with.SoapUI.Title"));
         }
     }
 
