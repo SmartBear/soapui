@@ -20,7 +20,6 @@ public class RoundButton extends JButton {
             setUI(new BasicButtonUI());
             setBorder(BorderFactory.createEmptyBorder(2, 5, 3, 5));
         }
-//        this.setSize(new Dimension(140, 24));
         setContentAreaFilled(false);
     }
 

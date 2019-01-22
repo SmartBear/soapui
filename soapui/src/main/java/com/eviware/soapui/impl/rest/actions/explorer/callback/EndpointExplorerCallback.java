@@ -35,9 +35,11 @@ import org.json.JSONObject;
 
 import javax.swing.SwingUtilities;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_ADD_HEADER;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CHANGE_HTTP_METHOD;
@@ -104,7 +106,7 @@ public class EndpointExplorerCallback {
 
         String url = "";
         String method = "";
-        HashMap<String, String> headersMap = null;
+        Map<String, String> headersMap = null;
         String payload = "";
 
         try {
@@ -236,7 +238,11 @@ public class EndpointExplorerCallback {
     private static String getResponseAsString(HttpResponse response) {
         StringBuilder builder = new StringBuilder();
         builder.append(response.getStatusLine().toString());
-        builder.append("\r\n");
+        try {
+            builder.append(StringUtils.fixLineSeparator("\r\n"));
+        } catch (UnsupportedEncodingException e) {
+            SoapUI.logError(e);
+        }
         for (Header header : response.getAllHeaders()) {
             builder.append(header.getName());
             builder.append("=");
@@ -273,13 +279,13 @@ public class EndpointExplorerCallback {
         return headersMap;
     }
 
-    private void setHeaders(AbstractHttpMessage message, HashMap<String, String> headersMap) {
+    private void setHeaders(AbstractHttpMessage message, Map<String, String> headersMap) {
         headersMap.entrySet().stream().filter(entry -> StringUtils.hasContent(entry.getKey())).forEach(entry -> {
             message.addHeader(entry.getKey(), entry.getValue());
         });
     }
 
-    private void setHeadersAndPayload(HttpEntityEnclosingRequestBase request, HashMap<String, String> headersMap, String payload) {
+    private void setHeadersAndPayload(HttpEntityEnclosingRequestBase request, Map<String, String> headersMap, String payload) {
         setHeaders(request, headersMap);
         request.setEntity(new ByteArrayEntity(payload.getBytes()));
     }

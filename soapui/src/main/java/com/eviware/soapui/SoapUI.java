@@ -455,8 +455,6 @@ public class SoapUI {
         endpointExplorerButtonPanel = new JPanel(new BorderLayout());
         endpointExplorerButtonPanel.setPreferredSize(new Dimension(130, 32));
         endpointExplorerButtonPanel.setMaximumSize(new Dimension(130, 32));
-//        endpointExplorerButtonPanel.setBackground(Color.blue); //TODO: delete
-
         endpointExplorerButton = new RoundButton(6);
         endpointExplorerButton.setForeground(Color.WHITE);
         endpointExplorerButton.setBackground(new Color(52, 137, 209));
