@@ -79,7 +79,7 @@ public class AutoTestStepFactory extends WsdlTestStepFactory implements SoapUIFa
         } catch (NoSuchMethodException e) {
             TestStepConfig config = TestStepConfig.Factory.newInstance();
             config.setType(annotation.typeName());
-            config.setName(annotation.name());
+            config.setName(name);
             return config;
         } catch (Exception e) {
             SoapUI.logError(e);
