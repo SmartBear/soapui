@@ -52,6 +52,7 @@ import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
+import javafx.application.Platform;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -71,6 +72,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * DesktopPanel for WsdlTestSuite
@@ -416,7 +418,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
     private class InternalTestSuiteRunListener implements TestSuiteRunListener {
         private TestRunLogTestRunListener runLogListener;
-        private int finishCount;
+        private AtomicInteger finishCount = new AtomicInteger();
 
         public void afterRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
             WsdlTestSuiteDesktopPanel.this.afterRun((WsdlTestSuiteRunner) testRunner);
@@ -424,7 +426,14 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         public void afterTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext,
                                   TestCaseRunner testCaseRunner) {
-            progressBar.setValue(++finishCount);
+            finishCount.incrementAndGet();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setValue(finishCount.get());
+                }
+            });
+
 
             if (getModelItem().getRunType() == TestSuiteRunType.SEQUENTIAL) {
                 testCaseRunner.getTestCase().removeTestRunListener(runLogListener);
@@ -439,7 +448,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
             progressBar.setMaximum(getModelItem().getTestCaseCount());
             progressBar.setValue(0);
             progressBar.setString("");
-            finishCount = 0;
+            finishCount.set(0);
 
             if (runLogListener == null) {
                 runLogListener = new TestRunLogTestRunListener(testRunLog, false);
