@@ -6,7 +6,7 @@
 ### ====================================================================== ###
 
 ### $Id$ ###
-EXECUTABLE=`dirname $0`/`basename $0`
+EXECUTABLE=`dirname "$0"`/`basename "$0"`
 LS_LD=`ls -ld "${EXECUTABLE}"`
 SYM_LINK_INDICATOR="->"
 if [ "$LS_LD" != "${LS_LD%$SYM_LINK_INDICATOR*}" ]
