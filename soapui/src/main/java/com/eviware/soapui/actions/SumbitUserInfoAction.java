@@ -40,9 +40,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class SumbitUserInfoAction {
-    private static final String FIRST_NAME_HINT = "Enter your first name *";
-    private static final String LAST_NAME_HINT = "Enter your last name *";
-    private static final String EMAIL_HINT = "Enter e-mail *";
+    private static final String FIRST_NAME_HINT = "Enter your first name";
+    private static final String LAST_NAME_HINT = "Enter your last name";
+    private static final String EMAIL_HINT = "Enter e-mail";
     private static final String DIALOG_CAPTION = "Stay Tuned!";
     private static final String DIALOG_MAIN_TEXT = "Want to stay in the loop?";
     private static final String DIALOG_DESCRIPTION = "We will use this information to help you get started, and provide you with best practices we’ve learned from over 7.5 Million development, quality and operations experts just like you.";
