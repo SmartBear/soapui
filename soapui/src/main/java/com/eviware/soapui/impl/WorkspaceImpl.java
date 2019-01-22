@@ -200,7 +200,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         String message = messages.get(
                 "WorkspaceImpl.Compatibility.Text",
                 SoapUI.PRODUCT_NAME,
-                SoapUICore.SOAPUI_VERSION);
+                SoapUI.SOAPUI_VERSION);
         if (!readyProjectsList.isEmpty()) {
             UISupport.showInfoMessage(String.join("\r\n", readyProjectsList) + message,
                     messages.get("Compatibility.with.ReadyAPI.Title"));

@@ -26,7 +26,6 @@ import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import java.io.File;
 
 public interface SoapUICore {
-    String SOAPUI_VERSION = "5.5.0-SNAPSHOT";
 
     String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
 
