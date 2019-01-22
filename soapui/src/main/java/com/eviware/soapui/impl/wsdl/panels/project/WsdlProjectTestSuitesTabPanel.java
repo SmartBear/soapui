@@ -379,7 +379,6 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
                 @Override
                 public void run() {
                     progressBar.setValue(finishCount.get());
-                    System.out.println("setting coutn to " + String.valueOf(finishCount.get()));
                 }
             });
 
