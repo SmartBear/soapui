@@ -68,7 +68,6 @@
       <mountPoint id="321" root="" location="bin" mode="755" />
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
-      <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
       <mountPoint id="5461" root="5280" location=".soapuios" mode="755" />
       <mountPoint id="5462" root="5280" location=".soapuios/plugins" mode="755" />
@@ -504,7 +503,7 @@ return console.askOkCancel(message, true);
               </formComponent>
             </formComponents>
           </screen>
-          <screen name="Display SoapUI license agreement" id="410" customizedId="" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" styleId="" rollbackBarrier="false" rollbackBarrierExitCode="1" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+          <screen name="Display SoapUI license agreement" id="410" customizedId="" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="false" commentSet="false" comment="" actionElevationType="inherit" styleId="" rollbackBarrier="false" rollbackBarrierExitCode="1" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
                 <object class="com.install4j.runtime.beans.screens.LicenseScreen" />
@@ -1230,7 +1229,7 @@ if (Util.isMacOS()) {
                         </object>
                       </void>
                       <void property="itemName">
-                        <string>${compiler:sys.fullName} ${compiler:sys.version}</string>
+                        <string>${compiler:sys.fullName}</string>
                       </void>
                     </object>
                   </java>
@@ -1249,25 +1248,6 @@ if (Util.isMacOS()) {
                             </object>
                           </void>
                         </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="Set JxBrowser location" id="2643" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                      <void property="script">
-                        <object class="com.install4j.api.beans.ScriptProperty">
-                          <void property="value">
-                            <string>return context.getCompilerVariable("SOAPUI_HOME") + context.getVariable("FILE_SEPARATOR") + ".JxBrowser";</string>
-                          </void>
-                        </object>
-                      </void>
-                      <void property="variableName">
-                        <string>jxBrowserInstallLocation</string>
                       </void>
                     </object>
                   </java>
@@ -1459,24 +1439,6 @@ if (Util.isMacOS()) {
                           </void>
                           <void index="12">
                             <string>-splash:SoapUI-Spashscreen.png</string>
-                          </void>
-                        </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="" id="2705" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="Error in setting write permissions for jxbrowser">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction">
-                      <void property="files">
-                        <array class="java.io.File" length="1">
-                          <void index="0">
-                            <object class="java.io.File">
-                              <string>.JxBrowser</string>
-                            </object>
                           </void>
                         </array>
                       </void>
@@ -2170,73 +2132,8 @@ return "";</string>
         </serializedBean>
         <styleOverrides />
         <customScript mode="1" file="">
-            <content />
+          <content />
         </customScript>
-        <styleOverrides>
-          <styleOverride name="Customize title bar" enabled="true">
-            <group name="" id="7598" customizedId="" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" enabled="true" commentSet="false" comment="" actionElevationType="inherit" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
-              <serializedBean>
-                <java class="java.beans.XMLDecoder">
-                  <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
-                    <void property="backgroundColor">
-                      <object class="java.awt.Color">
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                      </object>
-                    </void>
-                    <void property="borderSides">
-                      <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
-                        <void property="bottom">
-                          <boolean>true</boolean>
-                        </void>
-                      </object>
-                    </void>
-                    <void property="imageAnchor">
-                      <object class="java.lang.Enum" method="valueOf">
-                        <class>com.install4j.api.beans.Anchor</class>
-                        <string>NORTHEAST</string>
-                      </object>
-                    </void>
-                    <void property="imageEdgeBorderWidth">
-                      <int>2</int>
-                    </void>
-                    <void property="imageFile">
-                      <object class="com.install4j.api.beans.ExternalFile">
-                        <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png</string>
-                      </object>
-                    </void>
-                    <void property="imageInsets">
-                      <object class="java.awt.Insets">
-                        <int>0</int>
-                        <int>5</int>
-                        <int>1</int>
-                        <int>1</int>
-                      </object>
-                    </void>
-                    <void property="insets">
-                      <object class="java.awt.Insets">
-                        <int>0</int>
-                        <int>20</int>
-                        <int>0</int>
-                        <int>10</int>
-                      </object>
-                    </void>
-                  </object>
-                </java>
-              </serializedBean>
-              <beans />
-              <externalParametrizationPropertyNames>
-                <propertyName>backgroundColor</propertyName>
-                <propertyName>foregroundColor</propertyName>
-                <propertyName>imageAnchor</propertyName>
-                <propertyName>imageFile</propertyName>
-                <propertyName>imageOverlap</propertyName>
-              </externalParametrizationPropertyNames>
-            </group>
-          </styleOverride>
-        </styleOverrides>
         <launcherIds />
         <variables />
         <startup>
@@ -2413,49 +2310,6 @@ return console.askYesNo(message, true);
                       </void>
                       <void property="variableName">
                         <string>FILE_SEPARATOR</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="Set JxBrowser location" id="2645" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                      <void property="script">
-                        <object class="com.install4j.api.beans.ScriptProperty">
-                          <void property="value">
-                            <string>return context.getCompilerVariable("SOAPUI_HOME") + context.getVariable("FILE_SEPARATOR") + ".JxBrowser";</string>
-                          </void>
-                        </object>
-                      </void>
-                      <void property="variableName">
-                        <string>jxBrowserInstallLocation</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="Delete .JxBrowser" id="2615" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
-                      <void property="backupForRollback">
-                        <boolean>false</boolean>
-                      </void>
-                      <void property="files">
-                        <array class="java.io.File" length="1">
-                          <void index="0">
-                            <object class="java.io.File">
-                              <string>${installer:jxBrowserInstallLocation}</string>
-                            </object>
-                          </void>
-                        </array>
-                      </void>
-                      <void property="recursive">
-                        <boolean>true</boolean>
                       </void>
                     </object>
                   </java>
