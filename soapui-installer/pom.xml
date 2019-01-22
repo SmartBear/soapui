@@ -36,8 +36,10 @@
               <mainClass>com.eviware.soapui.tools.SplashScreenStomper</mainClass>
               <arguments>
                 <argument>SoapUI ${project.version}</argument>
-                <argument>${basedir}/src/main/resources/SoapUI-Spashscreen.png</argument>
-                <argument>${basedir}/target/SoapUI-Spashscreen.png</argument>
+                <argument>${basedir}/src/main/resources/SoapUI-Spashscreen-blank.png</argument>
+                <argument>${basedir}/target/classes/SoapUI-Spashscreen.png</argument>
+                <argument>${basedir}/src/main/resources/SoapUI-Spashscreen@2x-blank.png</argument>
+                <argument>${basedir}/target/classes/SoapUI-Spashscreen@2x.png</argument>
               </arguments>
             </configuration>
           </plugin>
