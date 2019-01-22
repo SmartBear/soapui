@@ -86,13 +86,16 @@ public class EndpointExplorerCallback {
         HttpMethod method = HttpMethod.valueOf(extractMethod(request));
         RequestInspectionData inspectionData = new RequestInspectionData(extractHeaders(request), extractPayload(request));
 
-        SwingUtilities.invokeLater(() -> {
-            HashMap<String, Object> context = new HashMap<>();
-            context.put("URLs", Arrays.asList(url));
-            context.put("Methods", Arrays.asList(method));
-            context.put("InspectionData", Arrays.asList(inspectionData));
-            SaveRequestAction saveRequestAction = new SaveRequestAction(context);
-            saveRequestAction.showNewRestRequestDialog();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                HashMap<String, Object> context = new HashMap<>();
+                context.put("URLs", Arrays.asList(url));
+                context.put("Methods", Arrays.asList(method));
+                context.put("InspectionData", Arrays.asList(inspectionData));
+                SaveRequestAction saveRequestAction = new SaveRequestAction(context);
+                saveRequestAction.showNewRestRequestDialog();
+            }
         });
     }
 
@@ -280,9 +283,11 @@ public class EndpointExplorerCallback {
     }
 
     private void setHeaders(AbstractHttpMessage message, Map<String, String> headersMap) {
-        headersMap.entrySet().stream().filter(entry -> StringUtils.hasContent(entry.getKey())).forEach(entry -> {
-            message.addHeader(entry.getKey(), entry.getValue());
-        });
+        for (Map.Entry<String, String> entry : headersMap.entrySet()) {
+            if (StringUtils.hasContent(entry.getKey())) {
+                message.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     private void setHeadersAndPayload(HttpEntityEnclosingRequestBase request, Map<String, String> headersMap, String payload) {
