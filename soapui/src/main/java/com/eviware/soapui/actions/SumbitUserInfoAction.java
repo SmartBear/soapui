@@ -83,7 +83,7 @@ public class SumbitUserInfoAction {
             setResizable(false);
             setUndecorated(true);
             setModal(true);
-            setSize(430, 265);
+            setSize(430, 270);
             setBackground(Color.WHITE);
 
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
