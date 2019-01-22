@@ -56,7 +56,7 @@ bundled or none -->
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/target</directory>
+            <directory>${basedir}/target/classes</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>SoapUI-Spashscreen.png</include>
