@@ -182,7 +182,6 @@ public enum SoapUIActions {
 
     //SoapUI Starter Page
     EXPLORE_API_CLICK_SEND("ExploreAPIClickSend", SOAPUI_NG, NO),
-    EXPLORE_API_CREATE_TEST("ExploreAPICreateTest", SOAPUI_NG, NO), //Called from API Inspection starter page
     EXPLORE_API_ADD_HEADER("ExploreAPIAddHeader", SOAPUI_NG, NO),
     EXPLORE_API_CHANGE_HTTP_METHOD("ExploreAPIchangeHTTPMethod", SOAPUI_NG, NO),
     EXPLORE_API_CLICK_AUTH_HEADERS_TAB("ExploreAPIClickAuthHeadersTab", SOAPUI_NG, NO),
