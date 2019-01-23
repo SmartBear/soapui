@@ -588,6 +588,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
 
     public WsdlProject importRemoteProject(String url) throws SoapUIException {
         WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(url, this);
+
+        ensureProjectsCompatibility(Arrays.asList(project));
+
         afterProjectImport(project);
 
         return project;
