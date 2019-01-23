@@ -29,7 +29,7 @@ public class EndpointExplorerAction extends AbstractAction {
         frame = new JFrame();
         frame.getContentPane().add(browserComponent);
         frame.setTitle("Endpoint Explorer");
-        frame.setSize(860, 450);
+        frame.setSize(860, 435);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
