@@ -78,7 +78,7 @@ public class EndpointExplorerCallback {
             return;
         }
         Analytics.trackAction(EXPLORE_API_CLICK_SAVE_REQUEST,
-                "HTTPMethod", HttpMethod.valueOf(extractMethod(request)).toString(),
+                "HTTPMethod", extractMethod(request),
                 "Endpoint", extractUrl(request));
 
         String url = extractUrl(request);
