@@ -1,4 +1,26 @@
-﻿# SoapUI Open Source 5.4.0
+﻿# SoapUI Open Source 5.5.0
+
+#### Released 2019-02-06 ####
+
+### Overall improvements ###
+
+* SoapUI 5.5 introduces the Endpoint Explorer dialog. Use it to send exploratory requests and analyze responses without creating a project.
+
+* SoapUI now supports extended HTTP methods: PROPFIND, LOCK, UNLOCK, COPY, PURGE.
+
+* Now, if you try to open a project created in a later SoapUI version or in ReadyAPI, SoapUI will notify you about this.
+
+### Bug Fixes ###
+
+* An invalid name was set for a custom test step.
+
+* A bug fix by modax: WS-Security did not support Strict Layout Rules.
+
+* A bug fix by arykov: Symlinks to soapui.sh did not work.
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.4.0
 
 #### Released 2017-11-29 ####
 
