@@ -1,72 +1,93 @@
-# The SoapUI project
+# SoapUI
 
 ## Structure and submodules
 
-* *[soapui](soapui)* - The core module that creates the SoapUI jar
-* *[soapui-system-test](soapui-system-test)* - Integration and system tests for SoapUI
-* *[soapui-installer](soapui-installer)* - Creates the SoapUI distributions, such as installers and archives
-* *[soapui-maven-plugin](soapui-maven-plugin)* – Maven plugin used for running SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
-* *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - Small test `pom.xml` used for testing the *soapui-maven-plugin*.
-
-## Building and running
+* *[soapui](soapui)* - The core module that creates the SoapUI .jar file.
+* *[soapui-system-test](soapui-system-test)* - Integration and system tests for SoapUI.
+* *[soapui-installer](soapui-installer)* - Creates SoapUI distributions, such as installers and archives.
+* *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used to run SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
+* *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - A test pom.xml file used to test the *soapui-maven-plugin*.
+ 
+## Build and run
 
 ### Prerequisite
 
-* [JDK (version 1.6 or higher)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-    * If you're using Java 1.6 you have download the [standalone Java FX runtime ](http://www.oracle.com/technetwork/java/javase/downloads/javafxjdk6-1728173.html) and set the `javafx.runtime.lib.jar` property in the root `pom.xml` file to the path of the `jfxrt.jar` file
-* [Maven (version 3.0.0 or higher)](http://maven.apache.org/)
-* [Git (version 1.8 or higher)](http://git-scm.com)
+* [JDK 8 (version 1.8 or later)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [Maven (version 3.0.0 or later)](http://maven.apache.org/)
+* [Git (version 1.8 or later)](http://git-scm.com)
 
-### Getting the source code for the first time
+### Get the source code for the first time
 
-To get the source code run `git clone https://github.com/SmartBear/soapui.git` where you want to the root folder of the SoapUI project.
+To get the source code, run `git clone https://github.com/SmartBear/soapui.git` in the folder where you want to clone the root folder of the SoapUI project.
 
-### Building
+### Build
 
-* To build the SoapUI project run `mvn clean install` in the root folder.
-* To build a individual submodule run `mvn clean install` the root folder of the submodule you want to build.
+* To build a SoapUI project, run `mvn clean install` in the root folder.
+* To build an individual submodule, run `mvn clean install` in the root folder of the submodule you want to build.
 
-### Running
+### Run
 
 To run SoapUI after it has been built, execute `mvn exec:java` in the root folder of the *soapui* submodule.
 
-### Getting the latest changes
+### Get the latest changes
 
-To get the latest source code changes clone the project by running `git pull` in the root directory of the SoapUI project or the root directory of the submodule you want to update.
+To get the latest source code changes, clone the project by running `git pull` in the root directory of the SoapUI project or in the root directory of the submodule you want to update.
 
-## Contributing
+## Contribute
 
-When you have decided that you want to take a more active part in improving SoapUI then there are a few things you have to do before you can get started. Go to http://www.soapui.org/Developers-Corner/contribute-to-soapui.html for more information.
+If you want to take a more active part in improving SoapUI, go to [http://www.soapui.org/Developers-Corner/contribute-to-soapui.html](SoapUI Developer's Corner) for more information.
 
 ### IDE support
 
 As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an IDE is usually very straight forward, as long as the IDE has good Maven support.
 
-**Getting started using Intellij IDEA (version 13)**
+#### Itellij IDEA
 
-* Clone the project
-* In the main menu select *File* -> *Open...*
-* Enter the path to the root folder of the SoapUI project
-* Run `mvn compile` in order to auto generate necessary source files
-* After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run*.
-* To get the latest changes right click on the root folder in the *Project* view and select *Git* -> *Repository* -> *Pull...*
-* To get the same code style settings as the SoapUI team select *File* -> *Import Settings...* and import the file intellij-codestyle.jar located in the root folder of the SoapUI project
+**Open project**
 
-**Getting started using Eclipse (version 4 / Juno)**
+1. Clone the project.
+* In the main menu, select **File > Open**.
+* Enter the path to the root folder of the SoapUI project.
+* Run `mvn compile` to generate necessary source files automatically.
 
-* Clone the project
-* In the main menu select *File* -> *Import* -> *Maven* -> *Existing Maven projects* and at *Root directory* enter the path to the root folder of the SoapUI project and then finish the wizard.
-* After you have created the Eclipse project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run as* -> *Java application*
-* To get the latest changes right click on the root folder in the *Package explorer* view and select *Team* -> *Pull*
+**Run SoapUI**
+
+After you have created the IDEA project, navigate to the `com.eviware.soapui.SoapUI` class, right-click and select **Run**.
+
+**Get the latest changes**
+
+Right-click on the root folder in the **Project** panel and select **Git > Repository > Pull**.
+
+**Tip**
+
+To get the code style settings used by the SoapUI team, select **File > Import Settings** and import the `intellij-codestyle.jar` file located in the root folder of the SoapUI project.
+
+#### Eclipse
+
+**Open project**
+
+1. Clone the project
+* In the main menu, select **File > Import**.
+* In the **Import** dialog, select **Maven > Existing Maven projects** and click **Next**.
+* In the **Root directory**, enter the path to the root folder of the SoapUI project and click **Finish**.
+
+**Run SoapUI**
+
+After you have created the Eclipse project, navigate to the `com.eviware.soapui.SoapUI` class, right-click it and select **Run as > Java application**.
+
+**Get the latest changes**
+
+1. Right-click on the root folder in the **Package explorer** panel.
+* Select **Team > Pull**.
 
 ## Documentation
-To generate documentation ([JavaDoc](http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html)) run `mvn javadoc:javadoc` in the root folder of the submodule you want documentation for. The documentation will be located in the `target/site/javadoc` folder after the Maven command has terminated successfully. 
+To generate documentation ([JavaDoc](http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html)), run `mvn javadoc:javadoc` in the root folder of the submodule you want to create documentation for. The documentation will be located in the `target/site/javadoc` folder after the Maven command is executed successfully. 
 
-You can also get the latest JavaDoc for SoapUI [here](http://www.soapui.org/apidocs).
+You can also get the latest information on SoapUI classes and methods [here](http://www.soapui.org/apidocs).
 
 
 ## Additional resources
-* *[SoapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples)* - This is a collection of SoapUI projects and Groovy Scripts used to demonstrate the Groovy scripting capabilities in SoapUI.
+* *[SoapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples)* - This is a collection of SoapUI projects and Groovy scripts used to demonstrate the Groovy scripting capabilities in SoapUI.
 * [Extending SoapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
 * [Custom factories](http://www.soapui.org/Developers-Corner/custom-factories.html)
 * [Integrating with SoapUI](http://www.soapui.org/Developers-Corner/integrating-with-soapui.html)
