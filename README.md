@@ -46,9 +46,9 @@ As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an
 **Open project**
 
 1. Clone the project.
-* In the main menu, select **File > Open**.
-* Enter the path to the root folder of the SoapUI project.
-* Run `mvn compile` to generate necessary source files automatically.
+2. In the main menu, select **File > Open**.
+3. Enter the path to the root folder of the SoapUI project.
+4. Run `mvn compile` to generate necessary source files automatically.
 
 **Run SoapUI**
 
@@ -67,9 +67,9 @@ To get the code style settings used by the SoapUI team, select **File > Import S
 **Open project**
 
 1. Clone the project
-* In the main menu, select **File > Import**.
-* In the **Import** dialog, select **Maven > Existing Maven projects** and click **Next**.
-* In the **Root directory**, enter the path to the root folder of the SoapUI project and click **Finish**.
+2. In the main menu, select **File > Import**.
+3. In the **Import** dialog, select **Maven > Existing Maven projects** and click **Next**.
+4. In the **Root directory**, enter the path to the root folder of the SoapUI project and click **Finish**.
 
 **Run SoapUI**
 
@@ -78,7 +78,7 @@ After you have created the Eclipse project, navigate to the `com.eviware.soapui.
 **Get the latest changes**
 
 1. Right-click on the root folder in the **Package explorer** panel.
-* Select **Team > Pull**.
+2. Select **Team > Pull**.
 
 ## Documentation
 To generate documentation ([JavaDoc](http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html)), run `mvn javadoc:javadoc` in the root folder of the submodule you want to create documentation for. The documentation will be located in the `target/site/javadoc` folder after the Maven command is executed successfully. 
