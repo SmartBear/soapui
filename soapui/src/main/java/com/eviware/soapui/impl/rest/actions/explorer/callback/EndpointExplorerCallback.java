@@ -70,7 +70,6 @@ public class EndpointExplorerCallback {
     }
 
     public void createFromInspection(String json) {
-        Analytics.trackAction(EXPLORE_API_CLICK_SAVE_REQUEST);
         JSONObject request;
         try {
             request = new JSONObject(json);
@@ -78,6 +77,9 @@ public class EndpointExplorerCallback {
             SoapUI.logError(e);
             return;
         }
+        Analytics.trackAction(EXPLORE_API_CLICK_SAVE_REQUEST,
+                "HTTPMethod", extractMethod(request),
+                "Endpoint", extractUrl(request));
 
         String url = extractUrl(request);
         if (StringUtils.isNullOrEmpty(url)) {
