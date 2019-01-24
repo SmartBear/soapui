@@ -41,7 +41,7 @@ If you want to take a more active part in improving SoapUI, go to [http://www.so
 
 As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an IDE is usually very straight forward, as long as the IDE has good Maven support.
 
-#### IntelliJ IDEA
+#### [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
 **Open project**
 
@@ -62,7 +62,7 @@ Right-click on the root folder in the **Project** panel and select **Git > Repos
 
 To get the code style settings used by the SoapUI team, select **File > Import Settings** and import the `intellij-codestyle.jar` file located in the root folder of the SoapUI project.
 
-#### Eclipse
+#### [Eclipse](https://www.eclipse.org/ide/)
 
 **Open project**
 
