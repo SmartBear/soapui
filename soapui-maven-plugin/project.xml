@@ -9,7 +9,7 @@
 	<inceptionYear>2006</inceptionYear>
 	<name>maven-soapui-plugin</name>
 	<currentVersion>5.4.0</currentVersion>
-	<package>com.eviware.soapui</package>
+	<package>com.smartbear.soapui</package>
 	<shortDescription>Maven plugin for SoapUI</shortDescription>
 	<repository />
 	<dependencies>
