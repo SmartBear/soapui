@@ -56,22 +56,26 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
         super(testSuite, properties);
     }
 
+    @Override
     public WsdlTestSuiteRunContext createContext(StringToObjectMap properties) {
         return new WsdlTestSuiteRunContext(this, properties);
     }
 
+    @Override
     public void onCancel(String reason) {
         for (TestCaseRunner runner : activeRunners.toArray(new TestCaseRunner[activeRunners.size()])) {
             runner.cancel(reason);
         }
     }
 
+    @Override
     public void onFail(String reason) {
         for (TestCaseRunner runner : activeRunners.toArray(new TestCaseRunner[activeRunners.size()])) {
             runner.fail(reason);
         }
     }
 
+    @Override
     public void internalRun(WsdlTestSuiteRunContext runContext) throws Exception {
         WsdlTestSuite testSuite = getTestRunnable();
 
@@ -156,6 +160,7 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
         return currentRunner;
     }
 
+    @Override
     protected void internalFinally(WsdlTestSuiteRunContext runContext) {
         WsdlTestSuite testSuite = getTestRunnable();
 
