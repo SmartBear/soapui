@@ -403,4 +403,14 @@ public class StringUtils {
         Arrays.sort(names);
         return names;
     }
+
+    /**
+     * Returns a {@code String} that is positioned before the first whitespace in the specified text
+     *
+     * @param originalString the {@code String} to be cut
+     * @return the {@code String} that contains all the symbols before the first whitespace in initial {@code String}
+     */
+    public static String getSubstringBeforeFirstWhitespace(String originalString) {
+        return originalString.split("\\s+")[0];
+    }
 }

@@ -964,10 +964,10 @@ public class SoapUI {
         } else {
             String workspaceFile = soapUICore.getSettings().getString(CURRENT_SOAPUI_WORKSPACE,
                     System.getProperty("user.home") + File.separatorChar + DEFAULT_WORKSPACE_FILE);
+            UISupport.setDialogs(new SwingDialogs(null));
             try {
                 workspace = WorkspaceFactory.getInstance().openWorkspace(workspaceFile, projectOptions);
             } catch (Exception e) {
-                UISupport.setDialogs(new SwingDialogs(null));
                 if (UISupport
                         .confirm("Failed to open workspace: [" + e.toString() + "], create new one instead?", "Error")) {
                     new File(workspaceFile).renameTo(new File(workspaceFile + ".bak"));

@@ -105,6 +105,7 @@
                                  maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>
+                <xsd:attribute name="updated" type="xsd:string"/>
                 <xsd:attribute name="soapui-version" type="xsd:string">
                 </xsd:attribute>
                 <xsd:attribute name="resourceRoot" type="xsd:string"></xsd:attribute>
