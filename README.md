@@ -41,7 +41,7 @@ If you want to take a more active part in improving SoapUI, go to [http://www.so
 
 As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an IDE is usually very straight forward, as long as the IDE has good Maven support.
 
-#### Itellij IDEA
+#### IntelliJ IDEA
 
 **Open project**
 
