@@ -58,6 +58,8 @@
                 <version>3.5.1</version>
             </plugin>
 
+            
+
             <!-- FIXME Why do we need this plugin ? -->
 			<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
