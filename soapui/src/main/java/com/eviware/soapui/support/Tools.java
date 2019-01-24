@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2018 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.support;
@@ -51,6 +51,7 @@ import java.util.regex.Pattern;
 public class Tools {
     public static final int COPY_BUFFER_SIZE = 1000;
 
+    private static final MessageSupport messages = MessageSupport.getMessages(Tools.class);
     private static final Logger log = Logger.getLogger(Tools.class);
 
     private static final Pattern PROPERTY_EXPANSION_EQUALS_PATTERN = Pattern.compile("^\\$\\{(.*)\\}$");
@@ -186,7 +187,6 @@ public class Tools {
     public static final long READ_ALL = 0;
 
 
-
     public static String modifyUrl(final String url, Integer mods) {
 
         String helpUrl = url;
@@ -202,7 +202,7 @@ public class Tools {
         } else if (((mods & ActionEvent.SHIFT_MASK) != 0)
                 && ((mods & ActionEvent.CTRL_MASK) != 0)) {
             modifier = 3; // "dev";
-        }else if (((mods & ActionEvent.SHIFT_MASK) != 0)
+        } else if (((mods & ActionEvent.SHIFT_MASK) != 0)
                 && ((mods & ActionEvent.ALT_MASK) != 0)) {
             modifier = 4; // "next";
         } else {
@@ -230,7 +230,6 @@ public class Tools {
 
         return helpUrl;
     }
-
 
 
     public static void openURL(String url) {
@@ -651,12 +650,12 @@ public class Tools {
         return value != null && PROPERTY_EXPANSION_EQUALS_PATTERN.matcher(value).matches();
     }
 
-    public static List<String> getPropertyExpansions(String value) {
-        List<String> properyExpansions = new ArrayList<>();
-        Matcher matcher = PROPERTY_EXPANSION_CONTAINS_PATTERN.matcher(value);
+    public static String removePropertyExpansions(String definitionUrl, String definition) {
+        Matcher matcher = PROPERTY_EXPANSION_CONTAINS_PATTERN.matcher(definition);
         while (matcher.find()) {
-            properyExpansions.add(matcher.group());
+            log.warn(messages.get("Tools.Warning.PropertyExpansionRemovedFromDefinition",
+                    definitionUrl, matcher.group()));
         }
-        return properyExpansions;
+        return matcher.replaceAll("");
     }
 }
