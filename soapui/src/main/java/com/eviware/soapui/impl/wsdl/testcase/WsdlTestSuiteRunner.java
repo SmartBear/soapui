@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.wsdl.testcase;
@@ -32,6 +32,7 @@ import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,8 +47,9 @@ import java.util.Set;
 public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlTestSuiteRunContext> implements
         TestSuiteRunner {
     private TestSuiteRunListener[] listeners;
-    private Set<TestCaseRunner> finishedRunners = new HashSet<TestCaseRunner>();
-    private Set<TestCaseRunner> activeRunners = new HashSet<TestCaseRunner>();
+    private Set<TestCaseRunner> finishedRunners = Collections.synchronizedSet(new HashSet<>());
+    private Set<TestCaseRunner> startedRunners = new HashSet<>();
+    private Object lock = new Object();
     private int currentTestCaseIndex;
     private WsdlTestCase currentTestCase;
     private TestRunListener parallellTestRunListener = new ParallellTestRunListener();
@@ -63,15 +65,23 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
 
     @Override
     public void onCancel(String reason) {
-        for (TestCaseRunner runner : activeRunners.toArray(new TestCaseRunner[activeRunners.size()])) {
-            runner.cancel(reason);
+        synchronized (lock) {
+            for (TestCaseRunner runner : startedRunners.toArray(new TestCaseRunner[startedRunners.size()])) {
+                if (runner.isRunning()) {
+                    runner.cancel(reason);
+                }
+            }
         }
     }
 
     @Override
     public void onFail(String reason) {
-        for (TestCaseRunner runner : activeRunners.toArray(new TestCaseRunner[activeRunners.size()])) {
-            runner.fail(reason);
+        synchronized (lock) {
+            for (TestCaseRunner runner : startedRunners.toArray(new TestCaseRunner[startedRunners.size()])) {
+                if (runner.isRunning()) {
+                    runner.fail(reason);
+                }
+            }
         }
     }
 
@@ -105,21 +115,22 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
         currentTestCaseIndex = -1;
         currentTestCase = null;
 
-        for (TestCase testCase : testSuite.getTestCaseList()) {
-            if (!testCase.isDisabled()) {
-                testCase.addTestRunListener(parallellTestRunListener);
-                notifyBeforeRunTestCase(testCase);
-                runTestCase((WsdlTestCase) testCase, true);
+        synchronized (lock) {
+
+            for (TestCase testCase : testSuite.getTestCaseList()) {
+                if (!testCase.isDisabled()) {
+                    testCase.addTestRunListener(parallellTestRunListener);
+                    notifyBeforeRunTestCase(testCase);
+                    runTestCase((WsdlTestCase) testCase, true);
+                }
             }
         }
 
-        try {
-            synchronized (activeRunners) {
-                activeRunners.wait();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for (TestCaseRunner startedRunner : startedRunners) {
+            startedRunner.waitUntilFinished();
         }
+
+        updateStatus();
     }
 
     private void runSequential(WsdlTestSuite testSuite, WsdlTestSuiteRunContext runContext) {
@@ -129,8 +140,8 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
             if (!currentTestCase.isDisabled()) {
                 notifyBeforeRunTestCase(currentTestCase);
                 TestCaseRunner testCaseRunner = runTestCase(currentTestCase, false);
-                activeRunners.remove(testCaseRunner);
                 finishedRunners.add(testCaseRunner);
+                startedRunners.add(testCaseRunner);
                 notifyAfterRunTestCase(testCaseRunner);
             }
         }
@@ -151,8 +162,9 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
         DefaultPropertyExpansionContext properties = (DefaultPropertyExpansionContext) getRunContext().getProperties();
         properties.put("#TestSuiteRunner#", this);
 
-        TestCaseRunner currentRunner = testCaseAt.run(properties, true);
-        activeRunners.add(currentRunner);
+        TestCaseRunner currentRunner;
+        currentRunner = testCaseAt.run(properties, true);
+        startedRunners.add(currentRunner);
         if (!async) {
             currentRunner.waitUntilFinished();
         }
@@ -236,19 +248,8 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
         @Override
         public void afterRun(TestCaseRunner testRunner, TestCaseRunContext runContext) {
             notifyAfterRunTestCase(testRunner);
-
-            activeRunners.remove(testRunner);
             finishedRunners.add(testRunner);
-
             testRunner.getTestCase().removeTestRunListener(parallellTestRunListener);
-
-            if (activeRunners.isEmpty()) {
-                updateStatus();
-
-                synchronized (activeRunners) {
-                    activeRunners.notify();
-                }
-            }
         }
     }
 }
