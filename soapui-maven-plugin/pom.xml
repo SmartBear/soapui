@@ -52,6 +52,12 @@
     <build>
 		<plugins>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.5.1</version>
+            </plugin>
+
             <!-- FIXME Why do we need this plugin ? -->
 			<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
