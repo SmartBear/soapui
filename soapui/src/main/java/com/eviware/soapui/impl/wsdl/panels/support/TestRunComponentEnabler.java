@@ -56,7 +56,7 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter {
         disable();
     }
 
-    private void disable() {
+    private synchronized void disable() {
         if (states.isEmpty()) {
             for (JComponent component : components) {
                 states.add(component.isEnabled());
@@ -65,7 +65,7 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter {
         }
     }
 
-    private void enable() {
+    private synchronized void enable() {
         if (!states.isEmpty()) {
             for (int c = 0; c < components.size(); c++) {
                 JComponent component = components.get(c);
@@ -98,7 +98,7 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter {
         }
     }
 
-    public void add(JComponent component) {
+    public synchronized void add(JComponent component) {
         components.add(component);
 
         if (SoapUI.getTestMonitor().hasRunningTest(testCase)) {
