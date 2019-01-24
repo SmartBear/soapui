@@ -135,7 +135,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     public final static String BEFORE_SAVE_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@tearDownScript";
     public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class.getName() + "@resourceRoot";
     public static final String ICON_NAME = "/project.png";
-    public static final SoapUIVersionInfo VERSION_IN_RAEDY_API_PROJECT = new SoapUIVersionInfo("6.0.0");
+    public static final SoapUIVersionInfo VERSION_IN_READY_API_PROJECT = new SoapUIVersionInfo("6.0.0");
     protected final static Logger log = Logger.getLogger(WsdlProject.class);
     private static final String XML_FILE_TYPE = "XML Files (*.xml)";
     private static final String XML_EXTENSION = ".xml";
@@ -2031,8 +2031,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         String soapuiVersion = getConfig().getSoapuiVersion();
         if (StringUtils.hasContent(soapuiVersion)) {
             SoapUIVersionInfo soapUIVersionInfo = new SoapUIVersionInfo(soapuiVersion);
-            if (SoapUIVersionInfo.isNewerThanCurrent(VERSION_IN_RAEDY_API_PROJECT)) {
-                return VERSION_IN_RAEDY_API_PROJECT.equals(soapUIVersionInfo);
+            if (SoapUIVersionInfo.isNewerThanCurrent(VERSION_IN_READY_API_PROJECT)) {
+                return VERSION_IN_READY_API_PROJECT.equals(soapUIVersionInfo);
             }
         }
         return false;
