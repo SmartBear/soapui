@@ -31,7 +31,7 @@ public class EndpointExplorerAction extends AbstractAction {
         frame.setTitle("Endpoint Explorer");
         frame.setSize(860, 435);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setVisible(true);
         frame.setIconImage((UISupport.createImageIcon("/SoapUI-OS_16-16.png")).getImage());
 
