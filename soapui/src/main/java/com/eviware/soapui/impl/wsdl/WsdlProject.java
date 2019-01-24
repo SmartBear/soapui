@@ -2023,7 +2023,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         NOT_ENCRYPTED, ENCRYPTED_BAD_OR_NO_PASSWORD, ENCRYPTED_GOOD_PASSWORD;
     }
 
-    public boolean isFromReady() {
+    public boolean isFromReadyApi() {
         return StringUtils.hasContent(getConfig().getUpdated())
                 || SoapUIVersionInfo.currentVersion.getMajorVersion() < 6
                 && "6.0.0".equals(getConfig().getSoapuiVersion());

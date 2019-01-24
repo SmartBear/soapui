@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.SoapuiWorkspaceDocumentConfig;
 import com.eviware.soapui.config.WorkspaceProjectConfig;
@@ -179,7 +178,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         List<String> readyProjectsList = new ArrayList<>();
         for (Project project : projects) {
             if (project instanceof WsdlProject) {
-                if (((WsdlProject) project).isFromReady()) {
+                if (((WsdlProject) project).isFromReadyApi()) {
                     ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
                     readyProjectsList.add(
                             messages.get(
