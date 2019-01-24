@@ -118,7 +118,7 @@ public class SoapUIVersionInfo implements Comparator<SoapUIVersionInfo> {
         return asString;
     }
 
-    public boolean isNewerThanCurrent(SoapUIVersionInfo version) {
-        return compare(version, currentVersion) > 0;
+    public static boolean isNewerThanCurrent(SoapUIVersionInfo version) {
+        return currentVersion.compare(version, currentVersion) > 0;
     }
 }
