@@ -77,14 +77,10 @@ public class WadlImporter {
 
     public void initFromWadl(String wadlUrl) {
         try {
-            // XmlObject xmlObject = XmlObject.Factory.parse( new URL( wadlUrl ) );
+            // XmlObject xmlObject = XmlObject.Factory.parse(new URL(wadlUrl));
             XmlObject xmlObject = XmlUtils.createXmlObject(new URL(wadlUrl));
 
-            String content = xmlObject.xmlText();
-
-            if (!UISupport.handleDefinitionPropertyExpansions(wadlUrl, content)) {
-                return;
-            }
+            String content = Tools.removePropertyExpansions(wadlUrl, xmlObject.xmlText());
 
             Element element = ((Document) xmlObject.getDomNode()).getDocumentElement();
 

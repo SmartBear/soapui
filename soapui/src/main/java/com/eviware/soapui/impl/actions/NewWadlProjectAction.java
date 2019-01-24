@@ -153,7 +153,6 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
         UISupport.select(restService);
         try {
             new WadlImporter(restService).initFromWadl(url);
-
         } catch (Exception e) {
             UISupport.showErrorMessage(e);
         }

@@ -23,9 +23,7 @@ import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.tools.PropertyExpansionRemover;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
@@ -134,10 +132,7 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
         if (SoapUI.getSettings().getBoolean(WsdlSettings.TRIM_WSDL)) {
             content = content.trim();
         }
-        if (!UISupport.handleDefinitionPropertyExpansions(url, content)) {
-            throw new Exception("The action has been cancelled.");
-        }
-        return content;
+        return Tools.removePropertyExpansions(url, content);
     }
 
     public String getBaseURI() {
