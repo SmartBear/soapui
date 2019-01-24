@@ -4,19 +4,19 @@
 	<artifactId>maven-soapui-plugin</artifactId>
 	<groupId>eviware</groupId>
 	<organization>
-		<name>eviware.com</name>
+		<name>smartbear.com</name>
 	</organization>
 	<inceptionYear>2006</inceptionYear>
 	<name>maven-soapui-plugin</name>
-	<currentVersion>4.5.1</currentVersion>
-	<package>com.eviware.soapui</package>
-	<shortDescription>maven plugin for soapui</shortDescription>
+	<currentVersion>5.4.0</currentVersion>
+	<package>com.smartbear.soapui</package>
+	<shortDescription>Maven plugin for SoapUI</shortDescription>
 	<repository />
 	<dependencies>
 		<dependency>
 			<groupId>eviware</groupId>
 			<artifactId>soapui</artifactId>
-			<version>4.5.1</version>
+			<version>5.4.0</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
