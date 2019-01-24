@@ -123,7 +123,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The SoapUI project file to test with
 	 * 
-	 * @parameter expression="soapui.projectfile"
+	 * @parameter property="soapui.projectfile"
 	 *            default-value="${project.artifactId}-soapui-project.xml"
 	 */
 
@@ -132,7 +132,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The TestSuite to run project file to test with
 	 * 
-	 * @parameter expression="soapui.testsuite"
+	 * @parameter property="soapui.testsuite"
 	 */
 
 	private String testSuite;
@@ -140,7 +140,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The TestCase to run project file to test with
 	 * 
-	 * @parameter expression="soapui.testcase"
+	 * @parameter property="soapui.testcase"
 	 */
 
 	private String testCase;
@@ -148,7 +148,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The username to use for authentication challenges
 	 * 
-	 * @parameter expression="soapui.username"
+	 * @parameter property="soapui.username"
 	 */
 
 	private String username;
@@ -156,7 +156,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The password to use for authentication challenges
 	 * 
-	 * @parameter expression="soapui.password"
+	 * @parameter property="soapui.password"
 	 */
 
 	private String password;
@@ -167,7 +167,7 @@ public class TestMojo extends AbstractMojo
 	 * outgoing request containing the specified username and password. Set to
 	 * either 'Text' or 'Digest'
 	 * 
-	 * @parameter expression="soapui.wssPasswordType"
+	 * @parameter property="soapui.wssPasswordType"
 	 */
 
 	private String wssPasswordType;
@@ -175,7 +175,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The domain to use for authentication challenges
 	 * 
-	 * @parameter expression="soapui.domain"
+	 * @parameter property="soapui.domain"
 	 */
 
 	private String domain;
@@ -183,7 +183,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * The host to use for requests
 	 * 
-	 * @parameter expression="soapui.host"
+	 * @parameter property="soapui.host"
 	 */
 
 	private String host;
@@ -191,7 +191,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Overrides the endpoint to use for requests
 	 * 
-	 * @parameter expression="soapui.endpoint"
+	 * @parameter property="soapui.endpoint"
 	 */
 
 	private String endpoint;
@@ -199,7 +199,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Sets the output folder for reports
 	 * 
-	 * @parameter expression="soapui.outputFolder"
+	 * @parameter property="soapui.outputFolder"
 	 */
 
 	private String outputFolder;
@@ -207,7 +207,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Turns on printing of reports
 	 * 
-	 * @parameter expression="soapui.printReport"
+	 * @parameter property="soapui.printReport"
 	 */
 
 	private boolean printReport;
@@ -215,7 +215,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Enabled interactive groovy scripts
 	 * 
-	 * @parameter expression="soapui.interactive"
+	 * @parameter property="soapui.interactive"
 	 */
 
 	private boolean interactive;
@@ -223,7 +223,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Turns on exporting of all results
 	 * 
-	 * @parameter expression="soapui.exportAll"
+	 * @parameter property="soapui.exportAll"
 	 */
 
 	private boolean exportAll;
@@ -231,7 +231,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Turns on creation of reports in junit style
 	 * 
-	 * @parameter expression="soapui.junitReport"
+	 * @parameter property="soapui.junitReport"
 	 */
 
 	private boolean junitReport;
@@ -239,7 +239,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Specifies SoapUI settings file to use
 	 * 
-	 * @parameter expression="soapui.settingsFile"
+	 * @parameter property="soapui.settingsFile"
 	 */
 
 	private String settingsFile;
@@ -247,7 +247,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Tells Test Runner to skip tests.
 	 * 
-	 * @parameter expression="soapui.skip"
+	 * @parameter property="soapui.skip"
 	 */
 
 	private boolean skip;
@@ -255,21 +255,21 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Specifies password for encrypted SoapUI project file
 	 * 
-	 * @parameter expression="soapui.project.password"
+	 * @parameter property="soapui.project.password"
 	 */
 	private String projectPassword;
 
 	/**
 	 * Specifies password for encrypted soapui-settings file
 	 * 
-	 * @parameter expression="soapui.settingsFile.password"
+	 * @parameter property="soapui.settingsFile.password"
 	 */
 	private String settingsPassword;
 
 	/**
 	 * If set ignore failed tests
 	 * 
-	 * @parameter expression="soapui.testFailIgnore"
+	 * @parameter property="soapui.testFailIgnore"
 	 */
 	
 	private boolean testFailIgnore;
@@ -277,7 +277,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Specified global property values soapui.saveAfterRun
 	 * 
-	 * @parameter expression="soapui.globalProperties"
+	 * @parameter property="soapui.globalProperties"
 	 */
 
 	private String[] globalProperties;
@@ -285,7 +285,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Specified project property values
 	 * 
-	 * @parameter expression="soapui.projectProperties"
+	 * @parameter property="soapui.projectProperties"
 	 */
 
 	private String[] projectProperties;
@@ -293,7 +293,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * Saves project file after running tests
 	 * 
-	 * @parameter expression=""
+	 * @parameter property=""
 	 */
 
 	private boolean saveAfterRun;
@@ -301,7 +301,7 @@ public class TestMojo extends AbstractMojo
 	/**
 	 * SoapUI Properties.
 	 * 
-	 * @parameter expression="soapuiProperties"
+	 * @parameter property="soapuiProperties"
 	 */
 	private Properties soapuiProperties;
 }

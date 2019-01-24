@@ -88,7 +88,7 @@ public class ToolMojo extends AbstractMojo
 	/**
 	 * The SoapUI project file to test with
 	 * 
-	 * @parameter expression="soapui.projectFile"
+	 * @parameter property="soapui.projectFile"
 	 *            default-value="${project.artifactId}-soapui-project.xml"
 	 */
 
@@ -97,7 +97,7 @@ public class ToolMojo extends AbstractMojo
 	/**
 	 * The tool to run
 	 * 
-	 * @parameter expression="soapui.tool"
+	 * @parameter property="soapui.tool"
 	 */
 
 	private String tool;
@@ -105,7 +105,7 @@ public class ToolMojo extends AbstractMojo
 	/**
 	 * The interface to run for
 	 * 
-	 * @parameter expression="soapui.iface"
+	 * @parameter property="soapui.iface"
 	 */
 
 	private String iface;
@@ -113,7 +113,7 @@ public class ToolMojo extends AbstractMojo
 	/**
 	 * Specifies SoapUI settings file to use
 	 * 
-	 * @parameter expression="soapui.settingsFile"
+	 * @parameter property="soapui.settingsFile"
 	 */
 
 	private String settingsFile;
@@ -121,28 +121,28 @@ public class ToolMojo extends AbstractMojo
 	/**
 	 * Specifies password for encrypted SoapUI project file
 	 * 
-	 * @parameter expression="soapui.project.password"
+	 * @parameter property="soapui.project.password"
 	 */
 	private String projectPassword;
 
 	/**
 	 * Specifies password for encrypted soapui-settings file
 	 * 
-	 * @parameter expression="soapui.settingsFile.password"
+	 * @parameter property="soapui.settingsFile.password"
 	 */
 	private String settingsPassword;
 
 	/**
 	 * Specifies output forder for report created by runned tool
 	 * 
-	 * @parameter expression="soapui.outputFolder"
+	 * @parameter property="soapui.outputFolder"
 	 */
 	private String outputFolder;
 	
 	/**
 	 * SoapUI Properties.
 	 * 
-	 * @parameter expression="soapuiProperties"
+	 * @parameter property="soapuiProperties"
 	 */
 	private Properties soapuiProperties;
 }
