@@ -1,23 +1,22 @@
 /*
  * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.autoupdate.SoapUIVersionInfo;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
@@ -89,7 +88,6 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.analytics.Analytics;
 import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlError;
@@ -237,7 +235,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             disabled = true;
         } finally {
             initProjectIcons();
-
 
             if (projectDocument == null) {
                 createEmptyProjectConfiguration(path, tempName);
@@ -415,7 +412,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             getConfig().addNewOAuth1ProfileContainer();
         }
         oAuth1ProfileContainer = new OAuth1ProfileContainer(this, getConfig().getOAuth1ProfileContainer());
-
 
         endpointStrategy.init(this);
 
@@ -736,7 +732,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             }
         }
 
-
         if (projectFileModified(projectFile)) {
             if (!UISupport.confirm("Project file for [" + getName() + "] has been modified externally, overwrite?",
                     "Save Project")) {
@@ -747,7 +742,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         if (shouldCreateBackup(projectFile)) {
             createBackup(projectFile);
         }
-
 
         SaveStatus saveStatus = saveIn(projectFile);
 
@@ -1703,15 +1697,15 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             ModelSupport.createNewIds(testSuite);
             testSuite.afterLoad();
 
-			/*
+            /*
              * security test keeps reference to test step by id, which gets changed
-			 * during importing, so old values needs to be rewritten to new ones.
-			 *
-			 * Create tarnsition table ( old id , new id ) and use it to replace
-			 * all old ids in new imported test case.
-			 *
-			 * Here needs to be done for all test cases separatly.
-			 */
+             * during importing, so old values needs to be rewritten to new ones.
+             *
+             * Create tarnsition table ( old id , new id ) and use it to replace
+             * all old ids in new imported test case.
+             *
+             * Here needs to be done for all test cases separatly.
+             */
             for (int cnt2 = 0; cnt2 < config.getTestCaseList().size(); cnt2++) {
                 TestCaseConfig newTestCase = config.getTestCaseList().get(cnt2);
                 TestCaseConfig importTestCaseConfig = newTestSuiteConfig.getTestSuite().getTestCaseList().get(cnt2);
@@ -2031,6 +2025,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     public boolean isFromReady() {
         return StringUtils.hasContent(getConfig().getUpdated())
-                || "6.0.0".equals(getConfig().getSoapuiVersion());
+                || SoapUIVersionInfo.currentVersion.getMajorVersion() < 6
+                && "6.0.0".equals(getConfig().getSoapuiVersion());
     }
 }
