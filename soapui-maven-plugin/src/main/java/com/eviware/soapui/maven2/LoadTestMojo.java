@@ -126,7 +126,7 @@ public class LoadTestMojo extends AbstractMojo
 	/**
     * The SoapUI project file to test with
     *
-    * @parameter expression="${soapui.projectFile}"    
+    * @parameter expression="soapui.projectFile"    
     * 	default-value="${project.artifactId}-soapui-project.xml"
     */
 	
@@ -135,7 +135,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The TestSuite to run 
     *
-    * @parameter expression="${soapui.testsuite}"    
+    * @parameter expression="soapui.testsuite"    
     */
 	
    private String testSuite;
@@ -143,7 +143,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The TestCase to run 
     *
-    * @parameter expression="${soapui.testcase}"    
+    * @parameter expression="soapui.testcase"    
     */
 	
    private String testCase;
@@ -151,7 +151,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The LoadTest to run 
     *
-    * @parameter expression="${soapui.loadtest}"    
+    * @parameter expression="soapui.loadtest"    
     */
 	
    private String loadTest;
@@ -159,7 +159,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The username to use for authentication challenges
     *
-    * @parameter expression="${soapui.username}"    
+    * @parameter expression="soapui.username"    
     */
 	
    private String username;
@@ -167,7 +167,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The password to use for authentication challenges
     *
-    * @parameter expression="${soapui.password}"    
+    * @parameter expression="soapui.password"    
     */
 	
    private String password;
@@ -177,7 +177,7 @@ public class LoadTestMojo extends AbstractMojo
 	 * in the addition of WS-Security UsernamePassword tokens to any outgoing request containing
 	 * the specified username and password. Set to either 'Text' or 'Digest'
 	 *  
-    * @parameter expression="${soapui.wssPasswordType}"    
+    * @parameter expression="soapui.wssPasswordType"    
 	 */
 	
    private String wssPasswordType;
@@ -185,7 +185,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The domain to use for authentication challenges
     *
-    * @parameter expression="${soapui.domain}"    
+    * @parameter expression="soapui.domain"    
     */
 	
    private String domain;
@@ -193,7 +193,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * The host to use for requests
     *
-    * @parameter expression="${soapui.host}"    
+    * @parameter expression="soapui.host"    
     */
 	
    private String host;
@@ -201,7 +201,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * Overrides the endpoint to use for requests
     *
-    * @parameter expression="${soapui.endpoint}"    
+    * @parameter expression="soapui.endpoint"    
     */
 	
    private String endpoint;
@@ -209,7 +209,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * Overrides the LoadTest limit
     *
-    * @parameter expression="${soapui.limit}"    
+    * @parameter expression="soapui.limit"    
     */
    
    private Integer limit;
@@ -217,7 +217,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * Overrides the LoadTest threadCount
     *
-    * @parameter expression="${soapui.threadcount}"    
+    * @parameter expression="soapui.threadcount"    
     */
    
    private Integer threadCount;
@@ -225,7 +225,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * Sets the output folder for reports
     *
-    * @parameter expression="${soapui.outputFolder}"    
+    * @parameter expression="soapui.outputFolder"    
     */
 	
    private String outputFolder;
@@ -241,7 +241,7 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * Specifies SoapUI settings file to use
     *
-    * @parameter expression="${soapui.settingsFile}"    
+    * @parameter expression="soapui.settingsFile"    
     * */
 	
    private String settingsFile;
@@ -255,21 +255,21 @@ public class LoadTestMojo extends AbstractMojo
    /**
     * Specifies password for encrypted SoapUI project file
     * 
-    * @parameter expression="${soapui.project.password}"
+    * @parameter expression="soapui.project.password"
     */
 	private String projectPassword;
 	
 	/**
 	 * Specifies password for encrypted soapui-settings file
 	 * 
-	 * @parameter expression="${soapui.settingsFile.password}"
+	 * @parameter expression="soapui.settingsFile.password"
 	 */
 	private String settingsPassword;
 	
 	/**
 	 * Specified global property values
 	 * 
-	 * @parameter expression="${soapui.globalProperties}"
+	 * @parameter expression="soapui.globalProperties"
 	 */
 	
 	private String [] globalProperties;
@@ -277,7 +277,7 @@ public class LoadTestMojo extends AbstractMojo
 	/**
 	 * Specified project property values
 	 * 
-	 * @parameter expression="${soapui.projectProperties}"
+	 * @parameter expression="soapui.projectProperties"
 	 */
 	
 	private String [] projectProperties;
@@ -285,7 +285,7 @@ public class LoadTestMojo extends AbstractMojo
 	/**
 	 * Saves project file after running tests
 	 * 
-	 * @parameter expression="${soapui.saveAfterRun}"
+	 * @parameter expression="soapui.saveAfterRun"
 	 */
 	
 	private boolean saveAfterRun;
@@ -293,7 +293,7 @@ public class LoadTestMojo extends AbstractMojo
 	/**
 	 * SoapUI Properties.
 	 * 
-	 * @parameter expression="${soapuiProperties}"
+	 * @parameter expression="soapuiProperties"
 	 */
 	private Properties soapuiProperties;
 
