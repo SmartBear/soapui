@@ -806,6 +806,10 @@ public class SoapUI {
                     });
                 }
 
+                if (isFirstLaunch && SoapUI.usingGraphicalEnvironment()) {
+                    SwingUtilities.invokeLater(SoapUI::showEndpointExplorer);
+                }
+
                 if (isCommandLine()) {
                     Analytics.trackAction(SoapUIActions.PRODUCT_STARTED_FROM_CMD);
                 }
@@ -1400,6 +1404,10 @@ public class SoapUI {
 
         UISupport.showDesktopPanel(starterPageDesktopPanel);
         starterPageDesktopPanel.navigate(HelpUrls.STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
+    }
+
+    private static void showEndpointExplorer() {
+        new EndpointExplorerAction().actionPerformed(null);
     }
 
     private static class AboutAction extends AbstractAction {
