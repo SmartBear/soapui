@@ -17,8 +17,6 @@ div.container {
 
 div.content-wrp {
     display: block;
-    padding: 1px;
-    height: 95%;
     overflow-y: auto
 }
 
@@ -39,10 +37,10 @@ div.always-show {
 }
 
 div.content-section {
-    display: block;
-    position: relative;
-    text-align: left;
-    z-index: 1
+       display: flex;
+       flex-direction: column;
+       height: 100%;
+       box-sizing: border-box;
 }
 
 p.content-section-headline {

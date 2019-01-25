@@ -7,13 +7,16 @@ import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class EndpointExplorerAction extends AbstractAction {
 
-    private JFrame frame;
+    private JDialog dialog;
 
     public EndpointExplorerAction() {
         putValue(Action.NAME, "Endpoint Explorer");
@@ -26,14 +29,24 @@ public class EndpointExplorerAction extends AbstractAction {
                         (false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER);
         Component browserComponent = browser.getComponent();
 
-        frame = new JFrame();
-        frame.getContentPane().add(browserComponent);
-        frame.setTitle("Endpoint Explorer");
-        frame.setSize(860, 435);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setVisible(true);
-        frame.setIconImage((UISupport.createImageIcon("/SoapUI-OS_16-16.png")).getImage());
+        dialog = new JDialog();
+        dialog.getContentPane().add(browserComponent);
+        dialog.setTitle("Endpoint Explorer");
+        dialog.setSize(860, 419);
+        dialog.setMinimumSize(new Dimension(860, 419));
+        dialog.setLocationRelativeTo(null);
+        dialog.setResizable(true);
+        dialog.setVisible(true);
+        dialog.setIconImage((UISupport.createImageIcon("/SoapUI-OS_16-16.png")).getImage());
+        UISupport.centerDialog(dialog, UISupport.getMainFrame());
+        UISupport.getMainFrame().setEnabled(false);
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                UISupport.getMainFrame().setEnabled(true);
+                dialog.setVisible(false);
+            }
+        });
 
         String path = "/com/eviware/soapui/explorer/soapui-pro-api-endpoint-explorer-starter-page.html";
         String resource = this.getClass().getResource(path).toString();
@@ -44,6 +57,7 @@ public class EndpointExplorerAction extends AbstractAction {
     }
 
     public void close() {
-        frame.setVisible(false);
+        UISupport.getMainFrame().setEnabled(true);
+        dialog.setVisible(false);
     }
 }
