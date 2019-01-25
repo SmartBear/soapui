@@ -95,7 +95,6 @@ public interface UISettings {
 
     @Setting(name = "Disable usage statistics", description = "Stop sending usage statistics", type = SettingType.BOOLEAN)
     public static final String DISABLE_ANALYTICS = UISettings.class.getSimpleName() + "@disable_analytics";
-    public static final String ANALYTICS_OPT_OUT_VERSION = UISettings.class.getSimpleName() + "@analytics_opt_out_version";
 
     @Setting(name = "Normalize Line-Breaks", description = "Normalize line-breaks when saving project", type = SettingType.BOOLEAN)
     public static final String LINEBREAK = UISettings.class.getSimpleName() + "@" + "normalize_line-breaks";
