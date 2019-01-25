@@ -17,36 +17,15 @@
 package com.eviware.soapui.analytics;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.Version;
 import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
-import com.eviware.soapui.analytics.providers.StatisticsCollectionConfirmationDialog;
-import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
 import com.smartbear.analytics.AnalyticsManager;
 import com.smartbear.analytics.api.AnalyticsProviderFactory;
 import com.smartbear.analytics.impl.GoogleAnalyticsProviderFactory;
 import com.smartbear.analytics.impl.SoapUIOSMixpanelProviderFactory;
 
-import javax.swing.JOptionPane;
-
 public class AnalyticsHelper {
     private static boolean initialized = false;
-
-    private static boolean isAnalyticsDisabled() {
-        Settings settings = SoapUI.getSettings();
-        boolean analyticsDisabled = settings.getBoolean(UISettings.DISABLE_ANALYTICS, false);
-        if (analyticsDisabled) {
-            return true;
-        }
-        Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
-        Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
-        if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
-            analyticsDisabled = StatisticsCollectionConfirmationDialog.showDialog() == JOptionPane.NO_OPTION;
-            settings.setBoolean(UISettings.DISABLE_ANALYTICS, analyticsDisabled);
-            settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
-        }
-        return analyticsDisabled;
-    }
 
     public static void initializeAnalytics() {
         if (initialized) {
@@ -58,7 +37,7 @@ public class AnalyticsHelper {
         manager.setExecutorService(SoapUI.getThreadPool());
         SoapUIProductInfo productInfo = SoapUIProductInfo.getInstance();
         manager.registerAnalyticsProviderFactory(new OSUserProviderFactory(productInfo));
-        if (isAnalyticsDisabled()) {
+        if (SoapUI.getSettings().getBoolean(UISettings.DISABLE_ANALYTICS, false)) {
             return;
         }
         manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
