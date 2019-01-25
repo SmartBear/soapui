@@ -187,7 +187,6 @@
 
             form.data.save = $("#{0}".format(form.formSave));
             form.data.save.button();
-            form.data.save.hide();
 
             form.data.send = $("#{0}".format(form.formAction));
             form.data.formContainer = form.data.send.closest('.re-request-item');
@@ -234,6 +233,14 @@
             });
 
             $("#formSave").click(function (event) {
+                var testData = $('#methodEndpoint').val();
+                    if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
+                        $('#methodEndpoint').addClass('invalid');
+                        setTimeout(function () {
+                            $('#methodEndpoint').removeClass('invalid');
+                        }, 1000);
+                        return;
+                    }
                 if (document.lastRequest != null) {
                     inspectorCallback.createFromInspection(JSON.stringify(document.lastRequest));
                     closeCallback.close();
@@ -317,7 +324,7 @@
             display: block;
             border: none;
             text-align: left;
-            padding: 0px 18px 5px 20px;
+            padding: 0px 18px 20px 20px;
         }
 
         .re-main input,
@@ -352,19 +359,50 @@
         .re-main .re-request-item .re-info-params {
             width: calc(100% / 2 - 10px);
             margin-top: 10px;
-            height: 240px;
-            <!--border-bottom: 1px solid #323232;-->
-            background-color: white;
             font-size: 12px;
         }
 
         .re-main .re-request-item .re-info-raw {
             width: calc(100% / 2 - 10px);
             margin-top: 10px;
-            height: 240px;
             border: 1px solid #767676;
             background-color: white;
             font-size: 12px;
+        }
+
+        #re-info-params-tabs {
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .re-main .re-request-item.re-request-info {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .re-params-table ::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+
+        .re-params-table ::-webkit-scrollbar-track {
+             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+             -webkit-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .re-params-table ::-webkit-scrollbar-thumb {
+             -webkit-border-radius: 4px;
+            border-radius: 4px;
+            background: rgba(201, 201, 201, 0.7);
+             -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
+        }
+
+        .re-params-table ::-webkit-scrollbar-thumb:window-inactive {
+            background: rgba(201, 201, 201, 0.);
         }
 
         .re-main .re-request-item.re-request-info ::-webkit-scrollbar {
@@ -394,15 +432,12 @@
             padding: 0;
         }
 
-        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget.ui-widget-content {
-            height: 100%;
-        }
-
         .ui-tabs.ui-widget-content#re-info-params-tabs {
             font-weight: normal;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
             margin: 0px;
             padding: 0;
+            box-sizing: border-box;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header {
@@ -461,7 +496,6 @@
 
         .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea{
             width: 94%;
-            height: 89%;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
@@ -487,6 +521,20 @@
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
             overflow: hidden;
+            height: calc(100% - 42px);
+        }
+
+        .re-params-table-row.re-params-table-body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .ui-tabs-panel.ui-widget-content#re-info-params-tab-3 {
+            overflow: hidden;
+            height: calc(100% - 42px);
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab a {
@@ -526,9 +574,9 @@
         }
 
         .re-info-raw .re-info-raw-body {
-            height: calc(100% - 31px);
             overflow: scroll;
             margin: 0 10px;
+            height: calc(100% - 43px);
         }
 
         .re-main .re-request-item .re-method {
@@ -621,25 +669,25 @@
         .ui-tabs-panel.ui-widget-content {
             margin: 0;
             padding: 0;
+            max-width: 100%;
+            overflow: auto;
+            border-right: 1px solid #767676;
+            border-left: 1px solid #767676;
+            border-bottom: 1px solid #767676;
         }
 
         .re-info-params .re-params-table {
-            margin-top: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
             display: block;
             border-spacing: 2px;
-            <!--width: 100%;-->
+            margin: 10px 10px 0 10px;
+            display: flex;
+            max-height: 97%;
+            flex-direction: column;
+            position: relative;
         }
 
         .re-info-params .re-params-table-row {
             margin: 0 0 5px 0;
-        }
-
-        .re-params-table-row.re-params-table-body {
-            max-height: 135px;
-            overflow-x: hidden;
-            overflow-y: auto;
         }
 
         .re-params-table-row .re-params-table-cell {
@@ -691,15 +739,6 @@
             overflow: hidden;
             cursor: pointer;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAIAAADpZ+PpAAAA5ElEQVR42k2Pu65FUBCGzQPwBiS70Gi0Ei2JmkaJnoR4B7QaIlGqRaETz4GegsalQBT2OmclJ2equf3z/QPzPBdFIYri5/N535cgiKZpSJIUBAFs267rGhVxHHMcV5ZlGIZoI4oiUBRlGAZUUBSl63qWZcRvGIYBfd+7rtt1HfEvNE1DakC8bdssyxrHEQ8kSUqS5Lqun1lVVUEQ/InQ8TRNWZYFBMBw3N33HSfIGvA8fxwHZvi+b5omZquqCm3bep4nyzJS3/c9TZPjOACQ5zksy4K8MAzzPM95nuj9dV1pmkbSL3lpcjIggew9AAAAAElFTkSuQmCC');
-        }
-
-        .ui-tabs-panel.ui-widget-content {
-            max-width: 100%;
-            height: 210px;
-            overflow: auto;
-            border-right: 1px solid #767676;
-            border-left: 1px solid #767676;
-            border-bottom: 1px solid #767676;
         }
 
         .re-info-params ul li.ui-state-disabled, ul li.ui-state-disabled a {
@@ -770,6 +809,13 @@
             background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E5E5E5));
         }
 
+        .closeButton:hover {
+            border-color: #3489D1;
+        }
+
+        .closeButtonArea {
+            float: right;
+        }
 
 
     </style>
@@ -851,7 +897,9 @@
                     </div>
                 </div>
             </div>
-            <button class=closeButton id="closeAction">Close</button>
+            <div class="closeButtonArea">
+                <button class=closeButton id="closeAction">Close</button>
+            </div>
         </div>
     </div>
 </div>
