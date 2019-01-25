@@ -1,4 +1,26 @@
-# SoapUI
+<p align="center">
+	<a href="https://soapui.org/">
+	  <img src="SoapUI-oss-logo.png">
+	</a>
+</p>
+
+SoapUI is the world's leading testing tool for API testing. See the [SoapUI website](https://www.soapui.org/) to learn more.
+
+## Table of content
+
+* [Structure and submodules](#structure-and-submodules)
+* [Build and run](#build-and-run)
+  * [Prerequisites](#prerequisites)
+  * [Get the source code for the first time](#get-the-source-code-for-the-first-time)
+  * [Build](#build)
+  * [Run](#run)
+  * [Get the latest changes](#get-the-latest-changes)
+* [Contribute](#contribute)
+  * [IDE support](#ide-support)
+    * [IntelliJ IDEA](#intellij-idea)
+	* [Eclipse](#eclipse)
+* [Documentation](#documentation)
+* [Additional resources](#additional-resources)
 
 ## Structure and submodules
 
@@ -10,7 +32,7 @@
  
 ## Build and run
 
-### Prerequisite
+### Prerequisites
 
 * [JDK 8 (version 1.8 or later)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Maven (version 3.0.0 or later)](http://maven.apache.org/)
@@ -85,9 +107,14 @@ To generate documentation ([JavaDoc](http://www.oracle.com/technetwork/java/java
 
 You can also get the latest information on SoapUI classes and methods [here](http://www.soapui.org/apidocs).
 
+## Advanced Functionality
+
+SoapUI Open Source offers basic functionality for API testing. For additional features, such as data-driven testing, coverage testing, groovy script debugging and others, try [SoapUI Pro](https://smartbear.com/product/ready-api/soapui/overview/).
+
 
 ## Additional resources
-* *[SoapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples)* - This is a collection of SoapUI projects and Groovy scripts used to demonstrate the Groovy scripting capabilities in SoapUI.
+
+* [SoapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples) - This is a collection of SoapUI projects and Groovy scripts used to demonstrate the Groovy scripting capabilities in SoapUI.
 * [Extending SoapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
 * [Custom factories](http://www.soapui.org/Developers-Corner/custom-factories.html)
 * [Integrating with SoapUI](http://www.soapui.org/Developers-Corner/integrating-with-soapui.html)
