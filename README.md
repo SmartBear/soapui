@@ -18,8 +18,9 @@ SoapUI is the world's leading testing tool for API testing. See the [SoapUI webs
 * [Contribute](#contribute)
   * [IDE support](#ide-support)
     * [IntelliJ IDEA](#intellij-idea)
-	* [Eclipse](#eclipse)
+    * [Eclipse](#eclipse)
 * [Documentation](#documentation)
+* [Advanced Functionality](#advanced-functionality)
 * [Additional resources](#additional-resources)
 
 ## Structure and submodules
