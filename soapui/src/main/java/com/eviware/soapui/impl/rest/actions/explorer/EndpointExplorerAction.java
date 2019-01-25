@@ -29,9 +29,8 @@ public class EndpointExplorerAction extends AbstractAction {
                         (false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER);
         Component browserComponent = browser.getComponent();
 
-        dialog = new JDialog();
+        dialog = new JDialog(UISupport.getMainFrame(), "Endpoint Explorer", false);
         dialog.getContentPane().add(browserComponent);
-        dialog.setTitle("Endpoint Explorer");
         dialog.setSize(860, 419);
         dialog.setMinimumSize(new Dimension(860, 419));
         dialog.setLocationRelativeTo(null);
