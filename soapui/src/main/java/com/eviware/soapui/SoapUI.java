@@ -460,7 +460,7 @@ public class SoapUI {
         endpointExplorerButton.setBackground(new Color(52, 137, 209));
         endpointExplorerButton.setText("Endpoint Explorer");
         if (UISupport.isMac()) {
-            endpointExplorerButton.setOpaque(true);
+            endpointExplorerButton.setOpaque(false);
         }
         EndpointExplorerAction action = new EndpointExplorerAction();
         endpointExplorerButton.addActionListener(action);
