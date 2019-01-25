@@ -42,7 +42,7 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
     private ProjectRunListener[] listeners;
     private Set<TestSuiteRunner> finishedRunners = Collections.synchronizedSet(new HashSet<>());
     private Set<TestSuiteRunner> startedRunners = new HashSet<>();
-    private Object lock = new Object();
+    private final Object lock = new Object();
     private int currentTestSuiteIndex;
     private WsdlTestSuite currentTestSuite;
     private TestSuiteRunListener internalTestRunListener = new InternalTestSuiteRunListener();
