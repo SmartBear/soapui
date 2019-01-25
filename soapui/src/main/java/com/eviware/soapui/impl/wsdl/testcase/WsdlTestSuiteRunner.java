@@ -162,8 +162,7 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
         DefaultPropertyExpansionContext properties = (DefaultPropertyExpansionContext) getRunContext().getProperties();
         properties.put("#TestSuiteRunner#", this);
 
-        TestCaseRunner currentRunner;
-        currentRunner = testCaseAt.run(properties, true);
+        TestCaseRunner currentRunner = testCaseAt.run(properties, true);
         startedRunners.add(currentRunner);
         if (!async) {
             currentRunner.waitUntilFinished();
