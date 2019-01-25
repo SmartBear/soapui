@@ -181,8 +181,16 @@
                 }
             })
 
-            $("#closeAction").click(function() {
+            $('#closeAction').click(function() {
                 closeCallback.close();
+            });
+
+            $('#bodyTab').click(function() {
+                requestPayload.focus();
+            });
+
+            $('#methodList-button').hover(function() {
+                $('.ui-icon').css('background-image', 'url("../images/jquery-ui/ui-icons_222222_256x240.png")');
             });
 
             form.data.save = $("#{0}".format(form.formSave));
@@ -324,7 +332,7 @@
             display: block;
             border: none;
             text-align: left;
-            padding: 0px 18px 20px 20px;
+            padding: 0px 20px 20px 20px;
         }
 
         .re-main input,
@@ -339,7 +347,7 @@
         }
 
         .re-main .re-request-item {
-            margin: 5px 0 10px 0;
+            margin: 5px 0 5px 0;
         }
 
         .re-main .re-request-item label {
@@ -356,10 +364,17 @@
             vertical-align: top;
         }
 
+        .re-main .re-request-item.re-request-form {
+            display: flex;
+            justify-content: space-between;
+        }
+
         .re-main .re-request-item .re-info-params {
             width: calc(100% / 2 - 10px);
             margin-top: 10px;
             font-size: 12px;
+            margin-right: 20px;
+            padding: 0;
         }
 
         .re-main .re-request-item .re-info-raw {
@@ -368,6 +383,8 @@
             border: 1px solid #767676;
             background-color: white;
             font-size: 12px;
+            padding: 0;
+            text-align: left;
         }
 
         #re-info-params-tabs {
@@ -427,11 +444,6 @@
             background: rgba(201, 201, 201, 0.);
         }
 
-        .re-main .re-request-item .re-info-params {
-            margin-right: 5px;
-            padding: 0;
-        }
-
         .ui-tabs.ui-widget-content#re-info-params-tabs {
             font-weight: normal;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
@@ -471,6 +483,7 @@
             border: none;
             float: right;
             height: 18px;
+            margin-top: 0;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li:nth-child(1) {
@@ -494,15 +507,19 @@
             padding-right: 10px;
         }
 
-        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea{
-            width: 94%;
+        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea {
+            width: 100%;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
             resize: none;
             font-family: monospace;
-            margin: 3%;
+            margin: 9px;
             border: 1px solid #CCCCCC;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea:focus {
+            border-color: #3489D1;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-3], [aria-selected=false] {
@@ -521,7 +538,7 @@
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
             overflow: hidden;
-            height: calc(100% - 42px);
+            height: calc(100% - 41px);
         }
 
         .re-params-table-row.re-params-table-body {
@@ -531,7 +548,7 @@
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-3 {
             overflow: hidden;
-            height: calc(100% - 42px);
+            height: calc(100% - 41px);
             display: flex;
             flex-flow: row wrap;
             justify-content: space-around;
@@ -557,12 +574,6 @@
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li a {
             margin: 0;
             padding: 1px 2px;
-        }
-
-        .re-main .re-request-item .re-info-raw {
-            margin-left: 5px;
-            padding: 0;
-            text-align: left;
         }
 
         .re-info-raw .re-info-raw-header {
@@ -598,7 +609,7 @@
         }
 
         .ui-button .ui-icon {
-            background-image: url("../images/jquery-ui/ui-icons_555555_256x240.png");
+            background-image: url("../images/jquery-ui/ui-icons_222222_256x240.png");
         }
 
         .re-main .re-request-item .re-url {
@@ -659,6 +670,7 @@
             width: 105px;
             border-radius: 3px;
             font-size: 12px;
+            margin-right: 0;
         }
 
         button.re-control.re-save.ui-button:hover {
@@ -693,6 +705,7 @@
         .re-params-table-row .re-params-table-cell {
             text-align: left;
             display: inline-block;
+            color: #707070;
         }
 
         .re-params-table-row .re-params-table-cell input {
@@ -706,8 +719,8 @@
         }
 
         .re-info-params .re-params-table-cell:nth-child(1) {
-            width: calc(40% - 11px);
-            margin-right: 5px;
+            width: calc(40% - 17px);
+            margin-right: 11px;
         }
 
         .re-info-params .re-params-table-cell:nth-child(2) {
@@ -735,9 +748,10 @@
         .delete-icon {
             width: 9px;
             height: 9px;
-            margin: 5px auto;
             overflow: hidden;
             cursor: pointer;
+            margin: 0 0 0 11px;
+            display: inline-flex;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAIAAADpZ+PpAAAA5ElEQVR42k2Pu65FUBCGzQPwBiS70Gi0Ei2JmkaJnoR4B7QaIlGqRaETz4GegsalQBT2OmclJ2equf3z/QPzPBdFIYri5/N535cgiKZpSJIUBAFs267rGhVxHHMcV5ZlGIZoI4oiUBRlGAZUUBSl63qWZcRvGIYBfd+7rtt1HfEvNE1DakC8bdssyxrHEQ8kSUqS5Lqun1lVVUEQ/InQ8TRNWZYFBMBw3N33HSfIGvA8fxwHZvi+b5omZquqCm3bep4nyzJS3/c9TZPjOACQ5zksy4K8MAzzPM95nuj9dV1pmkbSL3lpcjIggew9AAAAAElFTkSuQmCC');
         }
 
@@ -776,11 +790,6 @@
             border-bottom-right-radius: 0;
         }
 
-        .delete-icon {
-            margin: 0 0 0 5px;
-            display: inline-flex;
-        }
-
         .invalid {
             border: 1px solid red;
             background-color: #fd9c9c;
@@ -803,7 +812,6 @@
             float: right;
             width: 68px;
             height: 23px;
-            margin-right: 2px;
             border: 1px solid #6E6E6E;
             border-radius: 3px;
             background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E5E5E5));
@@ -815,6 +823,7 @@
 
         .closeButtonArea {
             float: right;
+            margin-top: 5px;
         }
 
 
