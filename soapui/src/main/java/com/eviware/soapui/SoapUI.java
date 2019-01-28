@@ -216,7 +216,7 @@ public class SoapUI {
     private static final String PROXY_ENABLED_ICON = "/Proxy_Turned-on.png";
     private static final String PROXY_DISABLED_ICON = "/Proxy_Turned-off.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-    public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
+    public static final String STARTER_PAGE_HEADER = "SoapUI Start Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
     public static String FRAME_ICON = "/SoapUI-OS_16-16.png;/SoapUI-OS_24-24.png;/SoapUI-OS_32-32.png;/SoapUI-OS_48-48.png;/SoapUI-OS_256-256.png";
 

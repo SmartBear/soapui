@@ -180,7 +180,7 @@ public enum SoapUIActions {
     //Tool
     RUN_TOOL_FROM_COMMAND_LINE("RunToolFromCmdLine", PROJECTS, NO),
 
-    //SoapUI Starter Page
+    //SoapUI Start Page
     EXPLORE_API_CLICK_SEND("ExploreAPIClickSend", SOAPUI_NG, NO),
     EXPLORE_API_ADD_HEADER("ExploreAPIAddHeader", SOAPUI_NG, NO),
     EXPLORE_API_CHANGE_HTTP_METHOD("ExploreAPIchangeHTTPMethod", SOAPUI_NG, NO),
