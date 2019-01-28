@@ -16,6 +16,8 @@
 
 * A bug fix by modax: WS-Security did not support Strict Layout Rules.
 
+* A bug fix by xgcssch: When a refresh token was used to update an OAuth 2.0 access token, the refresh token was not updated.
+
 * A bug fix by arykov: Symlinks to soapui.sh did not work.
 
 -------------------------------------------------------------------------------
