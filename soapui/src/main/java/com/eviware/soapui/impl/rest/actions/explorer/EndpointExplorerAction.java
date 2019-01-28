@@ -31,8 +31,8 @@ public class EndpointExplorerAction extends AbstractAction {
 
         dialog = new JDialog(UISupport.getMainFrame(), "Endpoint Explorer", false);
         dialog.getContentPane().add(browserComponent);
-        dialog.setSize(860, 419);
-        dialog.setMinimumSize(new Dimension(860, 419));
+        dialog.setSize(860, 435);
+        dialog.setMinimumSize(new Dimension(860, 435));
         dialog.setLocationRelativeTo(null);
         dialog.setResizable(true);
         dialog.setVisible(true);
