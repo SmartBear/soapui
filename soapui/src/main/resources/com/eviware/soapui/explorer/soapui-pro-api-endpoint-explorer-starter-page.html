@@ -747,12 +747,12 @@
 
         .delete-icon {
             width: 9px;
-            height: 9px;
+            height: 10px;
             overflow: hidden;
             cursor: pointer;
             margin: 0 0 0 11px;
             display: inline-flex;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAIAAADpZ+PpAAAA5ElEQVR42k2Pu65FUBCGzQPwBiS70Gi0Ei2JmkaJnoR4B7QaIlGqRaETz4GegsalQBT2OmclJ2equf3z/QPzPBdFIYri5/N535cgiKZpSJIUBAFs267rGhVxHHMcV5ZlGIZoI4oiUBRlGAZUUBSl63qWZcRvGIYBfd+7rtt1HfEvNE1DakC8bdssyxrHEQ8kSUqS5Lqun1lVVUEQ/InQ8TRNWZYFBMBw3N33HSfIGvA8fxwHZvi+b5omZquqCm3bep4nyzJS3/c9TZPjOACQ5zksy4K8MAzzPM95nuj9dV1pmkbSL3lpcjIggew9AAAAAElFTkSuQmCC');
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAD7SURBVChTY/j/6+3/+08+/scEH/8/uf/2/y8gi1np96+GDYdOMDwVM2MwkmRngICXDEen9DDM2b6P4cx3DQYmiOAPhiuL2xnmnvsEVTCBYc3dHxApIGD8/+3S/7lN8xiugMU4GMTEGBhevYIo4DVMYqiM0wUqAgKGT+cY5rYvhiqEAJgCTiAbYh2fNIOKOAeYCQEcDPI68mAFIABUBHHDhodIxqC4kYGB2VWEpQHmSJAV1Zk6DG9OXGJ49ecPw6tLQF9LWzMwG6qbNLyHKgC5gYddksHITIzhKUzhdykGhm/3D/xftfva/28gHyCDb9f+71518v+L////AwBsJZjhGJq0VwAAAABJRU5ErkJggg==');
         }
 
         .re-info-params ul li.ui-state-disabled, ul li.ui-state-disabled a {
@@ -826,6 +826,10 @@
             margin-top: 5px;
         }
 
+        .greeting-paragraph {
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
 
     </style>
 </head>
@@ -837,7 +841,7 @@
 
         <div class="content-section re-main">
             <div class="greeting-sentence">
-                <p>Choose a method and enter a REST endpoint URL</p>
+                <p class="greeting-paragraph">Choose a method and enter a REST endpoint URL</p>
             </div>
             <div class="re-request-item re-request-form">
                 <div class="re-method">
