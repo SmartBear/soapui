@@ -58,7 +58,7 @@ To get the latest source code changes, clone the project by running `git pull` i
 
 ## Contribute
 
-If you want to take a more active part in improving SoapUI, go to [http://www.soapui.org/Developers-Corner/contribute-to-soapui.html](SoapUI Developer's Corner) for more information.
+If you want to take a more active part in improving SoapUI, go to [SoapUI Developer's Corner](http://www.soapui.org/Developers-Corner/contribute-to-soapui.html) for more information.
 
 ### IDE support
 
