@@ -7,10 +7,13 @@ import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.KeyStroke;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -37,6 +40,10 @@ public class EndpointExplorerAction extends AbstractAction {
         dialog.setResizable(true);
         dialog.setVisible(true);
         dialog.setIconImage((UISupport.createImageIcon("/SoapUI-OS_16-16.png")).getImage());
+        dialog.getRootPane().registerKeyboardAction((event) -> close(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         UISupport.centerDialog(dialog, UISupport.getMainFrame());
         UISupport.getMainFrame().setEnabled(false);
         dialog.addWindowListener(new WindowAdapter() {
