@@ -211,7 +211,7 @@
         </include>
         <dependencies />
       </component>
-      <component name="HermesJMS" id="1263" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="true" downloadable="false" hidden="false">
+      <component name="HermesJMS" id="1263" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
         <description>Installs HermesJMS which is the application that allows SoapUI to interact with JMS providers (required for JMS Testing)</description>
         <include all="false">
           <entry location=".i4j_fileset_1260" fileType="regular" />
