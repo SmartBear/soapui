@@ -198,6 +198,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.SAVE_PREFERENCES;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_OFF_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_ON_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+import static com.eviware.soapui.settings.UISettings.SHOW_ENDPOINT_EXPLORER_ON_START;
 
 /**
  * Main SoapUI entry point.
@@ -855,7 +856,6 @@ public class SoapUI {
         }
     }
 
-
     private final class InternalDesktopListener extends DesktopListenerAdapter {
         @Override
         public void desktopPanelSelected(DesktopPanel desktopPanel) {
@@ -1006,6 +1006,9 @@ public class SoapUI {
                 SumbitUserInfoAction collector = new SumbitUserInfoAction();
                 collector.show();
                 workspace.setSupportInformationDialog(false);
+            }
+            if (SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true)) {
+                new EndpointExplorerAction().actionPerformed(null);
             }
         }
         return soapUI;
@@ -1434,7 +1437,6 @@ public class SoapUI {
             } catch (Exception exception) {
                 SoapUI.logError(exception, "Could not read build info properties");
             }
-
 
             UISupport.showExtendedInfo(
                     "About SoapUI",
