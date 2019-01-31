@@ -1008,7 +1008,7 @@ public class SoapUI {
                 workspace.setSupportInformationDialog(false);
             }
             if (SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true)) {
-                new EndpointExplorerAction().actionPerformed(null);
+                showEndpointExplorer();
             }
         }
         return soapUI;

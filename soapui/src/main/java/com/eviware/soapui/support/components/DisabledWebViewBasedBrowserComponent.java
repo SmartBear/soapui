@@ -74,4 +74,9 @@ class DisabledWebViewBasedBrowserComponent implements WebViewBasedBrowserCompone
     @Override
     public void addJavaScriptEventHandler(String memberName, Object eventHandler) {
     }
+
+    @Override
+    public PagePropertyMapper getPagePropertyMapper() {
+        return null;
+    }
 }

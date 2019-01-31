@@ -165,6 +165,16 @@
         });
 
         var initPage = function () {
+            window.propertyUpdater = {
+                update: function (id, newValue) {
+                    if(newValue instanceof Boolean) {
+                        $("[property='" + id + "']").prop('checked', newValue);
+                    } else {
+                        $("[property='" + id + "']").val(newValue);
+                    }
+                }
+            };
+
             var form = RequestExplorer.strings.form;
             $("#{0}".format(form.methodList)).selectmenu({
                 width: form.methodListWidth
@@ -867,7 +877,7 @@
                 </div>
                 <div class="re-url">
                     <label for="methodEndpoint">Endpoint</label>
-                    <input name="methodEndpoint" id="methodEndpoint" value="Enter request endpoint" class="re-control"/>
+                    <input property="methodEndpoint" name="methodEndpoint" id="methodEndpoint" value="Enter request endpoint" class="re-control"/>
                 </div>
                 <div class="re-action">
                     <label for="formAction"></label>
@@ -915,7 +925,7 @@
             </div>
             <div class="greeting-sentence">
                 <label>
-                    <input type="checkbox" name="dontShow" id="dontShow">Don't show this window on launch
+                    <input property="dontShow" type="checkbox" name="dontShow" id="dontShow">Don't show this window on launch
                 </label>
                 <button class=closeButton id="closeAction">Close</button>
             </div>
