@@ -5,6 +5,8 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css"/>
 
     <link rel="stylesheet" type="text/css" href="css/starter-page-main-api-inspection.css"/>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
 
     <!-- Google Analytics/Universal Analytics-->
     <script>
@@ -365,8 +367,12 @@
         }
 
         .re-main .re-request-item.re-request-form {
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
-            justify-content: space-between;
+            -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                    justify-content: space-between;
         }
 
         .re-main .re-request-item .re-info-params {
@@ -375,6 +381,7 @@
             font-size: 12px;
             margin-right: 20px;
             padding: 0;
+            flex: 1;
         }
 
         .re-main .re-request-item .re-info-raw {
@@ -385,19 +392,26 @@
             font-size: 12px;
             padding: 0;
             text-align: left;
+            flex: 1;
         }
 
         #re-info-params-tabs {
             height: 100%;
-            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
         }
 
         .re-main .re-request-item.re-request-info {
-            flex: 1;
-            height: 100%;
+            -webkit-box-flex: 1;
+                <!-- -ms-flex: 1;-->
+                    <!--flex: 1;-->
+            <!--height: 100%;-->
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
             position: relative;
-            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
         }
 
         .re-params-table ::-webkit-scrollbar{
@@ -407,19 +421,17 @@
 
         .re-params-table ::-webkit-scrollbar-track {
              -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-             -webkit-border-radius: 4px;
             border-radius: 4px;
         }
 
         .re-params-table ::-webkit-scrollbar-thumb {
-             -webkit-border-radius: 4px;
             border-radius: 4px;
             background: rgba(201, 201, 201, 0.7);
              -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
         }
 
         .re-params-table ::-webkit-scrollbar-thumb:window-inactive {
-            background: rgba(201, 201, 201, 0.);
+            background: rgba(201, 201, 201, 0);
         }
 
         .re-main .re-request-item.re-request-info ::-webkit-scrollbar {
@@ -429,12 +441,10 @@
 
         .re-main .re-request-item.re-request-info ::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-            -webkit-border-radius: 4px;
             border-radius: 4px;
         }
 
         .re-main .re-request-item.re-request-info ::-webkit-scrollbar-thumb {
-            -webkit-border-radius: 4px;
             border-radius: 4px;
             background: rgba(201, 201, 201, 0.7);
             -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
@@ -445,14 +455,19 @@
         }
 
         .ui-tabs.ui-widget-content#re-info-params-tabs {
+            height: 89%;
+            display: flex;
+            flex-direction: column;
             font-weight: normal;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
             margin: 0px;
             padding: 0;
-            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header {
+            flex: 1
             border-bottom: 1px solid #323232;
             border-top: none;
             border-left: none;
@@ -510,7 +525,6 @@
         .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea {
             width: 100%;
             -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
             box-sizing: border-box;
             resize: none;
             font-family: monospace;
@@ -537,8 +551,9 @@
         }
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
+            flex: 1;
             overflow: hidden;
-            height: calc(100% - 41px);
+            max-height: 69%;
         }
 
         .re-params-table-row.re-params-table-body {
@@ -549,9 +564,15 @@
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-3 {
             overflow: hidden;
             height: calc(100% - 41px);
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
-            flex-flow: row wrap;
-            justify-content: space-around;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+                -ms-flex-flow: row wrap;
+                    flex-flow: row wrap;
+            -ms-flex-pack: distribute;
+                justify-content: space-around;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab a {
@@ -692,9 +713,14 @@
             display: block;
             border-spacing: 2px;
             margin: 10px 10px 0 10px;
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
             max-height: 97%;
-            flex-direction: column;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                    flex-direction: column;
             position: relative;
         }
 
@@ -751,6 +777,8 @@
             overflow: hidden;
             cursor: pointer;
             margin: 0 0 0 11px;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
             display: inline-flex;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAD7SURBVChTY/j/6+3/+08+/scEH/8/uf/2/y8gi1np96+GDYdOMDwVM2MwkmRngICXDEen9DDM2b6P4cx3DQYmiOAPhiuL2xnmnvsEVTCBYc3dHxApIGD8/+3S/7lN8xiugMU4GMTEGBhevYIo4DVMYqiM0wUqAgKGT+cY5rYvhiqEAJgCTiAbYh2fNIOKOAeYCQEcDPI68mAFIABUBHHDhodIxqC4kYGB2VWEpQHmSJAV1Zk6DG9OXGJ49ecPw6tLQF9LWzMwG6qbNLyHKgC5gYddksHITIzhKUzhdykGhm/3D/xftfva/28gHyCDb9f+71518v+L////AwBsJZjhGJq0VwAAAABJRU5ErkJggg==');
         }

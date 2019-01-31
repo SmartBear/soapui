@@ -37,10 +37,17 @@ div.always-show {
 }
 
 div.content-section {
+       display: -webkit-box;
+       display: -ms-flexbox;
        display: flex;
-       flex-direction: column;
-       height: 100%;
-       box-sizing: border-box;
+       -webkit-box-orient: vertical;
+       -webkit-box-direction: normal;
+           -ms-flex-direction: column;
+               flex-direction: column;
+
+       -webkit-box-sizing: border-box;
+               box-sizing: border-box;
+               height: 100%;
 }
 
 p.content-section-headline {
@@ -78,15 +85,23 @@ div.action-button:hover {
 }
 
 div.content-movie-action {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     padding: 0px 20px 10px 20px;
     margin-right: 15px;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     background-color: white;
     border: #cccccc 1px solid;
     width: 300px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
 }
 
 .video-container div.content-movie-action:last-child {
@@ -137,9 +152,16 @@ hr.divider {
 }
 
 .last-section-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 .tutorial {
@@ -147,6 +169,8 @@ hr.divider {
 }
 
 .video-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 
@@ -154,8 +178,12 @@ hr.divider {
     grid-area: documentation;
     font-size: 14px;
     font-weight: 200;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     height: 60px;
 }
 
@@ -168,8 +196,12 @@ hr.divider {
 }
 
 .quick-start-wizard-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin-bottom: 30px;
 }
 
@@ -177,7 +209,7 @@ hr.divider {
     div.content-movie-action-caption {
         font-size: 12px;
     }
-	
+
 	div.content-movie-action {
         width: 220px;
         padding: 0px 0px 10px 0px;
