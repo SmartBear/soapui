@@ -26,7 +26,6 @@
         }, 1000);
 
 
-
     </script>
     <script type="text/javascript" src="js/jquery-1.11.1min.js"></script>
 
@@ -181,15 +180,15 @@
                 }
             })
 
-            $('#closeAction').click(function() {
+            $('#closeAction').click(function () {
                 closeCallback.close();
             });
 
-            $('#bodyTab').click(function() {
+            $('#bodyTab').click(function () {
                 requestPayload.focus();
             });
 
-            $('#methodList-button').hover(function() {
+            $('#methodList-button').hover(function () {
                 $('.ui-icon').css('background-image', 'url("../images/jquery-ui/ui-icons_222222_256x240.png")');
             });
 
@@ -242,13 +241,13 @@
 
             $("#formSave").click(function (event) {
                 var testData = $('#methodEndpoint').val();
-                    if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
-                        $('#methodEndpoint').addClass('invalid');
-                        setTimeout(function () {
-                            $('#methodEndpoint').removeClass('invalid');
-                        }, 1000);
-                        return;
-                    }
+                if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
+                    $('#methodEndpoint').addClass('invalid');
+                    setTimeout(function () {
+                        $('#methodEndpoint').removeClass('invalid');
+                    }, 1000);
+                    return;
+                }
                 if (document.lastRequest != null) {
                     inspectorCallback.createFromInspection(JSON.stringify(document.lastRequest));
                     closeCallback.close();
@@ -310,19 +309,23 @@
                     form.data.send.click();
                 }
             });
+
+            $('#dontShow').on('change', function () {
+                var newValue = $(this).prop('checked');
+                inspectorCallback.exploreAPIDontShowAgain(newValue);
+            });
         };
         $(document).ready(function () {
             initPage();
-            document.body.addEventListener('dragover', function(e) {
+            document.body.addEventListener('dragover', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }, false);
-            document.body.addEventListener('drop', function(e){
+            document.body.addEventListener('drop', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }, false);
         });
-
 
 
     </script>
@@ -400,22 +403,22 @@
             box-sizing: border-box;
         }
 
-        .re-params-table ::-webkit-scrollbar{
+        .re-params-table ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
 
         .re-params-table ::-webkit-scrollbar-track {
-             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-             -webkit-border-radius: 4px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+            -webkit-border-radius: 4px;
             border-radius: 4px;
         }
 
         .re-params-table ::-webkit-scrollbar-thumb {
-             -webkit-border-radius: 4px;
+            -webkit-border-radius: 4px;
             border-radius: 4px;
             background: rgba(201, 201, 201, 0.7);
-             -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
+            -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
         }
 
         .re-params-table ::-webkit-scrollbar-thumb:window-inactive {
@@ -656,7 +659,7 @@
             background-size: 15%;
         }
 
-         button.re-control.re-send.ui-button:hover {
+        button.re-control.re-send.ui-button:hover {
             background-color: #29A344;
             border-color: #25963F;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF+mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTAxLTIxVDExOjQ0OjI2KzAzOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wMS0yMVQxMTo0NzoxMCswMzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wMS0yMVQxMTo0NzoxMCswMzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDplY2JiNGVmNS00Zjk2LWM1NGEtOWViYS04Yjc4MDNkYjkxZjQiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDoxOGJlOTBlNC1jMzg5LTIyNGMtODYzYS02Mjk3YzI3NjNhNTkiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo0NzU3NmNmNi03ODM0LTA1NGYtODY4Mi1lYjRkZjZjNWFmOTkiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ3NTc2Y2Y2LTc4MzQtMDU0Zi04NjgyLWViNGRmNmM1YWY5OSIgc3RFdnQ6d2hlbj0iMjAxOS0wMS0yMVQxMTo0NDoyNiswMzowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDplY2JiNGVmNS00Zjk2LWM1NGEtOWViYS04Yjc4MDNkYjkxZjQiIHN0RXZ0OndoZW49IjIwMTktMDEtMjFUMTE6NDc6MTArMDM6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7DahR/AAAAz0lEQVQokWPUXOzCQBxgglDReoEOqtZEKdUWUG03LG6wKSSs9D8DAz8bb6iC5xrf6W7q9viUMjD8Z2BgYGRg1OJXaTEsarQtxqMUAXhYuELlPbYHLPDScCagFALkeaTbjYpb7EoJK2VgYGBgZORh4YLzWHApe/T12ZQbi7dc34NP6Zc/37Y82dd0ZCKaOFQpIwMjAwPD739/Lry7Pv3m0hP3z2IaAVX69/+/599fr3qwbebZJbicBFV64vX5NQ+3X3x0FZc6hNKtN/biUQQBACrUPxJnra7qAAAAAElFTkSuQmCC');
@@ -795,7 +798,7 @@
             background-color: #fd9c9c;
         }
 
-        .hint{
+        .hint {
             font-style: italic;
             color: gray;
         }
@@ -910,7 +913,10 @@
                     </div>
                 </div>
             </div>
-            <div class="closeButtonArea">
+            <div class="greeting-sentence">
+                <label>
+                    <input type="checkbox" name="dontShow" id="dontShow">Don't show this window on launch
+                </label>
                 <button class=closeButton id="closeAction">Close</button>
             </div>
         </div>

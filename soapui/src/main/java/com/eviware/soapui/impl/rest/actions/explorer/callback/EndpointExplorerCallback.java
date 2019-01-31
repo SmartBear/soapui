@@ -207,6 +207,10 @@ public class EndpointExplorerCallback {
         Analytics.trackAction(EXPLORE_API_CLICK_BODY_TAB);
     }
 
+    public void exploreAPIDontShowAgain(boolean newValue) {
+        SoapUI.log(newValue);
+    }
+
     private String extractUrl(JSONObject request) {
         try {
             if (request.getString(URL_PROPERTY) != null) {
