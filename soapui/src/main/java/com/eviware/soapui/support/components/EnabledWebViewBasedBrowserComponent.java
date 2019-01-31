@@ -191,8 +191,13 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
         return new PagePropertyMapper() {
             @Override
             public void update(String name, Object newValue) {
-                JSObject updater = (JSObject) getWebEngine().executeScript("window.propertyUpdater");
-                updater.call("update", name, newValue);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSObject updater = (JSObject) getWebEngine().executeScript("window.propertyUpdater");
+                        updater.call("update", name, newValue);
+                    }
+                });
             }
         };
     }
