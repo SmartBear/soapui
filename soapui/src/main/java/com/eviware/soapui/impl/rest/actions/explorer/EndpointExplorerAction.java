@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.actions.explorer;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.explorer.callback.EndpointExplorerCallback;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.PagePropertyMapper;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 
@@ -60,7 +61,10 @@ public class EndpointExplorerAction extends AbstractAction {
         String path = "/com/eviware/soapui/explorer/soapui-pro-api-endpoint-explorer-starter-page.html";
         String resource = this.getClass().getResource(path).toString();
         browser.navigate(resource);
-        browser.getPagePropertyMapper().update("dontShow", !SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true));
+        PagePropertyMapper pagePropertyMapper = browser.getPagePropertyMapper();
+        if (pagePropertyMapper != null) {
+            pagePropertyMapper.update("dontShow", !SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true));
+        }
 
         browser.addJavaScriptEventHandler("closeCallback", this);
         browser.addJavaScriptEventHandler("inspectorCallback", new EndpointExplorerCallback());
