@@ -26,6 +26,7 @@
         }, 1000);
 
 
+
     </script>
     <script type="text/javascript" src="js/jquery-1.11.1min.js"></script>
 
@@ -165,16 +166,6 @@
         });
 
         var initPage = function () {
-            window.propertyUpdater = {
-                update: function (id, newValue) {
-                    if (typeof newValue === 'boolean' || newValue instanceof Boolean) {
-                        $("[page-property='" + id + "']")[0].checked = newValue;
-                    } else {
-                        $("[page-property='" + id + "']").val(newValue);
-                    }
-                }
-            };
-
             var form = RequestExplorer.strings.form;
             $("#{0}".format(form.methodList)).selectmenu({
                 width: form.methodListWidth
@@ -190,15 +181,15 @@
                 }
             })
 
-            $('#closeAction').click(function () {
+            $('#closeAction').click(function() {
                 closeCallback.close();
             });
 
-            $('#bodyTab').click(function () {
+            $('#bodyTab').click(function() {
                 requestPayload.focus();
             });
 
-            $('#methodList-button').hover(function () {
+            $('#methodList-button').hover(function() {
                 $('.ui-icon').css('background-image', 'url("../images/jquery-ui/ui-icons_222222_256x240.png")');
             });
 
@@ -319,23 +310,19 @@
                     form.data.send.click();
                 }
             });
-
-            $('#dontShow').on('change', function () {
-                var newValue = $(this).prop('checked');
-                inspectorCallback.exploreAPIDontShowAgain(newValue);
-            });
         };
         $(document).ready(function () {
             initPage();
-            document.body.addEventListener('dragover', function (e) {
+            document.body.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
             }, false);
-            document.body.addEventListener('drop', function (e) {
+            document.body.addEventListener('drop', function(e){
                 e.preventDefault();
                 e.stopPropagation();
             }, false);
         });
+
 
 
     </script>
@@ -413,7 +400,7 @@
             box-sizing: border-box;
         }
 
-        .re-params-table ::-webkit-scrollbar {
+        .re-params-table ::-webkit-scrollbar{
             width: 6px;
             height: 6px;
         }
@@ -808,7 +795,7 @@
             background-color: #fd9c9c;
         }
 
-        .hint {
+        .hint{
             font-style: italic;
             color: gray;
         }
@@ -877,8 +864,7 @@
                 </div>
                 <div class="re-url">
                     <label for="methodEndpoint">Endpoint</label>
-                    <input name="methodEndpoint" id="methodEndpoint"
-                           value="Enter request endpoint" class="re-control"/>
+                    <input name="methodEndpoint" id="methodEndpoint" value="Enter request endpoint" class="re-control"/>
                 </div>
                 <div class="re-action">
                     <label for="formAction"></label>
@@ -924,11 +910,7 @@
                     </div>
                 </div>
             </div>
-            <div class="greeting-sentence">
-                <label>
-                    <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">Don't show this window on
-                    launch
-                </label>
+            <div class="closeButtonArea">
                 <button class=closeButton id="closeAction">Close</button>
             </div>
         </div>
