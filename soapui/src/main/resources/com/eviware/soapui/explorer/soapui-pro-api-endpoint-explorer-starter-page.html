@@ -168,9 +168,9 @@
             window.propertyUpdater = {
                 update: function (id, newValue) {
                     if (typeof newValue === 'boolean' || newValue instanceof Boolean) {
-                        $("[property='" + id + "']")[0].checked = newValue;
+                        $("[page-property='" + id + "']")[0].checked = newValue;
                     } else {
-                        $("[property='" + id + "']").val(newValue);
+                        $("[page-property='" + id + "']").val(newValue);
                     }
                 }
             };
@@ -926,7 +926,7 @@
             </div>
             <div class="greeting-sentence">
                 <label>
-                    <input property="dontShow" type="checkbox" name="dontShow" id="dontShow">Don't show this window on
+                    <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">Don't show this window on
                     launch
                 </label>
                 <button class=closeButton id="closeAction">Close</button>

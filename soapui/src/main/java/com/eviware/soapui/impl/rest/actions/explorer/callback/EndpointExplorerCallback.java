@@ -209,7 +209,6 @@ public class EndpointExplorerCallback {
     }
 
     public void exploreAPIDontShowAgain(boolean newValue) {
-        SoapUI.log(newValue);
         SoapUI.getSettings().setBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, !newValue);
     }
 
