@@ -166,6 +166,16 @@
         });
 
         var initPage = function () {
+            window.propertyUpdater = {
+                update: function (id, newValue) {
+                    if (typeof newValue === 'boolean' || newValue instanceof Boolean) {
+                        $("[page-property='" + id + "']")[0].checked = newValue;
+                    } else {
+                        $("[page-property='" + id + "']").val(newValue);
+                    }
+                }
+            };
+
             var form = RequestExplorer.strings.form;
             $("#{0}".format(form.methodList)).selectmenu({
                 width: form.methodListWidth
@@ -309,6 +319,11 @@
                     var form = RequestExplorer.strings.form;
                     form.data.send.click();
                 }
+            });
+
+            $('#dontShow').on('change', function () {
+                var newValue = $(this).prop('checked');
+                inspectorCallback.exploreAPIDontShowAgain(newValue);
             });
         };
         $(document).ready(function () {
@@ -911,6 +926,10 @@
                 </div>
             </div>
             <div class="closeButtonArea">
+                <label>
+                    <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">Don't show this window on
+                    launch
+                </label>
                 <button class=closeButton id="closeAction">Close</button>
             </div>
         </div>
