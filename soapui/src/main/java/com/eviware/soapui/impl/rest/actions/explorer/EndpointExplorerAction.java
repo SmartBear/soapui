@@ -61,7 +61,6 @@ public class EndpointExplorerAction extends AbstractAction {
         String resource = this.getClass().getResource(path).toString();
         browser.navigate(resource);
         browser.getPagePropertyMapper().update("dontShow", !SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true));
-        browser.getPagePropertyMapper().update("methodEndpoint", "test!");
 
         browser.addJavaScriptEventHandler("closeCallback", this);
         browser.addJavaScriptEventHandler("inspectorCallback", new EndpointExplorerCallback());
