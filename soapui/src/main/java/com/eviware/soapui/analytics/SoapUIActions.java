@@ -153,6 +153,10 @@ public enum SoapUIActions {
     IMPORT_REMOTE_PROJECT("ImportRemoteProject", null, NO),
     EXPORT_PROJECT("ExportProject", null, NO),
 
+    //Importing projects from ReadyAPI and from different version of SoapUI
+    IMPORT_PRO_PROJECT("OpeningProjectsCreatedInPro", null, NO),
+    IMPORT_PROJECT_FROM_HIGHER_VERSION("OpeningProjectsFromDifferentOSVersion", null, NO),
+
     //Security testing actions
     CREATE_SECURITY_TEST("CreateSecurityTest", SECURE, NO),
     CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateSecurityTest", SECURE, MAIN_EDITOR),

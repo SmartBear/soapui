@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.SoapuiWorkspaceDocumentConfig;
 import com.eviware.soapui.config.WorkspaceProjectConfig;
@@ -57,6 +58,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.eviware.soapui.analytics.SoapUIActions.IMPORT_PROJECT_FROM_HIGHER_VERSION;
+import static com.eviware.soapui.analytics.SoapUIActions.IMPORT_PRO_PROJECT;
 import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus;
 import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
 
@@ -201,10 +204,12 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
                 SoapUI.PRODUCT_NAME,
                 SoapUI.SOAPUI_VERSION);
         if (!readyProjectsList.isEmpty()) {
+            Analytics.trackAction(IMPORT_PRO_PROJECT);
             UISupport.showInfoMessage(String.join("\r\n", readyProjectsList) + message,
                     messages.get("Compatibility.with.ReadyAPI.Title"));
         }
         if (!newerProjectsList.isEmpty()) {
+            Analytics.trackAction(IMPORT_PROJECT_FROM_HIGHER_VERSION);
             UISupport.showInfoMessage(String.join("\r\n", newerProjectsList) + message,
                     messages.get("Compatibility.with.SoapUI.Title"));
         }
