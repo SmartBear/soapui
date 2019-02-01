@@ -47,6 +47,8 @@ import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_AUTH_
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_BODY_TAB;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_SAVE_REQUEST;
 import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_CLICK_SEND;
+import static com.eviware.soapui.analytics.SoapUIActions.EXPLORE_API_DONT_SHOW_ON_LAUNCH;
+import static com.eviware.soapui.settings.UISettings.SHOW_ENDPOINT_EXPLORER_ON_START;
 
 public class EndpointExplorerCallback {
 
@@ -205,6 +207,13 @@ public class EndpointExplorerCallback {
 
     public void exploreAPIClickBodyTab() {
         Analytics.trackAction(EXPLORE_API_CLICK_BODY_TAB);
+    }
+
+    public void exploreAPIDontShowAgain(boolean newValue) {
+        if(newValue) {
+            Analytics.trackAction(EXPLORE_API_DONT_SHOW_ON_LAUNCH);
+        }
+        SoapUI.getSettings().setBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, !newValue);
     }
 
     private String extractUrl(JSONObject request) {

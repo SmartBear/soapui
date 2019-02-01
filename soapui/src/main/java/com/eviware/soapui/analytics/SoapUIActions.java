@@ -153,6 +153,10 @@ public enum SoapUIActions {
     IMPORT_REMOTE_PROJECT("ImportRemoteProject", null, NO),
     EXPORT_PROJECT("ExportProject", null, NO),
 
+    //Importing projects from ReadyAPI and from different version of SoapUI
+    IMPORT_PRO_PROJECT("OpeningProjectsCreatedInPro", null, NO),
+    IMPORT_PROJECT_FROM_HIGHER_VERSION("OpeningProjectsFromDifferentOSVersion", null, NO),
+
     //Security testing actions
     CREATE_SECURITY_TEST("CreateSecurityTest", SECURE, NO),
     CREATE_SECURITY_TEST_FROM_TEST_CASE_PANEL("TestCasePanelCreateSecurityTest", SECURE, MAIN_EDITOR),
@@ -187,6 +191,7 @@ public enum SoapUIActions {
     EXPLORE_API_CLICK_AUTH_HEADERS_TAB("ExploreAPIClickAuthHeadersTab", SOAPUI_NG, NO),
     EXPLORE_API_CLICK_BODY_TAB("ExploreAPIClickBodyTab", SOAPUI_NG, NO),
     EXPLORE_API_CLICK_SAVE_REQUEST("ExploreAPIClickSaveRequest", SOAPUI_NG, NO),
+    EXPLORE_API_DONT_SHOW_ON_LAUNCH("checkExplorerNotShowOnLaunch", SOAPUI_NG, NO),
     OS_START_PAGE_NEW_SOAP_PROJECT("OSStartPageNewSoapProject", SOAPUI_NG, NO),
     OS_START_PAGE_NEW_REST_PROJECT("OSStartPageNewRestProject", SOAPUI_NG, NO),
     OS_START_PAGE_LAUNCH_EXPLORER("OSStartPageLaunchExplorer", SOAPUI_NG, NO),

@@ -198,6 +198,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.SAVE_PREFERENCES;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_OFF_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_ON_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+import static com.eviware.soapui.settings.UISettings.SHOW_ENDPOINT_EXPLORER_ON_START;
 
 /**
  * Main SoapUI entry point.
@@ -383,7 +384,7 @@ public class SoapUI {
                 "Opens the SoapUI Forum in a browser", "/forum.png"));
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
-                "/Trial.png"));
+                "/Trial_20-20.png"));
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
@@ -577,7 +578,7 @@ public class SoapUI {
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/SoapUI-OS_16-16.png"));
+                "Apply for SoapUI Pro Trial License", "/Trial_16-16.png"));
         helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
@@ -855,7 +856,6 @@ public class SoapUI {
         }
     }
 
-
     private final class InternalDesktopListener extends DesktopListenerAdapter {
         @Override
         public void desktopPanelSelected(DesktopPanel desktopPanel) {
@@ -1006,6 +1006,9 @@ public class SoapUI {
                 SumbitUserInfoAction collector = new SumbitUserInfoAction();
                 collector.show();
                 workspace.setSupportInformationDialog(false);
+            }
+            if (SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true)) {
+                showEndpointExplorer();
             }
         }
         return soapUI;
@@ -1434,7 +1437,6 @@ public class SoapUI {
             } catch (Exception exception) {
                 SoapUI.logError(exception, "Could not read build info properties");
             }
-
 
             UISupport.showExtendedInfo(
                     "About SoapUI",

@@ -93,6 +93,8 @@ public interface UISettings {
     public static final String DISABLE_TOOLTIPS = UISettings.class.getSimpleName() + "@disable_tooltips";
     public static final String SHOULD_DISPLAY_ANALYTICS_DIALOG = UISettings.class.getSimpleName() + "@display_analytics_opt_dialog";
 
+    public static final String SHOW_ENDPOINT_EXPLORER_ON_START = UISettings.class.getSimpleName() + "@show_endpoint_explorer";
+
     @Setting(name = "Disable usage statistics", description = "Stop sending usage statistics", type = SettingType.BOOLEAN)
     public static final String DISABLE_ANALYTICS = UISettings.class.getSimpleName() + "@disable_analytics";
 
