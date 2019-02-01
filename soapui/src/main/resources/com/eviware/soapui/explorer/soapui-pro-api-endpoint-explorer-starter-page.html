@@ -381,7 +381,7 @@
             font-size: 12px;
             margin-right: 20px;
             padding: 0;
-            flex: 1;
+            display: flex;
         }
 
         .re-main .re-request-item .re-info-raw {
@@ -402,10 +402,8 @@
         }
 
         .re-main .re-request-item.re-request-info {
+            height: calc(100% - 116px);
             -webkit-box-flex: 1;
-                <!-- -ms-flex: 1;-->
-                    <!--flex: 1;-->
-            <!--height: 100%;-->
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
@@ -455,7 +453,7 @@
         }
 
         .ui-tabs.ui-widget-content#re-info-params-tabs {
-            height: 89%;
+            flex: 1;
             display: flex;
             flex-direction: column;
             font-weight: normal;
@@ -464,11 +462,13 @@
             padding: 0;
             -webkit-box-sizing: border-box;
                     box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            padding-bottom: 10px;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header {
-            flex: 1
-            border-bottom: 1px solid #323232;
+            border-bottom: 1px solid #767676;
             border-top: none;
             border-left: none;
             border-right: none;
@@ -553,7 +553,6 @@
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
             flex: 1;
             overflow: hidden;
-            max-height: 69%;
         }
 
         .re-params-table-row.re-params-table-body {
@@ -608,7 +607,6 @@
         .re-info-raw .re-info-raw-body {
             overflow: scroll;
             margin: 0 10px;
-            height: calc(100% - 43px);
         }
 
         .re-main .re-request-item .re-method {
@@ -768,7 +766,9 @@
         }
 
         #formResponseBody {
+            margin-top: 10px;
             font-size: 12px;
+            max-height: calc(100% - 120px);
         }
 
         .delete-icon {
@@ -852,6 +852,7 @@
         .closeButtonArea {
             float: right;
             margin-top: 5px;
+            font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
         }
 
         .greeting-paragraph {
