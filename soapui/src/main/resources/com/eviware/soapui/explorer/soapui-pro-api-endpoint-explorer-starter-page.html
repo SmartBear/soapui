@@ -412,26 +412,6 @@
                     box-sizing: border-box;
         }
 
-        .re-params-table ::-webkit-scrollbar{
-            width: 6px;
-            height: 6px;
-        }
-
-        .re-params-table ::-webkit-scrollbar-track {
-             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-            border-radius: 4px;
-        }
-
-        .re-params-table ::-webkit-scrollbar-thumb {
-            border-radius: 4px;
-            background: rgba(201, 201, 201, 0.7);
-             -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
-        }
-
-        .re-params-table ::-webkit-scrollbar-thumb:window-inactive {
-            background: rgba(201, 201, 201, 0);
-        }
-
         .re-main .re-request-item.re-request-info ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -714,7 +694,7 @@
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
-            max-height: 97%;
+            max-height: calc(100% - 41px);
             -webkit-box-orient: vertical;
             -webkit-box-direction: normal;
                 -ms-flex-direction: column;
@@ -768,7 +748,7 @@
         #formResponseBody {
             margin-top: 10px;
             font-size: 12px;
-            max-height: calc(100% - 120px);
+            height: calc(100% - 55px);
         }
 
         .delete-icon {
