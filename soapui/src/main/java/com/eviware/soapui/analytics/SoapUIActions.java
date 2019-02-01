@@ -191,7 +191,11 @@ public enum SoapUIActions {
     EXPLORE_API_CLICK_AUTH_HEADERS_TAB("ExploreAPIClickAuthHeadersTab", SOAPUI_NG, NO),
     EXPLORE_API_CLICK_BODY_TAB("ExploreAPIClickBodyTab", SOAPUI_NG, NO),
     EXPLORE_API_CLICK_SAVE_REQUEST("ExploreAPIClickSaveRequest", SOAPUI_NG, NO),
-    EXPLORE_API_DONT_SHOW_ON_LAUNCH("checkExplorerNotShowOnLaunch", SOAPUI_NG, NO);
+    EXPLORE_API_DONT_SHOW_ON_LAUNCH("checkExplorerNotShowOnLaunch", SOAPUI_NG, NO),
+    OS_START_PAGE_NEW_SOAP_PROJECT("OSStartPageNewSoapProject", SOAPUI_NG, NO),
+    OS_START_PAGE_NEW_REST_PROJECT("OSStartPageNewRestProject", SOAPUI_NG, NO),
+    OS_START_PAGE_LAUNCH_EXPLORER("OSStartPageLaunchExplorer", SOAPUI_NG, NO),
+    OS_START_PAGE_TRY_SUI_PRO("OSStartPageTrySUIPro", SOAPUI_NG, NO); // has property 'type': values "fromTopButton" | "fromColumn"
 
     private String actionName;
     private ModuleType moduleType;
