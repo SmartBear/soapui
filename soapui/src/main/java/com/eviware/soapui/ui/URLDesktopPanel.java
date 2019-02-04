@@ -16,9 +16,11 @@
 
 package com.eviware.soapui.ui;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
+import com.eviware.soapui.ui.starterpage.StarterPageButtonCallback;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 import javax.swing.JPanel;
@@ -37,7 +39,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel {
         JPanel panel = (JPanel) getComponent();
 
         browser = WebViewBasedBrowserComponentFactory.createBrowserComponent(false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER);
-
+        browser.addJavaScriptEventHandler(StarterPageButtonCallback.CALLBACK, new StarterPageButtonCallback(SoapUI.getWorkspace()));
         //browser.addJavaScriptEventHandler("templateProjectCreator", new TemplateProjectCreator());
 
         panel.add(browser.getComponent(), BorderLayout.CENTER);
