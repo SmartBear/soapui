@@ -67,8 +67,7 @@ public class SaveRequestAction extends AbstractAction {
             String requestName = dialog.getValue(SaveRequestAction.Form.RESOURCENAME);
             RestRequest request = addRequest(context, requestName);
             if (dialog.getBooleanValue(SaveRequestAction.Form.OPENSREQUEST)) {
-                UISupport.select(request);
-                UISupport.showDesktopPanel(request);
+                UISupport.selectAndShow(request);
             }
         }
     }
