@@ -192,6 +192,13 @@
                 }
             })
 
+            $('#methodEndpoint').contextmenu(function () {
+                if ($('#methodEndpoint').hasClass('hint')) {
+                    $('#methodEndpoint').removeClass('hint');
+                    $('#methodEndpoint').val("");
+                }
+            });
+
             $('#closeAction').click(function() {
                 closeCallback.close();
             });
