@@ -13,6 +13,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.swing.SwingUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -66,7 +67,7 @@ public class SaveRequestAction extends AbstractAction {
         if (dialog.show()) {
             String requestName = dialog.getValue(SaveRequestAction.Form.RESOURCENAME);
             RestRequest request = addRequest(context, requestName);
-            SoapUI.getNavigator().updateUI();
+            UISupport.invokeLater(() -> SoapUI.getNavigator().updateUI());
             if (dialog.getBooleanValue(SaveRequestAction.Form.OPENSREQUEST)) {
                 UISupport.selectAndShow(request);
             }
