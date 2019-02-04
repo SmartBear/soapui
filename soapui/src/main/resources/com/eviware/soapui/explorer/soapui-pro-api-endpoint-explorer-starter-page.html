@@ -27,6 +27,7 @@
 
 
 
+
     </script>
     <script type="text/javascript" src="js/jquery-1.11.1min.js"></script>
 
@@ -340,6 +341,7 @@
 
 
 
+
     </script>
     <style>
         /* scrollbars */
@@ -362,7 +364,7 @@
         }
 
         .re-main .re-request-item {
-            margin: 5px 0 5px 0;
+            margin: 7px 0 5px 0;
         }
 
         .re-main .re-request-item label {
@@ -398,6 +400,7 @@
         }
 
         .re-main .re-request-item .re-info-raw {
+            height: calc(100% - 142px);
             width: calc(100% / 2 - 10px);
             margin-top: 10px;
             border: 1px solid #767676;
@@ -405,17 +408,17 @@
             font-size: 12px;
             padding: 0;
             text-align: left;
-            flex: 1;
+            <!--flex: 1;-->
         }
 
         #re-info-params-tabs {
-            height: 100%;
+
             -webkit-box-sizing: border-box;
                     box-sizing: border-box;
         }
 
         .re-main .re-request-item.re-request-info {
-            height: calc(100% - 116px);
+
             -webkit-box-flex: 1;
             display: -webkit-box;
             display: -ms-flexbox;
@@ -449,7 +452,7 @@
 
         .ui-tabs.ui-widget-content#re-info-params-tabs {
             flex: 1;
-            display: flex;
+
             flex-direction: column;
             font-weight: normal;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
@@ -457,9 +460,8 @@
             padding: 0;
             -webkit-box-sizing: border-box;
                     box-sizing: border-box;
-            height: 100%;
+
             width: 100%;
-            padding-bottom: 10px;
         }
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header {
@@ -485,7 +487,7 @@
 
         .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li {
             list-style-type: none;
-            list-style-image: url(data:0);
+
             padding: 5px 0px 5px 0px;
             margin-left: 0px;
             margin-right: 0px;
@@ -547,19 +549,19 @@
         }
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
-            flex: 1;
-            overflow: hidden;
-            height: calc(100% - 41px);
+            overflow: scroll;
+            height: calc(100% - 171px);
         }
 
         .re-params-table-row.re-params-table-body {
             overflow-x: hidden;
             overflow-y: auto;
+            max-height: 150px;
         }
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-3 {
             overflow: hidden;
-            height: calc(100% - 41px);
+            height: calc(100% - 171px);
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
@@ -706,13 +708,13 @@
         }
 
         .re-info-params .re-params-table {
-            display: block;
+
             border-spacing: 2px;
             margin: 10px 10px 0 10px;
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
-            max-height: calc(100% - 41px);
+            max-height: calc(100% - 13px);
             -webkit-box-orient: vertical;
             -webkit-box-direction: normal;
                 -ms-flex-direction: column;
@@ -763,10 +765,14 @@
             border: 1px solid #3489D1;
         }
 
+        .re-params-table-row.re-params-table-footer {
+            margin: 0;
+        }
+
         #formResponseBody {
             margin-top: 10px;
             font-size: 12px;
-            height: calc(100% - 55px);
+            height: calc(100% - 42px);
         }
 
         .delete-icon {
@@ -849,7 +855,6 @@
 
         .closeButtonArea {
             float: right;
-            margin-top: 5px;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
         }
 
@@ -857,6 +862,34 @@
             margin-bottom: 5px;
             margin-top: 5px;
         }
+
+        .dontShowInscription {
+            vertical-align: super;
+        }
+
+        .closeButtonArea.greeting-sentence {
+            margin-bottom: -5px;
+            display: inline-block;
+        }
+
+        dontShowLabel {
+            margin-top: 20px;
+        }
+
+        .labels {
+            margin-top: 5px;
+            <!--display: flex;-->
+            <!--flex-direction: row;-->
+            <!--justify-content: space-between;-->
+            font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            font-size: 12px;
+
+        }
+
+        .dontShowLabelContainer {
+            display: inline-block;
+        }
+
 
     </style>
 </head>
@@ -937,12 +970,16 @@
                     </div>
                 </div>
             </div>
-            <div class="closeButtonArea greeting-sentence">
-                <label>
-                    <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">Don't show this window on
-                    launch
-                </label>
-                <button class=closeButton id="closeAction">Close</button>
+            <div class="labels">
+                <div class="dontShowLabelContainer">
+                    <label class="dontShowLabel">
+                        <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">
+                        <label class=dontShowInscription>Don't show this window on launch</label>
+                    </label>
+                </div>
+                <div class="closeButtonArea greeting-sentence">
+                    <button class=closeButton id="closeAction">Close</button>
+                </div>
             </div>
         </div>
     </div>
