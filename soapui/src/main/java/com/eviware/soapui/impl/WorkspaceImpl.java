@@ -183,18 +183,22 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
             if (project instanceof WsdlProject) {
                 if (((WsdlProject) project).isFromReadyApi()) {
                     ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
+                    String version = StringUtils.isNullOrEmpty(config.getUpdated()) ? "" : StringUtils.getSubstringBeforeFirstWhitespace(config.getUpdated());
+                    Analytics.trackAction(IMPORT_PRO_PROJECT, "project_version", StringUtils.hasContent(version) ? version : "UNDEFINED");
                     readyProjectsList.add(
                             messages.get(
                                     "Compatibility.with.ReadyAPI.one.project",
                                     config.getName(),
-                                    StringUtils.isNullOrEmpty(config.getUpdated()) ? "" : "(" + StringUtils.getSubstringBeforeFirstWhitespace(config.getUpdated()) + ")"));
+                                    StringUtils.hasContent(version) ? "(" + version + ")" : ""));
                 } else if (((WsdlProject) project).isFromNewerVersion()) {
                     ProjectConfig config = ((WsdlProject) project).getProjectDocument().getSoapuiProject();
+                    String version = config.getSoapuiVersion();
+                    Analytics.trackAction(IMPORT_PROJECT_FROM_HIGHER_VERSION, "project_version", version);
                     newerProjectsList.add(
                             messages.get(
                                     "Compatibility.with.SoapUI.one.project",
                                     config.getName(),
-                                    config.getSoapuiVersion(),
+                                    version,
                                     SoapUI.PRODUCT_NAME));
                 }
             }
@@ -204,12 +208,10 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
                 SoapUI.PRODUCT_NAME,
                 SoapUI.SOAPUI_VERSION);
         if (!readyProjectsList.isEmpty()) {
-            Analytics.trackAction(IMPORT_PRO_PROJECT);
             UISupport.showInfoMessage(String.join("\r\n", readyProjectsList) + message,
                     messages.get("Compatibility.with.ReadyAPI.Title"));
         }
         if (!newerProjectsList.isEmpty()) {
-            Analytics.trackAction(IMPORT_PROJECT_FROM_HIGHER_VERSION);
             UISupport.showInfoMessage(String.join("\r\n", newerProjectsList) + message,
                     messages.get("Compatibility.with.SoapUI.Title"));
         }
