@@ -115,7 +115,7 @@ SoapUI Open Source offers basic functionality for API testing. For additional fe
 
 ## Additional resources
 
-* [SoapUI community](https://community.smartbear.com/t5/SoapUI-Open-Source/bd-p/SoapUI_OS) - SmartBear's SoapUI Open Source community for discussing and participating in all things SoapUI
+* [SoapUI community](https://community.smartbear.com/t5/SoapUI-Open-Source/bd-p/SoapUI_OS) - SmartBear's SoapUI Open Source community for discussing and participating in all things SoapUI.
 * [SoapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples) - This is a collection of SoapUI projects and Groovy scripts used to demonstrate the Groovy scripting capabilities in SoapUI.
 * [Extending SoapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
 * [Custom factories](http://www.soapui.org/Developers-Corner/custom-factories.html)
