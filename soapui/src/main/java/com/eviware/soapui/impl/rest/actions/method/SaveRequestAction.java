@@ -67,9 +67,11 @@ public class SaveRequestAction extends AbstractAction {
         if (dialog.show()) {
             String requestName = dialog.getValue(SaveRequestAction.Form.RESOURCENAME);
             RestRequest request = addRequest(context, requestName);
-            UISupport.invokeLater(() -> SoapUI.getNavigator().updateUI());
             if (dialog.getBooleanValue(SaveRequestAction.Form.OPENSREQUEST)) {
                 UISupport.selectAndShow(request);
+            } else {
+                //SOAPUIOS-447
+                UISupport.select(SoapUI.getNavigator().getSelectedItem());
             }
         }
     }
