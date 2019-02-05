@@ -35,7 +35,7 @@ SoapUI is the world's leading testing tool for API testing. See the [SoapUI webs
 
 ### Prerequisites
 
-* [JDK 8 (version 1.8 or later)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [JDK 8 (update 112 or later)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Maven (version 3.0.0 or later)](http://maven.apache.org/)
 * [Git (version 1.8 or later)](http://git-scm.com)
 

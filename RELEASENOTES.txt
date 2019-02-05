@@ -10,6 +10,8 @@
 
 * Now, if you try to open a project created in a later SoapUI version or in ReadyAPI, SoapUI will notify you about this.
 
+* SoapUI now requires Java 8 update 112 or higher.
+
 ### Bug Fixes ###
 
 * An invalid name was set for a custom test step.
