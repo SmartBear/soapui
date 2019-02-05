@@ -345,7 +345,7 @@
                 e.stopPropagation();
             }, false);
             document.body.addEventListener('contextmenu', function (e) {
-                if (e.target.nodeName == 'INPUT' || e.target.nodeName == 'TEXTAREA') {
+                if ((e.target.nodeName == 'INPUT' && e.target.type !== 'checkbox') || e.target.nodeName == 'TEXTAREA') {
                     return;
                 }
                 e.preventDefault();
