@@ -195,7 +195,11 @@ public enum SoapUIActions {
     OS_START_PAGE_NEW_SOAP_PROJECT("OSStartPageNewSoapProject", SOAPUI_NG, NO),
     OS_START_PAGE_NEW_REST_PROJECT("OSStartPageNewRestProject", SOAPUI_NG, NO),
     OS_START_PAGE_LAUNCH_EXPLORER("OSStartPageLaunchExplorer", SOAPUI_NG, NO),
-    OS_START_PAGE_TRY_SUI_PRO("OSStartPageTrySUIPro", SOAPUI_NG, NO); // has property 'type': values "fromTopButton" | "fromColumn"
+    OS_START_PAGE_TRY_SUI_PRO("OSStartPageTrySUIPro", SOAPUI_NG, NO), // has property 'type': values "fromTopButton" | "fromColumn"
+
+    //Stay Tuned
+    STAY_TUNED_DIALOG_SKIPPED("SkippedStayInLoopForm", null, NO),
+    STAY_TUNED_DIALOG_ACCEPTED("SkippedStayInLoopForm", null, NO);
 
     private String actionName;
     private ModuleType moduleType;
