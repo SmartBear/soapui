@@ -199,7 +199,7 @@ public enum SoapUIActions {
 
     //Stay Tuned
     STAY_TUNED_DIALOG_SKIPPED("SkippedStayInLoopForm", null, NO),
-    STAY_TUNED_DIALOG_ACCEPTED("SkippedStayInLoopForm", null, NO);
+    STAY_TUNED_DIALOG_ACCEPTED("CompletedStayInLoopForm", null, NO);
 
     private String actionName;
     private ModuleType moduleType;
