@@ -344,6 +344,13 @@
                 e.preventDefault();
                 e.stopPropagation();
             }, false);
+            document.body.addEventListener('contextmenu', function (e) {
+                if ((e.target.nodeName == 'INPUT' && e.target.type !== 'checkbox') || e.target.nodeName == 'TEXTAREA') {
+                    return;
+                }
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
         });
 
 
