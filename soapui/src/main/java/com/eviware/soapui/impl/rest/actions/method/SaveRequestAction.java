@@ -71,7 +71,7 @@ public class SaveRequestAction extends AbstractAction {
                 UISupport.selectAndShow(request);
             } else {
                 //SOAPUIOS-447
-                UISupport.select(SoapUI.getNavigator().getSelectedItem());
+                UISupport.select(request.getResource().getService().getProject());
             }
         }
     }
