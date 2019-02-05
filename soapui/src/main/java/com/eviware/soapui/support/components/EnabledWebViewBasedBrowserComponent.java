@@ -81,15 +81,9 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
     private JFXPanel browserPanel;
     private PopupStrategy popupStrategy;
-    private final boolean withContextMenu;
 
     EnabledWebViewBasedBrowserComponent(boolean addNavigationBar, PopupStrategy popupStrategy) {
-        this(addNavigationBar, false, popupStrategy);
-    }
-
-    public EnabledWebViewBasedBrowserComponent(boolean addNavigationBar, boolean withContextMenu, PopupStrategy popupStrategy) {
         this.popupStrategy = popupStrategy;
-        this.withContextMenu = withContextMenu;
         initializeWebView(addNavigationBar);
     }
 
@@ -373,7 +367,6 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
             }
             browserPanel.setScene(createJfxScene());
             addKeyboardFocusManager(browserPanel);
-            webView.setContextMenuEnabled(withContextMenu);
         }
 
         private Scene createJfxScene() {
