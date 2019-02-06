@@ -809,7 +809,9 @@ public class SoapUI {
                 }
 
                 if (isFirstLaunch && SoapUI.usingGraphicalEnvironment()) {
-                    SwingUtilities.invokeLater(SoapUI::showEndpointExplorer);
+                    if (!SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true)) {
+                        SwingUtilities.invokeLater(SoapUI::showEndpointExplorer);
+                    }
                 }
 
                 if (isCommandLine()) {
