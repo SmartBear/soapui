@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.ui;
@@ -31,8 +31,9 @@ import java.lang.reflect.InvocationTargetException;
 public class URLDesktopPanel extends DefaultDesktopPanel {
     private WebViewBasedBrowserComponent browser;
     private boolean closed;
+    private String lastBackupUrl = null;
 
-    public URLDesktopPanel(String title, String description, String url) throws InterruptedException,
+    public URLDesktopPanel(String title, String description, String url, String backupUrl) throws InterruptedException,
             InvocationTargetException {
         super(title, description, new JPanel(new BorderLayout()));
 
@@ -45,11 +46,12 @@ public class URLDesktopPanel extends DefaultDesktopPanel {
         panel.add(browser.getComponent(), BorderLayout.CENTER);
 
         if (StringUtils.hasContent(url)) {
-            navigate(url, null, true);
+            navigate(url, backupUrl, true);
         }
     }
 
     public void navigate(String url, String errorUrl, boolean async) {
+        lastBackupUrl = errorUrl;
         if (async) {
             SwingUtilities.invokeLater(new Navigator(url, errorUrl));
         } else {
@@ -73,17 +75,15 @@ public class URLDesktopPanel extends DefaultDesktopPanel {
 
     private class Navigator implements Runnable {
         private final String url;
-        private final String errorUrl;
+        private final String backupUrl;
 
-        public Navigator(String url, String errorUrl) {
+        public Navigator(String url, String backupUrl) {
             this.url = url;
-            this.errorUrl = errorUrl;
+            this.backupUrl = backupUrl;
         }
 
         public void run() {
-
-            browser.navigate(url);
-
+            browser.navigate(url, backupUrl);
         }
     }
 

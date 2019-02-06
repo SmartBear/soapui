@@ -284,6 +284,8 @@ public class SoapUI {
     private static Logger groovyLogger;
     private static CmdLineRunner soapUIRunner;
 
+    public static final String BACKUP_STARTER_PAGE_URL = "/starter-page/starter-page.html";
+
     static {
         try {
             Platform.setImplicitExit(false);
@@ -1401,7 +1403,8 @@ public class SoapUI {
     public static void showStarterPage() {
         if (starterPageDesktopPanel == null || starterPageDesktopPanel.isClosed()) {
             try {
-                starterPageDesktopPanel = new URLDesktopPanel(STARTER_PAGE_HEADER, STARTER_PAGE_TOOL_TIP, null);
+                starterPageDesktopPanel = new URLDesktopPanel(STARTER_PAGE_HEADER, STARTER_PAGE_TOOL_TIP, null,
+                        SoapUI.class.getResource(BACKUP_STARTER_PAGE_URL).toString());
             } catch (Exception e) {
                 logError(e);
                 return;
@@ -1409,7 +1412,7 @@ public class SoapUI {
         }
 
         UISupport.showDesktopPanel(starterPageDesktopPanel);
-        starterPageDesktopPanel.navigate(HelpUrls.STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
+        starterPageDesktopPanel.navigate(HelpUrls.STARTER_PAGE_URL, SoapUI.class.getResource(BACKUP_STARTER_PAGE_URL).toString(), true);
     }
 
     private static void showEndpointExplorer() {
