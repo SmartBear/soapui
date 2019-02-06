@@ -135,7 +135,7 @@ public class SaveRequestAction extends AbstractAction {
         return restRequest;
     }
 
-    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEW_REST_REQUEST_HELP_URL)
+    @AForm(name = "Form.Title", description = "Form.Description")
     public interface Form {
         @AField(description = "Form.ResourceName.Description", type = AField.AFieldType.STRING)
         public final static String RESOURCENAME = messages.get("Form.ResourceName.Label");
