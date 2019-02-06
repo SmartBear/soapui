@@ -786,7 +786,6 @@ public class SoapUI {
             }
 
             addStandardPreferencesShortcutOnMac();
-            boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
             Properties props = new Properties();
             try {
                 props.load(SoapUI.class.getResourceAsStream(SOAPUI_TITLE));
@@ -806,12 +805,6 @@ public class SoapUI {
                             showStarterPage();
                         }
                     });
-                }
-
-                if (isFirstLaunch && SoapUI.usingGraphicalEnvironment()) {
-                    if (!SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true)) {
-                        SwingUtilities.invokeLater(SoapUI::showEndpointExplorer);
-                    }
                 }
 
                 if (isCommandLine()) {
