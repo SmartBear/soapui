@@ -1430,7 +1430,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             URI splashURI = null;
             try {
-                splashURI = UISupport.findSplash(SoapUI.SOAPUI_SPLASH).toURI();
+                splashURI = UISupport.findSplash(SoapUI.SOAPUI_ABOUT).toURI();
             } catch (URISyntaxException e1) {
                 SoapUI.logError(e1);
             }
