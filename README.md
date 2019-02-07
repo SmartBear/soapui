@@ -25,7 +25,7 @@ SoapUI is the world's leading testing tool for API testing. See the [SoapUI webs
 
 ## Structure and submodules
 
-* *[soapui](soapui)* - The core module that creates the SoapUI .jar file.
+* *[soapui](soapui)* - The core module that creates the soapui.jar file.
 * *[soapui-system-test](soapui-system-test)* - Integration and system tests for SoapUI.
 * *[soapui-installer](soapui-installer)* - Creates SoapUI distributions, such as installers and archives.
 * *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used to run SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
