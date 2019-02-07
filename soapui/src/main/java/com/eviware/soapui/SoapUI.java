@@ -76,6 +76,7 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
+import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -120,6 +121,7 @@ import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktop;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.x.impl.swing.SwingDialogs;
 import com.google.common.base.Objects;
+import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import com.smartbear.analytics.AnalyticsManager;
@@ -135,6 +137,8 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -155,6 +159,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -213,6 +218,7 @@ public class SoapUI {
     public final static String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
     public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
+    public static final String SOAPUI_ABOUT = "/SoapUI-blank.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
     private static final String PROXY_ENABLED_ICON = "/Proxy_Turned-on.png";
@@ -1436,18 +1442,54 @@ public class SoapUI {
                 SoapUI.logError(exception, "Could not read build info properties");
             }
 
-            UISupport.showExtendedInfo(
-                    "About SoapUI",
-                    null,
-                    "<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
-                            + "\"><br>SoapUI " + SOAPUI_VERSION + "<br>"
-                            + "Copyright (C) " + COPYRIGHT + "<br>"
-                            + "<a href=\"" + SOAPUI_WEBSITE + "\">" + SOAPUI_WEBSITE + "</a> | "
-                            + "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br>"
-                            + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty("build.date"), "UNKNOWN BUILD DATE")
-                            + "</strong></font></p></body></html>",
+            Font font = UISupport.getEditorFont();
+            String fontFamily = font.getFamily();
 
-                    new Dimension(646, 480));   //Splash screen width + 70px, height + 175px
+            String info = "<html><body style=\"margin:0;padding:0;\"><div style=\"flex: 1;background-image: url(" + splashURI
+                    + "); background-repeat: no-repeat;width: 457px;height: 301px;\">"
+                    + "<p style=\"margin-top: 85px;margin-left: 30px;color:black;\"><font size=\"13px\" face=\"" + fontFamily
+                    + "\">SoapUI " + SOAPUI_VERSION + "<br>"
+                    + "Copyright (C) " + COPYRIGHT + "<br>"
+                    + "<a href=\"" + SOAPUI_WEBSITE + "\">" + SOAPUI_WEBSITE + "</a> | "
+                    + "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br><br>"
+                    + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty("build.date"), "UNKNOWN BUILD DATE") + "<br>"
+                    + "</font></p>"
+                    + "</div></body></html>";
+
+            JDialog dialog = new JDialog();
+            dialog.setIconImages(getFrameIcons());
+            dialog.setTitle("About SoapUI");
+            dialog.setModal(true);
+            dialog.setResizable(false);
+            JPanel panel = new JPanel(new BorderLayout());
+            JEditorPane editorPane = new JEditorPane("text/html", info);
+            editorPane.setBorder(BorderFactory.createEmptyBorder());
+            editorPane.setCaretPosition(0);
+            editorPane.setEditable(false);
+            editorPane.addHyperlinkListener(new DefaultHyperlinkListener(editorPane));
+            JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK", dialog)));
+            buttonBar.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
+            panel.add(buttonBar, BorderLayout.SOUTH);
+
+            dialog.getRootPane().setContentPane(panel);
+            dialog.setSize(new Dimension(493, 310));
+            dialog.add(editorPane);
+            UISupport.showDialog(dialog);
+        }
+
+        private final class OkAction extends AbstractAction {
+
+            private JDialog dialog;
+
+            public OkAction(String name, JDialog dialog) {
+                super(name);
+                this.dialog = dialog;
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+            }
+
         }
     }
 
