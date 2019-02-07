@@ -1,10 +1,10 @@
-# The SoapUI Maven plugin tester
+# SoapUI Maven plugin tester
 
-*This is a submodule of [The SoapUI project](../)*
+*This is a submodule of [SoapUI project](../)*
 
 This module tests the `mock` and `test` goals of soapui-maven-plugin.
 
-A mock service is started then the tests are runned against the mock.
+A mock service is started then the tests are run against the mock.
 
 ## Building and running
 
