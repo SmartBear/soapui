@@ -260,15 +260,33 @@
 
             $("#formSave").click(function (event) {
                 var testData = $('#methodEndpoint').val();
-                    if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
-                        $('#methodEndpoint').addClass('invalid');
-                        setTimeout(function () {
-                            $('#methodEndpoint').removeClass('invalid');
-                        }, 1000);
-                        return;
-                    }
-                if (document.lastRequest != null) {
-                    inspectorCallback.createFromInspection(JSON.stringify(document.lastRequest));
+
+                if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
+                    $('#methodEndpoint').addClass('invalid');
+                    setTimeout(function () {
+                        $('#methodEndpoint').removeClass('invalid');
+                    }, 1000);
+                    return;
+                }
+
+                var form = RequestExplorer.strings.form;
+                var headerNames = $('.headerName');
+                var headerValues = $('.headerValue');
+
+                var request = {};
+                var headers = [];
+
+                for (var i = 0; i < headerNames.length; i++) {
+                    headers.push([$(headerNames[i]).val(), $(headerValues[i]).val()]);
+                }
+
+                request.url = $('#methodEndpoint').val();
+                request.method = $('#methodList-button').find('.ui-selectmenu-text').text();
+                request.headers = headers;
+                request.payload = $('#requestPayload').val();
+
+                if (testData != null) {
+                    inspectorCallback.createFromInspection(JSON.stringify(request));
                     closeCallback.close();
                 }
             });
