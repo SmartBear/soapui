@@ -48,6 +48,10 @@ class DisabledWebViewBasedBrowserComponent implements WebViewBasedBrowserCompone
     }
 
     @Override
+    public void navigate(String url, String backUpUrl) {
+    }
+
+    @Override
     public void setContent(String contentAsString) {
     }
 
