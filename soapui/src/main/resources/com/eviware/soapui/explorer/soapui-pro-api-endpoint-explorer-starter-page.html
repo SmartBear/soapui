@@ -895,13 +895,8 @@
             margin-top: 5px;
         }
 
-        #dontShow {
-            cursor: pointer;
-        }
-
         .dontShowInscription {
             vertical-align: super;
-            cursor: pointer;
         }
 
         .closeButtonArea.greeting-sentence {
@@ -909,8 +904,12 @@
             display: inline-block;
         }
 
-        dontShowLabel {
-            margin-top: 20px;
+        .dontShowLabel {
+            display: block;
+        }
+
+        .dontShowLabel, #dontShow {
+            cursor: pointer;
         }
 
         .labels {
@@ -1008,7 +1007,7 @@
                 <div class="dontShowLabelContainer">
                     <label class="dontShowLabel">
                         <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">
-                        <label class=dontShowInscription>Don't show this window on launch</label>
+                        <span class=dontShowInscription>Don't show this window on launch</span>
                     </label>
                 </div>
                 <div class="closeButtonArea greeting-sentence">
