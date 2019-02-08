@@ -218,7 +218,7 @@ public class SoapUI {
     public final static String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
     public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
-    public static final String SOAPUI_ABOUT = "/SoapUI-blank.png";
+    public static final String SOAPUI_ABOUT = "SoapUI-blank.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
     private static final String PROXY_ENABLED_ICON = "/Proxy_Turned-on.png";
