@@ -37,6 +37,7 @@ import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,7 @@ public class EndpointExplorerCallback {
     private static final String URL_PROPERTY = "url";
     private static final String PAYLOAD_PROPERTY = "payload";
     private static final String HEADERS_PROPERTY = "headers";
+    private static final String UNKNOWN_HOST_EXCEPTION_RESPONSE_TEXT = "<missing raw response data>";
 
     public RestURIParser getUrlParser(String url) {
         if (StringUtils.hasContent(url)) {
@@ -185,6 +187,9 @@ public class EndpointExplorerCallback {
             }
         } catch (Exception e) {
             SoapUI.logError(e);
+            if (e instanceof UnknownHostException) {
+                return UNKNOWN_HOST_EXCEPTION_RESPONSE_TEXT;
+            }
             if (StringUtils.hasContent(e.getMessage())) {
                 return e.getMessage();
             } else {
@@ -210,7 +215,7 @@ public class EndpointExplorerCallback {
     }
 
     public void exploreAPIDontShowAgain(boolean newValue) {
-        if(newValue) {
+        if (newValue) {
             Analytics.trackAction(EXPLORE_API_DONT_SHOW_ON_LAUNCH);
         }
         SoapUI.getSettings().setBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, !newValue);
