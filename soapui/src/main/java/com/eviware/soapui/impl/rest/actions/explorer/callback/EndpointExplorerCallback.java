@@ -59,6 +59,8 @@ public class EndpointExplorerCallback {
     private static final String PAYLOAD_PROPERTY = "payload";
     private static final String HEADERS_PROPERTY = "headers";
 
+    private boolean requestCreated = false;
+
     public RestURIParser getUrlParser(String url) {
         if (StringUtils.hasContent(url)) {
             try {
@@ -71,13 +73,13 @@ public class EndpointExplorerCallback {
         return null;
     }
 
-    public void createFromInspection(String json) {
+    public boolean createFromInspection(String json) {
         JSONObject request;
         try {
             request = new JSONObject(json);
         } catch (JSONException e) {
             SoapUI.logError(e);
-            return;
+            return false;
         }
         Analytics.trackAction(EXPLORE_API_CLICK_SAVE_REQUEST,
                 "HTTPMethod", extractMethod(request),
@@ -85,7 +87,7 @@ public class EndpointExplorerCallback {
 
         String url = extractUrl(request);
         if (StringUtils.isNullOrEmpty(url)) {
-            return;
+            return false;
         }
         HttpMethod method = HttpMethod.valueOf(extractMethod(request));
         RequestInspectionData inspectionData = new RequestInspectionData(extractHeaders(request), extractPayload(request));
@@ -98,9 +100,11 @@ public class EndpointExplorerCallback {
                 context.put("Methods", Arrays.asList(method));
                 context.put("InspectionData", Arrays.asList(inspectionData));
                 SaveRequestAction saveRequestAction = new SaveRequestAction(context);
-                saveRequestAction.showNewRestRequestDialog();
+                requestCreated = saveRequestAction.showNewRestRequestDialog();
             }
         });
+
+        return requestCreated;
     }
 
     private static String sendRequest(HttpUriRequest httpUriRequest) throws IOException {

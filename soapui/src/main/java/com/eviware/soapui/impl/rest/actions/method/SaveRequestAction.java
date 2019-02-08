@@ -54,7 +54,7 @@ public class SaveRequestAction extends AbstractAction {
         showNewRestRequestDialog();
     }
 
-    public void showNewRestRequestDialog() {
+    public boolean showNewRestRequestDialog() {
         if (dialog == null) {
             dialog = ADialogBuilder.buildDialog(SaveRequestAction.Form.class);
         } else {
@@ -64,7 +64,8 @@ public class SaveRequestAction extends AbstractAction {
         dialog.getFormField(Form.PROJECTS).setProperty("preferredSize", PROJECTS_FORM_SIZE);
         dialog.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
-        if (dialog.show()) {
+        boolean dialogResult = dialog.show();
+        if (dialogResult) {
             String requestName = dialog.getValue(SaveRequestAction.Form.RESOURCENAME);
             RestRequest request = addRequest(context, requestName);
             if (dialog.getBooleanValue(SaveRequestAction.Form.OPENSREQUEST)) {
@@ -74,6 +75,8 @@ public class SaveRequestAction extends AbstractAction {
                 UISupport.select(request.getResource().getService().getProject());
             }
         }
+
+        return dialogResult;
     }
 
     private JPanel getProjectListComponent() {

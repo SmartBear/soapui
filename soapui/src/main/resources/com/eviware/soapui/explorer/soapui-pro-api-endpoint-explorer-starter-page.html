@@ -286,8 +286,10 @@
                 request.payload = $('#requestPayload').val();
 
                 if (testData != null) {
-                    inspectorCallback.createFromInspection(JSON.stringify(request));
-                    closeCallback.close();
+                    var requestCreated = inspectorCallback.createFromInspection(JSON.stringify(request));
+                    if (requestCreated == true) {
+                        closeCallback.close();
+                    }
                 }
             });
 
