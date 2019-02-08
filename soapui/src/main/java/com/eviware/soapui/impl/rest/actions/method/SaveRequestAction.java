@@ -7,13 +7,11 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.explorer.RequestInspectionData;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.swing.SwingUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -54,7 +52,7 @@ public class SaveRequestAction extends AbstractAction {
         showNewRestRequestDialog();
     }
 
-    public void showNewRestRequestDialog() {
+    public boolean showNewRestRequestDialog() {
         if (dialog == null) {
             dialog = ADialogBuilder.buildDialog(SaveRequestAction.Form.class);
         } else {
@@ -64,7 +62,8 @@ public class SaveRequestAction extends AbstractAction {
         dialog.getFormField(Form.PROJECTS).setProperty("preferredSize", PROJECTS_FORM_SIZE);
         dialog.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
-        if (dialog.show()) {
+        boolean dialogResult = dialog.show();
+        if (dialogResult) {
             String requestName = dialog.getValue(SaveRequestAction.Form.RESOURCENAME);
             RestRequest request = addRequest(context, requestName);
             if (dialog.getBooleanValue(SaveRequestAction.Form.OPENSREQUEST)) {
@@ -74,6 +73,7 @@ public class SaveRequestAction extends AbstractAction {
                 UISupport.select(request.getResource().getService().getProject());
             }
         }
+        return dialogResult;
     }
 
     private JPanel getProjectListComponent() {

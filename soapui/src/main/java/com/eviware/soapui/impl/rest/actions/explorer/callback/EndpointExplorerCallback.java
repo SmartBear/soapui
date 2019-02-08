@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpP
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -59,6 +60,15 @@ public class EndpointExplorerCallback {
     private static final String URL_PROPERTY = "url";
     private static final String PAYLOAD_PROPERTY = "payload";
     private static final String HEADERS_PROPERTY = "headers";
+
+    private final WebViewBasedBrowserComponent browserComponent;
+
+    private boolean requestCreated = false;
+
+    public EndpointExplorerCallback(WebViewBasedBrowserComponent browserComponent){
+        this.browserComponent = browserComponent;
+    }
+
     private static final String UNKNOWN_HOST_EXCEPTION_RESPONSE_TEXT = "<missing raw response data>";
 
     public RestURIParser getUrlParser(String url) {
@@ -100,7 +110,8 @@ public class EndpointExplorerCallback {
                 context.put("Methods", Arrays.asList(method));
                 context.put("InspectionData", Arrays.asList(inspectionData));
                 SaveRequestAction saveRequestAction = new SaveRequestAction(context);
-                saveRequestAction.showNewRestRequestDialog();
+                requestCreated = saveRequestAction.showNewRestRequestDialog();
+                browserComponent.executeJavaScript(String.format("window.closeHandler(%s)", requestCreated));
             }
         });
     }

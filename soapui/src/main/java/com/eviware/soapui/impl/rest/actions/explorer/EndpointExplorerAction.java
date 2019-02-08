@@ -67,7 +67,7 @@ public class EndpointExplorerAction extends AbstractAction {
         }
 
         browser.addJavaScriptEventHandler("closeCallback", this);
-        browser.addJavaScriptEventHandler("inspectorCallback", new EndpointExplorerCallback());
+        browser.addJavaScriptEventHandler("inspectorCallback", new EndpointExplorerCallback(browser));
     }
 
     public void close() {

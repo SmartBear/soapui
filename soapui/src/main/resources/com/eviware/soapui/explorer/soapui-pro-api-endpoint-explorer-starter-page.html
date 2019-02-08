@@ -177,6 +177,12 @@
                 }
             };
 
+            window.closeHandler = function(success) {
+                if (success == true) {
+                    closeCallback.close();
+                }
+            }
+
             var form = RequestExplorer.strings.form;
             $("#{0}".format(form.methodList)).selectmenu({
                 width: form.methodListWidth
@@ -286,8 +292,7 @@
                 request.payload = $('#requestPayload').val();
 
                 if (testData != null) {
-                    inspectorCallback.createFromInspection(JSON.stringify(request));
-                    closeCallback.close();
+                    var requestCreated = inspectorCallback.createFromInspection(JSON.stringify(request));
                 }
             });
 
