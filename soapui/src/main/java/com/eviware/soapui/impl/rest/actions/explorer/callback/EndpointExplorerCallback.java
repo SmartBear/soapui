@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpP
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -58,8 +59,13 @@ public class EndpointExplorerCallback {
     private static final String URL_PROPERTY = "url";
     private static final String PAYLOAD_PROPERTY = "payload";
     private static final String HEADERS_PROPERTY = "headers";
+    private final WebViewBasedBrowserComponent browserComponent;
 
     private boolean requestCreated = false;
+
+    public EndpointExplorerCallback(WebViewBasedBrowserComponent browserComponent){
+        this.browserComponent = browserComponent;
+    }
 
     public RestURIParser getUrlParser(String url) {
         if (StringUtils.hasContent(url)) {
@@ -73,13 +79,13 @@ public class EndpointExplorerCallback {
         return null;
     }
 
-    public boolean createFromInspection(String json) {
+    public void createFromInspection(String json) {
         JSONObject request;
         try {
             request = new JSONObject(json);
         } catch (JSONException e) {
             SoapUI.logError(e);
-            return false;
+            return;
         }
         Analytics.trackAction(EXPLORE_API_CLICK_SAVE_REQUEST,
                 "HTTPMethod", extractMethod(request),
@@ -87,7 +93,7 @@ public class EndpointExplorerCallback {
 
         String url = extractUrl(request);
         if (StringUtils.isNullOrEmpty(url)) {
-            return false;
+            return;
         }
         HttpMethod method = HttpMethod.valueOf(extractMethod(request));
         RequestInspectionData inspectionData = new RequestInspectionData(extractHeaders(request), extractPayload(request));
@@ -101,10 +107,9 @@ public class EndpointExplorerCallback {
                 context.put("InspectionData", Arrays.asList(inspectionData));
                 SaveRequestAction saveRequestAction = new SaveRequestAction(context);
                 requestCreated = saveRequestAction.showNewRestRequestDialog();
+                browserComponent.executeJavaScript(String.format("window.closeHandler(%s)", requestCreated));
             }
         });
-
-        return requestCreated;
     }
 
     private static String sendRequest(HttpUriRequest httpUriRequest) throws IOException {
