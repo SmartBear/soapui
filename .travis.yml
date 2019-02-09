@@ -1,0 +1,13 @@
+language: java
+
+#
+# INSTALL: setup the software, i.e. build & install
+#
+install:
+  - mvn clean install -DskipTests --fail-at-end
+
+#
+# TESTS: run all the test after the installation
+#
+script:
+  - mvn install --fail-at-end
