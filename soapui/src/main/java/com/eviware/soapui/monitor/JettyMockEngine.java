@@ -233,17 +233,19 @@ public class JettyMockEngine implements MockEngine {
                 } catch (Exception e) {
                     SoapUI.logError(e);
                 }
+
+                if (addedSslConnector) {
+                    log.debug("Removing SSL connector.");
+                    server.removeConnector(sslConnector);
+                    addedSslConnector = false;
+                }
+
                 server.removeConnector(connector);
                 runners.remove(port);
                 if (runners.isEmpty()) {
                     try {
                         log.info("No more connectors.. stopping server");
                         server.stop();
-                        if (sslConnector != null) {
-                            // server.removeConnector( sslConnector );
-                            // sslConnector.stop();
-                            // sslConnector = null;
-                        }
                     } catch (Exception e) {
                         SoapUI.logError(e);
                     }
