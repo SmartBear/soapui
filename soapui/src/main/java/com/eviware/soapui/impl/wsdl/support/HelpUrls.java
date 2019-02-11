@@ -128,6 +128,7 @@ public interface HelpUrls {
     public static final String NEWRESTSERVICE_HELP_URL = "/REST-Testing/working-with-rest-services.html";
     public static final String NEW_WADL_PROJECT_HELP_URL = "/REST-Testing/working-with-rest-services.html";
     public static final String CREATEWADLDOC_HELP_URL = "/REST-Testing/working-with-rest-services.html";
+    public static final String NEW_REST_REQUEST_HELP_URL = "/REST-testing/working-with-rest-requests.html";
 
     public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "/OAuth/access-token-from-server.html";
     public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "/OAuth/access-token-retrieval.html";

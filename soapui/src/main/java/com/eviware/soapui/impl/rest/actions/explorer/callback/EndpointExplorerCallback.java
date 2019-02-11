@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpP
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.HttpUnlockMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -37,6 +38,7 @@ import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +60,16 @@ public class EndpointExplorerCallback {
     private static final String URL_PROPERTY = "url";
     private static final String PAYLOAD_PROPERTY = "payload";
     private static final String HEADERS_PROPERTY = "headers";
+
+    private final WebViewBasedBrowserComponent browserComponent;
+
+    private boolean requestCreated = false;
+
+    public EndpointExplorerCallback(WebViewBasedBrowserComponent browserComponent){
+        this.browserComponent = browserComponent;
+    }
+
+    private static final String UNKNOWN_HOST_EXCEPTION_RESPONSE_TEXT = "<missing raw response data>";
 
     public RestURIParser getUrlParser(String url) {
         if (StringUtils.hasContent(url)) {
@@ -98,7 +110,8 @@ public class EndpointExplorerCallback {
                 context.put("Methods", Arrays.asList(method));
                 context.put("InspectionData", Arrays.asList(inspectionData));
                 SaveRequestAction saveRequestAction = new SaveRequestAction(context);
-                saveRequestAction.showNewRestRequestDialog();
+                requestCreated = saveRequestAction.showNewRestRequestDialog();
+                browserComponent.executeJavaScript(String.format("window.closeHandler(%s)", requestCreated));
             }
         });
     }
@@ -185,6 +198,9 @@ public class EndpointExplorerCallback {
             }
         } catch (Exception e) {
             SoapUI.logError(e);
+            if (e instanceof UnknownHostException) {
+                return UNKNOWN_HOST_EXCEPTION_RESPONSE_TEXT;
+            }
             if (StringUtils.hasContent(e.getMessage())) {
                 return e.getMessage();
             } else {
@@ -210,7 +226,7 @@ public class EndpointExplorerCallback {
     }
 
     public void exploreAPIDontShowAgain(boolean newValue) {
-        if(newValue) {
+        if (newValue) {
             Analytics.trackAction(EXPLORE_API_DONT_SHOW_ON_LAUNCH);
         }
         SoapUI.getSettings().setBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, !newValue);

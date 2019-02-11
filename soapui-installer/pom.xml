@@ -7,7 +7,7 @@
   <parent>
     <artifactId>soapui-project</artifactId>
     <groupId>com.smartbear.soapui</groupId>
-    <version>5.5.0-SNAPSHOT</version>
+    <version>5.5.0</version>
   </parent>
 
   <artifactId>soapui-installer</artifactId>
@@ -92,6 +92,13 @@
       <id>installer</id>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
           <plugin>
             <groupId>org.sonatype.install4j</groupId>
             <artifactId>install4j-maven-plugin</artifactId>

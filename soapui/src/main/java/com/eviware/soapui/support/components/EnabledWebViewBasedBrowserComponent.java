@@ -32,6 +32,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import netscape.javascript.JSObject;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -53,13 +54,19 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.eviware.soapui.SoapUI.getThreadPool;
 
 class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponent {
     public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
@@ -287,13 +294,16 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
         navigate(url, DEFAULT_ERROR_PAGE);
     }
 
-    public void navigate(final String url, String errorPage) {
+    public void navigate(final String url, String backupUrl) {
         if (SoapUI.isBrowserDisabled()) {
             return;
         }
-        setErrorPage(errorPage);
 
-        this.url = url;
+        loadUrl(url);
+
+        if (StringUtils.isNotBlank(backupUrl)) {
+            getThreadPool().submit(new BrowserFallbackTask(url, backupUrl));
+        }
 
         Platform.runLater(new Runnable() {
             public void run() {
@@ -301,6 +311,34 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
             }
         });
 
+    }
+
+    private void loadUrl(final String url) {
+        Platform.runLater(() -> {
+
+            getWebEngine().load(url);
+        });
+        this.url = url;
+    }
+
+    public static boolean verifyReturnCode(String urlString) {
+        try {
+            int neededIndex = urlString.indexOf("?");
+            if (neededIndex != -1) {
+                urlString = urlString.substring(0, neededIndex);
+            }
+            URL url = new URL(urlString);
+            final URLConnection urlConnection = url.openConnection();
+            if (urlConnection instanceof HttpURLConnection) {
+                HttpURLConnection httpURLConnection = (HttpURLConnection) urlConnection;
+                int statusCode = httpURLConnection.getResponseCode();
+                return statusCode == HttpURLConnection.HTTP_OK;
+            } else {
+                return true;
+            }
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     @Override
@@ -470,5 +508,24 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
             );
         }
 
+    }
+
+    private class BrowserFallbackTask implements Runnable {
+
+        private final String url;
+        private final String backupUrl;
+
+        public BrowserFallbackTask(String url, String backupUrl) {
+            this.url = url;
+            this.backupUrl = backupUrl;
+        }
+
+        @Override
+        public void run() {
+            if (!verifyReturnCode(url)) {
+                loadUrl(backupUrl);
+            }
+
+        }
     }
 }
