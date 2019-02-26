@@ -20,6 +20,11 @@
     <url>http://www.soapui.org</url>
     <packaging>jar</packaging>
 
+    <properties>
+        <!--xmlbeans requires javac 8-->
+        <xmlbeans.compiler.path/>
+    </properties>
+
     <build>
         <resources>
             <resource>
@@ -66,6 +71,7 @@
                 <configuration>
                     <javaSource>1.5</javaSource>
                     <verbose>false</verbose>
+                    <compiler>${xmlbeans.compiler.path}</compiler>
                     <schemaDirectory>src/main/xsd</schemaDirectory>
                 </configuration>
             </plugin>
@@ -233,6 +239,29 @@
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
             <version>2.5.0</version>
+        </dependency>
+
+        <!--JavaFX-->
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>11</version>
         </dependency>
 
         <!-- Jetty -->

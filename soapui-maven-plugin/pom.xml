@@ -56,6 +56,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.5.1</version>
+                <configuration>
+                    <extractors>
+                        <extractor>java-javadoc</extractor>
+                    </extractors>
+                </configuration>
             </plugin>
 
             <!-- FIXME Why do we need this plugin ? -->
