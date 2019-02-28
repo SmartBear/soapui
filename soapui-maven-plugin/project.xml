@@ -120,7 +120,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.3</version>
+			<version>1.6</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
