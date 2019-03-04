@@ -6,11 +6,13 @@
 
 * remove useless jars. Jackson, KeenIO.
 
-* update org.apache.httpcomponents jar versions. httpclient:4.4.1, httpmime:4.4.1, httpclient-cache:4.4.1, httpcore:4.4.1, httpcore-nio:4.4.1
+* update org.apache.httpcomponents jar versions. httpclient:4.5.5, httpmime:4.5.5, httpclient-cache:4.5.5, httpcore:4.4.9, httpcore-nio:4.4.9
 
 * update commons-logging jar versions. commons-logging:1.2
 
-* update commons-codec jar versions. commons-codec:1.9
+* update commons-codec jar versions. commons-codec:1.10
+
+* update junit jar versions. junit:4.12
 
 -------------------------------------------------------------------------------
 

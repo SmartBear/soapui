@@ -17,7 +17,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/ezmorph/jars/ezmorph-1.0.5.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xom/jars/xom-1.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/swingx/jars/swingx-soapui.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/commons-codec/jars/commons-codec-1.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-codec/jars/commons-codec-1.10.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/groovy/jars/groovy-all-1.8.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/rhino/jars/js-1.7R2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty-6.1.26.jar"/>
