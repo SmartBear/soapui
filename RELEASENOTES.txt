@@ -1,4 +1,20 @@
-﻿# SoapUI Open Source 5.5.0
+﻿# SoapUI Open Source 5.6.0-SNAPSHOT
+
+#### Released ~2020-??-?? ####
+
+### Overall improvements ###
+
+* remove useless jars. Jackson, KeenIO.
+
+* update org.apache.httpcomponents jar versions. httpclient:4.4.1, httpmime:4.4.1, httpclient-cache:4.4.1, httpcore:4.4.1, httpcore-nio:4.4.1
+
+* update commons-logging jar versions. commons-logging:1.2
+
+* update commons-codec jar versions. commons-codec:1.9
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.5.0
 
 #### Released 2019-02-06 ####
 
