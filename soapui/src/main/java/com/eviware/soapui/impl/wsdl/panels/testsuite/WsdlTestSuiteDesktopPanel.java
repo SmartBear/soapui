@@ -52,7 +52,6 @@ import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
-import javafx.application.Platform;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -65,6 +64,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -427,7 +427,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         public void afterTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext,
                                   TestCaseRunner testCaseRunner) {
             finishCount.incrementAndGet();
-            Platform.runLater(new Runnable() {
+            SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
                     progressBar.setValue(finishCount.get());
