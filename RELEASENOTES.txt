@@ -1,4 +1,4 @@
-﻿# SoapUI Open Source 5.6.0-SNAPSHOT
+﻿# SoapUI Open Source 5.6.0
 
 #### Released ~2020-??-?? ####
 
