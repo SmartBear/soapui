@@ -32,6 +32,8 @@ public interface WebViewBasedBrowserComponent {
 
     void navigate(String url);
 
+    void navigate(String url, String backupUrl);
+
     void setContent(String contentAsString);
 
     void setContent(String contentAsString, String contentType);

@@ -39,6 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.eviware.soapui.analytics.SoapUIActions.STAY_TUNED_DIALOG_ACCEPTED;
+import static com.eviware.soapui.analytics.SoapUIActions.STAY_TUNED_DIALOG_SKIPPED;
+
 public class SumbitUserInfoAction {
     private static final String FIRST_NAME_HINT = "Enter your first name";
     private static final String LAST_NAME_HINT = "Enter your last name";
@@ -186,6 +189,7 @@ public class SumbitUserInfoAction {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (handleOk()) {
+                        Analytics.trackAction(STAY_TUNED_DIALOG_ACCEPTED);
                         setVisible(false);
                     }
                 }
@@ -207,6 +211,7 @@ public class SumbitUserInfoAction {
             jSkip.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    Analytics.trackAction(STAY_TUNED_DIALOG_SKIPPED);
                     setVisible(false);
                 }
             });

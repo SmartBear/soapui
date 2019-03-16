@@ -7,7 +7,6 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.explorer.RequestInspectionData;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
@@ -53,7 +52,7 @@ public class SaveRequestAction extends AbstractAction {
         showNewRestRequestDialog();
     }
 
-    public void showNewRestRequestDialog() {
+    public boolean showNewRestRequestDialog() {
         if (dialog == null) {
             dialog = ADialogBuilder.buildDialog(SaveRequestAction.Form.class);
         } else {
@@ -63,14 +62,18 @@ public class SaveRequestAction extends AbstractAction {
         dialog.getFormField(Form.PROJECTS).setProperty("preferredSize", PROJECTS_FORM_SIZE);
         dialog.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
-        if (dialog.show()) {
+        boolean dialogResult = dialog.show();
+        if (dialogResult) {
             String requestName = dialog.getValue(SaveRequestAction.Form.RESOURCENAME);
             RestRequest request = addRequest(context, requestName);
-            SoapUI.getNavigator().updateUI();
             if (dialog.getBooleanValue(SaveRequestAction.Form.OPENSREQUEST)) {
                 UISupport.selectAndShow(request);
+            } else {
+                //SOAPUIOS-447
+                UISupport.select(request.getResource().getService().getProject());
             }
         }
+        return dialogResult;
     }
 
     private JPanel getProjectListComponent() {
@@ -132,7 +135,7 @@ public class SaveRequestAction extends AbstractAction {
         return restRequest;
     }
 
-    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL)
+    @AForm(name = "Form.Title", description = "Form.Description")
     public interface Form {
         @AField(description = "Form.ResourceName.Description", type = AField.AFieldType.STRING)
         public final static String RESOURCENAME = messages.get("Form.ResourceName.Label");

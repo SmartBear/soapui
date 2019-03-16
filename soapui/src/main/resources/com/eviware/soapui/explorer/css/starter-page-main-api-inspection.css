@@ -18,6 +18,7 @@ div.container {
 div.content-wrp {
     display: block;
     overflow-y: auto
+    height: 90%;
 }
 
 div.always-show {

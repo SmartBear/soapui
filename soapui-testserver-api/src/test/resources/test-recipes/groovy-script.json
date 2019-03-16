@@ -1,8 +1,0 @@
-{
-  "testSteps": [
-    {
-      "type": "Groovy",
-      "script": "println 'Hello World!'"
-    }
-  ]
-}

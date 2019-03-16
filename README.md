@@ -5,6 +5,7 @@
 </p>
 
 SoapUI is the world's leading testing tool for API testing. See the [SoapUI website](https://www.soapui.org/) to learn more.
+By downloading our software, you agree to our [license](https://www.soapui.org/developers-corner/soapui-license.html) and [privacy policy](https://smartbear.com/privacy/).
 
 ## Table of content
 
@@ -25,7 +26,7 @@ SoapUI is the world's leading testing tool for API testing. See the [SoapUI webs
 
 ## Structure and submodules
 
-* *[soapui](soapui)* - The core module that creates the SoapUI .jar file.
+* *[soapui](soapui)* - The core module that creates the soapui.jar file.
 * *[soapui-system-test](soapui-system-test)* - Integration and system tests for SoapUI.
 * *[soapui-installer](soapui-installer)* - Creates SoapUI distributions, such as installers and archives.
 * *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used to run SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
@@ -35,7 +36,7 @@ SoapUI is the world's leading testing tool for API testing. See the [SoapUI webs
 
 ### Prerequisites
 
-* [JDK 8 (version 1.8 or later)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [JDK 8 (update 112 or later)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Maven (version 3.0.0 or later)](http://maven.apache.org/)
 * [Git (version 1.8 or later)](http://git-scm.com)
 
