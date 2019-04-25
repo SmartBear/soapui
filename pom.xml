@@ -66,7 +66,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>8</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -105,7 +105,7 @@
                             <rules>
                                 <!-- http://mojo.codehaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
                                 <enforceBytecodeVersion>
-                                    <maxJdkVersion>11</maxJdkVersion>
+                                    <maxJdkVersion>8</maxJdkVersion>
                                 </enforceBytecodeVersion>
                             </rules>
                             <fail>true</fail>
