@@ -49,7 +49,6 @@
         <maven-assembly-plugin-version>3.1.1</maven-assembly-plugin-version>
         <!-- org.codehaus.mojo -->
         <versions-maven-plugin-version>2.7</versions-maven-plugin-version>
-        <animal-sniffer-maven-plugin-version>1.18</animal-sniffer-maven-plugin-version>
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
 
         <!-- other -->
@@ -148,7 +147,7 @@
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.0-beta-2</version>
+                        <version>1.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -166,33 +165,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${maven-site-plugin-version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>${animal-sniffer-maven-plugin-version}</version>
-                <configuration>
-                    <signature>
-                        <groupId>org.codehaus.mojo.signature</groupId>
-                        <!-- currently, we cannot use java16 1.1 because some classes depends on the sun specific
-                        implementation (com.sun.java.swing.plaf.windows) -->
-                        <artifactId>java18</artifactId>
-                        <version>1.0</version>
-                    </signature>
-                    <ignores>
-                        <ignore>javafx.*</ignore>
-                        <ignore>netscape.*</ignore>
-                    </ignores>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>animal-sniffer-check</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

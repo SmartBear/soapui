@@ -209,7 +209,7 @@ public abstract class AbstractModelItemTreeNode<T extends ModelItem> implements 
         });
     }
 
-    public Enumeration<?> children() {
+    public Enumeration<? extends TreeNode> children() {
         Vector<TreeNode> children = new Vector<TreeNode>();
         for (int c = 0; c < getChildCount(); c++) {
             children.add(getChildAt(c));
