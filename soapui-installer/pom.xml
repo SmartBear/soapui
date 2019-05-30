@@ -23,7 +23,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.2.1</version>
+            <version>${exec-maven-plugin-version}</version>
             <executions>
               <execution>
                 <phase>prepare-package</phase>
@@ -47,7 +47,7 @@
           <plugin>
             <groupId>com.github.danielflower.mavenplugins</groupId>
             <artifactId>maven-gitlog-plugin</artifactId>
-            <version>1.4.11</version>
+            <version>${maven-gitlog-plugin-version}</version>
             <configuration>
               <reportTitle>
                 SoapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
@@ -61,7 +61,7 @@
 
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.3</version>
+            <version>${maven-assembly-plugin-version}</version>
             <configuration>
               <outputDirectory>${assembly.build.directory}</outputDirectory>
               <descriptors>

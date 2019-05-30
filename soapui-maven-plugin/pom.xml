@@ -55,7 +55,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>${maven-plugin-plugin-version}</version>
             </plugin>
 
             <!-- FIXME Why do we need this plugin ? -->
@@ -76,12 +76,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
