@@ -16,10 +16,18 @@
             <url>http://www.soapui.org/repository/maven2</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>smartbear-plugin-repository</id>
+            <url>http://www.soapui.org/repository/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <requireMavenVersion-value>3.0.5</requireMavenVersion-value>
+        <maxJdkVersion-value>12</maxJdkVersion-value>
 
         <!-- Custom properties -->
         <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
@@ -29,10 +37,6 @@
         <project.name.full>SoapUI-${project.version}</project.name.full>
         <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
-
-        <javafx.version>2.2</javafx.version>
-        <!-- Set this property to the location of your JavaFX runtime jar if you want to compile with Java 6 -->
-        <javafx.runtime.lib.jar>${java.home}/lib/jfxrt.jar</javafx.runtime.lib.jar>
 
         <!-- org.apache.maven.plugins -->
         <maven-enforcer-plugin-version>3.0.0-M2</maven-enforcer-plugin-version>
@@ -47,14 +51,22 @@
         <maven-plugin-plugin-version>3.6.0</maven-plugin-plugin-version>
         <maven-failsafe-plugin-version>3.0.0-M3</maven-failsafe-plugin-version>
         <maven-assembly-plugin-version>3.1.1</maven-assembly-plugin-version>
+        <!-- org.apache.xmlbeans -->
+        <xmlbeans-version>3.1.1</xmlbeans-version>
+        <xmlbeans-xpath-version>2.6.0</xmlbeans-xpath-version>
+        <xmlbeans-xmlpublic-version>2.6.0</xmlbeans-xmlpublic-version>
         <!-- org.codehaus.mojo -->
         <versions-maven-plugin-version>2.7</versions-maven-plugin-version>
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
-
+        <xmlbeans-maven-plugin-version>2.3.4</xmlbeans-maven-plugin-version>
+        <!-- org.openjfx-->
+        <javafx-base-version>11</javafx-base-version>
+        <javafx-controls-version>11</javafx-controls-version>
+        <javafx-web-version>11</javafx-web-version>
+        <javafx-swing-version>11</javafx-swing-version>
         <!-- other -->
         <maven-gitlog-plugin-version>1.9.1</maven-gitlog-plugin-version>
 
-        <requireMavenVersion-value>3.0.5</requireMavenVersion-value>
     </properties>
 
     <modules>
@@ -97,7 +109,7 @@
                 <version>${maven-compiler-plugin-version}</version>
                 <configuration>
                     <source>1.8</source>
-                    <target>1.8</target>
+                    <target>1.9</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -106,7 +118,6 @@
                 <version>${maven-javadoc-plugin-version}</version>
                 <configuration>
                     <maxmemory>1024m</maxmemory>
-                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
             </plugin>
             <plugin>
@@ -134,9 +145,8 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <!-- http://mojo.codehaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
                                 <enforceBytecodeVersion>
-                                    <maxJdkVersion>1.8</maxJdkVersion>
+                                    <maxJdkVersion>${maxJdkVersion-value}</maxJdkVersion>
                                 </enforceBytecodeVersion>
                             </rules>
                             <fail>true</fail>

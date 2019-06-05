@@ -151,21 +151,21 @@
 			<version>2.5-20081211</version>
 		</dependency>
 		<dependency>
-			<groupId>xmlbeans</groupId>
-			<artifactId>xbean</artifactId>
-			<version>fixed-2.4.0</version>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>3.1.1</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>xmlbeans</groupId>
-			<artifactId>xbean_xpath</artifactId>
-			<version>2.4.0</version>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans-xpath</artifactId>
+			<version>2.6.0</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>xmlbeans</groupId>
-			<artifactId>xmlpublic</artifactId>
-			<version>2.4.0</version>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans-xmlpublic</artifactId>
+			<version>2.6.0</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
