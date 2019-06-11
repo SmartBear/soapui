@@ -57,6 +57,9 @@ public class ProxyUtilsTestCase {
     public static final String AUTOMATIC_PROXY_PORT = "3";
 
     private HttpUriRequest httpMethod;
+    private boolean defaultAutoProxy = true;
+    private boolean defaultProxyEnabled = true;
+    private ProxySelector defaultProxySelector = null;
 
     /* FIXME This will do nslookups which will not always mach of natural reasons since test.com is a real domain
         What is the purpose of this? */
@@ -75,6 +78,10 @@ public class ProxyUtilsTestCase {
 
     @Before
     public void setup() {
+        defaultAutoProxy = ProxyUtils.isAutoProxy();
+        defaultProxyEnabled = ProxyUtils.isProxyEnabled();
+        defaultProxySelector = ProxySelector.getDefault();
+
         clearProxySystemProperties();
 
         httpMethod = new ExtendedGetMethod();
@@ -82,8 +89,9 @@ public class ProxyUtilsTestCase {
 
     @After
     public void teardown() {
-        ProxyUtils.setAutoProxy(false);
-        ProxyUtils.setProxyEnabled(false);
+        ProxySelector.setDefault(defaultProxySelector);
+        ProxyUtils.setProxyEnabled(defaultProxyEnabled);
+        ProxyUtils.setAutoProxy(defaultAutoProxy);
     }
 
     @Test

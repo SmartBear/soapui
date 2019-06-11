@@ -50,7 +50,6 @@ public class WsrmUtilsTest {
 
     }
 
-    @Ignore
     @Test
     public void buildsValidStartSequenceRequest() throws Exception {
         WsrmUtils requestBuilder = new WsrmUtils(SoapVersion.Soap12);
@@ -62,7 +61,6 @@ public class WsrmUtilsTest {
         assertThat(nodeList.item(0), is(compliantWithSchema(WSRM_1_1_SCHEMA_200702_LOCATION)));
     }
 
-    @Ignore
     @Test
     public void buildsValidStartSequenceRequestWithVersion10() throws Exception {
         WsrmUtils requestBuilder = new WsrmUtils(SoapVersion.Soap12);
@@ -74,7 +72,6 @@ public class WsrmUtilsTest {
         assertThat(nodeList.item(0), is(compliantWithSchema(WSRM_1_0_SCHEMA_200502_LOCATION)));
     }
 
-    @Ignore
     @Test
     public void buildsValidStartSequenceRequestWhenOfferEndpointIsSet() throws Exception {
         WsrmUtils requestBuilder = new WsrmUtils(SoapVersion.Soap12);
@@ -86,7 +83,6 @@ public class WsrmUtilsTest {
         assertThat(nodeList.item(0), is(compliantWithSchema(WSRM_1_1_SCHEMA_200702_LOCATION)));
     }
 
-    @Ignore
     @Test
     public void buildsValidStartSequenceRequestWhenOfferEndpointIsSetWithVersion10() throws Exception {
         WsrmUtils requestBuilder = new WsrmUtils(SoapVersion.Soap12);
