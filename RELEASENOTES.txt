@@ -14,6 +14,8 @@
 
 * update junit jar versions. junit:4.12
 
+* move to oracle jre 12
+
 ### Bug Fixes ###
 
 * SoapUI 5.5.0 will not run project or suites - Toolkit not initialized error
