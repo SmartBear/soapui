@@ -62,6 +62,8 @@
         <!-- org.openjfx-->
         <javafx-base-version>11</javafx-base-version>
         <javafx-controls-version>11</javafx-controls-version>
+        <javafx-graphics-version>11</javafx-graphics-version>
+        <javafx-media-version>11</javafx-media-version>
         <javafx-web-version>11</javafx-web-version>
         <javafx-swing-version>11</javafx-swing-version>
         <!-- other -->

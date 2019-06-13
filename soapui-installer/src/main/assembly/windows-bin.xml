@@ -13,6 +13,8 @@
             <scope>runtime</scope>
             <excludes>
                 <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
+                <exclude>org.openjfx:*:jar:linux:*</exclude>
+                <exclude>org.openjfx:*:jar:mac:*</exclude>
             </excludes>
         </dependencySet>
         <dependencySet>
