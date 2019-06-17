@@ -103,6 +103,24 @@
           <entry location="xulrunner-windows-3.3.jar" fileType="regular" />
           <entry location="xulrunner15-mac-3.3.jar" fileType="regular" />
           <entry location="xulrunner15-windows-3.3.jar" fileType="regular" />
+          <entry location="javafx-base-11-win.jar" fileType="regular" />
+          <entry location="javafx-controls-11-win.jar" fileType="regular" />
+          <entry location="javafx-graphics-11-win.jar" fileType="regular" />
+          <entry location="javafx-media-11-win.jar" fileType="regular" />
+          <entry location="javafx-swing-11-win.jar" fileType="regular" />
+          <entry location="javafx-web-11-win.jar" fileType="regular" />
+          <entry location="javafx-base-11-linux.jar" fileType="regular" />
+          <entry location="javafx-controls-11-linux.jar" fileType="regular" />
+          <entry location="javafx-graphics-11-linux.jar" fileType="regular" />
+          <entry location="javafx-media-11-linux.jar" fileType="regular" />
+          <entry location="javafx-swing-11-linux.jar" fileType="regular" />
+          <entry location="javafx-web-11-linux.jar" fileType="regular" />
+          <entry location="javafx-base-11-mac.jar" fileType="regular" />
+          <entry location="javafx-controls-11-mac.jar" fileType="regular" />
+          <entry location="javafx-graphics-11-mac.jar" fileType="regular" />
+          <entry location="javafx-media-11-mac.jar" fileType="regular" />
+          <entry location="javafx-swing-11-mac.jar" fileType="regular" />
+          <entry location="javafx-web-11-mac.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
@@ -225,6 +243,9 @@
           <entry location=".i4j_fileset_2232" fileType="regular" />
           <entry location=".i4j_fileset_2234" fileType="regular" />
           <entry location=".i4j_fileset_2808" fileType="regular" />
+          <entry location=".i4j_fileset_7717" fileType="regular" />
+          <entry location=".i4j_fileset_7965" fileType="regular" />
+          <entry location=".i4j_fileset_7967" fileType="regular" />
         </include>
         <dependencies />
       </component>
