@@ -39,9 +39,6 @@
       <fileset name="HermesJMS" id="1260" customizedId="" />
       <fileset name="wsi-bundled java" id="1859" customizedId="" />
       <fileset name="wsi-non bundled java" id="1861" customizedId="" />
-      <fileset name="xulrunner-windows" id="2230" customizedId="" />
-      <fileset name="xulrunner-mac" id="2232" customizedId="" />
-      <fileset name="xulrunner-linux" id="2234" customizedId="" />
       <fileset name="Tutorials" id="2390" customizedId="" />
       <fileset name="logs" id="4415" customizedId="" />
       <fileset name="javafx-windows" id="7717" customizedId="" />
@@ -58,9 +55,6 @@
       <root id="1261" fileset="1260" location="" />
       <root id="1860" fileset="1859" location="" />
       <root id="1862" fileset="1861" location="" />
-      <root id="2231" fileset="2230" location="" />
-      <root id="2233" fileset="2232" location="" />
-      <root id="2235" fileset="2234" location="" />
       <root id="2391" fileset="2390" location="" />
       <root id="4416" fileset="4415" location="" />
       <root id="7718" fileset="7717" location="" />
@@ -82,9 +76,6 @@
       <mountPoint id="1334" root="1261" location="tempHermes" mode="755" />
       <mountPoint id="1955" root="1860" location="wsi-test-tools" mode="755" />
       <mountPoint id="1956" root="1862" location="wsi-test-tools" mode="755" />
-      <mountPoint id="2236" root="2231" location="lib" mode="755" />
-      <mountPoint id="2237" root="2233" location="lib" mode="755" />
-      <mountPoint id="2238" root="2235" location="lib" mode="755" />
       <mountPoint id="2392" root="2391" location="SoapUI-Tutorials" mode="755" />
       <mountPoint id="4418" root="4416" location="bin" mode="755" />
       <mountPoint id="7719" root="7718" location="lib" mode="755" />
@@ -97,12 +88,6 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude>
-          <entry location="xulrunner-linux-3.3.jar" fileType="regular" />
-          <entry location="xulrunner-linux64-3.3.jar" fileType="regular" />
-          <entry location="xulrunner-mac-3.3.jar" fileType="regular" />
-          <entry location="xulrunner-windows-3.3.jar" fileType="regular" />
-          <entry location="xulrunner15-mac-3.3.jar" fileType="regular" />
-          <entry location="xulrunner15-windows-3.3.jar" fileType="regular" />
           <entry location="javafx-base-12-win.jar" fileType="regular" />
           <entry location="javafx-controls-12-win.jar" fileType="regular" />
           <entry location="javafx-graphics-12-win.jar" fileType="regular" />
@@ -198,12 +183,6 @@
       <dirEntry mountPoint="1956" file="${compiler:DIST_ROOT}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner15-windows-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner15-mac-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
@@ -3913,7 +3892,6 @@ if (context.isUnattended()) {
         <entry location=".i4j_fileset_7965" fileType="regular" />
       </exclude>
       <variables>
-        <variable name="XULRUNNER" value="xulrunner-mac" description="" category="" />
         <variable name="OS_EXT" value="MAC" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
@@ -3939,7 +3917,6 @@ if (context.isUnattended()) {
         <entry location=".i4j_fileset_7967" fileType="regular" />
       </exclude>
       <variables>
-        <variable name="XULRUNNER" value="xulrunner-windows" description="" category="" />
         <variable name="OS_EXT" value="64bit" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
@@ -3966,7 +3943,6 @@ if (context.isUnattended()) {
         <entry location=".i4j_fileset_7967" fileType="regular" />
       </exclude>
       <variables>
-        <variable name="XULRUNNER" value="xulrunner-linux" description="" category="" />
         <variable name="32-BIT-INSTALLER" value="false" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
