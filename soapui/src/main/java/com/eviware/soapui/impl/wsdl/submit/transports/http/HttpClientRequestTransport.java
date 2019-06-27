@@ -331,12 +331,22 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
 				.equals(RestRequestInterface.HttpMethod.POST.toString()));
 	}
 
+    private boolean isPutMethod(ExtendedHttpMethod httpMethod, org.apache.http.HttpResponse httpResponse) {
+		int statusCode = httpResponse.getStatusLine().getStatusCode();
+		return (statusCode != HttpServletResponse.SC_SEE_OTHER && 
+				httpMethod != null &&
+				httpMethod.getMethod()
+				.equals(RestRequestInterface.HttpMethod.PUT.toString()));
+	}
+
     private ExtendedHttpMethod followRedirects(HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
     										   org.apache.http.HttpResponse httpResponse, HttpContext httpContext, SubmitContext submitContext) throws Exception {
 		ExtendedHttpMethod getMethod;
-		if(isPostMethod(httpMethod, httpResponse))
+		if(isPostMethod(httpMethod, httpResponse)) {
 			getMethod = new ExtendedPostMethod();
-		else {
+		} else if(isPutMethod(httpMethod, httpResponse)) {
+			getMethod = new ExtendedPutMethod();
+		} else {
 			getMethod = new ExtendedGetMethod();
 		}
 
