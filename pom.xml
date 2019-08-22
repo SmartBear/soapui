@@ -12,8 +12,8 @@
 
     <repositories>
         <repository>
-            <id>smartbear-sweden-repository</id>
-            <url>http://www.soapui.org/repository/maven2</url>
+            <id>smartbear-soapui-repository</id>
+            <url>https://www.soapui.org/repository/maven2</url>
         </repository>
     </repositories>
 
