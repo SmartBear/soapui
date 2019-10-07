@@ -118,7 +118,7 @@
    	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('com.narupley:not-going-to-be-commons-ssl')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
@@ -277,7 +277,7 @@
    	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('com.narupley:not-going-to-be-commons-ssl')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
@@ -391,7 +391,7 @@
    	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('com.narupley:not-going-to-be-commons-ssl')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
@@ -560,7 +560,7 @@
    	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('com.narupley:not-going-to-be-commons-ssl')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>

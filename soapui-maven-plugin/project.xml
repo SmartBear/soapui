@@ -72,11 +72,9 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>commons-ssl</groupId>
-			<artifactId>not-yet-commons-ssl</artifactId>
-			<version>0.3.11</version>
-			<type>jar</type>
-			<url>http://juliusdavies.ca/commons-ssl/</url>
+			<groupId>com.narupley</groupId>
+			<artifactId>not-going-to-be-commons-ssl</artifactId>
+			<version>${not-going-to-be-commons-ssl.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>

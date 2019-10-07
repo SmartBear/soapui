@@ -20,6 +20,9 @@
     <url>http://www.soapui.org</url>
     <packaging>jar</packaging>
 
+    <properties>
+        <not-going-to-be-commons-ssl.version>0.3.20</not-going-to-be-commons-ssl.version>
+    </properties>
     <build>
         <resources>
             <resource>
@@ -464,9 +467,9 @@
             <version>1.6.2-fixed</version>
         </dependency>
         <dependency>
-            <groupId>commons-ssl</groupId>
-            <artifactId>not-yet-commons-ssl</artifactId>
-            <version>0.3.11</version>
+            <groupId>com.narupley</groupId>
+            <artifactId>not-going-to-be-commons-ssl</artifactId>
+            <version>${not-going-to-be-commons-ssl.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
