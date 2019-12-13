@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.smartbear.soapui</groupId>
-        <artifactId>soapui-project</artifactId>
-        <version>5.6.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.smartbear.soapui.se-fork</groupId>
+		<artifactId>soapui-project</artifactId>
+		<version>5.6.0-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>soapui-maven-plugin</artifactId>
-    <name>SoapUI Maven plugin</name>
-    <description>Documentation: http://www.soapui.org/Test-Automation/maven-2x.html</description>
-    <packaging>maven-plugin</packaging>
+	<artifactId>soapui-maven-plugin</artifactId>
+	<name>SoapUI Maven plugin</name>
+	<description>Documentation: http://www.soapui.org/Test-Automation/maven-2x.html</description>
+	<packaging>maven-plugin</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
-    <dependencies>
+	<dependencies>
 		<dependency>
-			<groupId>com.smartbear.soapui</groupId>
+			<groupId>com.smartbear.soapui.se-fork</groupId>
 			<artifactId>soapui</artifactId>
 			<version>${project.version}</version>
-            <exclusions>
+			<exclusions>
 
-                <!-- These are mainly GUI artifacts not needed in the headless test runner-->
-                <!-- TODO We might also want to remove: fife:rsyntaxtextarea.
-                          It's included in prior versions (< 4.5.2) though -->
+				<!-- These are mainly GUI artifacts not needed in the headless test runner -->
+				<!-- TODO We might also want to remove: fife:rsyntaxtextarea. It's included 
+					in prior versions (< 4.5.2) though -->
 
-                <!-- JGoodies -->
+				<!-- JGoodies -->
 
-                <exclusion>
-                    <groupId>com.jgoodies</groupId>
-                    <artifactId>forms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.jgoodies</groupId>
-                    <artifactId>looks</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.jgoodies</groupId>
-                    <artifactId>binding</artifactId>
-                </exclusion>
-            </exclusions>
+				<exclusion>
+					<groupId>com.jgoodies</groupId>
+					<artifactId>forms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.jgoodies</groupId>
+					<artifactId>looks</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.jgoodies</groupId>
+					<artifactId>binding</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-   	</dependencies>
+	</dependencies>
 
-    <build>
+	<build>
 		<plugins>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>${maven-plugin-plugin-version}</version>
-            </plugin>
-
-            <!-- FIXME Why do we need this plugin ? -->
 			<plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>${maven-plugin-plugin-version}</version>
+			</plugin>
+
+			<!-- FIXME Why do we need this plugin ? -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
 						<phase>install</phase>

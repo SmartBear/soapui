@@ -3,94 +3,94 @@
 <!-- TODO Extend with better tests -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.smartbear.soapui</groupId>
-        <artifactId>soapui-project</artifactId>
-        <version>5.6.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.smartbear.soapui.se-fork</groupId>
+		<artifactId>soapui-project</artifactId>
+		<version>5.6.0-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>soapui-maven-plugin-tester</artifactId>
-    <name>SoapUI Maven plugin tester</name>
-    <packaging>pom</packaging>
+	<artifactId>soapui-maven-plugin-tester</artifactId>
+	<name>SoapUI Maven plugin tester</name>
+	<packaging>pom</packaging>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>smartbear-sweden-plugin-repository</id>
-            <url>http://www.soapui.org/repository/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>smartbear-sweden-plugin-repository</id>
+			<url>http://www.soapui.org/repository/maven2/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <mockServerPort>9090</mockServerPort>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<mockServerPort>9090</mockServerPort>
+	</properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.smartbear.soapui</groupId>
-                <artifactId>soapui-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <configuration>
-                    <projectFile>${project.basedir}/src/test/soapui/SoapUI-Maven-Plugin-Tester-soapui-project.xml</projectFile>
-                    <testSuite>ShouldRun</testSuite>
-                    <testCase>ShouldRun</testCase>
-                    <loadTest>LoadTest</loadTest>
-                    <!-- TODO Disabled due to SOAP-804 -->
-                    <!-- <securityTest>SecurityTest</securityTest> -->
-                    <exportAll>true</exportAll>
-                    <junitReport>true</junitReport>
-                    <printReport>true</printReport>
-                    <outputFolder>${project.build.directory}/soapui/output</outputFolder>
-                    <soapuiProperties>
-                      <property>
-                          <name>soapui.logroot</name>
-                          <value>${project.build.directory}/soapui/logs/</value>
-                      </property>
-                    </soapuiProperties>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>soapui-test</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                            <goal>loadtest</goal>
-                            <!-- TODO Disabled due to SOAP-804 -->
-                            <!-- <goal>security-test</goal> -->
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>groovy log 1</id>
-                        <phase>test</phase>
-                        <configuration>
-                            <projectFile>${project.basedir}/src/test/soapui/GroovyLog-soapui-project.xml</projectFile>
-                            <testSuite>Number of ConsoleAppender on groovy.log</testSuite>
-                            <testCase>Groovy log should have at most one ConsoleAppender</testCase>
-                        </configuration>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>groovy log 2</id>
-                        <phase>test</phase>
-                        <configuration>
-                            <projectFile>${project.basedir}/src/test/soapui/GroovyLog-soapui-project.xml</projectFile>
-                            <testSuite>Number of ConsoleAppender on groovy.log</testSuite>
-                            <testCase>Groovy log should have at most one ConsoleAppender</testCase>
-                        </configuration>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.smartbear.soapui.se-fork</groupId>
+				<artifactId>soapui-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<configuration>
+					<projectFile>${project.basedir}/src/test/soapui/SoapUI-Maven-Plugin-Tester-soapui-project.xml</projectFile>
+					<testSuite>ShouldRun</testSuite>
+					<testCase>ShouldRun</testCase>
+					<loadTest>LoadTest</loadTest>
+					<!-- TODO Disabled due to SOAP-804 -->
+					<!-- <securityTest>SecurityTest</securityTest> -->
+					<exportAll>true</exportAll>
+					<junitReport>true</junitReport>
+					<printReport>true</printReport>
+					<outputFolder>${project.build.directory}/soapui/output</outputFolder>
+					<soapuiProperties>
+						<property>
+							<name>soapui.logroot</name>
+							<value>${project.build.directory}/soapui/logs/</value>
+						</property>
+					</soapuiProperties>
+				</configuration>
+				<executions>
+					<execution>
+						<id>soapui-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+							<goal>loadtest</goal>
+							<!-- TODO Disabled due to SOAP-804 -->
+							<!-- <goal>security-test</goal> -->
+						</goals>
+					</execution>
+					<execution>
+						<id>groovy log 1</id>
+						<phase>test</phase>
+						<configuration>
+							<projectFile>${project.basedir}/src/test/soapui/GroovyLog-soapui-project.xml</projectFile>
+							<testSuite>Number of ConsoleAppender on groovy.log</testSuite>
+							<testCase>Groovy log should have at most one ConsoleAppender</testCase>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>groovy log 2</id>
+						<phase>test</phase>
+						<configuration>
+							<projectFile>${project.basedir}/src/test/soapui/GroovyLog-soapui-project.xml</projectFile>
+							<testSuite>Number of ConsoleAppender on groovy.log</testSuite>
+							<testCase>Groovy log should have at most one ConsoleAppender</testCase>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
