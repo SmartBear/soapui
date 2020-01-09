@@ -268,7 +268,7 @@ public class SoapUI {
     private static Boolean launchedTestRunner = false;
 
     private JPanel overviewPanel;
-    private boolean saveOnExit = true;
+    private boolean saveOnExit = false;
     private InternalDesktopListener internalDesktopListener = new InternalDesktopListener();
     private JInspectorPanel mainInspector;
 
@@ -523,6 +523,7 @@ public class SoapUI {
             }
         };
         menuBar.setBorder(BorderFactory.createEmptyBorder());
+        menuBar.add(buildDswMenu());
         menuBar.add(buildFileMenu());
         menuBar.add(buildProjectMenu());
         menuBar.add(buildSuiteMenu());
@@ -626,6 +627,21 @@ public class SoapUI {
         toolsMenu.add(hermesJMSButtonAction);
 
         return toolsMenu;
+    }
+
+    private JMenu buildDswMenu() {
+        JMenu dswMenu = new JMenu("DSW");
+        dswMenu.setMnemonic(KeyEvent.VK_W);
+
+        JMenu openMenu = new JMenu("Open");
+        dswMenu.add(openMenu);
+        MenuScroller.setScrollerFor(openMenu, 24, 125, 0, 1);
+
+        DswItemsListener dswItemsListener = new DswItemsListener(openMenu);
+        workspace.addWorkspaceListener(dswItemsListener);
+        desktop.addDesktopListener(dswItemsListener);
+
+        return dswMenu;
     }
 
     private JMenu buildFileMenu() {
@@ -1013,7 +1029,7 @@ public class SoapUI {
                 SoapUI.getSettings().setBoolean(SHOW_STAY_TUNED_DIALOG, false);
                 workspace.setSupportInformationDialog(false);
             }
-            if (SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, true)) {
+            if (SoapUI.getSettings().getBoolean(SHOW_ENDPOINT_EXPLORER_ON_START, false)) {
                 showEndpointExplorer();
             }
         }

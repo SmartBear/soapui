@@ -44,6 +44,9 @@
     <tns:action id="RenameWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.RenameWorkspaceAction"/>
     <tns:action id="ClearWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.ClearWorkspaceAction"/>
 
+	<!-- DSW Actions -->
+	<tns:action id="DswImportWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.DswImportWsdlProjectAction"/>
+	
     <!-- Project Actions -->
     <tns:action id="ReloadProjectAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.ReloadProjectAction"/>

@@ -328,12 +328,12 @@ public class DefaultSoapUICore implements SoapUICore {
         setIfNotSet(HttpSettings.MAX_TOTAL_CONNECTIONS, 2000);
         setIfNotSet(HttpSettings.RESPONSE_COMPRESSION, true);
         setIfNotSet(HttpSettings.LEAVE_MOCKENGINE, true);
-        setIfNotSet(UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, true);
+        setIfNotSet(UISettings.AUTO_SAVE_PROJECTS_ON_EXIT, false);
         setIfNotSet(UISettings.SHOW_DESCRIPTIONS, true);
         setIfNotSet(WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS, true);
         setIfNotSet(WsaSettings.USE_DEFAULT_RELATES_TO, true);
         setIfNotSet(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true);
-        setIfNotSet(UISettings.SHOW_STARTUP_PAGE, true);
+        setIfNotSet(UISettings.SHOW_STARTUP_PAGE, false);
         setIfNotSet(UISettings.GC_INTERVAL, "60");
         setIfNotSet(WsdlSettings.CACHE_WSDLS, true);
         setIfNotSet(WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, true);
@@ -344,7 +344,7 @@ public class DefaultSoapUICore implements SoapUICore {
         setIfNotSet(HttpSettings.START_MOCK_SERVICE, true);
         setIfNotSet(UISettings.AUTO_SAVE_INTERVAL, "0");
         setIfNotSet(UISettings.GC_INTERVAL, "60");
-        setIfNotSet(UISettings.SHOW_STARTUP_PAGE, true);
+        setIfNotSet(UISettings.SHOW_STARTUP_PAGE, false);
         setIfNotSet(WsaSettings.SOAP_ACTION_OVERRIDES_WSA_ACTION, false);
         setIfNotSet(WsaSettings.USE_DEFAULT_RELATIONSHIP_TYPE, true);
         setIfNotSet(WsaSettings.USE_DEFAULT_RELATES_TO, true);
@@ -377,7 +377,7 @@ public class DefaultSoapUICore implements SoapUICore {
 
     private void setIfNotSet(String id, boolean value) {
         if (!settings.isSet(id)) {
-            settings.setBoolean(id, true);
+            settings.setBoolean(id, value);
         }
     }
 

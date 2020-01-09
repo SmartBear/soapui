@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+    <item name="DE5T TIBCO Services" path="X:\obs\de5t\testdaten\services\SoapUI\de5t-tibco-servicecontracts-soapui-project.xml"/>
+	<item name="HAFT HALO Services" path="X:\obs\haft\testdaten\services\SoapUI\haft-halo-servicecontracts-soapui-project.xml"/>
+	<item name="HAFT MIFID2 Services" path="X:\obs\haft\testdaten\services\SoapUI\dsw-servicecontracts-mifid2-soapui-project.xml"/>
+	<item name="MF2T Services" path="X:\obs\mf2t\testdaten\services\SoapUI\mf2t-servicecontracts-soapui-project.xml"/>
+</items>
