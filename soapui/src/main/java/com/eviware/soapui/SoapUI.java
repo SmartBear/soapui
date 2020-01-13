@@ -389,49 +389,49 @@ public class SoapUI {
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
-                "Opens the SoapUI Forum in a browser", "/forum.png"));
-        mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
-                "/Trial_20-20.png"));
+//        mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
+//                "Opens the SoapUI Forum in a browser", "/forum.png"));
+//        mainToolbar.addSpace(2);
+//        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
+//                "/Trial_20-20.png"));
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
         mainToolbar.addSpace(15);
         createToolbarSeparator();
         mainToolbar.addSpace(10);
-        createEndpointExplorerButton();
-        endpointExplorerButtonPanel.add(endpointExplorerButton);
-        mainToolbar.add(endpointExplorerButtonPanel);
-        mainToolbar.addSpace(10);
-        createToolbarSeparator();
+//        createEndpointExplorerButton();
+//        endpointExplorerButtonPanel.add(endpointExplorerButton);
+//        mainToolbar.add(endpointExplorerButtonPanel);
+//        mainToolbar.addSpace(10);
+//        createToolbarSeparator();
 
         mainToolbar.addGlue();
-        searchField = new JTextField(20) {
-            @Override
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(Color.LIGHT_GRAY);
-                g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-            }
-        };
-        searchField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == '\n') {
-                    doCommunitySearch(searchField.getText());
-                }
-            }
-        });
-
-        JLabel searchLabel = new JLabel("Search Forum");
-        // Extra width to avoid label to be truncated
-        searchLabel.setPreferredSize(new Dimension(
-                (int) (searchLabel.getPreferredSize().getWidth() * 1.1),
-                (int) searchLabel.getPreferredSize().getHeight()));
-        mainToolbar.addFixed(searchLabel);
-        mainToolbar.addSeparator(new Dimension(3, 3));
-        mainToolbar.addFixed(searchField);
+//        searchField = new JTextField(20) {
+//            @Override
+//            public void paintComponent(Graphics g) {
+//                super.paintComponent(g);
+//                g.setColor(Color.LIGHT_GRAY);
+//                g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+//            }
+//        };
+//        searchField.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//                if (e.getKeyChar() == '\n') {
+//                    doCommunitySearch(searchField.getText());
+//                }
+//            }
+//        });
+//
+//        JLabel searchLabel = new JLabel("Search Forum");
+//        // Extra width to avoid label to be truncated
+//        searchLabel.setPreferredSize(new Dimension(
+//                (int) (searchLabel.getPreferredSize().getWidth() * 1.1),
+//                (int) searchLabel.getPreferredSize().getHeight()));
+//        mainToolbar.addFixed(searchLabel);
+//        mainToolbar.addSeparator(new Dimension(3, 3));
+//        mainToolbar.addFixed(searchField);
         mainToolbar.add(new ToolbarForumSearchAction());
         mainToolbar.add(new ShowOnlineHelpAction(HelpUrls.USERGUIDE_HELP_URL));
         for (int i = 0; i < mainToolbar.getComponentCount(); i++) {
@@ -526,10 +526,10 @@ public class SoapUI {
         menuBar.add(buildDswMenu());
         menuBar.add(buildFileMenu());
         menuBar.add(buildProjectMenu());
-        menuBar.add(buildSuiteMenu());
-        menuBar.add(buildCaseMenu());
-        menuBar.add(buildStepMenu());
-        menuBar.add(buildToolsMenu());
+//        menuBar.add(buildSuiteMenu());
+//        menuBar.add(buildCaseMenu());
+//        menuBar.add(buildStepMenu());
+//        menuBar.add(buildToolsMenu());
         menuBar.add(buildDesktopMenu());
         menuBar.add(buildHelpMenu());
         return menuBar;
@@ -585,14 +585,14 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new ShowSystemPropertiesAction());
         helpMenu.addSeparator();
-        helpMenu.add(new VersionUpdateAction());
-        helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/Trial_16-16.png"));
-        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
-        helpMenu.addSeparator();
+//        helpMenu.add(new VersionUpdateAction());
+//        helpMenu.addSeparator();
+//        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
+//                "Apply for SoapUI Pro Trial License", "/Trial_16-16.png"));
+//        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
+//        helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
-        helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
+//        helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new AboutAction());
         return helpMenu;
@@ -602,29 +602,29 @@ public class SoapUI {
         JMenu toolsMenu = new JMenu("Tools");
         toolsMenu.setMnemonic(KeyEvent.VK_T);
 
-        toolsMenu.add(SwingActionDelegate.createDelegate(WSToolsWsdl2JavaAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(JBossWSConsumeAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
-        toolsMenu.add(SwingActionDelegate.createDelegate(WSCompileAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(WSImportAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
-        toolsMenu.add(SwingActionDelegate.createDelegate(Axis1XWSDL2JavaAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(Axis2WSDL2CodeAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(CXFAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(XFireAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(OracleWsaGenProxyAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
-        toolsMenu.add(SwingActionDelegate.createDelegate(XmlBeans2Action.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(JaxbXjcAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
-        toolsMenu.add(SwingActionDelegate.createDelegate(DotNetWsdlAction.SOAPUI_ACTION_ID));
-        toolsMenu.add(SwingActionDelegate.createDelegate(GSoapAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
-        toolsMenu.add(SwingActionDelegate.createDelegate(TcpMonAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
-        StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
-        hermesJMSButtonAction.setEnabled(HermesUtils.isHermesJMSSupported());
-        toolsMenu.add(hermesJMSButtonAction);
+//        toolsMenu.add(SwingActionDelegate.createDelegate(WSToolsWsdl2JavaAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(JBossWSConsumeAction.SOAPUI_ACTION_ID));
+//        toolsMenu.addSeparator();
+//        toolsMenu.add(SwingActionDelegate.createDelegate(WSCompileAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(WSImportAction.SOAPUI_ACTION_ID));
+//        toolsMenu.addSeparator();
+//        toolsMenu.add(SwingActionDelegate.createDelegate(Axis1XWSDL2JavaAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(Axis2WSDL2CodeAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(CXFAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(XFireAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(OracleWsaGenProxyAction.SOAPUI_ACTION_ID));
+//        toolsMenu.addSeparator();
+//        toolsMenu.add(SwingActionDelegate.createDelegate(XmlBeans2Action.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(JaxbXjcAction.SOAPUI_ACTION_ID));
+//        toolsMenu.addSeparator();
+//        toolsMenu.add(SwingActionDelegate.createDelegate(DotNetWsdlAction.SOAPUI_ACTION_ID));
+//        toolsMenu.add(SwingActionDelegate.createDelegate(GSoapAction.SOAPUI_ACTION_ID));
+//        toolsMenu.addSeparator();
+//        toolsMenu.add(SwingActionDelegate.createDelegate(TcpMonAction.SOAPUI_ACTION_ID));
+//        toolsMenu.addSeparator();
+//        StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
+//        hermesJMSButtonAction.setEnabled(HermesUtils.isHermesJMSSupported());
+//        toolsMenu.add(hermesJMSButtonAction);
 
         return toolsMenu;
     }

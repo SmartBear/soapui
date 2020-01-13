@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -53,6 +54,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
+
+import static com.eviware.soapui.settings.UISettings.SHOW_ENDPOINT_EXPLORER_ON_START;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -65,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 
 public class WadlImporter {
+	public static final String IMPORT_MERGE_ADD_EXISTING_REQUEST = WadlImporter.class.getSimpleName() + "@add_duplicate_request_on_import";
     private RestService service;
     private Application application;
     private List<Resources> resourcesList;
@@ -253,6 +258,10 @@ public class WadlImporter {
 
         // ensure unique name
         if (newResource.getRestMethodByName(name) != null) {
+        	if (!SoapUI.getSettings().getBoolean(IMPORT_MERGE_ADD_EXISTING_REQUEST, true)){
+                return newResource.getRestMethodByName(name);              
+              }
+
             int cnt = 0;
             String orgName = name;
 

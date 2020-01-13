@@ -16,8 +16,8 @@
 
 package com.eviware.soapui.impl.support.actions;
 
-import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+//import com.eviware.soapui.analytics.Analytics;
+//import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -27,8 +27,8 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
 
-import static com.eviware.soapui.analytics.SoapUIActions.APPLY_TRIAL_FROM_TOOLBAR;
-import static com.eviware.soapui.analytics.SoapUIActions.OPEN_FORUM_FROM_TOOLBAR;
+//import static com.eviware.soapui.analytics.SoapUIActions.APPLY_TRIAL_FROM_TOOLBAR;
+//import static com.eviware.soapui.analytics.SoapUIActions.OPEN_FORUM_FROM_TOOLBAR;
 
 /**
  * Shows an online help page
@@ -38,7 +38,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.OPEN_FORUM_FROM_TOOLBAR
 
 public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMarker {
     private final String url;
-    private String helpurl;
+//    private String helpurl;
 
     public ShowOnlineHelpAction(String url) {
         this("Online Help", url, UISupport.getKeyStroke("F1"));
@@ -80,10 +80,10 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
         Integer mods = e.getModifiers();
         String helpUrl = Tools.modifyUrl(url, mods);
         Tools.openURL(helpUrl);
-        if (url.equals(HelpUrls.COMMUNITY_HELP_URL)) {
-            Analytics.trackAction(OPEN_FORUM_FROM_TOOLBAR);
-        } else if (url.equals(HelpUrls.TRIAL_URL)) {
-            Analytics.trackAction(APPLY_TRIAL_FROM_TOOLBAR);
-        }
+//        if (url.equals(HelpUrls.COMMUNITY_HELP_URL)) {
+//            Analytics.trackAction(OPEN_FORUM_FROM_TOOLBAR);
+//        } else if (url.equals(HelpUrls.TRIAL_URL)) {
+//            Analytics.trackAction(APPLY_TRIAL_FROM_TOOLBAR);
+//        }
     }
 }

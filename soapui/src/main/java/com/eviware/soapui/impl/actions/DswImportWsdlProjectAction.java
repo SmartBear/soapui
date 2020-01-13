@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * Copyright (C) 1995-2020 Die Software Peter Fitzon GmbH
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -33,7 +33,7 @@ import java.io.File;
  * Actions for importing an existing SoapUI project file into the current
  * workspace
  *
- * @author Ole.Matzura
+ * @author Jovan Vasic
  */
 
 public class DswImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {

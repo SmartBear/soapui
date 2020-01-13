@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * Copyright (C) 1995-2020 Die Software Peter Fitzon GmbH
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.actions.DswImportWsdlProjectAction;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceListener;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.DefaultActionMapping;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.ui.desktop.DesktopListener;
@@ -109,7 +110,7 @@ public class DswItemsListener implements WorkspaceListener, DesktopListener {
 			try {
 				input = new FileInputStream(path);
 			} catch (FileNotFoundException e) {
-				input = getClass().getResourceAsStream("/dsw_soapui_projects.xml");
+				UISupport.showInfoMessage("Configuration file dsw_soapui_projects.xml does not exist in application folder, DSW menu will not be created");
 			} 
 			
 			if (input != null) {

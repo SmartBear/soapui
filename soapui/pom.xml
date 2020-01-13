@@ -98,6 +98,70 @@
                     <mainClass>com.eviware.soapui.SoapUI</mainClass>
                 </configuration>
             </plugin>
+            
+            <plugin>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-bytecode-version</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<enforceBytecodeVersion>
+									<maxJdkVersion>1.7</maxJdkVersion>
+									<ignoreClasses>
+										<ignoreClass>module-info</ignoreClass>
+									</ignoreClasses>
+								</enforceBytecodeVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>extra-enforcer-rules</artifactId>
+						<version>1.0-beta-7</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-shade-plugin</artifactId>
+		        <executions>
+		          	<execution>
+		            	<phase>package</phase>
+		            	<goals>
+		              		<goal>shade</goal>
+		            	</goals>
+		            	<configuration>
+		            		<filters>
+				        		<filter>
+				            		<artifact>*:*</artifact>
+				            		<excludes>
+				                		<exclude>META-INF/*.SF</exclude>
+				                		<exclude>META-INF/*.DSA</exclude>
+				                		<exclude>META-INF/*.RSA</exclude>
+				            		</excludes>
+				        		</filter>
+				    		</filters>   	
+		              		<transformers>
+				                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+				                	<mainClass>com.eviware.soapui.SoapUI</mainClass>
+				                </transformer>
+				                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+				                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+				                	<addHeader>true</addHeader>
+				                </transformer>
+		              		</transformers>
+		            	</configuration>
+		          	</execution>
+		        </executions>
+			</plugin>
+		      
         </plugins>
     </build>
 

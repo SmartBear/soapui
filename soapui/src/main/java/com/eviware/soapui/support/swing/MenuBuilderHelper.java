@@ -81,6 +81,7 @@ public class MenuBuilderHelper {
 
     private static void activateMenuItems(String groupId, boolean activate) {
         JMenu menu = getMenu(groupId);
+        if (menu == null) return;
         for (Component component : menu.getMenuComponents()) {
             activateMenuSubItems(component, activate);
             component.setEnabled(activate);
