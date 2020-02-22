@@ -105,6 +105,46 @@ public class Navigator extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     }
 
+    public SoapUITreeNode searchNode(String nodeStr, SoapUITreeNode fromNode, boolean isFromRoot) {
+        DefaultMutableTreeNode node = null;
+        SoapUITreeNode fromNodeRoot = fromNode;
+        int iThisIdx = -1;
+        if (isFromRoot) {
+            if (fromNode.getParent() != null)
+                if (fromNode.getParent() instanceof SoapUITreeNode)
+                    fromNodeRoot = (SoapUITreeNode) fromNode.getParent();
+            for (int i = 0; i < fromNodeRoot.getChildCount(); i++) {
+                SoapUITreeNode thisNode = fromNodeRoot.getChildNode(i);
+                if (fromNode.equals(thisNode)) iThisIdx = i;
+            }
+            if (iThisIdx > 0)
+                for (int ii=iThisIdx; ii<fromNodeRoot.getChildCount(); ii++) {
+                    SoapUITreeNode thisNode1 = fromNodeRoot.getChildNode(ii);
+                    String sFind = nodeStr.toLowerCase();
+                    String sWhere = thisNode1.getModelItem().getName().toLowerCase();
+                    if ((sWhere.contains(sFind)) && (!fromNode.equals(thisNode1))) {
+                        return thisNode1;
+                    }
+                }
+        }
+        for (int i=0; i<fromNodeRoot.getChildCount(); i++) {
+            SoapUITreeNode thisNode = fromNodeRoot.getChildNode(i);
+            String sFind = nodeStr.toLowerCase();
+            String sWhere = thisNode.getModelItem().getName().toLowerCase();
+            if ((sWhere.contains(sFind)) && (!fromNode.equals(thisNode))) {
+                return thisNode;
+            }
+        }
+        for (int i=0; i<fromNodeRoot.getChildCount(); i++) {
+            SoapUITreeNode thisNode = fromNodeRoot.getChildNode(i);
+            if (!thisNode.isLeaf()) {
+                SoapUITreeNode thisNode2 = searchNode(nodeStr, thisNode, false);
+                if (thisNode2 != null) return thisNode2;
+            }
+        }
+        return null;
+    }
+
     private Component buildToolbar() {
         JXToolBar toolbar = UISupport.createSmallToolbar();
 
@@ -112,7 +152,31 @@ public class Navigator extends JPanel {
         toggleButton.setToolTipText("Toggles displaying of Test Properties in tree");
         toggleButton.setSize(10, 12);
         toolbar.addFixed(toggleButton);
+
+        JTextField searchText = new JTextField(10);
+        toolbar.add(searchText);
+
+        JButton searchButton = new JButton(">");
+        toolbar.addFixed(searchButton);
+
         toolbar.addGlue();
+
+        searchButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                ModelItem mi = getSelectedItem();
+                TreePath selectionPath = mainTree.getSelectionPath();
+                if (selectionPath == null || mainTree.getSelectionCount() == 0) {
+                    return;
+                }
+                if (mainTree.getSelectionCount() == 1) {
+                    SoapUITreeNode lastPathComponent = (SoapUITreeNode) selectionPath.getLastPathComponent();
+                    SoapUITreeNode node = searchNode(searchText.getText(), lastPathComponent, true);
+                    if (node != null) selectModelItem(node.getModelItem());
+                }
+            }
+        });
 
         return toolbar;
     }
