@@ -2,20 +2,20 @@
 
 set SOAPUI_HOME=%~dp0
 
+set JAVA=%JAVA_HOME%\bin\java
+
 if exist "%SOAPUI_HOME%..\jre\bin" goto SET_BUNDLED_JAVA
 
-if exist "%JAVA_HOME%" goto SET_SYSTEM_JAVA
+if exist "%JAVA_HOME%" goto END_SETTING_JAVA
+
+set JAVA=java
 
 echo JAVA_HOME is not set, unexpected results may occur.
 echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
-goto SET_SYSTEM_JAVA
 
 :SET_BUNDLED_JAVA
 set JAVA=%SOAPUI_HOME%..\jre\bin\java
 goto END_SETTING_JAVA
-
-:SET_SYSTEM_JAVA
-set JAVA=java
 
 :END_SETTING_JAVA
 
@@ -28,7 +28,7 @@ del %TEMP%\jfxrtpath
 set CLASSPATH=%CLASSPATH%;%JFXRTPATH%
 
 rem JVM parameters, modify as appropriate
-set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1  "-Dsoapui.home=%SOAPUI_HOME%\"
+set JAVA_OPTS=%JAVA_OPTS% -Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"
 
 if "%SOAPUI_HOME%\" == "" goto START
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"
@@ -37,6 +37,6 @@ if "%SOAPUI_HOME%\" == "" goto START
 
 :START
 
-rem ********* run soapui loadtest runner ***********
+rem ********* run %SOAPUI_RUNNER_NAME% ***********
 
-"%JAVA%" %JAVA_OPTS% com.eviware.soapui.tools.SoapUIMockAsWarGenerator %*
+"%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" %MAIN_CLASS% %*

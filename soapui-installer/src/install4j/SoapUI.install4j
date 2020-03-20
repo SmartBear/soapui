@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="7.0.8" transformSequenceNumber="7">
-  <directoryPresets config="${compiler:DIST_STANDALONE}/bin/installationcomplete.sh" />
+  <directoryPresets config="${compiler:DIST}/bin/installationcomplete.sh" />
   <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" macVolumeId="11e3ac6b2ec2ffac" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -19,7 +19,6 @@
       <variable name="VERSION_NUMBER" value="" description="" category="" />
       <variable name="SRC_ROOT" value="" description="" category="" />
       <variable name="DIST_ROOT" value="" description="" category="" />
-      <variable name="DIST_STANDALONE" value="" description="" category="" />
       <variable name="RESOURCES_HOME" value="" description="" category="" />
       <variable name="SOURCE_CODE_ROOT" value="" description="" category="" />
       <variable name="MAC_CERT_PATH" value="" description="" category="" />
@@ -86,7 +85,7 @@
       <mountPoint id="4418" root="4416" location="bin" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="*.bat,*.sh" dirMode="755" overrideDirMode="true">
+      <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="*.bat,*.cmd,*.sh" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
@@ -117,26 +116,28 @@
       <dirEntry mountPoint="5462" file="${compiler:SRC_ROOT}/BundlePlugins" overwriteMode="1" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/soapui.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/toolrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/testrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/securitytestrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/wargenerator.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/installationcomplete.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/uninstallactiontrack.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/updateinstallation.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/soapui.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/toolrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/testrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/securitytestrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/wargenerator.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/installationcomplete.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/updateinstallation.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/uninstallactiontrack.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/baserunner.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/soapui.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/mockservicerunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/loadtestrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/toolrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/testrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/securitytestrunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/wargenerator.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/installationcomplete.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/uninstallactiontrack.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_ROOT}/bin/updateinstallation.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/baserunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/soapui.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/mockservicerunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/loadtestrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/toolrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/testrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/securitytestrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/wargenerator.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/installationcomplete.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/updateinstallation.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_ROOT}/bin/uninstallactiontrack.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/soapui.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/mockservicerunner.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/loadtestrunner.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
@@ -168,7 +169,7 @@
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstallMAC.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/xml-apis.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/xercesImpl.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
-      <dirEntry mountPoint="1955" file="${compiler:DIST_STANDALONE}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
+      <dirEntry mountPoint="1955" file="${compiler:DIST_ROOT}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
       <dirEntry mountPoint="1956" file="${compiler:DIST_ROOT}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">

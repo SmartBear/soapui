@@ -61,7 +61,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/src/dist_standalone/bin</directory>
+            <directory>${basedir}/src/dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>*.bat</include>
