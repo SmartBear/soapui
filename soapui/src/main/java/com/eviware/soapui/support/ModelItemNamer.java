@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -17,6 +17,7 @@
 package com.eviware.soapui.support;
 
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.types.StringList;
 
 import javax.annotation.Nonnull;
 
@@ -60,6 +61,32 @@ public class ModelItemNamer {
         }
 
         return baseName + " " + (++maxExistingIndex);
+    }
+
+    public static boolean isUnique(String baseName, Iterable nameHolders) {
+        for (Object nameHolder : nameHolders) {
+            if (nameHolder == null) {
+                continue;
+            }
+            String name = getName(nameHolder);
+            if (baseName.equals(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String getUniqueName(String def, ModelItem parent) {
+        final StringList childrenNames = getChildrenNames(parent);
+        return createName(def, childrenNames);
+    }
+
+    private static StringList getChildrenNames(ModelItem parent) {
+        StringList names = new StringList();
+        for (ModelItem item : parent.getChildren()) {
+            names.add(item.getName());
+        }
+        return names;
     }
 
     private static String getName(@Nonnull Object nameHolder) {

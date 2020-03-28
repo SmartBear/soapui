@@ -1,0 +1,1027 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css"/>
+
+    <link rel="stylesheet" type="text/css" href="css/starter-page-main-api-inspection.css"/>
+
+    <!-- Google Analytics/Universal Analytics-->
+    <script>
+        setTimeout(function () {
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-92447-21', 'auto');
+            ga('send', 'pagevi1ew');
+        }, 1000);
+
+
+
+
+    </script>
+    <script type="text/javascript" src="js/jquery-1.11.1min.js"></script>
+
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script>
+        if (!String.prototype.trim) {
+            (function () {
+                String.prototype.trim = function () {
+                    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+                };
+            })();
+        }
+
+        function isNullOrWhitespace(input) {
+            return !input || !('' + input).trim();
+        };
+
+        var RequestExplorer = {};
+        RequestExplorer.strings = {
+            form: {
+                re_control: 're-control',
+                formAction: 'formAction',
+                tabsContainer: 're-info-params-tabs',
+                formInfoContainer: 're-request-info',
+                formResponseBody: 'formResponseBody',
+                methodList: 'methodList',
+                methodListWidth: '90px',
+                fadeOutDelay: 200,
+                fadeInDelay: 200,
+                data: {},
+                formSave: 'formSave'
+            }
+        };
+        RequestExplorer.validators = {
+            URL: function (value) {
+                var prepareValue = value ? ('' + value).trim() : '';
+                if (isNullOrWhitespace(prepareValue))
+                    return false;
+                var pattURL = new RegExp(/(ftp|file|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
+                var pattFile = new RegExp(/^([a-zA-Z]:)?(\\[a-zA-Z0-9_\-]+)+\\?/);
+                var pathNetwork = new RegExp(/^\\(\\[^\s\\]+)+(\\)?$/);
+                var pattUNC = new RegExp(/^\\\\([^\\:\|\[\]\/";<>+=,?* _]+)\\([\u0020-\u0021\u0023-\u0029\u002D-\u002E\u0030-\u0039\u0040-\u005A\u005E-\u007B\u007E-\u00FF]{1,80})(((?:\\[\u0020-\u0021\u0023-\u0029\u002D-\u002E\u0030-\u0039\u0040-\u005A\u005E-\u007B\u007E-\u00FF]{1,255})+?|)(?:\\((?:[\u0020-\u0021\u0023-\u0029\u002B-\u002E\u0030-\u0039\u003B\u003D\u0040-\u005B\u005D-\u007B]{1,255}){1}(?:\:(?=[\u0001-\u002E\u0030-\u0039\u003B-\u005B\u005D-\u00FF]|\:)(?:([\u0001-\u002E\u0030-\u0039\u003B-\u005B\u005D-\u00FF]+(?!\:)|[\u0001-\u002E\u0030-\u0039\u003B-\u005B\u005D-\u00FF]*)(?:\:([\u0001-\u002E\u0030-\u0039\u003B-\u005B\u005D-\u00FF]+)|))|)))|)$/);
+                var isValid = pattURL.test(prepareValue) || pattFile.test(prepareValue) || pathNetwork.test(prepareValue) || pattUNC.test(prepareValue);
+                return isValid;
+            }
+        }
+        RequestExplorer.RequestParametersTable = $.Class.create({
+            init: function (opts) {
+                this.form = RequestExplorer.strings.form;
+                var config = {
+                    container: opts.renderTo,
+                    title: 'RequestParametersTable',
+                    name: 'name',
+                    cssClass: ''
+                };
+                $.extend(config, opts);
+                $.extend(this, config);
+                this.fixSize = $.proxy(this.fixSize, this);
+                this.generateHtml = $.proxy(this.generateHtml, this);
+                this.generateHtml();
+            },
+            fixSize: function () {
+            },
+            generateHtml: function () {
+                var me = this;
+                me.table = $('<div class="re-params-table ' + me.cssClass + '">').appendTo(me.renderTo);
+
+                me.tableHeader = $('<div class="re-params-table-row re-params-table-header">').appendTo(me.table);
+                me.tableHeaderName = $('<div class="re-params-table-cell">').html('Header').appendTo(me.tableHeader);
+                me.tableHeaderValue = $('<div class="re-params-table-cell">').html('Value').appendTo(me.tableHeader);
+                me.tableHeaderAction = $('<div class="re-params-table-cell">').html('').appendTo(me.tableHeader);
+
+                me.tableBody = $('<div class="re-params-table-row re-params-table-body">').appendTo(me.table);
+
+                me.tableFooter = $('<div class="re-params-table-row re-params-table-footer">').appendTo(me.table);
+                me.tableFooterActions = $('<div class="re-params-table-cell re-params-actions">').appendTo(me.tableFooter);
+                me.tableActionAdd = $('<span class="re-params-action-add">').html('+ Add header').appendTo(me.tableFooterActions);
+                var clickFunction = function (event) {
+                    inspectorCallback.exploreAPIAddHeader();
+                    event.preventDefault();
+                    var me = this;
+                    new RequestExplorer.RequestParameter({
+                        renderTo: me.tableBody
+                    });
+                };
+                clickFunction = $.proxy(clickFunction, me);
+                me.tableActionAdd.click(clickFunction);
+                /*
+                var frame = $('<iframe width=100% height=100% style="position:absolute;z-index:-1"></iframe>').appendTo(this.container);
+                if (frame[0] && frame[0].contentWindow)
+                    frame[0].contentWindow.onresize = me.fixSize;
+                */
+            }
+        });
+
+        RequestExplorer.RequestParameter = $.Class.create({
+            init: function (opts) {
+                this.form = RequestExplorer.strings.form;
+                var config = {
+                    title: 'RequestParameter',
+                    name: 'name',
+                    cssClass: ''
+                };
+                $.extend(config, opts);
+                $.extend(this, config);
+                this.generateHtml = $.proxy(this.generateHtml, this);
+                this.generateHtml();
+            },
+            generateHtml: function () {
+                var me = this;
+                me.tableRow = $('<div class="re-params-table-row">').appendTo(me.renderTo);
+                me.tableRowName = $('<div class="re-params-table-cell">').html('<input type="text" class="headerName">').appendTo(me.tableRow);
+                me.tableRowValue = $('<div class="re-params-table-cell">').html('<input type="text" class="headerValue">').appendTo(me.tableRow);
+                var deleteClickFunction = $.proxy(function (event) {
+                    console.log("DBG");
+                    event.preventDefault();
+                    var me = this;
+
+                    me.tableRow.stop().animate({
+                            height: "0px",
+                            width: "100%",
+                            opacity: 0,
+                        }, 600, function () {
+                            $(this).remove();
+                        }
+                    );
+                }, me);
+                me.deleteAction = $('<div class="delete-icon">').click(deleteClickFunction);
+                me.tableRowAction = $('<div class="re-params-table-cell">').append(me.deleteAction).appendTo(me.tableRow);
+                me.attrActionsPanel = $('<div class="re-param-item-actiuons>').appendTo(me.tableRowAction);
+                me.attrActionDelete = $('<button name="attrActionDelete" id="attrActionDelete" class="re-control re-attrActionDelete">Delete</button>').appendTo(me.attrActionsPanel).button();
+                me.attrActionDelete.click(function (event) {
+                    event.preventDefault();
+                });
+            }
+        });
+
+        var initPage = function () {
+            window.propertyUpdater = {
+                update: function (id, newValue) {
+                    if (typeof newValue === 'boolean' || newValue instanceof Boolean) {
+                        $("[page-property='" + id + "']")[0].checked = newValue;
+                    } else {
+                        $("[page-property='" + id + "']").val(newValue);
+                    }
+                }
+            };
+
+            window.closeHandler = function(success) {
+                if (success == true) {
+                    closeCallback.close();
+                }
+            }
+
+            var form = RequestExplorer.strings.form;
+            $("#{0}".format(form.methodList)).selectmenu({
+                width: form.methodListWidth
+            });
+
+            $('.{0}'.format(form.re_control)).addClass("ui-corner-all");
+
+            $('#methodEndpoint').addClass('hint');
+            $('#methodEndpoint').click(function (event) {
+                if ($('#methodEndpoint').hasClass('hint')) {
+                    $('#methodEndpoint').removeClass('hint');
+                    $('#methodEndpoint').val("");
+                }
+            })
+
+            $('#methodEndpoint').contextmenu(function () {
+                if ($('#methodEndpoint').hasClass('hint')) {
+                    $('#methodEndpoint').removeClass('hint');
+                    $('#methodEndpoint').val("");
+                }
+            });
+
+            $('#closeAction').click(function() {
+                closeCallback.close();
+            });
+
+            $('#bodyTab').click(function() {
+                requestPayload.focus();
+            });
+
+            $('#methodList-button').hover(function() {
+                $('.ui-icon').css('background-image', 'url("../images/jquery-ui/ui-icons_222222_256x240.png")');
+            });
+
+            form.data.save = $("#{0}".format(form.formSave));
+            form.data.save.button();
+
+            form.data.send = $("#{0}".format(form.formAction));
+            form.data.formContainer = form.data.send.closest('.re-request-item');
+            form.data.send.button();
+            form.data.send.click(function (event) {
+                event.preventDefault();
+                var testData = $('#methodEndpoint').val();
+                if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
+                    $('#methodEndpoint').addClass('invalid');
+                    setTimeout(function () {
+                        $('#methodEndpoint').removeClass('invalid');
+                    }, 1000);
+                    return;
+                }
+
+                var form = RequestExplorer.strings.form;
+
+                var headerNames = $('.headerName');
+                var headerValues = $('.headerValue');
+
+                var request = {};
+                var headers = [];
+
+                for (var i = 0; i < headerNames.length; i++) {
+                    headers.push([$(headerNames[i]).val(), $(headerValues[i]).val()]);
+                }
+
+                request.url = $('#methodEndpoint').val();
+                request.method = $('#methodList-button').find('.ui-selectmenu-text').text();
+                request.headers = headers;
+                request.payload = $('#requestPayload').val();
+
+                var response = inspectorCallback.sendRequest(JSON.stringify(request));
+                $(".re-info-raw-body pre").text(response);
+
+                var lastRequest = request;
+
+                if (lastRequest.url != null) {
+                    document.lastRequest = request;
+                    var urlParser = inspectorCallback.getUrlParser(lastRequest.url);
+                }
+
+                form.data.save.show();
+            });
+
+            $("#formSave").click(function (event) {
+                var testData = $('#methodEndpoint').val();
+
+                if (isNullOrWhitespace(testData) || !RequestExplorer.validators.URL(testData)) {
+                    $('#methodEndpoint').addClass('invalid');
+                    setTimeout(function () {
+                        $('#methodEndpoint').removeClass('invalid');
+                    }, 1000);
+                    return;
+                }
+
+                var form = RequestExplorer.strings.form;
+                var headerNames = $('.headerName');
+                var headerValues = $('.headerValue');
+
+                var request = {};
+                var headers = [];
+
+                for (var i = 0; i < headerNames.length; i++) {
+                    headers.push([$(headerNames[i]).val(), $(headerValues[i]).val()]);
+                }
+
+                request.url = $('#methodEndpoint').val();
+                request.method = $('#methodList-button').find('.ui-selectmenu-text').text();
+                request.headers = headers;
+                request.payload = $('#requestPayload').val();
+
+                if (testData != null) {
+                    var requestCreated = inspectorCallback.createFromInspection(JSON.stringify(request));
+                }
+            });
+
+            var selectHeadersTab = function () {
+                var index = $('a[href="#re-info-params-tab-2"]').parent().index();
+                $('#re-info-params-tabs').tabs("option", "active", index);
+            };
+
+            var hasPayload = function (method) {
+                return method == 'POST' || method == 'DELETE' || method == 'PUT' || method == 'PATCH' ||
+                    method == 'LOCK';
+            };
+
+            var initPOST = function () {
+                $("#bodyTab").show();
+
+            };
+            var initGET = function () {
+                $("#bodyTab").hide();
+            };
+
+            $("#methodList").on("selectmenuchange", function (event, ui) {
+                inspectorCallback.exploreAPIchangeHTTPMethod(ui.item.value);
+                if (hasPayload(ui.item.value)) {
+                    var form = RequestExplorer.strings.form;
+                    initPOST();
+                } else {
+                    initGET();
+                }
+                selectHeadersTab();
+            });
+
+            initGET();
+
+            form.data.infoContainer = $(".{0}".format(form.formInfoContainer));
+            form.data.infoBody = $("#{0}".format(form.formResponseBody));
+
+            form.data.tabs = $("#{0}".format(form.tabsContainer));
+            form.data.tabsControl = form.data.tabs.tabs({
+                disabled: [0],
+                active: 1
+            });
+
+            form.data.tabsParam = $("#{0}".format('re-info-params-tab-2'));
+            form.data.tabsParam.empty();
+            form.data.paramsTable = new RequestExplorer.RequestParametersTable({
+                renderTo: form.data.tabsParam
+            });
+            new RequestExplorer.RequestParameter({
+                renderTo: form.data.paramsTable.tableBody
+            });
+
+            $('#methodEndpoint').keypress(function (event) {
+                if (event.which == 13) {
+                    var form = RequestExplorer.strings.form;
+                    form.data.send.click();
+                }
+            });
+
+            $('#dontShow').on('change', function () {
+                var newValue = $(this).prop('checked');
+                inspectorCallback.exploreAPIDontShowAgain(newValue);
+            });
+        };
+        $(document).ready(function () {
+            initPage();
+            document.body.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+            document.body.addEventListener('drop', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+            document.body.addEventListener('contextmenu', function (e) {
+                if ((e.target.nodeName == 'INPUT' && e.target.type !== 'checkbox') || e.target.nodeName == 'TEXTAREA') {
+                    return;
+                }
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+
+
+
+
+    </script>
+    <style>
+        /* scrollbars */
+        .re-main {
+            display: block;
+            border: none;
+            text-align: left;
+            padding: 0px 20px 20px 20px;
+        }
+
+        .re-main input,
+        .re-main textarea,
+        .re-main span,
+        .re-main button {
+            outline-style: none;
+        }
+
+        .re-main input {
+            padding: 0px 10px;
+        }
+
+        .re-main .re-request-item {
+            margin: 7px 0 5px 0;
+        }
+
+        .re-main .re-request-item label {
+            display: block;
+            text-align: left;
+            height: 22px;
+            color: #707070;
+        }
+
+        .re-main .re-request-item > div {
+            display: inline-block;
+            margin: 0;
+            border: none;
+            vertical-align: top;
+        }
+
+        .re-main .re-request-item.re-request-form {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                    justify-content: space-between;
+        }
+
+        .re-main .re-request-item .re-info-params {
+            width: calc(100% / 2 - 10px);
+            margin-top: 10px;
+            font-size: 12px;
+            margin-right: 20px;
+            padding: 0;
+            display: flex;
+        }
+
+        .re-main .re-request-item .re-info-raw {
+            height: calc(100% - 142px);
+            width: calc(100% / 2 - 10px);
+            margin-top: 10px;
+            border: 1px solid #767676;
+            background-color: white;
+            font-size: 12px;
+            padding: 0;
+            text-align: left;
+        }
+
+        #re-info-params-tabs {
+
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+        }
+
+        .re-main .re-request-item.re-request-info {
+
+            -webkit-box-flex: 1;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            position: relative;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+        }
+
+        .re-main .re-request-item.re-request-info ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .re-main .re-request-item.re-request-info ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .re-main .re-request-item.re-request-info ::-webkit-scrollbar-thumb {
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            background: rgba(201, 201, 201, 0.7);
+            -webkit-box-shadow: inset 0 0 6px rgba(201, 201, 201, 0.5);
+        }
+
+        .re-main .re-request-item.re-request-info ::-webkit-scrollbar-thumb:window-inactive {
+            background: rgba(201, 201, 201, 0.);
+        }
+
+        .ui-tabs.ui-widget-content#re-info-params-tabs {
+            flex: 1;
+
+            flex-direction: column;
+            font-weight: normal;
+            font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            margin: 0px;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+
+            width: 100%;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header {
+            border-bottom: 1px solid #767676;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background-color: transparent;
+            font-size: 12px;
+            font-weight: inherit;
+            margin: 0;
+            padding: 0;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget.ui-widget-content {
+            background-color: transparent;
+            border: none;
+            font-size: 12px;
+            font-weight: inherit;
+            margin: 0;
+            padding: 0;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li {
+            list-style-type: none;
+
+            padding: 5px 0px 5px 0px;
+            margin-left: 0px;
+            margin-right: 0px;
+            background-color: white;
+            border: none;
+            float: right;
+            height: 18px;
+            margin-top: 0;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li:nth-child(1) {
+            float: left;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li:focus,
+        .ui-tabs .ui-tabs-nav .ui-tabs-anchor:focus {
+            outline: none;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-1] {
+            font-weight: bold;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-2],
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-3] {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea {
+            width: 100%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            resize: none;
+            font-family: monospace;
+            margin: 9px;
+            border: 1px solid #CCCCCC;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs.ui-widget-content #re-info-params-tab-3 textarea:focus {
+            border-color: #3489D1;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-3], [aria-selected=false] {
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #CCCCCC;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li[aria-controls=re-info-params-tab-2], [aria-selected=false] {
+            border-left: 1px solid #CCCCCC;
+            border-top: 1px solid #CCCCCC;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .ui-tabs-panel.ui-widget-content#re-info-params-tab-2 {
+            overflow: scroll;
+            height: calc(100% - 171px);
+        }
+
+        .re-params-table-row.re-params-table-body {
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 150px;
+        }
+
+        .ui-tabs-panel.ui-widget-content#re-info-params-tab-3 {
+            overflow: hidden;
+            height: calc(100% - 171px);
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+                -ms-flex-flow: row wrap;
+                    flex-flow: row wrap;
+            -ms-flex-pack: distribute;
+                justify-content: space-around;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab a {
+            padding: 2px 2px 0 2px;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab.ui-tabs-active {
+            border-left: 1px solid #767676;
+            border-top: 1px solid #767676;
+            border-right: 1px solid #767676;
+            border-radius: 5px 5px 0 0;
+            border-bottom: 1px solid white;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li.ui-tab.ui-tabs-active a {
+            color: black;
+            font-weight: bold;
+        }
+
+        .re-main .re-request-item .re-info-params .ui-tabs-nav.ui-widget-header li a {
+            margin: 0;
+            padding: 1px 2px;
+        }
+
+        .re-info-raw .re-info-raw-header {
+            margin: 0px;
+            padding: 7px 0 7px 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #CCCCCC;
+            height: 16px;
+        }
+
+        .re-info-raw .re-info-raw-body {
+            overflow: scroll;
+            margin: 0 10px;
+            height: calc(100% - 43px);
+        }
+
+        .re-main .re-request-item .re-method {
+            width: 90px;
+            height: 24px;
+            line-height: 18px;
+            font-size: 12px;
+        }
+
+        .re-main .re-request-item .re-method .ui-selectmenu-button {
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#d4d4d4));
+            border: 1px solid #707070;
+            border-radius: 3px;
+            color: black;
+        }
+
+        .re-main .re-request-item .re-method .ui-selectmenu-button:hover {
+            border-color: #3489D1;
+        }
+
+        .ui-button .ui-icon {
+            background-image: url("../images/jquery-ui/ui-icons_222222_256x240.png");
+        }
+
+        .re-main .re-request-item .re-url {
+            width: calc(100% - 302px);
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .re-main .re-request-item .re-url label {
+            margin-left: 5px;
+        }
+
+        .re-main .re-request-item .re-url input {
+            height: 24px;
+            border: 1px solid #707070;
+            border-radius: 3px;
+            margin-left: 5px;
+            width: 100%;
+        }
+
+        .re-main .re-request-item .re-action {
+            width: 90px;
+        }
+
+        .ui-button {
+            padding: 4px 5px 2px 5px;
+            font-size: 12px;
+        }
+
+        button.re-control.re-send.ui-button {
+            height: 24px;
+            background-color: #2CB14A;
+            color: white;
+            border: 1px solid #25963F;
+            width: 75px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAABN0lEQVR42mPU2ejFyMDwn4Hh599f7MxsDLgBo/ZGTx4WLl8Zp6ffX+16eoSNmZWZkQm7Uq0NnnxsPOXaqY4SFjufHZ56Y8nT7y85mTmwmbrBk5eVu0wnLVDO9T/D/+sf7866tWLL4wPszKxMqMbDlaYGyrlBhL78+bb96aHpN5c++foC2fVYlELAwy9PJ99YDHTS////GRkZ8SkFgt//fm9+sn/KjcUvvr9mZmTGq/T/n/3PT/Rem/fo6zMWPEqB0kDzdjw99I/hPyMDI05vbXmyb8r1Ja9/vmNjYkUNV1bucp20ADnX3//+XHh3Hej3o6/OsjABA4sRIwpYuUu0U6zEjFY92Lbgzrpvf78jG4YSsVzMnPbipk++vTj++gIPKxfEZViUApMLMJJ+/f0NjBtWJhY8yQUArK6VMWUSFCwAAAAASUVORK5CYII=');
+            background-repeat: no-repeat;
+            background-position-x: 15px;
+            background-position-y: 7px;
+            text-indent: 11px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+            background-size: 15%;
+        }
+
+         button.re-control.re-send.ui-button:hover {
+            background-color: #29A344;
+            border-color: #25963F;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF+mlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE5LTAxLTIxVDExOjQ0OjI2KzAzOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wMS0yMVQxMTo0NzoxMCswMzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wMS0yMVQxMTo0NzoxMCswMzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDplY2JiNGVmNS00Zjk2LWM1NGEtOWViYS04Yjc4MDNkYjkxZjQiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDoxOGJlOTBlNC1jMzg5LTIyNGMtODYzYS02Mjk3YzI3NjNhNTkiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo0NzU3NmNmNi03ODM0LTA1NGYtODY4Mi1lYjRkZjZjNWFmOTkiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ3NTc2Y2Y2LTc4MzQtMDU0Zi04NjgyLWViNGRmNmM1YWY5OSIgc3RFdnQ6d2hlbj0iMjAxOS0wMS0yMVQxMTo0NDoyNiswMzowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDplY2JiNGVmNS00Zjk2LWM1NGEtOWViYS04Yjc4MDNkYjkxZjQiIHN0RXZ0OndoZW49IjIwMTktMDEtMjFUMTE6NDc6MTArMDM6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7DahR/AAAAz0lEQVQokWPUXOzCQBxgglDReoEOqtZEKdUWUG03LG6wKSSs9D8DAz8bb6iC5xrf6W7q9viUMjD8Z2BgYGRg1OJXaTEsarQtxqMUAXhYuELlPbYHLPDScCagFALkeaTbjYpb7EoJK2VgYGBgZORh4YLzWHApe/T12ZQbi7dc34NP6Zc/37Y82dd0ZCKaOFQpIwMjAwPD739/Lry7Pv3m0hP3z2IaAVX69/+/599fr3qwbebZJbicBFV64vX5NQ+3X3x0FZc6hNKtN/biUQQBACrUPxJnra7qAAAAAElFTkSuQmCC');
+        }
+
+        button.re-control.re-save.ui-button {
+            height: 24px;
+            background-color: #3489D1;
+            color: white;
+            border: 1px solid #27689E;
+            width: 105px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 0;
+        }
+
+        button.re-control.re-save.ui-button:hover {
+            background-color: #3181C4;
+            border-color: #27689E;
+        }
+
+        .ui-tabs-panel.ui-widget-content {
+            margin: 0;
+            padding: 0;
+            max-width: 100%;
+            overflow: auto;
+            border-right: 1px solid #767676;
+            border-left: 1px solid #767676;
+            border-bottom: 1px solid #767676;
+        }
+
+        .re-info-params .re-params-table {
+
+            border-spacing: 2px;
+            margin: 10px 10px 0 10px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            max-height: calc(100% - 13px);
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                    flex-direction: column;
+            position: relative;
+        }
+
+        .re-info-params .re-params-table-row {
+            margin: 0 0 5px 0;
+        }
+
+        .re-params-table-row .re-params-table-cell {
+            text-align: left;
+            display: inline-block;
+            color: #707070;
+        }
+
+        .re-params-table-row .re-params-table-cell input {
+            width: 100%;
+            border: 1px solid #CCCCCC;
+            height: 23px
+        }
+
+        .re-params-table-row .re-params-table-cell input:focus {
+            border: 1px solid #3489D1;
+        }
+
+        .re-info-params .re-params-table-cell:nth-child(1) {
+            width: calc(40% - 17px);
+            margin-right: 11px;
+        }
+
+        .re-info-params .re-params-table-cell:nth-child(2) {
+            width: calc(60% - 14px);
+        }
+
+        .re-info-params .re-params-table-cell:nth-child(3) {
+            width: 15px;
+            margin-right: 5px;
+        }
+
+        .re-params-table-cell.re-params-actions span {
+            font-size: 12px;
+            color: #2698de;
+        }
+
+        #requestPayload:focus, #methodEndpoint:focus {
+            border: 1px solid #3489D1;
+        }
+
+        .re-params-table-row.re-params-table-footer {
+            margin: 0;
+        }
+
+        #formResponseBody {
+            margin-top: 10px;
+            font-size: 12px;
+            height: calc(100% - 42px);
+        }
+
+        .delete-icon {
+            width: 9px;
+            height: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            margin: 0 0 0 11px;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAD7SURBVChTY/j/6+3/+08+/scEH/8/uf/2/y8gi1np96+GDYdOMDwVM2MwkmRngICXDEen9DDM2b6P4cx3DQYmiOAPhiuL2xnmnvsEVTCBYc3dHxApIGD8/+3S/7lN8xiugMU4GMTEGBhevYIo4DVMYqiM0wUqAgKGT+cY5rYvhiqEAJgCTiAbYh2fNIOKOAeYCQEcDPI68mAFIABUBHHDhodIxqC4kYGB2VWEpQHmSJAV1Zk6DG9OXGJ49ecPw6tLQF9LWzMwG6qbNLyHKgC5gYddksHITIzhKUzhdykGhm/3D/xftfva/28gHyCDb9f+71518v+L////AwBsJZjhGJq0VwAAAABJRU5ErkJggg==');
+        }
+
+        .re-info-params ul li.ui-state-disabled, ul li.ui-state-disabled a {
+            border: none;
+            color: black;
+            opacity: initial;
+        }
+
+        .ui-menu-item {
+            font-size: 12px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: #2698DE;
+        }
+
+        /* Corner radius */
+        .re-request-item .ui-corner-all, .re-request-item .ui-corner-top, .re-request-item .ui-corner-left, .re-request-item .ui-corner-tl {
+            border-top-left-radius: 0;
+        }
+
+        .re-request-item .ui-corner-all, .re-request-item .ui-corner-top, .re-request-item .ui-corner-right, .re-request-item .ui-corner-tr {
+            border-top-right-radius: 0;
+        }
+
+        .re-request-item .ui-corner-all, .re-request-item .ui-corner-bottom, .re-request-item .ui-corner-left, .re-request-item .ui-corner-bl {
+            border-bottom-left-radius: 0;
+        }
+
+        .re-request-item .ui-corner-all, .re-request-item .ui-corner-bottom, .re-request-item .ui-corner-right, .re-request-item .ui-corner-br {
+            border-bottom-right-radius: 0;
+        }
+
+        .invalid {
+            border: 1px solid red;
+            background-color: #fd9c9c;
+        }
+
+        .hint{
+            font-style: italic;
+            color: gray;
+        }
+
+        .greeting-sentence {
+            font-size: 12px;
+        }
+
+        li#authHeadTab, li#bodyTab {
+            float: left;
+        }
+
+        .closeButton {
+            float: right;
+            width: 68px;
+            height: 23px;
+            border: 1px solid #6E6E6E;
+            border-radius: 3px;
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#E5E5E5));
+            cursor: pointer;
+        }
+
+        .closeButton:hover {
+            border-color: #3489D1;
+        }
+
+        .closeButtonArea {
+            float: right;
+            font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+        }
+
+        .greeting-paragraph {
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .dontShowInscription {
+            vertical-align: super;
+        }
+
+        .closeButtonArea.greeting-sentence {
+            margin-bottom: -5px;
+            display: inline-block;
+        }
+
+        .dontShowLabel {
+            display: block;
+        }
+
+        .dontShowLabel, #dontShow {
+            cursor: pointer;
+        }
+
+        .labels {
+            margin-top: 5px;
+            font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            font-size: 12px;
+
+        }
+
+        .dontShowLabelContainer {
+            display: inline-block;
+        }
+
+
+    </style>
+</head>
+<body onload="populateRecentItems()">
+<div class="container">
+    <div class="content-wrp">
+        <!-- Main content here -->
+        <!-- Request preparator -->
+
+        <div class="content-section re-main">
+            <div class="greeting-sentence">
+                <p class="greeting-paragraph">Choose a method and enter a REST endpoint URL</p>
+            </div>
+            <div class="re-request-item re-request-form">
+                <div class="re-method">
+                    <label for="methodList">Method</label>
+                    <select name="methodList" id="methodList" class="re-control re-sel">
+                        <option>GET</option>
+                        <option>POST</option>
+                        <option>PUT</option>
+                        <option>DELETE</option>
+                        <option>HEAD</option>
+                        <option>OPTIONS</option>
+                        <option>TRACE</option>
+                        <option>PATCH</option>
+                        <option>PROPFIND</option>
+                        <option>LOCK</option>
+                        <option>UNLOCK</option>
+                        <option>COPY</option>
+                        <option>PURGE</option>
+                    </select>
+                </div>
+                <div class="re-url">
+                    <label for="methodEndpoint">Endpoint</label>
+                    <input name="methodEndpoint" id="methodEndpoint" value="Enter request endpoint" class="re-control"/>
+                </div>
+                <div class="re-action">
+                    <label for="formAction"></label>
+                    <button name="formAction" id="formAction" class="re-control re-send">Send</button>
+                </div>
+                <div class="re-save">
+                    <label for="formSave"></label>
+                    <button name="formSave" id="formSave" class="re-control re-save">Save Request</button>
+                </div>
+            </div>
+            <div class="re-request-item re-request-info">
+                <div class="re-info-params">
+                    <div id="re-info-params-tabs">
+                        <ul>
+                            <li id="request-tab">
+                                <a href="#re-info-params-tab-1">Request</a>
+                            </li>
+                            <li id="authHeadTab" class="rightAlignedTab">
+                                <a href="#re-info-params-tab-2"
+                                   onclick="inspectorCallback.exploreAPIClickAuthHeadersTab();return false;">Authentication
+                                    & Headers</a>
+                            </li>
+                            <li id="bodyTab" class="rightAlignedTab">
+                                <a href="#re-info-params-tab-3"
+                                   onclick="inspectorCallback.exploreAPIClickBodyTab();return false;">Body</a>
+                            </li>
+                        </ul>
+                        <div id="re-info-params-tab-1">
+                            <p></p>
+                        </div>
+                        <div id="re-info-params-tab-2">
+                            <p>waiting....</p>
+                        </div>
+                        <div id="re-info-params-tab-3">
+                            <textarea id="requestPayload"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="re-info-raw">
+                    <div class="re-info-raw-header">Response (Raw)</div>
+                    <div class="re-info-raw-body" id="formResponseBody">
+                        <pre></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="labels">
+                <div class="dontShowLabelContainer">
+                    <label class="dontShowLabel">
+                        <input page-property="dontShow" type="checkbox" name="dontShow" id="dontShow">
+                        <span class=dontShowInscription>Don't show this window on launch</span>
+                    </label>
+                </div>
+                <div class="closeButtonArea greeting-sentence">
+                    <button class=closeButton id="closeAction">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

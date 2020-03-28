@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -172,7 +172,8 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
     public boolean hasRequestBody() {
         RestRequestInterface.HttpMethod method = getMethod();
         return method == RestRequestInterface.HttpMethod.POST || method == RestRequestInterface.HttpMethod.PUT
-                || method == RestRequestInterface.HttpMethod.PATCH || method == RestRequestInterface.HttpMethod.DELETE;
+                || method == RestRequestInterface.HttpMethod.PATCH || method == RestRequestInterface.HttpMethod.DELETE
+                || method == RestRequestInterface.HttpMethod.PROPFIND || method == RestRequestInterface.HttpMethod.LOCK;
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {

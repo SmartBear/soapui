@@ -1,0 +1,198 @@
+﻿body, div, p.content-section-headline {
+    margin: 0px;
+    font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
+
+div.container {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+    background: white;
+}
+
+div.content-wrp {
+    display: block;
+    overflow-y: auto
+    height: 90%;
+}
+
+div.always-show {
+    display: table;
+    position: absolute;
+    bottom: 0px;
+    height: 2em;
+    width: 300px;
+    z-index: 1000;
+    color: #666;
+    font-weight: 200;
+    font-size: 10pt
+}
+
+.always-show span, .always-show input  {
+    vertical-align: middle
+}
+
+div.content-section {
+       display: flex;
+       flex-direction: column;
+       height: 100%;
+       box-sizing: border-box;
+}
+
+p.content-section-headline {
+    line-height: 20px;
+    text-align: center;
+    margin: 30px 0px;
+}
+
+div.action-button {
+    position: relative;
+    display: inline-table;
+    width: 300px;
+    height: 35px;
+    border-radius: 5px;
+    background-color: white;
+    border: solid 2px;
+    border-color: #2698DE;
+    color: #2698DE;
+    margin-right: 15px;
+    margin-left: 15px;
+    font-size: 12px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: center;
+}
+
+div.action-button:hover {
+    background-color: #2698DE;
+    color: white;
+}
+
+.action-button span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+div.content-movie-action {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px 10px 20px;
+    margin-right: 15px;
+    align-items: center;
+    background-color: white;
+    border: #cccccc 1px solid;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.video-container div.content-movie-action:last-child {
+    margin-right: 0px;
+}
+
+.content-movie-action a {
+    color: #2698DE;
+}
+
+div.content-movie-action-thumbnail {
+    width: 100px;
+    height: 60px;
+    margin: 10px;
+}
+
+div.content-movie-action-thumbnail a {
+    display: inline-block;
+}
+
+div.content-movie-action-thumbnail a img {
+    height: 100%;
+    width: 100%;
+}
+
+div.content-movie-action-caption {
+    background-color: transparent;
+    font-size: 12px;
+    font-weight: 200;
+}
+
+div.center-divider {
+    position: relative;
+    display: block;
+    margin: 0px 25%;
+}
+
+hr.divider {
+    border: 0px;
+    background: #4A494D;
+    height: 2px;
+    background-color: gray;
+}
+
+.modelitem_icon {
+    vertical-align: middle;
+    padding-right: 3px;
+}
+
+.last-section-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tutorial {
+    margin: 24px;
+}
+
+.video-container {
+    display: flex;
+}
+
+.documentation {
+    grid-area: documentation;
+    font-size: 14px;
+    font-weight: 200;
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+.documentation a {
+    color: #2698DE;
+}
+
+.re-params-action-add {
+    cursor: pointer;
+}
+
+.quick-start-wizard-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 1370px) {
+    div.content-movie-action-caption {
+        font-size: 12px;
+    }
+	
+	div.content-movie-action {
+        width: 220px;
+        padding: 0px 0px 10px 0px;
+    }
+
+    div.action-button {
+        font-size: 12px;
+    }
+
+    p.content-section-headline {
+        font-size: 16px;
+    }
+
+    .documentation {
+        font-size: 12px;
+    }
+}

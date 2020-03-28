@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -105,7 +105,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource> {
         public final static String RESOURCENAME = messages.get("Form.ResourceName.Label");
 
         @AField(description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = {"GET", "POST", "PUT",
-                "DELETE", "HEAD", "PATCH"})
+                "DELETE", "HEAD", "PATCH", "PROPFIND", "LOCK", "UNLOCK", "COPY", "PURGE"})
         public final static String METHOD = messages.get("Form.Method.Label");
 
         @AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT)

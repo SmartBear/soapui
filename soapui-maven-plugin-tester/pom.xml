@@ -10,7 +10,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>5.4.0</version>
+        <version>5.6.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>soapui-maven-plugin-tester</artifactId>
@@ -20,7 +20,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>smartbear-sweden-plugin-repository</id>
-            <url>http://www.soapui.org/repository/maven2/</url>
+            <url>https://www.soapui.org/repository/maven2/</url>
         </pluginRepository>
     </pluginRepositories>
 

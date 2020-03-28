@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -153,7 +153,6 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
         UISupport.select(restService);
         try {
             new WadlImporter(restService).initFromWadl(url);
-
         } catch (Exception e) {
             UISupport.showErrorMessage(e);
         }

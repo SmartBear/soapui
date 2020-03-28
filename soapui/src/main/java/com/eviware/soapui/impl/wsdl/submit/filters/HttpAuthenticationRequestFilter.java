@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -21,7 +21,6 @@ import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpCredentialsProvider;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -34,8 +33,6 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.auth.NTLMSchemeFactory;
-import org.apache.http.impl.auth.NegotiateSchemeFactory;
 import org.apache.http.protocol.HttpContext;
 
 /**
@@ -59,8 +56,6 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter {
 
         Enum authType = Enum.forString(wsdlRequest.getAuthType());
 
-        registerSpnegoAuthSchemeFactory(authType);
-
         String wssPasswordType = null;
 
         if (wsdlRequest instanceof WsdlRequest) {
@@ -70,16 +65,6 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter {
 
         if (StringUtils.isNullOrEmpty(wssPasswordType)) {
             initRequestCredentials(context, username, settings, password, domain, authType);
-        }
-    }
-
-    private void registerSpnegoAuthSchemeFactory(Enum authtype) {
-        // Due to a bug in apache http client 4.1.1 (HTTPCLIENT-1107) the user must explicitly set the auth type on the request.
-        // For more info, see SOAP-1021
-        if (authtype == AuthType.NTLM) {
-            HttpClientSupport.getHttpClient().getAuthSchemes().register(AuthPolicy.SPNEGO, new NTLMSchemeFactory());
-        } else if (authtype == AuthType.SPNEGO_KERBEROS) {
-            HttpClientSupport.getHttpClient().getAuthSchemes().register(AuthPolicy.SPNEGO, new NegotiateSchemeFactory(null, true));
         }
     }
 

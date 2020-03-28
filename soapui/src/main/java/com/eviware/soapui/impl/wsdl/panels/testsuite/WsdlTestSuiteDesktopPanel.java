@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -64,6 +64,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -71,6 +72,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * DesktopPanel for WsdlTestSuite
@@ -416,7 +418,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
     private class InternalTestSuiteRunListener implements TestSuiteRunListener {
         private TestRunLogTestRunListener runLogListener;
-        private int finishCount;
+        private AtomicInteger finishCount = new AtomicInteger();
 
         public void afterRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
             WsdlTestSuiteDesktopPanel.this.afterRun((WsdlTestSuiteRunner) testRunner);
@@ -424,7 +426,14 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         public void afterTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext,
                                   TestCaseRunner testCaseRunner) {
-            progressBar.setValue(++finishCount);
+            finishCount.incrementAndGet();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setValue(finishCount.get());
+                }
+            });
+
 
             if (getModelItem().getRunType() == TestSuiteRunType.SEQUENTIAL) {
                 testCaseRunner.getTestCase().removeTestRunListener(runLogListener);
@@ -439,7 +448,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
             progressBar.setMaximum(getModelItem().getTestCaseCount());
             progressBar.setValue(0);
             progressBar.setString("");
-            finishCount = 0;
+            finishCount.set(0);
 
             if (runLogListener == null) {
                 runLogListener = new TestRunLogTestRunListener(testRunLog, false);

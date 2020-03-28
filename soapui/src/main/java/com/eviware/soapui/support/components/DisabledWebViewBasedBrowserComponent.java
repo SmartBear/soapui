@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -48,6 +48,10 @@ class DisabledWebViewBasedBrowserComponent implements WebViewBasedBrowserCompone
     }
 
     @Override
+    public void navigate(String url, String backUpUrl) {
+    }
+
+    @Override
     public void setContent(String contentAsString) {
     }
 
@@ -73,5 +77,10 @@ class DisabledWebViewBasedBrowserComponent implements WebViewBasedBrowserCompone
 
     @Override
     public void addJavaScriptEventHandler(String memberName, Object eventHandler) {
+    }
+
+    @Override
+    public PagePropertyMapper getPagePropertyMapper() {
+        return null;
     }
 }

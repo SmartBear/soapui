@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -23,6 +23,8 @@ import org.apache.http.client.protocol.ResponseContentEncoding;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -83,7 +85,8 @@ public class CompressionSupport {
         ByteArrayEntity entity = new ByteArrayEntity(content);
         entity.setContentEncoding(alg);
         response.setEntity(entity);
-        new ResponseContentEncoding().process(response, null);
+        HttpContext httpContext = new BasicHttpContext();
+        new ResponseContentEncoding().process(response, httpContext);
         return IOUtils.toByteArray(response.getEntity().getContent());
     }
 

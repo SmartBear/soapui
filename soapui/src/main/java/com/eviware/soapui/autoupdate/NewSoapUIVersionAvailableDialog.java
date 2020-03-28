@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -78,6 +78,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
         mainPanel.add(toolbar, new GridBagConstraints(0, 4, 2, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(4, 4, 4, 4), 0, 0));
 
         setTitle("New Version Check");
+        setIconImage((UISupport.createImageIcon("/SoapUI-OS_16-16.png")).getImage());
         getContentPane().add(mainPanel);
         setSize(new Dimension(550, 440));
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);

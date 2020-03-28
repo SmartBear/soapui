@@ -1,8 +1,0 @@
-{
-  "testSteps": [
-    {
-      "type": "Delay",
-      "delay": 3000
-    }
-  ]
-}

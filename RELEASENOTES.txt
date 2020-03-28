@@ -1,4 +1,52 @@
-﻿# SoapUI Open Source 5.4.0
+﻿# SoapUI Open Source 5.6.0
+
+#### Released ... ####
+
+### Overall improvements ###
+
+* remove useless jars. Jackson, KeenIO.
+
+* update org.apache.httpcomponents jar versions. httpclient:4.5.5, httpmime:4.5.5, httpclient-cache:4.5.5, httpcore:4.4.9, httpcore-nio:4.4.9
+
+* update commons-logging jar versions. commons-logging:1.2
+
+* update commons-codec jar versions. commons-codec:1.10
+
+* update junit jar versions. junit:4.12
+
+### Bug Fixes ###
+
+* SoapUI 5.5.0 will not run project or suites - Toolkit not initialized error
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.5.0
+
+#### Released 2019-02-06 ####
+
+### Overall improvements ###
+
+* SoapUI 5.5 introduces the Endpoint Explorer dialog. Use it to send exploratory requests and analyze responses without creating a project.
+
+* SoapUI now supports extended HTTP methods: PROPFIND, LOCK, UNLOCK, COPY, PURGE.
+
+* Now, if you try to open a project created in a later SoapUI version or in ReadyAPI, SoapUI will notify you about this.
+
+* SoapUI now requires Java 8 update 112 or higher.
+
+### Bug Fixes ###
+
+* An invalid name was set for a custom test step.
+
+* A bug fix by modax: WS-Security did not support Strict Layout Rules.
+
+* A bug fix by xgcssch: When a refresh token was used to update an OAuth 2.0 access token, the refresh token was not updated.
+
+* A bug fix by arykov: Symlinks to soapui.sh did not work.
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.4.0
 
 #### Released 2017-11-29 ####
 

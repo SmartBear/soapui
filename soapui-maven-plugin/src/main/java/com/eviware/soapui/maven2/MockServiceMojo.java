@@ -1,7 +1,7 @@
 package com.eviware.soapui.maven2;
 
 /*
- * Copyright 2004-2016 SmartBear Software
+ * Copyright 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -100,7 +100,7 @@ public class MockServiceMojo extends AbstractMojo
 	/**
     * The SoapUI project file to test with
     *
-    * @parameter expression="${soapui.projectFile}"    
+    * @parameter property="soapui.projectFile"    
     * 	default-value="${project.artifactId}-soapui-project.xml"
     */
 	
@@ -109,7 +109,7 @@ public class MockServiceMojo extends AbstractMojo
    /**
     * The mockservice to run 
     *
-    * @parameter expression="${soapui.mockService}"    
+    * @parameter property="soapui.mockService"    
     */
 	
    private String mockService;
@@ -117,7 +117,7 @@ public class MockServiceMojo extends AbstractMojo
    /**
     * The path to listen on
     *
-    * @parameter expression="${soapui.path}"    
+    * @parameter property="soapui.path"    
     */
 	
    private String path;
@@ -125,7 +125,7 @@ public class MockServiceMojo extends AbstractMojo
    /**
     * The port to listen on
     *
-    * @parameter expression="${soapui.port}"    
+    * @parameter property="soapui.port"    
     */
 	
    private String port;
@@ -133,7 +133,7 @@ public class MockServiceMojo extends AbstractMojo
    /**
     * Specifies SoapUI settings file to use
     *
-    * @parameter expression="${soapui.settingsFile}"    
+    * @parameter property="soapui.settingsFile"    
     */
 	
    private String settingsFile;
@@ -141,7 +141,7 @@ public class MockServiceMojo extends AbstractMojo
    /**
     * To not wait for input
     *
-    * @parameter expression="${soapui.noBlock}"    
+    * @parameter property="soapui.noBlock"    
     */
 	
    private boolean noBlock;
@@ -155,21 +155,21 @@ public class MockServiceMojo extends AbstractMojo
    /**
     * Specifies password for encrypted SoapUI project file
     * 
-    * @parameter expression="${soapui.project.password}"
+    * @parameter property="soapui.project.password"
     */
 	private String projectPassword;
 	
 	/**
 	 * Specifies password for encrypted soapui-settings file
 	 * 
-	 * @parameter expression="${soapui.settingsFile.password}"
+	 * @parameter property="soapui.settingsFile.password"
 	 */
 	private String settingsPassword;
 	
 	/**
 	 * Specified global property values
 	 * 
-	 * @parameter expression="${soapui.globalProperties}"
+	 * @parameter property="soapui.globalProperties"
 	 */
 	
 	private String [] globalProperties;
@@ -177,7 +177,7 @@ public class MockServiceMojo extends AbstractMojo
 	/**
 	 * Specified project property values
 	 * 
-	 * @parameter expression="${soapui.projectProperties}"
+	 * @parameter property="soapui.projectProperties"
 	 */
 	
 	private String [] projectProperties;
@@ -185,7 +185,7 @@ public class MockServiceMojo extends AbstractMojo
 	/**
 	 * Saves project file after running tests
 	 * 
-	 * @parameter expression="${soapui.saveAfterRun}"
+	 * @parameter property="soapui.saveAfterRun"
 	 */
 	
 	private boolean saveAfterRun;
@@ -193,7 +193,7 @@ public class MockServiceMojo extends AbstractMojo
 	/**
 	 * SoapUI Properties.
 	 * 
-	 * @parameter expression="${soapuiProperties}"
+	 * @parameter property="soapuiProperties"
 	 */
 	private Properties soapuiProperties;
 

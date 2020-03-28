@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -209,7 +209,7 @@ public abstract class AbstractModelItemTreeNode<T extends ModelItem> implements 
         });
     }
 
-    public Enumeration<?> children() {
+    public Enumeration<? extends TreeNode> children() {
         Vector<TreeNode> children = new Vector<TreeNode>();
         for (int c = 0; c < getChildCount(); c++) {
             children.add(getChildAt(c));

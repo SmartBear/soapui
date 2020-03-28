@@ -1,23 +1,24 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.plugins;
 
 import com.eviware.soapui.SoapUI;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,32 +34,51 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 public final class ProductBodyguard extends Provider {
-    private X509Certificate providerCert = null;
+    private X509Certificate[] acceptedCerts = null;
 
     public ProductBodyguard() {
         super("SoapUIOSPluginSignChecker", 1.0, "Plugin signature validity checker");
     }
 
-    private static X509Certificate setupProviderCert()
+    private static X509Certificate[] setupProviderCert()
             throws IOException, CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        return (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.key"));
+        return new X509Certificate[]{
+                (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.key")),
+                (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKeySB.key"))
+        };
     }
 
     public final synchronized boolean isKnown(File plugin) {
         JarVerifier jv = new JarVerifier(plugin);
 
         try {
-            if (providerCert == null) {
-                providerCert = setupProviderCert();
+            if (acceptedCerts == null) {
+                acceptedCerts = setupProviderCert();
             }
-            jv.verify(providerCert);
         } catch (Exception e) {
             SoapUI.logError(e);
             return false;
         }
 
-        return true;
+        for (X509Certificate certificate : acceptedCerts) {
+            if (isCertificateAccepted(jv, certificate)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isCertificateAccepted(@Nonnull JarVerifier jarVerifier, @Nonnull X509Certificate certificate) {
+        boolean passed = true;
+        try {
+            jarVerifier.verify(certificate);
+        } catch (Exception e) {
+            passed = false;
+        }
+
+        return passed;
     }
 
     private class JarVerifier {
@@ -67,7 +87,7 @@ public final class ProductBodyguard extends Provider {
         JarVerifier(File jarURL) {
             try {
                 jarFile = new JarFile(jarURL);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 SoapUI.logError(e);
             }
         }

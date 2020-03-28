@@ -1,17 +1,17 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.x.impl.swing;
@@ -35,10 +35,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -54,12 +57,13 @@ public class SwingDialogs implements XDialogs {
 
     public void showErrorMessage(final String message) {
         try {
+            Object displayMessage = getDisplayMessage(message);
             if (SwingUtilities.isEventDispatchThread()) {
-                JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parent, displayMessage, "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
-                        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(parent, displayMessage, "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 });
             }
@@ -69,12 +73,14 @@ public class SwingDialogs implements XDialogs {
     }
 
     public boolean confirm(String question, String title) {
-        return JOptionPane.showConfirmDialog(this.parent, question, title, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
+        Object displayMessage = getDisplayMessage(question);
+        return JOptionPane.showConfirmDialog(this.parent, displayMessage, title, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
     }
 
     @Override
     public boolean confirm(String question, String title, Component parent) {
-        return JOptionPane.showConfirmDialog(parent, question, title, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
+        Object displayMessage = getDisplayMessage(question);
+        return JOptionPane.showConfirmDialog(parent, displayMessage, title, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
     }
 
     public String prompt(String question, String title, String value) {
@@ -91,13 +97,14 @@ public class SwingDialogs implements XDialogs {
     }
 
     public void showInfoMessage(final String message, final String title) {
+        Object displayMessage = getDisplayMessage(message);
         try {
             if (SwingUtilities.isEventDispatchThread()) {
-                JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(parent, displayMessage, title, JOptionPane.INFORMATION_MESSAGE);
             } else {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
-                        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(parent, displayMessage, title, JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
             }
@@ -284,5 +291,39 @@ public class SwingDialogs implements XDialogs {
 
         public void ancestorRemoved(AncestorEvent e) {
         }
+    }
+
+    /**
+     * Method which accepts a message as a string, checks if it is longer than a certain threshold
+     * and if so, returns a JScrollPane with a JTextArea instead of the string. The returned
+     * value can be used as message to a JOptionPane. JOptionPane will create a JLabel for the
+     * message unless it is passed an JComponent of some other kind.
+     *
+     * @param message The string message to process
+     * @return The string sent in or a JScrollPane depending on message length
+     */
+    private Object getDisplayMessage(String message) {
+        final int maxWidth = 60;
+        final int maxLines = 15;
+        final Color transparent = new Color(0, 0, 0, 0);
+
+        if (message == null || message.length() <= UISupport.EXTENDED_ERROR_MESSAGE_THRESHOLD) {
+            return message;
+        }
+        JTextArea textArea = new JTextArea(message);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setColumns(maxWidth);
+        textArea.setOpaque(false);
+        textArea.setEditable(false);
+        textArea.setBackground(transparent);
+        if (textArea.getLineCount() > maxLines) {
+            textArea.setRows(maxLines);
+        }
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        JViewport viewport = scrollPane.getViewport();
+        viewport.setOpaque(false);
+        viewport.setBackground(transparent);
+        return scrollPane;
     }
 }

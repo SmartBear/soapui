@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -93,9 +93,11 @@ public interface UISettings {
     public static final String DISABLE_TOOLTIPS = UISettings.class.getSimpleName() + "@disable_tooltips";
     public static final String SHOULD_DISPLAY_ANALYTICS_DIALOG = UISettings.class.getSimpleName() + "@display_analytics_opt_dialog";
 
+    public static final String SHOW_ENDPOINT_EXPLORER_ON_START = UISettings.class.getSimpleName() + "@show_endpoint_explorer";
+    public static final String SHOW_STAY_TUNED_DIALOG = UISettings.class.getSimpleName() + "@show_stay_tuned";
+
     @Setting(name = "Disable usage statistics", description = "Stop sending usage statistics", type = SettingType.BOOLEAN)
     public static final String DISABLE_ANALYTICS = UISettings.class.getSimpleName() + "@disable_analytics";
-    public static final String ANALYTICS_OPT_OUT_VERSION = UISettings.class.getSimpleName() + "@analytics_opt_out_version";
 
     @Setting(name = "Normalize Line-Breaks", description = "Normalize line-breaks when saving project", type = SettingType.BOOLEAN)
     public static final String LINEBREAK = UISettings.class.getSimpleName() + "@" + "normalize_line-breaks";

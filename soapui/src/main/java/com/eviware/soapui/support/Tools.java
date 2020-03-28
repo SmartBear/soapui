@@ -1,17 +1,17 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.support;
@@ -23,6 +23,7 @@ import junit.framework.ComparisonFailure;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.awt.event.ActionEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -44,13 +45,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tools {
     public static final int COPY_BUFFER_SIZE = 1000;
 
+    private static final MessageSupport messages = MessageSupport.getMessages(Tools.class);
     private static final Logger log = Logger.getLogger(Tools.class);
 
+    private static final Pattern PROPERTY_EXPANSION_EQUALS_PATTERN = Pattern.compile("^\\$\\{(.*)\\}$");
+    private static final Pattern PROPERTY_EXPANSION_CONTAINS_PATTERN =
+            Pattern.compile("(\\$\\{(.*?)\\})|(%24%7B.*?%7D)|(%2524%257B.*?%257D)|(%252524%25257B.*?%25257D)");
 
     public static String[] tokenizeArgs(String args) {
         if (args == null || args.trim().length() == 0) {
@@ -181,7 +187,6 @@ public class Tools {
     public static final long READ_ALL = 0;
 
 
-
     public static String modifyUrl(final String url, Integer mods) {
 
         String helpUrl = url;
@@ -197,7 +202,7 @@ public class Tools {
         } else if (((mods & ActionEvent.SHIFT_MASK) != 0)
                 && ((mods & ActionEvent.CTRL_MASK) != 0)) {
             modifier = 3; // "dev";
-        }else if (((mods & ActionEvent.SHIFT_MASK) != 0)
+        } else if (((mods & ActionEvent.SHIFT_MASK) != 0)
                 && ((mods & ActionEvent.ALT_MASK) != 0)) {
             modifier = 4; // "next";
         } else {
@@ -225,7 +230,6 @@ public class Tools {
 
         return helpUrl;
     }
-
 
 
     public static void openURL(String url) {
@@ -640,5 +644,18 @@ public class Tools {
                 }
             }
         }));
+    }
+
+    public static boolean isPropertyExpansion(@Nullable String value) {
+        return value != null && PROPERTY_EXPANSION_EQUALS_PATTERN.matcher(value).matches();
+    }
+
+    public static String removePropertyExpansions(String definitionUrl, String definition) {
+        Matcher matcher = PROPERTY_EXPANSION_CONTAINS_PATTERN.matcher(definition);
+        while (matcher.find()) {
+            log.warn(messages.get("Tools.Warning.PropertyExpansionRemovedFromDefinition",
+                    definitionUrl, matcher.group()));
+        }
+        return matcher.replaceAll("");
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2004-2016 SmartBear Software
+  ~ Copyright (C) 2004-2019 SmartBear Software
   ~
   ~ Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
   ~ versions of the EUPL (the "Licence");
@@ -105,6 +105,7 @@
                                  maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>
+                <xsd:attribute name="updated" type="xsd:string"/>
                 <xsd:attribute name="soapui-version" type="xsd:string">
                 </xsd:attribute>
                 <xsd:attribute name="resourceRoot" type="xsd:string"></xsd:attribute>

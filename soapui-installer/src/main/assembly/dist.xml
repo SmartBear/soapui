@@ -44,10 +44,11 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/target</directory>
+            <directory>${basedir}/target/classes</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>SoapUI-Spashscreen.png</include>
+                <include>SoapUI-Spashscreen@2x.png</include>
             </includes>
         </fileSet>
         <fileSet>

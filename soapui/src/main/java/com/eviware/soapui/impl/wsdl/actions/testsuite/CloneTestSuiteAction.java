@@ -1,17 +1,17 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.wsdl.actions.testsuite;
@@ -60,55 +60,52 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
     }
 
     public void perform(final WsdlTestSuite testSuite, Object param) {
-        if (dialog == null) {
-            ActionList actions = new DefaultActionList();
+        ActionList actions = new DefaultActionList();
 
-            final AbstractAction cloneAction = new AbstractAction("Clone") {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (dialog.validate()) {
-                        dialog.setVisible(false);
+        final AbstractAction cloneAction = new AbstractAction("Clone") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (dialog.validate()) {
+                    dialog.setVisible(false);
 
-                        String targetProjectName = dialog.getValue(Form.PROJECT);
-                        String name = dialog.getValue(Form.NAME);
+                    String targetProjectName = dialog.getValue(Form.PROJECT);
+                    String name = dialog.getValue(Form.NAME);
 
-                        WsdlProject project = testSuite.getProject();
+                    WsdlProject project = testSuite.getProject();
 
-                        // within same project?
-                        boolean move = dialog.getBooleanValue(Form.MOVE);
-                        boolean cloneDescription = dialog.getBooleanValue(Form.CLONE_DESCRIPTION);
-                        String description = testSuite.getDescription();
-                        if (!cloneDescription) {
-                            description = dialog.getValue(Form.DESCRIPTION);
-                        }
+                    // within same project?
+                    boolean move = dialog.getBooleanValue(Form.MOVE);
+                    boolean cloneDescription = dialog.getBooleanValue(Form.CLONE_DESCRIPTION);
+                    String description = testSuite.getDescription();
+                    if (!cloneDescription) {
+                        description = dialog.getValue(Form.DESCRIPTION);
+                    }
 
-                        TestSuite result;
+                    TestSuite result;
 
-                        if (targetProjectName.equals(testSuite.getProject().getName())) {
-                            result = cloneTestSuiteWithinProject(testSuite, name, project, description);
-                        } else {
-                            result = cloneToAnotherProject(testSuite, targetProjectName, name, move, description);
-                        }
+                    if (targetProjectName.equals(testSuite.getProject().getName())) {
+                        result = cloneTestSuiteWithinProject(testSuite, name, project, description);
+                    } else {
+                        result = cloneToAnotherProject(testSuite, targetProjectName, name, move, description);
+                    }
 
-                        if (move && result != null) {
-                            testSuite.getProject().removeTestSuite(testSuite);
-                        }
+                    if (move && result != null) {
+                        testSuite.getProject().removeTestSuite(testSuite);
                     }
                 }
-            };
-            actions.addAction(cloneAction);
+            }
+        };
+        actions.addAction(cloneAction);
 
-            actions.addAction(new AbstractAction("Cancel") {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dialog.setVisible(false);
-                }
-            });
-            actions.setDefaultAction(cloneAction);
+        actions.addAction(new AbstractAction("Cancel") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+            }
+        });
+        actions.setDefaultAction(cloneAction);
 
-
-            dialog = ADialogBuilder.buildDialog(Form.class, actions, false);
-        }
+        dialog = ADialogBuilder.buildDialog(Form.class, actions, false);
 
         dialog.getFormField(Form.CLONE_DESCRIPTION).addFormFieldListener(new XFormFieldListener() {
 

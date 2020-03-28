@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -24,7 +24,6 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.tools.PropertyExpansionRemover;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
@@ -42,12 +41,13 @@ import java.net.URI;
  */
 
 public abstract class WsdlLoader extends AbstractDefinitionLoader implements WsdlDefinitionLoader {
+    protected static final Logger log = Logger.getLogger(WsdlLoader.class);
+
     private String url;
     private String firstNewURI;
     private String last;
     private String username;
     private String password;
-    protected static final Logger log = Logger.getLogger(WsdlLoader.class);
 
     public WsdlLoader(String url) {
         this.url = url;
@@ -129,11 +129,10 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 
     private String readCleanWsdlFrom(String url) throws Exception {
         String content = XmlUtils.createXmlObject(load(url)).xmlText();
-
         if (SoapUI.getSettings().getBoolean(WsdlSettings.TRIM_WSDL)) {
             content = content.trim();
         }
-        return PropertyExpansionRemover.removeExpansions(content);
+        return Tools.removePropertyExpansions(url, content);
     }
 
     public String getBaseURI() {

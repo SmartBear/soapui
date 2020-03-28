@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -128,6 +128,7 @@ public interface HelpUrls {
     public static final String NEWRESTSERVICE_HELP_URL = "/REST-Testing/working-with-rest-services.html";
     public static final String NEW_WADL_PROJECT_HELP_URL = "/REST-Testing/working-with-rest-services.html";
     public static final String CREATEWADLDOC_HELP_URL = "/REST-Testing/working-with-rest-services.html";
+    public static final String NEW_REST_REQUEST_HELP_URL = "/REST-testing/working-with-rest-requests.html";
 
     public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "/OAuth/access-token-from-server.html";
     public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "/OAuth/access-token-retrieval.html";
@@ -220,5 +221,5 @@ public interface HelpUrls {
 
 
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
-    public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
+    public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage-new.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
 }

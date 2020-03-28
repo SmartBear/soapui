@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -230,7 +230,9 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
     }
 
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "REST");
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP_FROM_PANEL, "StepType", "REST",
+                "HTTPMethod", getRequest().getMethod().name());
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP, "HTTPMethod", getRequest().getMethod().name());
 
         return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
     }

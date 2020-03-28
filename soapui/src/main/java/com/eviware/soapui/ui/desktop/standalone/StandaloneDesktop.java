@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -247,7 +247,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
                     BorderFactory.createEmptyBorder(4, 4, 4, 4)));
         } else if (!UISupport.isMac()) {
-            frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3));
         }
         return frame;
     }

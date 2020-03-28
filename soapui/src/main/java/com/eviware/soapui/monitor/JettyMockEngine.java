@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2017 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -233,17 +233,19 @@ public class JettyMockEngine implements MockEngine {
                 } catch (Exception e) {
                     SoapUI.logError(e);
                 }
+
+                if (addedSslConnector) {
+                    log.debug("Removing SSL connector.");
+                    server.removeConnector(sslConnector);
+                    addedSslConnector = false;
+                }
+
                 server.removeConnector(connector);
                 runners.remove(port);
                 if (runners.isEmpty()) {
                     try {
                         log.info("No more connectors.. stopping server");
                         server.stop();
-                        if (sslConnector != null) {
-                            // server.removeConnector( sslConnector );
-                            // sslConnector.stop();
-                            // sslConnector = null;
-                        }
                     } catch (Exception e) {
                         SoapUI.logError(e);
                     }
