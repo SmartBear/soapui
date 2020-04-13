@@ -76,6 +76,8 @@ public class ProxyUtilsTestCase {
     @Before
     public void setup() {
         clearProxySystemProperties();
+        //clear system-wide proxy selector, as long as it is manipulated by tests
+        ProxySelector.setDefault(null);
 
         httpMethod = new ExtendedGetMethod();
     }
