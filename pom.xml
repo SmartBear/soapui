@@ -52,13 +52,13 @@
         <maven-failsafe-plugin-version>3.0.0-M3</maven-failsafe-plugin-version>
         <maven-assembly-plugin-version>3.1.1</maven-assembly-plugin-version>
         <!-- org.apache.xmlbeans -->
-        <xmlbeans-version>3.1.1</xmlbeans-version>
+        <xmlbeans-version>3.1.1-sb-fixed</xmlbeans-version>
         <xmlbeans-xpath-version>2.6.0</xmlbeans-xpath-version>
         <xmlbeans-xmlpublic-version>2.6.0</xmlbeans-xmlpublic-version>
         <!-- org.codehaus.mojo -->
         <versions-maven-plugin-version>2.7</versions-maven-plugin-version>
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
-        <xmlbeans-maven-plugin-version>2.3.4</xmlbeans-maven-plugin-version>
+        <xmlbeans-maven-plugin-version>2.3.5-sb-fixed</xmlbeans-maven-plugin-version>
         <!-- org.openjfx-->
         <javafx-base-version>12</javafx-base-version>
         <javafx-controls-version>12</javafx-controls-version>
