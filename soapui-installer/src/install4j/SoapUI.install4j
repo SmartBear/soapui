@@ -27,10 +27,7 @@
       <variable name="HERMES_INSTALLER" value="" description="" category="" />
     </variables>
     <mergedProjects />
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="${compiler:CERT_PATH}" windowsPkcs11Library="" windowsPkcs11Slot="">
-      <windowsKeystoreIdentifier issuer="" serial="" subject="" />
-      <windowsPkcs11Identifier issuer="" serial="" subject="" />
-    </codeSigning>
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="${compiler:CERT_PATH}" />
   </application>
   <files keepModificationTimes="false" missingFilesStrategy="warn" globalExcludeSuffixes="" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
     <filesets>
@@ -42,11 +39,11 @@
       <fileset name="HermesJMS" id="1260" customizedId="" />
       <fileset name="wsi-bundled java" id="1859" customizedId="" />
       <fileset name="wsi-non bundled java" id="1861" customizedId="" />
-      <fileset name="xulrunner-windows" id="2230" customizedId="" />
-      <fileset name="xulrunner-mac" id="2232" customizedId="" />
-      <fileset name="xulrunner-linux" id="2234" customizedId="" />
       <fileset name="Tutorials" id="2390" customizedId="" />
       <fileset name="logs" id="4415" customizedId="" />
+      <fileset name="javafx-windows" id="7717" customizedId="" />
+      <fileset name="javafx-linux" id="7965" customizedId="" />
+      <fileset name="javafx-mac" id="7967" customizedId="" />
     </filesets>
     <roots>
       <root id="5280" fileset="" location="${installer:sys.userHome}" />
@@ -58,11 +55,11 @@
       <root id="1261" fileset="1260" location="" />
       <root id="1860" fileset="1859" location="" />
       <root id="1862" fileset="1861" location="" />
-      <root id="2231" fileset="2230" location="" />
-      <root id="2233" fileset="2232" location="" />
-      <root id="2235" fileset="2234" location="" />
       <root id="2391" fileset="2390" location="" />
       <root id="4416" fileset="4415" location="" />
+      <root id="7718" fileset="7717" location="" />
+      <root id="7966" fileset="7965" location="" />
+      <root id="7968" fileset="7967" location="" />
     </roots>
     <mountPoints>
       <mountPoint id="321" root="" location="bin" mode="755" />
@@ -79,11 +76,11 @@
       <mountPoint id="1334" root="1261" location="tempHermes" mode="755" />
       <mountPoint id="1955" root="1860" location="wsi-test-tools" mode="755" />
       <mountPoint id="1956" root="1862" location="wsi-test-tools" mode="755" />
-      <mountPoint id="2236" root="2231" location="lib" mode="755" />
-      <mountPoint id="2237" root="2233" location="lib" mode="755" />
-      <mountPoint id="2238" root="2235" location="lib" mode="755" />
       <mountPoint id="2392" root="2391" location="SoapUI-Tutorials" mode="755" />
       <mountPoint id="4418" root="4416" location="bin" mode="755" />
+      <mountPoint id="7719" root="7718" location="lib" mode="755" />
+      <mountPoint id="7969" root="7966" location="lib" mode="755" />
+      <mountPoint id="7970" root="7968" location="lib" mode="755" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="*.bat,*.sh" dirMode="755" overrideDirMode="true">
@@ -91,12 +88,24 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude>
-          <entry location="xulrunner-linux-3.3.jar" fileType="regular" />
-          <entry location="xulrunner-linux64-3.3.jar" fileType="regular" />
-          <entry location="xulrunner-mac-3.3.jar" fileType="regular" />
-          <entry location="xulrunner-windows-3.3.jar" fileType="regular" />
-          <entry location="xulrunner15-mac-3.3.jar" fileType="regular" />
-          <entry location="xulrunner15-windows-3.3.jar" fileType="regular" />
+          <entry location="javafx-base-12-win.jar" fileType="regular" />
+          <entry location="javafx-controls-12-win.jar" fileType="regular" />
+          <entry location="javafx-graphics-12-win.jar" fileType="regular" />
+          <entry location="javafx-media-12-win.jar" fileType="regular" />
+          <entry location="javafx-swing-12-win.jar" fileType="regular" />
+          <entry location="javafx-web-12-win.jar" fileType="regular" />
+          <entry location="javafx-base-12-linux.jar" fileType="regular" />
+          <entry location="javafx-controls-12-linux.jar" fileType="regular" />
+          <entry location="javafx-graphics-12-linux.jar" fileType="regular" />
+          <entry location="javafx-media-12-linux.jar" fileType="regular" />
+          <entry location="javafx-swing-12-linux.jar" fileType="regular" />
+          <entry location="javafx-web-12-linux.jar" fileType="regular" />
+          <entry location="javafx-base-12-mac.jar" fileType="regular" />
+          <entry location="javafx-controls-12-mac.jar" fileType="regular" />
+          <entry location="javafx-graphics-12-mac.jar" fileType="regular" />
+          <entry location="javafx-media-12-mac.jar" fileType="regular" />
+          <entry location="javafx-swing-12-mac.jar" fileType="regular" />
+          <entry location="javafx-web-12-mac.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
@@ -174,17 +183,29 @@
       <dirEntry mountPoint="1956" file="${compiler:DIST_ROOT}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner15-windows-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner15-mac-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
       <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui.log" overwriteMode="4" shared="false" fileMode="666" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui-errors.log" overwriteMode="4" shared="false" fileMode="666" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-base-12-win.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-controls-12-win.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-graphics-12-win.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-media-12-win.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-swing-12-win.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-web-12-win.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-base-12-linux.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-controls-12-linux.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-graphics-12-linux.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-media-12-linux.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-swing-12-linux.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-web-12-linux.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-base-12-mac.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-controls-12-mac.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-graphics-12-mac.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-media-12-mac.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-swing-12-mac.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-web-12-mac.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
     </entries>
     <components>
       <component name="SoapUI" id="132" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="false" downloadable="false" hidden="false">
@@ -201,6 +222,9 @@
           <entry location=".i4j_fileset_2232" fileType="regular" />
           <entry location=".i4j_fileset_2234" fileType="regular" />
           <entry location=".i4j_fileset_2808" fileType="regular" />
+          <entry location=".i4j_fileset_7717" fileType="regular" />
+          <entry location=".i4j_fileset_7965" fileType="regular" />
+          <entry location=".i4j_fileset_7967" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -333,9 +357,6 @@
             </group>
           </styleOverride>
         </styleOverrides>
-        <customScript mode="1" file="">
-          <content />
-        </customScript>
         <launcherIds />
         <variables />
         <startup>
@@ -2131,9 +2152,6 @@ return "";</string>
           </java>
         </serializedBean>
         <styleOverrides />
-        <customScript mode="1" file="">
-          <content />
-        </customScript>
         <launcherIds />
         <variables />
         <startup>
@@ -2603,9 +2621,6 @@ return console.askYesNo(message, true);
           </java>
         </serializedBean>
         <styleOverrides />
-        <customScript mode="1" file="">
-          <content />
-        </customScript>
         <launcherIds />
         <variables />
         <startup>
@@ -3861,72 +3876,22 @@ if (context.isUnattended()) {
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows x32" id="23" customizedId="" mediaFileName="SoapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-x86-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
-      <excludedComponents />
-      <includedDownloadableComponents />
-      <excludedLaunchers />
-      <excludedBeans />
-      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
-      <exclude>
-        <entry location=".i4j_fileset_1841" fileType="regular" />
-        <entry location=".i4j_fileset_1843" fileType="regular" />
-        <entry location=".i4j_fileset_1573" fileType="regular" />
-        <entry location=".i4j_fileset_1861" fileType="regular" />
-        <entry location=".i4j_fileset_2232" fileType="regular" />
-        <entry location=".i4j_fileset_2234" fileType="regular" />
-      </exclude>
-      <variables>
-        <variable name="XULRUNNER" value="xulrunner-windows" description="" category="" />
-        <variable name="32-BIT-INSTALLER" value="true" description="" category="" />
-      </variables>
-      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
-        <commentFiles />
-        <customAttributes />
-      </autoUpdate>
-    </windows>
-    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="SoapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="linux-x86-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
-      <excludedComponents />
-      <includedDownloadableComponents />
-      <excludedLaunchers />
-      <excludedBeans>
-        <bean refId="493" />
-      </excludedBeans>
-      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
-      <exclude>
-        <entry location=".i4j_fileset_1658" fileType="regular" />
-        <entry location=".i4j_fileset_1843" fileType="regular" />
-        <entry location=".i4j_fileset_1573" fileType="regular" />
-        <entry location=".i4j_fileset_1861" fileType="regular" />
-        <entry location=".i4j_fileset_2230" fileType="regular" />
-        <entry location=".i4j_fileset_2232" fileType="regular" />
-      </exclude>
-      <variables>
-        <variable name="XULRUNNER" value="xulrunner-linux" description="" category="" />
-        <variable name="32-BIT-INSTALLER" value="true" description="" category="" />
-      </variables>
-      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
-        <commentFiles />
-        <customAttributes />
-      </autoUpdate>
-      <installerScript mode="1" file="">
-        <content />
-      </installerScript>
-    </unixInstaller>
-    <macos name="Mac OS X Single Bundle" id="198" customizedId="" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="macosx-amd64-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" installerName="${i18n:InstallerName(${compiler:sys.fullName})}" volumeName="${compiler:sys.shortName}" compressDmg="false" launcherId="64">
+    <macos name="Mac OS X Single Bundle" id="198" customizedId="" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="macosx-amd64-12.0.1" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" installerName="${i18n:InstallerName(${compiler:sys.fullName})}" volumeName="${compiler:sys.shortName}" compressDmg="false" launcherId="64">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
+        <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
         <entry location=".i4j_fileset_1859" fileType="regular" />
         <entry location=".i4j_fileset_2230" fileType="regular" />
         <entry location=".i4j_fileset_2234" fileType="regular" />
+        <entry location=".i4j_fileset_7717" fileType="regular" />
+        <entry location=".i4j_fileset_7965" fileType="regular" />
       </exclude>
       <variables>
-        <variable name="XULRUNNER" value="xulrunner-mac" description="" category="" />
         <variable name="OS_EXT" value="MAC" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
@@ -3935,7 +3900,7 @@ if (context.isUnattended()) {
       </autoUpdate>
       <topLevelFiles />
     </macos>
-    <windows name="Windows x64" id="1215" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-amd64-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
+    <windows name="Windows x64" id="1215" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="windows-amd64-12.0.1" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" verifyIntegrity="true">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -3948,9 +3913,10 @@ if (context.isUnattended()) {
         <entry location=".i4j_fileset_1861" fileType="regular" />
         <entry location=".i4j_fileset_2232" fileType="regular" />
         <entry location=".i4j_fileset_2234" fileType="regular" />
+        <entry location=".i4j_fileset_7965" fileType="regular" />
+        <entry location=".i4j_fileset_7967" fileType="regular" />
       </exclude>
       <variables>
-        <variable name="XULRUNNER" value="xulrunner-windows" description="" category="" />
         <variable name="OS_EXT" value="64bit" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
@@ -3958,7 +3924,7 @@ if (context.isUnattended()) {
         <customAttributes />
       </autoUpdate>
     </windows>
-    <unixInstaller name="Unix Installer x64" id="4755" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="linux-amd64-1.8.0_181" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
+    <unixInstaller name="Unix Installer x64" id="4755" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" downloadURL="" includeAllDownloadableComponents="false" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1">
       <excludedComponents />
       <includedDownloadableComponents />
       <excludedLaunchers />
@@ -3973,9 +3939,10 @@ if (context.isUnattended()) {
         <entry location=".i4j_fileset_1861" fileType="regular" />
         <entry location=".i4j_fileset_2230" fileType="regular" />
         <entry location=".i4j_fileset_2232" fileType="regular" />
+        <entry location=".i4j_fileset_7717" fileType="regular" />
+        <entry location=".i4j_fileset_7967" fileType="regular" />
       </exclude>
       <variables>
-        <variable name="XULRUNNER" value="xulrunner-linux" description="" category="" />
         <variable name="32-BIT-INSTALLER" value="false" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">

@@ -17,6 +17,8 @@ bundled or none -->
             <scope>runtime</scope>
             <excludes>
                 <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
+                <exclude>org.openjfx:*:jar:win:*</exclude>
+                <exclude>org.openjfx:*:jar:mac:*</exclude>
             </excludes>
         </dependencySet>
         <dependencySet>

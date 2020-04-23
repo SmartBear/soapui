@@ -68,7 +68,6 @@
                 <descriptor>src/main/assembly/dist.xml</descriptor>
                 <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
                 <descriptor>src/main/assembly/windows-bin.xml</descriptor>
-                <descriptor>src/main/assembly/win32-standalone-bin.xml</descriptor>
                 <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                 <descriptor>src/main/assembly/mac-bin.xml</descriptor>
               </descriptors>
@@ -170,9 +169,6 @@
                   ${assembly.build.directory}/${project.name.visible}-${project.version}-windows-bin.zip
                 </file>
                 <file>
-                  ${assembly.build.directory}/${project.name.visible}-${project.version}-win32-standalone-bin.zip
-                </file>
-                <file>
                   ${assembly.build.directory}/${project.name.visible}-${project.version}-linux-bin.tar.gz
                 </file>
                 <file>
@@ -180,13 +176,7 @@
                 </file>
                 <!-- Installers -->
                 <file>
-                  ${installer.build.directory}/${project.name.visible}-x32-${project.version}.exe
-                </file>
-                <file>
                   ${installer.build.directory}/${project.name.visible}-x64-${project.version}.exe
-                </file>
-                <file>
-                  ${installer.build.directory}/${project.name.visible}-x32-${project.version}.sh
                 </file>
                 <file>
                   ${installer.build.directory}/${project.name.visible}-x64-${project.version}.sh
