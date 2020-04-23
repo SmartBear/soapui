@@ -19,7 +19,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>smartbear-plugin-repository</id>
-            <url>http://www.soapui.org/repository/maven2</url>
+            <url>https://www.soapui.org/repository/maven2</url>
         </pluginRepository>
     </pluginRepositories>
 

@@ -20,7 +20,6 @@ import com.eviware.soapui.impl.support.wsa.WsaRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
