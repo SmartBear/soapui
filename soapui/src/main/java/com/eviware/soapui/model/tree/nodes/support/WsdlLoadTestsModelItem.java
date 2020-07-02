@@ -29,13 +29,11 @@ import com.eviware.soapui.support.UISupport;
  * @author ole.matzura
  */
 
-public class WsdlLoadTestsModelItem extends EmptyModelItem {
-    private TestCase testCase;
+public class WsdlLoadTestsModelItem extends BaseTestsModelItem {
     private TestSuiteListener listener = new InternalTestSuiteListener();
 
     public WsdlLoadTestsModelItem(TestCase testCase) {
-        super(createLabel(testCase), UISupport.createImageIcon("/loadtests.png"));
-        this.testCase = testCase;
+        super(testCase, createLabel(testCase), UISupport.createImageIcon("/loadtests.png"));
 
         testCase.getTestSuite().addTestSuiteListener(listener);
     }
