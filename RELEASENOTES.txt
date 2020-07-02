@@ -20,6 +20,8 @@
 
 * SoapUI 5.5.0 will not run project or suites - Toolkit not initialized error
 
+* Add setting to enable/disable load script/save script execution.
+
 -------------------------------------------------------------------------------
 
 # SoapUI Open Source 5.5.0
