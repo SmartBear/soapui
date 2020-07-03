@@ -92,8 +92,8 @@ public class PluginManager {
         });
         if (pluginFiles != null) {
             List<File> pluginFileList = new ArrayList<>();
-            for (File f:pluginFiles) {
-                pluginFileList.add(f);
+            for (File file : pluginFiles) {
+                pluginFileList.add(file);
             }
 
             resolver = null;
