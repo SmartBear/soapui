@@ -38,7 +38,7 @@
         <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
 
-        <analytics.version>5.5.1-AT</analytics.version>
+        <analytics.version>5.5.1</analytics.version>
 
         <!-- org.apache.maven.plugins -->
         <maven-enforcer-plugin-version>3.0.0-M2</maven-enforcer-plugin-version>
