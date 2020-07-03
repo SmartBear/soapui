@@ -24,6 +24,8 @@
 
 * Plugins don't need to be signed by Smartbear. Any plugin will be loaded.
 
+* Plugins loaded once during launch process.
+
 -------------------------------------------------------------------------------
 
 # SoapUI Open Source 5.5.0
