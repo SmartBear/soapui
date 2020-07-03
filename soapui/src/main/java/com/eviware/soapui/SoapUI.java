@@ -788,6 +788,7 @@ public class SoapUI {
         public void run() {
             boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                     getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+            StandaloneSoapUICore standaloneSoapUICore = new StandaloneSoapUICore(true);
             SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
             if (!isDebug && SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
                 updateProvider.start();
@@ -804,8 +805,7 @@ public class SoapUI {
                     brandedTitleExt = "";
                 }
 
-                startSoapUI(mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
-                        new StandaloneSoapUICore(true));
+                startSoapUI(mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt, standaloneSoapUICore);
 
                 if (getSettings().getBoolean(UISettings.SHOW_STARTUP_PAGE) && !isBrowserDisabled()) {
                     SwingUtilities.invokeLater(new Runnable() {
