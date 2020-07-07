@@ -12,6 +12,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.tools.JavaFXTools;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -95,7 +96,12 @@ public class SaveRequestAction extends AbstractAction {
         });
         Scene scene = new Scene(projectsListView);
         JFXPanel panel = new JFXPanel();
-        panel.setScene(scene);
+        JavaFXTools.runAndWait(new Runnable() {
+            @Override
+            public void run() {
+                panel.setScene(scene);
+            }
+        });
         JPanel container = new JPanel(new BorderLayout());
         container.add(panel, BorderLayout.CENTER);
         return container;
