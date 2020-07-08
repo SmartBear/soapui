@@ -620,10 +620,10 @@ public class SoapUI {
         toolsMenu.add(SwingActionDelegate.createDelegate(GSoapAction.SOAPUI_ACTION_ID));
         toolsMenu.addSeparator();
         toolsMenu.add(SwingActionDelegate.createDelegate(TcpMonAction.SOAPUI_ACTION_ID));
-        toolsMenu.addSeparator();
+        /*toolsMenu.addSeparator();
         StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
         hermesJMSButtonAction.setEnabled(HermesUtils.isHermesJMSSupported());
-        toolsMenu.add(hermesJMSButtonAction);
+        toolsMenu.add(hermesJMSButtonAction);*/
 
         return toolsMenu;
     }
