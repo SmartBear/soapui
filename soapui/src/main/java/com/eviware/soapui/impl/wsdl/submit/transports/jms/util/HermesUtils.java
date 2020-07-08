@@ -148,11 +148,6 @@ public class HermesUtils {
                 if (!mustBeAddedToCurrentClassLoader(filename)) {
                     urls.add(file.toURI().toURL());
                 }
-
-                urls.add(file.toURI().toURL());
-
-//            SoapUIExtensionClassLoader.addUrlToClassLoader(new File(dir, filename).toURI().toURL(),
-//                    JAXBHermesLoader.class.getClassLoader());
             }
             hermesClassLoader = new ReverseOrderClassLoader(urls.toArray(new URL[urls.size()]),
                     currentClassLoader, classesToBeLoadedByParentClassLoader);
