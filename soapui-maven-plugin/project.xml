@@ -124,7 +124,7 @@
 		<dependency>
 			<groupId>groovy</groupId>
 			<artifactId>groovy-all</artifactId>
-			<version>1.8.0</version>
+			<version>${groovy-all.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
