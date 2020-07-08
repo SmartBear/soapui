@@ -80,7 +80,7 @@
     <tns:action id="ResolveProjectAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.ResolveProjectAction"/>
     <tns:action id="ImportTestSuite" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ImportTestSuiteAction"/>
-    <tns:action id="StarHermesJMS" actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>
+    <!--<tns:action id="StarHermesJMS" actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>-->
 
     <!-- WsdlInterface Actions -->
     <tns:action id="WSToolsRegenerateJava2WsdlAction"
@@ -441,8 +441,8 @@
         <tns:actionMapping actionId="ImportMockService"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="MockAsWar"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="StarHermesJMS"/>
+        <!--<tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="StarHermesJMS"/>-->
 
 
     </tns:actionGroup>
