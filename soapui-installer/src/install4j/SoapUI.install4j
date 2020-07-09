@@ -177,6 +177,7 @@
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstallMAC.sh" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/xml-apis.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/xercesImpl.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/jaxb-impl-2.1.17.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
       <dirEntry mountPoint="1955" file="${compiler:DIST_STANDALONE}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
@@ -1691,7 +1692,7 @@ return false;</condition>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib{installer:FILE_SEPARATOR}jaxb-api.jar</string>
+                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jaxb-api.jar</string>
                             </object>
                           </void>
                         </array>
@@ -1714,7 +1715,7 @@ return false;</condition>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib{installer:FILE_SEPARATOR}jide-action.jar</string>
+                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-action.jar</string>
                             </object>
                           </void>
                         </array>
@@ -1737,7 +1738,7 @@ return false;</condition>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib{installer:FILE_SEPARATOR}jide-common.jar</string>
+                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-common.jar</string>
                             </object>
                           </void>
                         </array>
@@ -1760,7 +1761,7 @@ return false;</condition>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib{installer:FILE_SEPARATOR}jide-components.jar</string>
+                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-components.jar</string>
                             </object>
                           </void>
                         </array>
@@ -1783,7 +1784,7 @@ return false;</condition>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib{installer:FILE_SEPARATOR}jide-dock.jar</string>
+                              <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-dock.jar</string>
                             </object>
                           </void>
                         </array>
