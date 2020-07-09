@@ -141,7 +141,8 @@ public class HermesUtils {
                 // fix for users using version of hermesJMS which still has
                 // cglib-2.1.3.jar in lib directory
                 String filename = file.getName();
-                if (!filename.endsWith(".jar") || filename.equals("cglib-2.1.3.jar")) {
+                if (!filename.endsWith(".jar") || filename.equals("cglib-2.1.3.jar") ||
+                        filename.equals("slf4j-jdk14-1.0.1.jar")) {
                     continue;
                 }
 
