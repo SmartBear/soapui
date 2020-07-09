@@ -26,8 +26,6 @@ import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import hermes.Hermes;
-import hermes.HermesInitialContextFactory;
-import hermes.JAXBHermesLoader;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -75,6 +73,10 @@ public class HermesUtils {
 
     }
 
+    public static ClassLoader getHermesClassLoader() {
+        return hermesClassLoader;
+    }
+
     public static Context hermesContext(WsdlProject project) throws NamingException, MalformedURLException,
             IOException {
         String expandedHermesConfigPath = PropertyExpander.expandProperties(project, project.getHermesConfig());
@@ -107,9 +109,9 @@ public class HermesUtils {
         try {
             Thread.currentThread().setContextClassLoader(hermesClassLoader);
             Properties props = new Properties();
-            props.put(Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName());
+            props.put(Context.INITIAL_CONTEXT_FACTORY, "hermes.HermesInitialContextFactory");
             props.put(Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML);
-            props.put("hermes.loader", JAXBHermesLoader.class.getName());
+            props.put("hermes.loader", "hermes.JAXBHermesLoader");
             Context ctx = new InitialContext(props);
             contextMap.put(key, ctx);
             return ctx;
@@ -141,7 +143,8 @@ public class HermesUtils {
                 // fix for users using version of hermesJMS which still has
                 // cglib-2.1.3.jar in lib directory
                 String filename = file.getName();
-                if (!filename.endsWith(".jar") || filename.equals("cglib-2.1.3.jar")) {
+                if (!filename.endsWith(".jar") || filename.equals("cglib-2.1.3.jar") ||
+                        filename.equals("slf4j-jdk14-1.0.1.jar")) {
                     continue;
                 }
 

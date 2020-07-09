@@ -32,13 +32,13 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import hermes.Domain;
 import hermes.Hermes;
-import hermes.HermesContext;
-import hermes.JAXBHermesLoader;
-import hermes.config.DestinationConfig;
 
 import javax.naming.Context;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,6 +46,8 @@ import java.util.List;
 
 public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface<?>> {
     public static final String SOAPUI_ACTION_ID = "AddJMSEndpointAction";
+    private static final String HERMES_IMPL_CLASS_NAME = "hermes.impl.DefaultHermesImpl";
+    private static final String DESTINATION_CONFIG_CLASS_NAME = "hermes.config.DestinationConfig";
     private static final String SESSION = "Session";
     private static final String HERMES_CONFIG = "Hermes Config";
     private static final String SEND = "Send/Publish destination";
@@ -101,8 +103,15 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
         List<Hermes> hermesList = new ArrayList<Hermes>();
         try {
             Context ctx = getHermesContext(iface, hermesConfigPath);
-            JAXBHermesLoader loader = (JAXBHermesLoader) ctx.lookup(HermesContext.LOADER);
-            hermesList = loader.load();
+            if (ctx != null) {
+                NamingEnumeration<NameClassPair> sessions = ctx.list("");
+                while (sessions.hasMore()) {
+                    NameClassPair pair = sessions.next();
+                    if (pair.getClassName().equals(HERMES_IMPL_CLASS_NAME)) {
+                        hermesList.add((Hermes) ctx.lookup(pair.getName()));
+                    }
+                }
+            }
         } catch (Exception e) {
             SoapUI.logError(e);
             SoapUI.log.warn("no HermesJMS context!");
@@ -225,11 +234,25 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
     }
 
     private void extractDestinations(Hermes hermes, List<Destination> destinationList) {
-        Iterator<?> hermesDestionations = hermes.getDestinations();
-        while (hermesDestionations.hasNext()) {
-            DestinationConfig dest = (DestinationConfig) hermesDestionations.next();
-            Destination temp = new Destination(dest.getName(), Domain.getDomain(dest.getDomain()));
-            destinationList.add(temp);
+        try {
+            ClassLoader hermesClassLoader = HermesUtils.getHermesClassLoader();
+            Class cl = hermesClassLoader.loadClass(DESTINATION_CONFIG_CLASS_NAME);
+            if (cl != null) {
+                Iterator<?> hermesDestinations = hermes.getDestinations();
+                while (hermesDestinations.hasNext()) {
+                    Object dest = hermesDestinations.next();
+                    Field nameField = cl.getDeclaredField("name");
+                    nameField.setAccessible(true);
+                    String name = (String) nameField.get(dest);
+                    Field domainField = cl.getDeclaredField("domain");
+                    domainField.setAccessible(true);
+                    Integer domain = (Integer) domainField.get(dest);
+                    Destination temp = new Destination(name, Domain.getDomain(domain));
+                    destinationList.add(temp);
+                }
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
         }
     }
 
