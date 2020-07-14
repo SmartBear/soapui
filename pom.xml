@@ -38,7 +38,7 @@
         <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
 
-        <analytics.version>5.5.1-SNAPSHOT</analytics.version>
+        <analytics.version>5.5.1</analytics.version>
 
         <groovy-all.version>2.4.17</groovy-all.version>
 
