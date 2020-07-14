@@ -38,7 +38,7 @@ import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
+import com.eviware.soapui.model.tree.nodes.PropertyModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;

@@ -26,8 +26,6 @@ import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import hermes.Hermes;
-import hermes.HermesInitialContextFactory;
-import hermes.JAXBHermesLoader;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -35,18 +33,49 @@ import javax.naming.NamingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class HermesUtils {
-    private static boolean hermesJarsLoaded = false;
+    private static ClassLoader hermesClassLoader;
     private static Map<String, Context> contextMap = new HashMap<String, Context>();
     public static String HERMES_CONFIG_XML = "hermes-config.xml";
+
+    private static HashSet<String> classesToBeLoadedByParentClassLoader = new HashSet<>();
+
+    static {
+        classesToBeLoadedByParentClassLoader.add("hermes.browser.tasks.ThreadPool");
+        classesToBeLoadedByParentClassLoader.add("hermes.browser.HermesUI");
+        classesToBeLoadedByParentClassLoader.add("hermes.Hermes");
+        classesToBeLoadedByParentClassLoader.add("hermes.config.SessionConfig");
+        classesToBeLoadedByParentClassLoader.add("hermes.browser.UIMessageSink");
+        classesToBeLoadedByParentClassLoader.add("hermes.Domain");
+        classesToBeLoadedByParentClassLoader.add("hermes.EventManager");
+        classesToBeLoadedByParentClassLoader.add("hermes.HermesDispatcher");
+        classesToBeLoadedByParentClassLoader.add("hermes.config.DestinationConfig");
+        classesToBeLoadedByParentClassLoader.add("hermes.config.PropertyConfig");
+        classesToBeLoadedByParentClassLoader.add("hermes.config.PropertySetConfig");
+        classesToBeLoadedByParentClassLoader.add("hermes.config.RendererConfig");
+        classesToBeLoadedByParentClassLoader.add("hermes.ProviderMetaData");
+        classesToBeLoadedByParentClassLoader.add("hermes.impl.DestinationManager");
+        classesToBeLoadedByParentClassLoader.add("hermes.browser.MessageRenderer");
+
+    }
+
+    public static ClassLoader getHermesClassLoader() {
+        return hermesClassLoader;
+    }
 
     public static Context hermesContext(WsdlProject project) throws NamingException, MalformedURLException,
             IOException {
@@ -67,9 +96,8 @@ public class HermesUtils {
     private static Context getHermes(String key, String hermesConfigPath) throws IOException, MalformedURLException,
             NamingException {
         SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
-        if (!hermesJarsLoaded) {
+        if (hermesClassLoader == null) {
             addHermesJarsToClasspath();
-            hermesJarsLoaded = true;
         }
 
         if (contextMap.containsKey(key)) {
@@ -79,11 +107,11 @@ public class HermesUtils {
         // ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
         try {
-            Thread.currentThread().setContextClassLoader(JAXBHermesLoader.class.getClassLoader());
+            Thread.currentThread().setContextClassLoader(hermesClassLoader);
             Properties props = new Properties();
-            props.put(Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName());
+            props.put(Context.INITIAL_CONTEXT_FACTORY, "hermes.HermesInitialContextFactory");
             props.put(Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML);
-            props.put("hermes.loader", JAXBHermesLoader.class.getName());
+            props.put("hermes.loader", "hermes.JAXBHermesLoader");
             Context ctx = new InitialContext(props);
             contextMap.put(key, ctx);
             return ctx;
@@ -108,21 +136,40 @@ public class HermesUtils {
         File dir = new File(hermesLib);
 
         File[] children = dir.listFiles();
-        List<URL> urls = new ArrayList<URL>();
-        for (File file : children) {
-            // fix for users using version of hermesJMS which still has
-            // cglib-2.1.3.jar in lib directory
-            String filename = file.getName();
-            if (!filename.endsWith(".jar") || filename.equals("cglib-2.1.3.jar")) {
-                continue;
+        if (children != null) {
+            ClassLoader currentClassLoader = Hermes.class.getClassLoader();
+            List<URL> urls = new ArrayList<URL>();
+            for (File file : children) {
+                // fix for users using version of hermesJMS which still has
+                // cglib-2.1.3.jar in lib directory
+                String filename = file.getName();
+                if (!filename.endsWith(".jar") || filename.equals("cglib-2.1.3.jar") ||
+                        filename.equals("slf4j-jdk14-1.0.1.jar")) {
+                    continue;
+                }
+
+                if (!mustBeAddedToCurrentClassLoader(filename)) {
+                    urls.add(file.toURI().toURL());
+                }
             }
-
-            urls.add(file.toURI().toURL());
-
-            SoapUIExtensionClassLoader.addUrlToClassLoader(new File(dir, filename).toURI().toURL(),
-                    JAXBHermesLoader.class.getClassLoader());
+            hermesClassLoader = new ReverseOrderClassLoader(urls.toArray(new URL[urls.size()]),
+                    currentClassLoader, classesToBeLoadedByParentClassLoader);
         }
 
+    }
+
+    private static boolean mustBeAddedToCurrentClassLoader(String filename) {
+        return filename.equals("jide-action.jar") ||
+                filename.equals("jaxb-api.jar") ||
+                filename.equals("xerces.jar") ||
+                filename.equals("xercesImpl.jar") ||
+                filename.equals("jide-components.jar") ||
+                filename.equals(("xml-apis.jar")) ||
+                filename.equals("javax.jms.jar") ||
+                filename.equals("jms.jar") ||
+                filename.equals("jta-spec1_0_1.jar") ||
+                filename.equals("jmx.jar") ||
+                filename.equals("jms-jmx.jar");
     }
 
     public static void flushHermesCache() {
@@ -198,5 +245,84 @@ public class HermesUtils {
 
     public static boolean isHermesJMSSupported() {
         return !UISupport.isIdePlugin();
+    }
+
+    public static class ReverseOrderClassLoader extends URLClassLoader {
+        final private Set<String> toBeLoadedByParent;
+
+        public ReverseOrderClassLoader(URL[] urls, ClassLoader parent, Set<String> toBeLoadedByParent) {
+            super(urls, parent);
+            this.toBeLoadedByParent = toBeLoadedByParent != null ? toBeLoadedByParent : Collections.emptySet();
+        }
+
+        @Override
+        protected synchronized Class<?> loadClass(String name, boolean resolve)
+                throws ClassNotFoundException {
+            Class<?> c = findLoadedClass(name);
+            if (c == null) {
+                c = innerLoadClass(name, resolve);
+            }
+            if (resolve) {
+                resolveClass(c);
+            }
+            return c;
+        }
+
+        private Class<?> innerLoadClass(String name, boolean resolve) throws ClassNotFoundException {
+            if (toBeLoadedByParent.contains(name)) {
+                return super.loadClass(name, resolve);
+            }
+            try {
+                return findClass(name);
+            } catch (ClassNotFoundException e) {
+                return super.loadClass(name, resolve);
+            }
+        }
+
+        @Override
+        public URL getResource(String name) {
+            URL url = findResource(name);
+            if (url == null) {
+                url = super.getResource(name);
+            }
+            return url;
+        }
+
+        @Override
+        public Enumeration<URL> getResources(String name) throws IOException {
+
+            Enumeration<URL> localUrls = findResources(name);
+
+            Enumeration<URL> parentUrls = null;
+            if (getParent() != null) {
+                parentUrls = getParent().getResources(name);
+            }
+
+            final List<URL> urlList = new ArrayList<>();
+            addURLsIntoList(urlList, localUrls);
+            addURLsIntoList(urlList, parentUrls);
+
+            return Collections.enumeration(urlList);
+        }
+
+        @Override
+        public InputStream getResourceAsStream(String name) {
+            URL url = getResource(name);
+            try {
+                return url != null ? url.openStream() : null;
+            } catch (IOException ignore) {
+            }
+            return null;
+        }
+
+
+        private void addURLsIntoList(List<URL> urlList, Enumeration<URL> urlEnumeration) {
+            if (urlEnumeration != null && urlList != null) {
+                while (urlEnumeration.hasMoreElements()) {
+                    urlList.add(urlEnumeration.nextElement());
+                }
+            }
+        }
+
     }
 }

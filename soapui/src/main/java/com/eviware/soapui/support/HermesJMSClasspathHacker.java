@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.support;
 
-import hermes.JAXBHermesLoader;
+import hermes.HermesLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class HermesJMSClasspathHacker {
     }// end method
 
     private static void addURL(URL u) throws IOException {
-        ClassLoader classLoader = JAXBHermesLoader.class.getClassLoader();
+        ClassLoader classLoader = HermesLoader.class.getClassLoader();
         // ClasspathHacker.addUrlToClassLoader( u, classLoader );
     }// end method
 
