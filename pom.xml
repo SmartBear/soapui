@@ -64,12 +64,13 @@
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
         <xmlbeans-maven-plugin-version>2.3.5-sb-fixed</xmlbeans-maven-plugin-version>
         <!-- org.openjfx-->
-        <javafx-base-version>12</javafx-base-version>
-        <javafx-controls-version>12</javafx-controls-version>
-        <javafx-graphics-version>12</javafx-graphics-version>
-        <javafx-media-version>12</javafx-media-version>
-        <javafx-web-version>12</javafx-web-version>
-        <javafx-swing-version>12</javafx-swing-version>
+        <javafx.version>12</javafx.version>
+        <javafx-base-version>${javafx.version}</javafx-base-version>
+        <javafx-controls-version>${javafx.version}</javafx-controls-version>
+        <javafx-graphics-version>${javafx.version}</javafx-graphics-version>
+        <javafx-media-version>${javafx.version}</javafx-media-version>
+        <javafx-web-version>${javafx.version}</javafx-web-version>
+        <javafx-swing-version>${javafx.version}</javafx-swing-version>
         <!-- other -->
         <maven-gitlog-plugin-version>1.9.1</maven-gitlog-plugin-version>
 
