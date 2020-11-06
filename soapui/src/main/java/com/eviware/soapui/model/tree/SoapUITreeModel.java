@@ -67,11 +67,13 @@ public class SoapUITreeModel implements TreeModel {
         return treeNode.getChildCount();
     }
 
+    @Override
     public boolean isLeaf(Object node) {
         SoapUITreeNode treeNode = (SoapUITreeNode) node;
         return treeNode.isLeaf();
     }
 
+    @Override
     public void valueForPathChanged(TreePath path, Object newValue) {
         SoapUITreeNode treeNode = (SoapUITreeNode) path.getLastPathComponent();
         if (treeNode.valueChanged(newValue)) {
@@ -79,15 +81,18 @@ public class SoapUITreeModel implements TreeModel {
         }
     }
 
+    @Override
     public int getIndexOfChild(Object parent, Object child) {
         SoapUITreeNode treeNode = (SoapUITreeNode) parent;
         return treeNode.getIndexOfChild(child);
     }
 
+    @Override
     public void addTreeModelListener(TreeModelListener l) {
         listeners.add(l);
     }
 
+    @Override
     public void removeTreeModelListener(TreeModelListener l) {
         listeners.remove(l);
     }

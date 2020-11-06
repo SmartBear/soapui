@@ -64,7 +64,7 @@
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
         <xmlbeans-maven-plugin-version>2.3.5-sb-fixed</xmlbeans-maven-plugin-version>
         <!-- org.openjfx-->
-        <javafx.version>12</javafx.version>
+        <javafx.version>15</javafx.version>
         <javafx-base-version>${javafx.version}</javafx-base-version>
         <javafx-controls-version>${javafx.version}</javafx-controls-version>
         <javafx-graphics-version>${javafx.version}</javafx-graphics-version>
