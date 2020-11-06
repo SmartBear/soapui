@@ -72,6 +72,7 @@
         <javafx-swing-version>12</javafx-swing-version>
         <!-- other -->
         <maven-gitlog-plugin-version>1.9.1</maven-gitlog-plugin-version>
+        <junit-version>4.13.1</junit-version>
 
     </properties>
 
