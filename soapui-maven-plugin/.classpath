@@ -38,7 +38,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/xmlunit/jars/xmlunit-1.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xml-security/jars/xmlsec-1.4.3.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/opensaml/jars/opensaml-1.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/xalan/jars/xalan-2.7.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xalan/jars/xalan-2.7.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/wss4j/jars/wss4j-1.5.8.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/org/bouncycastle/jars/bcprov-jdk15on-1.64.jar"/>

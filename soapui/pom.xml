@@ -550,7 +550,7 @@
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.1</version>
+            <version>${xalan-xalan-version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -645,7 +645,7 @@
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>serializer</artifactId>
-            <version>2.7.1</version>
+            <version>${xalan-serializer-version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
