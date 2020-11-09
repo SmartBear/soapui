@@ -74,6 +74,7 @@
         <!-- other -->
         <maven-gitlog-plugin-version>1.9.1</maven-gitlog-plugin-version>
         <junit-version>4.13.1</junit-version>
+        <thoughtworks-xstream-version>1.4.13</thoughtworks-xstream-version>
 
     </properties>
 
