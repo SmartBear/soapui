@@ -555,7 +555,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.64</version>
+            <version>${org-bouncycastle-bcprov-jdk15on-version}</version>
         </dependency>
         <dependency>
             <groupId>jtidy</groupId>
