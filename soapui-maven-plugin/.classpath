@@ -50,7 +50,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/amf/jars/flex-messaging-opt-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/amf/jars/flex-messaging-proxy-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/amf/jars/flex-messaging-remoting-1.0.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/thoughtworks/jars/xstream-1.3.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/thoughtworks/jars/xstream-1.4.13.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/net.sourceforge.htmlunit/jars/htmlunit-2.7.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/org.w3c.css/jars/sac-1.3.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/net.sourceforge.htmlunit/jars/htmlunit-core-js-2.7.jar"/>

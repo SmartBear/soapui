@@ -74,6 +74,7 @@
         <!-- other -->
         <maven-gitlog-plugin-version>1.9.1</maven-gitlog-plugin-version>
         <junit-version>4.13.1</junit-version>
+        <thoughtworks-xstream-version>1.4.13</thoughtworks-xstream-version>
         <xalan-version>2.7.2</xalan-version>
         <xalan-xalan-version>${xalan-version}</xalan-xalan-version>
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
