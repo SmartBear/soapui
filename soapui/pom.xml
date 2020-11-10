@@ -485,7 +485,7 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.7.0</version>
+            <version>${commons-beanutils-version}</version>
         </dependency>
         <dependency>
             <groupId>json</groupId>
