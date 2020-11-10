@@ -78,6 +78,7 @@
         <xalan-version>2.7.2</xalan-version>
         <xalan-xalan-version>${xalan-version}</xalan-xalan-version>
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
+        <commons-beanutils-version>1.9.4</commons-beanutils-version>
 
     </properties>
 
