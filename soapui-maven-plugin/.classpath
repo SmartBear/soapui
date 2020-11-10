@@ -11,7 +11,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/commons-io/jars/commons-io-1.3.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/com.narupley/jars/not-going-to-be-commons-ssl-0.3.20.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-cli/jars/commons-cli-1.0.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.9.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-httpclient/jars/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/json/jars/json-lib-2.2.2-jdk15.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/ezmorph/jars/ezmorph-1.0.5.jar"/>
