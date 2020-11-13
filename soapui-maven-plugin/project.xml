@@ -132,10 +132,15 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>groovy</groupId>
+			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
-			<version>${groovy-all.version}</version>
-			<type>jar</type>
+			<version>3.0.6</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-dateutil</artifactId>
+			<version>3.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>rhino</groupId>
