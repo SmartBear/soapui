@@ -88,43 +88,13 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     protected void ensureConsoleAppenderIsDefined(Logger logger) {
         if (logger != null) {
             Map<String, Appender> appenderMap = ((org.apache.logging.log4j.core.Logger) logger).getAppenders();
-            System.out.println("======>>>> START");
             for (Map.Entry<String, Appender> appenderEntry : appenderMap.entrySet()) {
-                System.out.println("======>>>> key = " + appenderEntry.getKey());
                 if (appenderEntry.getValue() instanceof ConsoleAppender) {
-                    System.out.println("======>>>> FIND <<==========");
                     return;
                 }
             }
-            // ensure there is a ConsoleAppender defined, adding one if necessary
-            /*for (Object appender : Collections.list(logger.getAllAppenders())) {
-                if (appender instanceof ConsoleAppender) {
-                    return;
-                }
-            }*/
-            /*PatternLayout patternLayout = new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n");
-            ConsoleAppender consoleAppender = new ConsoleAppender();
-            consoleAppender.setWriter(new OutputStreamWriter(System.out));
-            consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-            logger.addAppender(consoleAppender);*/
-
-            /*ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-            builder.setConfigurationName("DefaultLogger");
-            // create a console appender
-            AppenderComponentBuilder appenderBuilder = builder.newAppender("Console", "CONSOLE").addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT);
-            // add a layout like pattern, json etc
-            appenderBuilder.add(builder.newLayout("PatternLayout").addAttribute("pattern", "%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-            RootLoggerComponentBuilder rootLogger = builder.newRootLogger(Level.DEBUG);
-            rootLogger.add(builder.newAppenderRef("Console"));
-            builder.add(appenderBuilder);
-            //builder.add(logger);
-            builder.add(rootLogger);
-            Configurator.reconfigure(builder.build());*/
             PatternLayout patternLayout = PatternLayout.newBuilder().withPattern("%d{ABSOLUTE} %-5p [%c{1}] %m%n").build();
             ConsoleAppender consoleAppender = ConsoleAppender.newBuilder().withLayout(patternLayout).build();
-            /*consoleAppender.setWriter(new OutputStreamWriter(System.out));
-            consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-            logger.addAppender(consoleAppender);*/
             Logging.addAppender(logger.getName(), consoleAppender);
         }
     }

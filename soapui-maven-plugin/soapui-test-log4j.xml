@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<Configuration packages="com.eviware.soapui.support.log">
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+        </Console>
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+        <Console name="WARN-CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+        </Console>
+    </Appenders>
+    <Logger>
 
-    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-        <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-        <param name="Target" value="System.out"/>
-        <param name="Threshold" value="ERROR"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
-        </layout>
-    </appender>
+        <logger name="groovy.log" level="ERROR" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-    <logger name="groovy.log">
-        <level value="ERROR"/>
-        <appender-ref ref="CONSOLE"/>
-    </logger>
+        <root level="ERROR">
+            <AppenderRef ref="CONSOLE"/>
+        </root>
+    </Logger>
 
-    <root>
-        <priority value="ERROR"/>
-        <appender-ref ref="CONSOLE"/>
-    </root>
-
-</log4j:configuration>
+</Configuration>
