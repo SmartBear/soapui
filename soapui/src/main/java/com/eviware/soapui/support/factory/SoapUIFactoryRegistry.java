@@ -21,7 +21,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SoapUIFactoriesConfig;
 import com.eviware.soapui.config.SoapUIFactoryConfig;
 import com.eviware.soapui.config.SoapuiFactoriesDocumentConfig;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ import java.util.Set;
 public class SoapUIFactoryRegistry {
     private Map<Class<?>, List<Object>> factories = new HashMap<Class<?>, List<Object>>();
     private Map<Class<?>, SoapUIFactoryConfig> factoryConfigs = new HashMap<Class<?>, SoapUIFactoryConfig>();
-    private final static Logger log = Logger.getLogger(SoapUIFactoryRegistry.class);
+    private final static Logger log = LogManager.getLogger(SoapUIFactoryRegistry.class);
     private Set<SoapUIFactoryRegistryListener> listeners = new HashSet<SoapUIFactoryRegistryListener>();
 
     public SoapUIFactoryRegistry(InputStream config) {

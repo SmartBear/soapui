@@ -20,7 +20,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +38,7 @@ public class LoadTestAssertionRegistry {
     private static LoadTestAssertionRegistry instance;
     private Map<String, Class<? extends AbstractLoadTestAssertion>> availableAssertions = new HashMap<String, Class<? extends AbstractLoadTestAssertion>>();
     @SuppressWarnings("unused")
-    private final static Logger logger = Logger.getLogger(LoadTestAssertionRegistry.class);
+    private final static Logger logger = LogManager.getLogger(LoadTestAssertionRegistry.class);
 
     public LoadTestAssertionRegistry() {
         availableAssertions.put(TestStepAverageAssertion.STEP_AVERAGE_TYPE, TestStepAverageAssertion.class);

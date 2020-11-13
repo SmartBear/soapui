@@ -21,7 +21,8 @@ import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandl
 import com.eviware.soapui.support.types.StringToStringMap;
 import junit.framework.ComparisonFailure;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.awt.event.ActionEvent;
@@ -52,7 +53,7 @@ public class Tools {
     public static final int COPY_BUFFER_SIZE = 1000;
 
     private static final MessageSupport messages = MessageSupport.getMessages(Tools.class);
-    private static final Logger log = Logger.getLogger(Tools.class);
+    private static final Logger log = LogManager.getLogger(Tools.class);
 
     private static final Pattern PROPERTY_EXPANSION_EQUALS_PATTERN = Pattern.compile("^\\$\\{(.*)\\}$");
     private static final Pattern PROPERTY_EXPANSION_CONTAINS_PATTERN =

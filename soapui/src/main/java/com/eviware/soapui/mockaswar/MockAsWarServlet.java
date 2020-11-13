@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.mockaswar;
@@ -33,8 +33,11 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.smartbear.soapui.core.Logging;
 import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.xmlbeans.XmlException;
 
 import javax.servlet.ServletContext;
@@ -62,7 +65,7 @@ public class MockAsWarServlet extends HttpServlet {
     protected WsdlProject project;
     long maxResults;
     List<MockResult> results = new TreeList();
-    private List<LoggingEvent> events = new TreeList();
+    private List<LogEvent> events = new TreeList();
     boolean enableWebUI;
 
     public void init() throws ServletException {
@@ -153,8 +156,8 @@ public class MockAsWarServlet extends HttpServlet {
                 }
             }
 
-        }catch (Exception e){
-            logger.info("Property set with error!"+e.getMessage());
+        } catch (Exception e) {
+            logger.info("Property set with error!" + e.getMessage());
         }
         try {
             maxResults = Integer.parseInt(getInitParameter("maxResults"));
@@ -162,7 +165,7 @@ public class MockAsWarServlet extends HttpServlet {
             maxResults = 1000;
         }
 
-        SoapUI.ensureGroovyLog().addAppender(new GroovyLogAppender());
+        Logging.addAppender(Logging.ensureGroovyLog().getName(), new GroovyLogAppender());
 
         return getInitParameter("mockServiceEndpoint");
     }
@@ -476,9 +479,15 @@ public class MockAsWarServlet extends HttpServlet {
         out.flush();
     }
 
-    private class GroovyLogAppender extends org.apache.log4j.AppenderSkeleton {
+    private class GroovyLogAppender extends AbstractAppender {
+        static final String GROOVY_LOG_APPENDER_NAME = "GROOVY_LOG_APPENDER";
 
-        protected void append(LoggingEvent event) {
+        GroovyLogAppender() {
+            super(GROOVY_LOG_APPENDER_NAME, null, PatternLayout.createDefaultLayout());
+        }
+
+        @Override
+        public void append(LogEvent event) {
             events.add(event);
         }
 
@@ -509,11 +518,11 @@ public class MockAsWarServlet extends HttpServlet {
 
         int cnt = 1;
 
-        for (LoggingEvent event : events) {
+        for (LogEvent event : events) {
 
             out.print("<tr><td>" + (cnt++) + "</td>");
-            out.print("<td>" + new java.util.Date(event.timeStamp) + "</td>");
-            out.print("<td>" + event.getRenderedMessage() + "</td></tr>");
+            out.print("<td>" + new java.util.Date(event.getTimeMillis()) + "</td>");
+            out.print("<td>" + event.getMessage().getFormattedMessage() + "</td></tr>");
         }
 
         out.print("</table>");

@@ -21,8 +21,9 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,11 +40,11 @@ public final class LogDisablingTestMonitorListener extends TestMonitorListenerAd
 
     public void loadTestStarted(LoadTestRunner runner) {
         if (loadTestRunners.isEmpty()) {
-            Logger.getLogger(SoapUI.class).info("Disabling logs during loadtests");
-            Logger.getLogger("org.apache.http.wire").setLevel(Level.OFF);
+            LogManager.getLogger(SoapUI.class).info("Disabling logs during loadtests");
+            Configurator.setLevel("org.apache.http.wire", Level.OFF);
 
             if (!SoapUI.getSettings().getBoolean(UISettings.DONT_DISABLE_GROOVY_LOG)) {
-                Logger.getLogger("groovy.log").setLevel(Level.OFF);
+                Configurator.setLevel("groovy.log", Level.OFF);
             }
         }
 
@@ -54,9 +55,9 @@ public final class LogDisablingTestMonitorListener extends TestMonitorListenerAd
         loadTestRunners.remove(runner);
 
         if (loadTestRunners.isEmpty()) {
-            Logger.getLogger("org.apache.http.wire").setLevel(Level.DEBUG);
-            Logger.getLogger("groovy.log").setLevel(Level.DEBUG);
-            Logger.getLogger(SoapUI.class).info("Enabled logs after loadtests");
+            Configurator.setLevel("org.apache.http.wire", Level.DEBUG);
+            Configurator.setLevel("groovy.log", Level.DEBUG);
+            LogManager.getLogger(SoapUI.class).info("Enabled logs after loadtests");
         }
     }
 

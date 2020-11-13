@@ -28,7 +28,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.junit.After;
 import org.junit.Before;

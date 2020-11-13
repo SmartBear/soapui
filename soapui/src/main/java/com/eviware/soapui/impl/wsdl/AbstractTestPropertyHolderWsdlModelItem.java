@@ -25,7 +25,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ import java.util.Map;
 public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelItemConfig> extends
         AbstractWsdlModelItem<T> implements MutableTestPropertyHolder {
     private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
-    private final static Logger log = Logger.getLogger(AbstractTestPropertyHolderWsdlModelItem.class);
+    private final static Logger log = LogManager.getLogger(AbstractTestPropertyHolderWsdlModelItem.class);
 
     protected AbstractTestPropertyHolderWsdlModelItem(T config, ModelItem parent, String icon) {
         super(config, parent, icon);

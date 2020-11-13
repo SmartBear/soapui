@@ -18,7 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.support;
 
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class MockLoadTestRunner extends AbstractMockTestRunner<WsdlLoadTest> implements LoadTestRunner {
     public MockLoadTestRunner(WsdlLoadTest modelItem, Logger logger) {

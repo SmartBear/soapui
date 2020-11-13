@@ -28,7 +28,7 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.result.SecurityScanResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest> implements SecurityTestRunner {
 

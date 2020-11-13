@@ -23,7 +23,8 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -51,7 +52,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory {
     private static final Map<String, SSLSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLSocketFactory>();
     private final String sslContextAlgorithm = System.getProperty("soapui.sslcontext.algorithm", "TLS");
     private final SSLContext sslContext = SSLContext.getInstance(sslContextAlgorithm);
-    private final static Logger log = Logger.getLogger(SoapUISSLSocketFactory.class);
+    private final static Logger log = LogManager.getLogger(SoapUISSLSocketFactory.class);
 
     @SuppressWarnings("deprecation")
     public SoapUISSLSocketFactory(KeyStore keyStore, String keystorePassword) throws KeyManagementException,

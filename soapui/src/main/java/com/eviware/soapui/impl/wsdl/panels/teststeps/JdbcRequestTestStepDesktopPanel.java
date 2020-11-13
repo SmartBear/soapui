@@ -72,7 +72,8 @@ import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListen
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.annotation.Nonnull;
@@ -113,7 +114,7 @@ import java.util.List;
 
 public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcRequestTestStep> implements
         SubmitListener {
-    private final static Logger log = Logger.getLogger(AbstractHttpRequestDesktopPanel.class);
+    private final static Logger log = LogManager.getLogger(AbstractHttpRequestDesktopPanel.class);
     private final static MessageSupport messages = MessageSupport.getMessages(JdbcRequestTestStepDesktopPanel.class);
     protected JPanel configPanel;
     private JButton addAssertionButton;

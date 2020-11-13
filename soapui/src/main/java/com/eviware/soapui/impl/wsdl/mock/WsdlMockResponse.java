@@ -58,7 +58,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
@@ -85,7 +86,7 @@ import java.util.Map;
  */
 
 public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> implements WsaContainer {
-    private final static Logger log = Logger.getLogger(WsdlMockResponse.class);
+    private final static Logger log = LogManager.getLogger(WsdlMockResponse.class);
 
     public final static String MOCKRESULT_PROPERTY = WsdlMockResponse.class.getName() + "@mockresult";
     public final static String HEADERS_PROPERTY = WsdlMockResponse.class.getName() + "@headers";

@@ -18,7 +18,8 @@ package com.eviware.soapui.support.xml;
 
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaParticle;
 import org.apache.xmlbeans.SchemaProperty;
@@ -56,7 +57,7 @@ public class XmlObjectTreeModel implements TreeTableModel {
     private SchemaTypeSystem typeSystem;
     private RootXmlTreeNode root;
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(XmlObjectTreeModel.class);
+    private final static Logger log = LogManager.getLogger(XmlObjectTreeModel.class);
 
     public XmlObjectTreeModel(XmlObject xmlObject) {
         this(XmlBeans.getBuiltinTypeSystem(), xmlObject);

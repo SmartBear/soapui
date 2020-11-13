@@ -25,7 +25,8 @@ import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandl
 import com.eviware.soapui.support.resolver.ResolveContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -49,7 +50,7 @@ import java.util.zip.ZipOutputStream;
 
 public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> implements WsdlAttachment {
     private AttachmentConfig config;
-    private final static Logger log = Logger.getLogger(FileAttachment.class);
+    private final static Logger log = LogManager.getLogger(FileAttachment.class);
     private final T modelItem;
     private BeanPathPropertySupport urlProperty;
 

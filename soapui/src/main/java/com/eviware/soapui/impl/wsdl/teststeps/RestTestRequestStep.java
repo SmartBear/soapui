@@ -71,7 +71,8 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaType;
 import org.w3c.dom.Document;
 
@@ -88,7 +89,7 @@ import java.util.Map;
 import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 public class RestTestRequestStep extends WsdlTestStepWithProperties implements RestTestRequestStepInterface, Securable {
-    private final static Logger log = Logger.getLogger(RestTestRequestStep.class);
+    private final static Logger log = LogManager.getLogger(RestTestRequestStep.class);
     private RestRequestStepConfig restRequestStepConfig;
     private RestTestRequest testRequest;
     private RestResource restResource;

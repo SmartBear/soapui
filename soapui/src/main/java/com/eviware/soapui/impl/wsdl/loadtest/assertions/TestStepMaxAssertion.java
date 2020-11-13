@@ -37,7 +37,8 @@ import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class TestStepMaxAssertion extends AbstractLoadTestAssertion implements C
     private int maxErrors;
     private XFormDialog dialog;
     public static final String STEP_MAXIMUM_TYPE = "Step Maximum";
-    private final static Logger log = Logger.getLogger(TestStepMaxAssertion.class);
+    private final static Logger log = LogManager.getLogger(TestStepMaxAssertion.class);
 
     public TestStepMaxAssertion(LoadTestAssertionConfig assertionConfig, WsdlLoadTest loadTest) {
         super(assertionConfig, loadTest);

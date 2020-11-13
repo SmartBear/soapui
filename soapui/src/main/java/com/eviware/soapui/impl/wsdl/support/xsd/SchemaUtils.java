@@ -25,7 +25,8 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaAnnotation;
 import org.apache.xmlbeans.SchemaField;
 import org.apache.xmlbeans.SchemaLocalElement;
@@ -67,7 +68,7 @@ import java.util.Set;
  */
 
 public class SchemaUtils {
-    private final static Logger log = Logger.getLogger(SchemaUtils.class);
+    private final static Logger log = LogManager.getLogger(SchemaUtils.class);
     private static Map<String, XmlObject> defaultSchemas = new HashMap<String, XmlObject>();
 
     static {

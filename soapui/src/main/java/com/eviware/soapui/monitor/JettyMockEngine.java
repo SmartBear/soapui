@@ -30,7 +30,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.log.JettyLogger;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mortbay.component.AbstractLifeCycle;
 import org.mortbay.io.Connection;
 import org.mortbay.io.EndPoint;
@@ -74,7 +75,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 
 public class JettyMockEngine implements MockEngine {
-    public final static Logger log = Logger.getLogger(JettyMockEngine.class);
+    public final static Logger log = LogManager.getLogger(JettyMockEngine.class);
 
     private Server server;
     private Map<Integer, Map<String, List<MockRunner>>> runners = new HashMap<Integer, Map<String, List<MockRunner>>>();

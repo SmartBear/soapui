@@ -43,7 +43,8 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.io.HttpTransportMetrics;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
     /**
      * Log object for this class.
      */
-    private static final Logger log = Logger.getLogger(SoapUIMultiThreadedHttpConnectionManager.class);
+    private static final Logger log = LogManager.getLogger(SoapUIMultiThreadedHttpConnectionManager.class);
 
     /**
      * Connection eviction policy

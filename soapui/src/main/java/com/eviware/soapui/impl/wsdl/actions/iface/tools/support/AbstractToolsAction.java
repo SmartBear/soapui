@@ -37,7 +37,8 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormTextField;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -53,7 +54,7 @@ import java.io.FilenameFilter;
 
 public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractSoapUIAction<T> {
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(AbstractToolsAction.class);
+    private static final Logger log = LogManager.getLogger(AbstractToolsAction.class);
 
     protected static final String WSDL = "WSDL";
     protected static final String CACHED_WSDL = "Use cached WSDL";

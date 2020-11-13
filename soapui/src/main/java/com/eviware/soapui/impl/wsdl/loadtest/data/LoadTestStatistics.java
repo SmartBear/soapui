@@ -31,7 +31,8 @@ import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.types.StringList;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.Color;
@@ -53,7 +54,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class LoadTestStatistics extends AbstractTableModel implements Runnable {
     public final static String NO_STATS_TESTCASE_CANCEL_REASON = "NO_STATS_TESTCASE_CANCEL_REASON";
-    private final static Logger log = Logger.getLogger(LoadTestStatistics.class);
+    private final static Logger log = LogManager.getLogger(LoadTestStatistics.class);
 
     private final WsdlLoadTest loadTest;
     private long[][] data;

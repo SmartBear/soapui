@@ -26,12 +26,13 @@ import com.eviware.soapui.settings.HttpSettings;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 
 public class HttpCompressionRequestFilter extends AbstractRequestFilter {
-    private final static Logger log = Logger.getLogger(HttpCompressionRequestFilter.class);
+    private final static Logger log = LogManager.getLogger(HttpCompressionRequestFilter.class);
 
     @Override
     public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> httpRequest) {

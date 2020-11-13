@@ -25,7 +25,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class LoadTestSamples extends AbstractTableModel {
     private List<Long> timestamps = new ArrayList<Long>();
     private InternalLoadTestRunListener loadTestRunListener = new InternalLoadTestRunListener();
     private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
-    private final static Logger log = Logger.getLogger(LoadTestSamples.class);
+    private final static Logger log = LogManager.getLogger(LoadTestSamples.class);
 
     public LoadTestSamples(LoadTest loadTest) {
         this.loadTest = loadTest;

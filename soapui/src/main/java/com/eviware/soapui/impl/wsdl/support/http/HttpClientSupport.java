@@ -48,7 +48,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -186,7 +187,7 @@ public class HttpClientSupport {
 
     private static class Helper {
         private final SoapUIHttpClient httpClient;
-        private final static Logger log = Logger.getLogger(HttpClientSupport.Helper.class);
+        private final static Logger log = LogManager.getLogger(HttpClientSupport.Helper.class);
         private final SoapUIMultiThreadedHttpConnectionManager connectionManager;
         private final SchemeRegistry registry;
 

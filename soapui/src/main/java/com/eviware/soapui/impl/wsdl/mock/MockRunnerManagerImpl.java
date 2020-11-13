@@ -19,14 +19,15 @@ package com.eviware.soapui.impl.wsdl.mock;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 public class MockRunnerManagerImpl implements MockRunnerManager {
-    private final static Logger log = Logger.getLogger(MockRunnerManagerImpl.class);
+    private final static Logger log = LogManager.getLogger(MockRunnerManagerImpl.class);
 
     private static Map<String, MockRunnerManager> managers = new HashMap<String, MockRunnerManager>();
 

@@ -49,7 +49,8 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -66,7 +67,7 @@ import java.util.Map;
 
 public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer,
         PropertyExpansionContainer, WsaContainer, WsrmContainer, PropertyChangeListener {
-    public final static Logger log = Logger.getLogger(WsdlRequest.class);
+    public final static Logger log = LogManager.getLogger(WsdlRequest.class);
 
     public static final String RESPONSE_CONTENT_PROPERTY = WsdlRequest.class.getName() + "@response-content";
     public static final String INLINE_RESPONSE_ATTACHMENTS = WsdlRequest.class.getName()

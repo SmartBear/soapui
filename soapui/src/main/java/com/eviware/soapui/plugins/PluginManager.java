@@ -21,7 +21,8 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -44,7 +45,7 @@ public class PluginManager {
     FileOperations fileOperations = new DefaultFileOperations();
     PluginLoader pluginLoader;
 
-    private static Logger log = Logger.getLogger(PluginManager.class);
+    private static Logger log = LogManager.getLogger(PluginManager.class);
     private Map<File, InstalledPluginRecord> installedPlugins = new HashMap<File, InstalledPluginRecord>();
     private File pluginDirectory;
     private List<PluginListener> listeners = new ArrayList<PluginListener>();

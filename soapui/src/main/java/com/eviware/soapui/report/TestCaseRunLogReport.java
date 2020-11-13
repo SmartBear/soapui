@@ -29,7 +29,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter {
     private final String outputFolder;
     private long startTime;
 
-    private final static Logger log = Logger.getLogger(TestCaseRunLogReport.class);
+    private final static Logger log = LogManager.getLogger(TestCaseRunLogReport.class);
 
     private boolean testRunHasFinished = false;
 

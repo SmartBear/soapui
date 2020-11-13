@@ -20,7 +20,7 @@ import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.SubmitContext;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import java.beans.PropertyChangeListener;
 
@@ -43,7 +43,7 @@ public interface RestRequestInterface extends HttpRequestInterface<RestRequestCo
         }
     }
 
-    public final static Logger log = Logger.getLogger(RestRequest.class);
+    //public final static Logger log = Logger.getLogger(RestRequest.class);
     public static final String DEFAULT_MEDIATYPE = "application/xml";
     public static final String REST_XML_REQUEST = "restXmlRequest";
 

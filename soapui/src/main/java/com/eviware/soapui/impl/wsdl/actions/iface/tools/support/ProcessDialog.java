@@ -19,7 +19,8 @@ package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -54,7 +55,7 @@ public class ProcessDialog extends JDialog implements RunnerContext {
     private JButton closeButton;
     private ToolRunner runner;
     private RunnerStatus status;
-    private final static Logger log = Logger.getLogger("toolLogger");
+    private final static Logger log = LogManager.getLogger("toolLogger");
 
     public ProcessDialog(String title, String description, boolean showLog, boolean allowCancel)
             throws HeadlessException {

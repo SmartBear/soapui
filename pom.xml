@@ -38,7 +38,7 @@
         <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
 
-        <analytics.version>5.5.1</analytics.version>
+        <analytics.version>5.6.0-SNAPSHOT</analytics.version>
 
         <groovy-all.version>2.4.17</groovy-all.version>
 
@@ -81,6 +81,7 @@
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
         <xerces-xercesImpl-version>2.12.0</xerces-xercesImpl-version>
         <commons-beanutils-version>1.9.4</commons-beanutils-version>
+        <log4j2.version>2.13.3</log4j2.version>
 
     </properties>
 
@@ -176,18 +177,18 @@
                     </dependency>
                 </dependencies>
             </plugin>
-<!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin-version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>${maven-install-plugin-version}</version>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-deploy-plugin</artifactId>
+                            <version>${maven-deploy-plugin-version}</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-install-plugin</artifactId>
+                            <version>${maven-install-plugin-version}</version>
+                        </plugin>
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>

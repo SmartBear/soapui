@@ -49,7 +49,8 @@ import com.eviware.x.dialogs.Worker;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlLineNumber;
 import org.apache.xmlbeans.XmlObject;
@@ -105,7 +106,7 @@ import java.util.Map;
  */
 
 public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterface> {
-    private final static Logger logger = Logger.getLogger(WsdlInterfaceDesktopPanel.class);
+    private final static Logger logger = LogManager.getLogger(WsdlInterfaceDesktopPanel.class);
     private JTabbedPane partTabs;
     private List<RSyntaxTextArea> editors = new ArrayList<RSyntaxTextArea>();
     private JTree tree;

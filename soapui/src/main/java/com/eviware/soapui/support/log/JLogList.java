@@ -1,28 +1,32 @@
 /*
  * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.support.log;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
+import com.smartbear.soapui.core.Logging;
 import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
@@ -66,6 +70,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class JLogList extends JPanel {
+    private static final String INTERNAL_LOG_NAME = "InternalLog";
     private long maxRows = 1000;
     private JList logList;
     private final LogListModel model;
@@ -139,12 +144,12 @@ public class JLogList extends JPanel {
             return;
         }
 
-        if (line instanceof LoggingEvent) {
-            LoggingEvent ev = (LoggingEvent) line;
+        if (line instanceof LogEvent) {
+            LogEvent ev = (LogEvent) line;
             linesToAdd.add(new LoggingEventWrapper(ev));
 
-            if (ev.getThrowableInformation() != null) {
-                Throwable t = ev.getThrowableInformation().getThrowable();
+            if (ev.getThrown() != null) {
+                Throwable t = ev.getThrown();
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 t.printStackTrace(pw);
@@ -199,10 +204,10 @@ public class JLogList extends JPanel {
     }
 
     private final static class LoggingEventWrapper {
-        private final LoggingEvent loggingEvent;
+        private final LogEvent loggingEvent;
         private String str;
 
-        public LoggingEventWrapper(LoggingEvent loggingEvent) {
+        public LoggingEventWrapper(LogEvent loggingEvent) {
             this.loggingEvent = loggingEvent;
         }
 
@@ -213,7 +218,7 @@ public class JLogList extends JPanel {
         public String toString() {
             if (str == null) {
                 StringBuilder builder = new StringBuilder();
-                builder.append(new Date(loggingEvent.timeStamp));
+                builder.append(new Date(loggingEvent.getTimeMillis()));
                 builder.append(':').append(loggingEvent.getLevel()).append(':').append(loggingEvent.getMessage());
                 str = builder.toString();
             }
@@ -223,9 +228,9 @@ public class JLogList extends JPanel {
     }
 
     public void addLogger(String loggerName, boolean addAppender) {
-        Logger logger = Logger.getLogger(loggerName);
+        Logger logger = LogManager.getLogger(loggerName);
         if (addAppender) {
-            logger.addAppender(internalLogAppender);
+            Logging.addAppender(loggerName, internalLogAppender);
         }
 
         loggers.add(logger);
@@ -237,7 +242,7 @@ public class JLogList extends JPanel {
 
     public void setLevel(Level level) {
         for (Logger logger : loggers) {
-            logger.setLevel(level);
+            Configurator.setLevel(logger.getName(), level);
         }
     }
 
@@ -251,8 +256,13 @@ public class JLogList extends JPanel {
         return null;
     }
 
-    private class InternalLogAppender extends AppenderSkeleton {
-        protected void append(LoggingEvent event) {
+    private class InternalLogAppender extends AbstractAppender {
+
+        InternalLogAppender() {
+            super(INTERNAL_LOG_NAME, null, PatternLayout.createDefaultLayout());
+        }
+
+        public void append(LogEvent event) {
             addLine(event);
         }
 
@@ -277,7 +287,7 @@ public class JLogList extends JPanel {
     public void removeLogger(String loggerName) {
         for (Logger logger : loggers) {
             if (loggerName.equals(logger.getName())) {
-                logger.removeAppender(internalLogAppender);
+                Logging.removeAppender(loggerName, internalLogAppender);
             }
         }
     }

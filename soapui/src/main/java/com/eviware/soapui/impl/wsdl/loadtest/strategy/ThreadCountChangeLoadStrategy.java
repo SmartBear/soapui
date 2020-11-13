@@ -25,7 +25,8 @@ import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.JComponent;
@@ -43,7 +44,7 @@ import javax.swing.event.ChangeListener;
  */
 
 public class ThreadCountChangeLoadStrategy extends AbstractLoadStrategy {
-    private final static Logger log = Logger.getLogger(ThreadCountChangeLoadStrategy.class);
+    private final static Logger log = LogManager.getLogger(ThreadCountChangeLoadStrategy.class);
 
     private static final int DEFAULT_END_THREAD_COUNT = 10;
     private static final int DEFAULT_START_THREAD_COUNT = 1;

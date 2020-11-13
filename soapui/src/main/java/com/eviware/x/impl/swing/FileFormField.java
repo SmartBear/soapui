@@ -25,7 +25,8 @@ import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormTextField;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -37,7 +38,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 public class FileFormField extends AbstractSwingXFormField<JPanel> implements XFormTextField {
-    private final static Logger log = Logger.getLogger(FileFormField.class);
+    private final static Logger log = LogManager.getLogger(FileFormField.class);
 
     private JTextField textField;
     private final FieldType type;

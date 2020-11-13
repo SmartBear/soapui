@@ -22,7 +22,8 @@ import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,7 +46,7 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
     private String reason;
     private volatile Future<?> future;
     private int id;
-    private final static Logger log = Logger.getLogger(AbstractTestRunner.class);
+    private final static Logger log = LogManager.getLogger(AbstractTestRunner.class);
 
     private static int idCounter = 0;
 

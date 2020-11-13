@@ -21,12 +21,13 @@ import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 public class WadlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<RestService> {
     private ApplicationDocument applicationDocument;
-    private Logger log = Logger.getLogger(WadlInterfaceDefinition.class);
+    private Logger log = LogManager.getLogger(WadlInterfaceDefinition.class);
 
     public WadlInterfaceDefinition(RestService iface) {
         super(iface);

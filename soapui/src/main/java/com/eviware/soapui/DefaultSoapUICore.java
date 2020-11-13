@@ -43,8 +43,9 @@ import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -55,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
@@ -490,11 +492,15 @@ public class DefaultSoapUICore implements SoapUICore {
             File log4jconfig = root == null ? new File(logFileName) : new File(new File(getRoot()), logFileName);
             if (log4jconfig.exists()) {
                 System.out.println("Configuring log4j from [" + log4jconfig.getAbsolutePath() + "]");
-                DOMConfigurator.configureAndWatch(log4jconfig.getAbsolutePath(), 5000);
+                ((LoggerContext) LogManager.getContext(false)).setConfigLocation(log4jconfig.toURI());
             } else {
                 URL url = SoapUI.class.getResource("/com/eviware/soapui/resources/conf/soapui-log4j.xml");
                 if (url != null) {
-                    DOMConfigurator.configure(url);
+                    try {
+                        ((LoggerContext) LogManager.getContext(false)).setConfigLocation(url.toURI());
+                    } catch (URISyntaxException e) {
+                        System.err.println("Unable to locate soapui-log4j.xml configuration");
+                    }
                 } else {
                     System.err.println("Missing soapui-log4j.xml configuration");
                 }
@@ -502,7 +508,7 @@ public class DefaultSoapUICore implements SoapUICore {
 
             logIsInitialized = true;
 
-            log = Logger.getLogger(DefaultSoapUICore.class);
+            log = LogManager.getLogger(DefaultSoapUICore.class);
         }
     }
 
