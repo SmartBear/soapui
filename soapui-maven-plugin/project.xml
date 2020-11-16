@@ -54,12 +54,6 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>${log4j2.version}</version>
 		</dependency>
-		<!--<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
-			<type>jar</type>
-		</dependency>-->
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>

@@ -32,7 +32,7 @@
             <DefaultRolloverStrategy max="50"/>
         </RollingFile>
 
-        <SOAPUI name="SOAPUI" class="com.eviware.soapui.support.log.SoapUIAppender"/>
+        <SOAPUI name="SOAPUI"/>
 
         <File name="GLOBAL_GROOVY_LOG" fileName="${sys:user.home}/.soapuios/logs/global-groovy.log" append="true">
             <PatternLayout pattern="%d %-5p [%c{1}] %m%n"/>

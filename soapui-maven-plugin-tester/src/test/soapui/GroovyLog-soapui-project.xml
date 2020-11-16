@@ -18,9 +18,9 @@ is invoked more than one time.</con:description>
 
             Logger groovyLog = LogManager.getLogger('groovy.log')
 
-            Map<String, Appender> appenderMap = ((org.apache.logging.log4j.core.Logger) groovyLog).getAppenders();
+            Map&lt;String, Appender&gt; appenderMap = ((org.apache.logging.log4j.core.Logger) groovyLog).getAppenders();
             boolean findConcole = false;
-            for (Map.Entry<String, Appender> item : appenderMap) {
+            for (Map.Entry&lt;String, Appender&gt; item : appenderMap) {
             Appender appender = item.getValue();
             if (appender instanceof ConsoleAppender) {
             findConcole = true;
@@ -28,6 +28,7 @@ is invoked more than one time.</con:description>
             }
             }
             assert findConcole == true
+          </script>
         </con:config>
       </con:testStep>
       <con:properties/>
