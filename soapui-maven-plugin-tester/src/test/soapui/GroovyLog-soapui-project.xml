@@ -8,7 +8,7 @@ is invoked more than one time.</con:description>
     <con:runType>SEQUENTIAL</con:runType>
     <con:testCase id="1b15fda6-8f9e-4f13-8aac-c339935bbbfd" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Groovy log should have at most one ConsoleAppender" searchProperties="true">
       <con:settings/>
-      <con:testStep type="groovy" name="Count ConsoleAppender should be zero or one" id="56e8fd8f-1730-4ddb-aa9c-e1af4c64da75">
+      <con:testStep type="groovy" name="Count ConsoleAppender must be one" id="56e8fd8f-1730-4ddb-aa9c-e1af4c64da75">
         <con:settings/>
         <con:config>
           <script>import org.apache.logging.log4j.LogManager;
@@ -19,15 +19,14 @@ is invoked more than one time.</con:description>
             Logger groovyLog = LogManager.getLogger('groovy.log')
 
             Map&lt;String, Appender&gt; appenderMap = ((org.apache.logging.log4j.core.Logger) groovyLog).getAppenders();
-            boolean findConcole = false;
+            int amount = 0;
             for (Map.Entry&lt;String, Appender&gt; item : appenderMap) {
             Appender appender = item.getValue();
             if (appender instanceof ConsoleAppender) {
-            findConcole = true;
-            break;
+            amount++;
             }
             }
-            assert findConcole == true
+            assert amount == 1
           </script>
         </con:config>
       </con:testStep>
