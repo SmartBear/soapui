@@ -73,7 +73,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
@@ -111,7 +112,7 @@ import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener {
     private static final String ENDPOINT = "Endpoint";
     private static final String AMF_CALL = "AMF Call";
-    private final static Logger log = Logger.getLogger(AbstractHttpRequestDesktopPanel.class);
+    private final static Logger log = LogManager.getLogger(AbstractHttpRequestDesktopPanel.class);
     private JPanel configPanel;
     private JButton addAssertionButton;
     private JInspectorPanel inspectorPanel;

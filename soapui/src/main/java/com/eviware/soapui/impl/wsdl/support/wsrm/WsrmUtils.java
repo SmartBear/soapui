@@ -39,7 +39,7 @@ import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -154,7 +154,7 @@ public class WsrmUtils {
             cursor.toFirstChild();
             cursor.toFirstChild();
             String sequenceIdentifier = cursor.getTextValue();
-            Logger.getLogger("wsrm").info("Sequence response Received, sequence ID: " + sequenceIdentifier);
+            LogManager.getLogger("wsrm").info("Sequence response Received, sequence ID: " + sequenceIdentifier);
 
             // WsmcInjection receiveInjection = new WsmcInjection(request);
             // request.setAfterRequestInjection(receiveInjection);
@@ -172,7 +172,7 @@ public class WsrmUtils {
 
     private Response submitCreateSequenceRequest(String uuid, WsaRequest startSequenceRequest) throws SubmitException {
         WsdlSubmit wsdlSubmit = startSequenceRequest.submit(new WsdlSubmitContext(null), true);
-        Logger.getLogger("wsrm").info("StartSequence Request Sent: " + uuid);
+        LogManager.getLogger("wsrm").info("StartSequence Request Sent: " + uuid);
 
         // startSequenceRequest.getWsaConfig().setWsaEnabled(false);
         while (wsdlSubmit.getStatus() != Status.FINISHED) {
@@ -347,7 +347,7 @@ public class WsrmUtils {
 
                 closeSequenceRequest.setRequestContent(content);
 
-                Logger.getLogger("wsrm").info("CloseSequence Request Sent for Sequence: " + identifier);
+                LogManager.getLogger("wsrm").info("CloseSequence Request Sent for Sequence: " + identifier);
 
             } catch (XmlException e) {
                 SoapUI.logError(e);
@@ -375,16 +375,16 @@ public class WsrmUtils {
                         String lower = aResult.selectAttribute(null, "Lower").getDomNode().getNodeValue();
 
                         if (lower.equals(upper)) {
-                            Logger.getLogger("wsrm").info(
+                            LogManager.getLogger("wsrm").info(
                                     "Acknowledgment for message " + upper + " received for identifier: " + identifier);
                         } else {
-                            Logger.getLogger("wsrm").info(
+                            LogManager.getLogger("wsrm").info(
                                     "Acknowledgment for messages " + lower + " to " + upper + " received for identifier: "
                                             + identifier);
                         }
                     }
                 } else {
-                    Logger.getLogger("wsrm").info("No Acknowledgments received for identifier: " + identifier);
+                    LogManager.getLogger("wsrm").info("No Acknowledgments received for identifier: " + identifier);
                 }
 
             } catch (SubmitException e1) {
@@ -506,7 +506,7 @@ public class WsrmUtils {
             // operation, soapVersion, uuid);
             // startSequenceRequest.setAfterRequestInjection(wsmcInjection);
 
-            Logger.getLogger("wsrm").info("Acknowledgments Requested for Sequence: " + identifier);
+            LogManager.getLogger("wsrm").info("Acknowledgments Requested for Sequence: " + identifier);
 
         } catch (XmlException e) {
             // TODO Auto-generated catch block

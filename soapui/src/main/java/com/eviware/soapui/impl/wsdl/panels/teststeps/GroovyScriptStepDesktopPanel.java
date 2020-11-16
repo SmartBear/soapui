@@ -39,7 +39,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -89,7 +90,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
         buildUI();
         setPreferredSize(new Dimension(600, 440));
 
-        logger = Logger.getLogger(groovyStep.getName() + "#" + hashCode());
+        logger = LogManager.getLogger(groovyStep.getName() + "#" + hashCode());
 
         addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
@@ -174,7 +175,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
         componentEnabler.release();
         editor.release();
         SoapUI.getSettings().removeSettingsListener(settingsListener);
-        logger.removeAllAppenders();
+        logArea.removeLogger(logger.getName());
         logger = null;
         inspectorPanel.release();
 

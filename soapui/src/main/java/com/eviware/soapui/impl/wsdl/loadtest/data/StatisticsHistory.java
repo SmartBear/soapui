@@ -22,7 +22,8 @@ import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics.Statistic;
 import com.eviware.soapui.model.support.LoadTestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -48,7 +49,7 @@ public class StatisticsHistory {
             Statistic.class);
 
     @SuppressWarnings("unused")
-    private final static Logger logger = Logger.getLogger(StatisticsHistory.class);
+    private final static Logger logger = LogManager.getLogger(StatisticsHistory.class);
     private long resolution = 0;
     private InternalTableModelListener internalTableModelListener = new InternalTableModelListener();
     private Updater updater = new Updater();

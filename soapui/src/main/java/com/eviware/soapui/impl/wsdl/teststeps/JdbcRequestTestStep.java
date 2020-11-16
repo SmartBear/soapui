@@ -51,7 +51,8 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 
@@ -72,7 +73,7 @@ import java.util.Map;
 public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder,
         PropertyChangeListener, SamplerTestStep {
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
+    private final static Logger log = LogManager.getLogger(WsdlTestRequestStep.class);
 
     public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
     public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";

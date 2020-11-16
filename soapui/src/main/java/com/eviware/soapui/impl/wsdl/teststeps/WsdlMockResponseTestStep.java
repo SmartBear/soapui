@@ -82,7 +82,8 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.ImageIcon;
 import java.beans.PropertyChangeEvent;
@@ -95,7 +96,7 @@ import java.util.Map;
 
 public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties implements OperationTestStep,
         PropertyChangeListener, Assertable, PropertyExpansionContainer {
-    private final static Logger log = Logger.getLogger(WsdlMockResponseTestStep.class);
+    private final static Logger log = LogManager.getLogger(WsdlMockResponseTestStep.class);
 
     public static final String STATUS_PROPERTY = WsdlMockResponseTestStep.class.getName() + "@status";
     public static final String TIMEOUT_PROPERTY = WsdlMockResponseTestStep.class.getName() + "@timeout";

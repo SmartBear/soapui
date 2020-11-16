@@ -17,7 +17,8 @@
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
 import com.eviware.soapui.SoapUI;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.Response;
 import org.mortbay.util.IO;
@@ -33,7 +34,7 @@ import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
 public class JettyServer extends org.mortbay.jetty.Server {
-    private Logger log = Logger.getLogger(JettyServer.class);
+    private Logger log = LogManager.getLogger(JettyServer.class);
 
     public JettyServer() {
         super();

@@ -49,7 +49,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringList;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
 import org.w3.x2007.x05.addressing.metadata.AnonymousResponsesDocument.AnonymousResponses;
 import org.w3.x2007.x05.addressing.metadata.NonAnonymousResponsesDocument.NonAnonymousResponses;
@@ -83,7 +84,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     public static final String WSTOOLS_ACTIONS = "wstools";
     public static final String XML_ACTIONS = "xml";
 
-    private final static Logger log = Logger.getLogger(WsdlInterface.class);
+    private final static Logger log = LogManager.getLogger(WsdlInterface.class);
     private List<WsdlOperation> operations = new ArrayList<WsdlOperation>();
     private WsdlProject project;
     private SoapMessageBuilder soapMessageBuilder;

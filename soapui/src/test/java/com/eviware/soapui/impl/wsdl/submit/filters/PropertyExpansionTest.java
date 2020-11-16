@@ -28,7 +28,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.GroovyScriptStepFactory;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.GlobalPropertySettings;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -104,7 +104,7 @@ public class PropertyExpansionTest {
 
         WsdlTestStep testStep = testCase.addTestStep(GroovyScriptStepFactory.GROOVY_TYPE, "GroovyScript");
 
-        MockTestRunner mockTestRunner = new MockTestRunner(testCase, Logger.getLogger("testing"));
+        MockTestRunner mockTestRunner = new MockTestRunner(testCase, LogManager.getLogger("testing"));
         MockTestRunContext context = new MockTestRunContext(mockTestRunner, testStep);
 
         PropertyExpansionUtils.getGlobalProperties().setPropertyValue("testSuiteId", "testing");

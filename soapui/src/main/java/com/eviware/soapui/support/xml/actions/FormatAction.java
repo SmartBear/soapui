@@ -17,14 +17,15 @@
 package com.eviware.soapui.support.xml.actions;
 
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 
 public class FormatAction extends AbstractAction {
-    private final static Logger log = Logger.getLogger(FormatAction.class);
+    private final static Logger log = LogManager.getLogger(FormatAction.class);
     private final RSyntaxTextArea textArea;
     private final String language;
 

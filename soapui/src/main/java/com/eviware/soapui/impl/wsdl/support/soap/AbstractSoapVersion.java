@@ -16,7 +16,8 @@
 
 package com.eviware.soapui.impl.wsdl.support.soap;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.SchemaTypeLoader;
 import org.apache.xmlbeans.XmlError;
@@ -36,7 +37,7 @@ import java.util.List;
  */
 
 public abstract class AbstractSoapVersion implements SoapVersion {
-    private final static Logger log = Logger.getLogger(AbstractSoapVersion.class);
+    private final static Logger log = LogManager.getLogger(AbstractSoapVersion.class);
 
     @SuppressWarnings("unchecked")
     public void validateSoapEnvelope(String soapMessage, List<XmlError> errors) {

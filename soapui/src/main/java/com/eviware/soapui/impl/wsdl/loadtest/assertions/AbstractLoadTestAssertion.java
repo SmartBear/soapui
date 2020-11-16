@@ -26,7 +26,8 @@ import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.AbstractAction;
@@ -46,7 +47,7 @@ import java.beans.PropertyChangeSupport;
 public abstract class AbstractLoadTestAssertion implements LoadTestAssertion {
     private LoadTestAssertionConfig assertionConfig;
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(AbstractLoadTestAssertion.class);
+    private final static Logger log = LogManager.getLogger(AbstractLoadTestAssertion.class);
     private ImageIcon icon;
     private final WsdlLoadTest loadTest;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);

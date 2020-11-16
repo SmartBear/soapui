@@ -16,7 +16,8 @@
 
 package com.eviware.soapui.tools;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -30,7 +31,7 @@ import java.util.jar.Manifest;
 
 public class JarPackager {
     public static int BUFFER_SIZE = 10240;
-    static Logger log = Logger.getLogger(JarPackager.class);
+    static Logger log = LogManager.getLogger(JarPackager.class);
 
     public static File copyFileToDir(File fromFile, File toDir) {
         File toFile = new File(toDir, fromFile.getName());

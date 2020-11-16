@@ -39,7 +39,8 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.Dialog.ModalityType;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 
 {
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
+    private final static Logger log = LogManager.getLogger(WsdlTestRequestStep.class);
     protected ManualTestStepConfig manualTestStepConfig;
     private ManualTestStepResult testStepResult;
     public final static String MANUAL_STEP = ManualTestStep.class.getName() + "@manualstep";

@@ -33,7 +33,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wsI.testing.x2003.x03.analyzerConfig.AssertionResults;
 import org.wsI.testing.x2003.x03.analyzerConfig.Configuration;
 import org.wsI.testing.x2003.x03.analyzerConfig.ConfigurationDocument;
@@ -68,7 +69,7 @@ import java.util.Map;
  */
 
 public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse> {
-    public final static Logger log = Logger.getLogger(WSIValidateResponseAction.class);
+    public final static Logger log = LogManager.getLogger(WSIValidateResponseAction.class);
     private String configFile;
     private File logFile;
     private String wsiDir;

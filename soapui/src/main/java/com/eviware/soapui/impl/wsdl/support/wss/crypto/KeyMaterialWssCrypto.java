@@ -32,7 +32,8 @@ import com.google.common.io.Files;
 import org.apache.commons.ssl.KeyStoreBuilder;
 import org.apache.commons.ssl.ProbablyBadPasswordException;
 import org.apache.commons.ssl.Util;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.ws.security.components.crypto.CredentialException;
 import org.apache.ws.security.components.crypto.Merlin;
 import org.apache.ws.security.util.Loader;
@@ -65,7 +66,7 @@ public class KeyMaterialWssCrypto implements WssCrypto {
     private KeyStore keyStore;
     private BeanPathPropertySupport sourceProperty;
 
-    private static final Logger log = Logger.getLogger(KeyMaterialWssCrypto.class);
+    private static final Logger log = LogManager.getLogger(KeyMaterialWssCrypto.class);
 
     public KeyMaterialWssCrypto(KeyMaterialCryptoConfig config2, WssContainer container, String source,
                                 String password, CryptoType type) {

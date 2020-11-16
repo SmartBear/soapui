@@ -54,7 +54,8 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -76,7 +77,7 @@ import java.util.UUID;
  */
 
 public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCaseConfig> implements TestCase {
-    private final static Logger logger = Logger.getLogger(WsdlTestCase.class);
+    private final static Logger logger = LogManager.getLogger(WsdlTestCase.class);
     public final static String KEEP_SESSION_PROPERTY = WsdlTestCase.class.getName() + "@keepSession";
     public final static String FAIL_ON_ERROR_PROPERTY = WsdlTestCase.class.getName() + "@failOnError";
     public final static String FAIL_ON_ERRORS_PROPERTY = WsdlTestCase.class.getName() + "@failOnErrors";

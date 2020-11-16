@@ -51,6 +51,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 
 import javax.swing.ImageIcon;
@@ -66,6 +68,7 @@ import java.util.Set;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
         Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer {
+    public final static Logger log = LogManager.getLogger(AbstractHttpRequest.class);
     public static final String BASIC_AUTH_PROFILE = "Basic";
     public static final String SELECTED_AUTH_PROFILE_PROPERTY_NAME = "selectedAuthProfile";
     public static final String CR_ESCAPE_SEQUENCE = "\\\\_r";

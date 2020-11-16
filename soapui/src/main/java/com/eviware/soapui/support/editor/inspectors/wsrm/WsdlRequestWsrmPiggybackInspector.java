@@ -22,7 +22,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -62,11 +62,11 @@ public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector imp
                         String lower = result[i].selectAttribute(null, "Lower").getDomNode().getNodeValue();
 
                         if (lower == upper) {
-                            Logger.getLogger("wsrm").info(
+                            LogManager.getLogger("wsrm").info(
                                     "Acknowledgment for message " + upper + " received for identifier: "
                                             + request.getWsrmConfig().getSequenceIdentifier());
                         } else {
-                            Logger.getLogger("wsrm").info(
+                            LogManager.getLogger("wsrm").info(
                                     "Acknowledgment for messages " + lower + " to " + upper + " received for identifier: "
                                             + request.getWsrmConfig().getSequenceIdentifier());
                         }

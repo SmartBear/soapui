@@ -24,7 +24,8 @@ import com.eviware.soapui.testondemand.Location;
 import com.eviware.soapui.testondemand.TestOnDemandCaller;
 import com.google.common.base.Strings;
 import com.smartbear.soapui.utils.IntegrationTest;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -52,7 +53,7 @@ public class TestOnDemandCallerTest {
     private WsdlTestCase testCase;
     private static final String NOT_THE_RIGHT_HOST = "You need to specify the host name of the test server";
 
-    public final static Logger log = Logger.getLogger(TestOnDemandCallerTest.class);
+    public final static Logger log = LogManager.getLogger(TestOnDemandCallerTest.class);
 
     @Before
     public void setUp() throws Exception {

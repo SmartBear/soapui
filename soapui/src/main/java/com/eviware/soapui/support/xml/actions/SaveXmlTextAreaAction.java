@@ -19,7 +19,8 @@ package com.eviware.soapui.support.xml.actions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -40,7 +41,7 @@ import java.io.IOException;
 public class SaveXmlTextAreaAction extends AbstractAction {
     private final RSyntaxTextArea textArea;
     private String dialogTitle;
-    private static final Logger log = Logger.getLogger(SaveXmlTextAreaAction.class);
+    private static final Logger log = LogManager.getLogger(SaveXmlTextAreaAction.class);
 
     public SaveXmlTextAreaAction(RSyntaxTextArea editArea, String dialogTitle) {
         super("Save as..");

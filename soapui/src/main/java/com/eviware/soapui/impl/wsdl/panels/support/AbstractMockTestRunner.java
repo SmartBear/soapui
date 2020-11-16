@@ -20,7 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Dummy TestRunner used when executing TestSteps one by one

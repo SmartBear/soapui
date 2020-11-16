@@ -129,8 +129,9 @@ import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -213,7 +214,7 @@ public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
     public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
-    public final static Logger log = Logger.getLogger(SoapUI.class);
+    public final static Logger log = LogManager.getLogger(SoapUI.class);
     public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
     public final static String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
@@ -255,7 +256,7 @@ public class SoapUI {
     private static SoapUIDesktop desktop;
     private static Workspace workspace;
     private static Log4JMonitor logMonitor;
-    private static Logger errorLog = Logger.getLogger("soapui.errorlog");
+    private static Logger errorLog = LogManager.getLogger("soapui.errorlog");
     private static boolean isStandalone;
     private static boolean isCommandLine;
     private static TestMonitor testMonitor;
@@ -1218,7 +1219,7 @@ public class SoapUI {
     public static Logger ensureGroovyLog() {
         synchronized (threadPool) {
             if (!checkedGroovyLogMonitor || launchedTestRunner) {
-                groovyLogger = Logger.getLogger("groovy.log");
+                groovyLogger = LogManager.getLogger("groovy.log");
 
                 Log4JMonitor logMonitor = getLogMonitor();
                 if (logMonitor != null && !logMonitor.hasLogArea("groovy.log")) {

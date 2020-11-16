@@ -39,7 +39,8 @@ import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.ImageIcon;
 import java.util.HashSet;
@@ -51,7 +52,7 @@ public class JdbcRequest extends AbstractModelItem implements Assertable, TestRe
     private final JdbcRequestTestStep testStep;
     private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
     private JdbcResponse response;
-    final static Logger logger = Logger.getLogger(JdbcRequest.class);
+    final static Logger logger = LogManager.getLogger(JdbcRequest.class);
     private ImageIcon validRequestIcon;
     private ImageIcon failedRequestIcon;
     private ImageIcon disabledRequestIcon;

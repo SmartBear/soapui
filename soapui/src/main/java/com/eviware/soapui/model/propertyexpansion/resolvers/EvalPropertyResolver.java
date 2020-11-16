@@ -40,13 +40,14 @@ import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EvalPropertyResolver implements PropertyResolver {
-    private Logger log = Logger.getLogger(EvalPropertyResolver.class);
+    private Logger log = LogManager.getLogger(EvalPropertyResolver.class);
     private Map<String, ScriptEnginePool> scriptEnginePools = new HashMap<String, ScriptEnginePool>();
 
     public String resolveProperty(PropertyExpansionContext context, String name, boolean globalOverride) {

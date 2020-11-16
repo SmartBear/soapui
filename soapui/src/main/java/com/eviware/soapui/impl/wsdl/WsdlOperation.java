@@ -35,7 +35,8 @@ import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.MessagePart.FaultPart;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 
@@ -70,7 +71,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
     public static final String REQUEST_RESPONSE = "Request-Response";
     public static final String SOLICIT_RESPONSE = "Solicit-Response";
 
-    public final static Logger log = Logger.getLogger(WsdlOperation.class);
+    public final static Logger log = LogManager.getLogger(WsdlOperation.class);
     public static final String ICON_NAME = "/operation.png";
     private List<WsdlRequest> requests = new ArrayList<WsdlRequest>();
     private WsdlInterface iface;

@@ -37,7 +37,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -76,7 +77,7 @@ public class JSecurityTestRunLog extends JPanel {
     private boolean follow = true;
     protected int selectedIndex;
     private XFormDialog optionsDialog;
-    private Logger log = Logger.getLogger(JSecurityTestRunLog.class);
+    private Logger log = LogManager.getLogger(JSecurityTestRunLog.class);
 
     public JSecurityTestRunLog(SecurityTest securityTest) {
         super(new BorderLayout());

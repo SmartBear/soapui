@@ -40,7 +40,8 @@ import com.eviware.soapui.support.resolver.DisablePropertyTransferResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.apache.xmlbeans.XmlException;
@@ -69,7 +70,7 @@ import static com.eviware.soapui.tools.PropertyExpansionRemover.removeExpansions
 public class PropertyTransfer implements PropertyChangeNotifier {
 
 
-    private final static Logger log = Logger.getLogger(PropertyTransfer.class);
+    private final static Logger log = LogManager.getLogger(PropertyTransfer.class);
 
     public final static String SOURCE_PATH_PROPERTY = PropertyTransfer.class.getName() + "@sourcePath";
     public final static String SOURCE_TYPE_PROPERTY = PropertyTransfer.class.getName() + "@sourceProperty";

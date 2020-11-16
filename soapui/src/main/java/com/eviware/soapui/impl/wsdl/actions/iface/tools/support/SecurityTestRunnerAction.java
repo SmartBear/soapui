@@ -36,7 +36,8 @@ import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
     public static final String SOAPUI_ACTION_ID = "SecurityTestRunnerAction";
     private static final String ALL_VALUE = "<all>";
 
-    private final static Logger log = Logger.getLogger(SecurityTestRunnerAction.class);
+    private final static Logger log = LogManager.getLogger(SecurityTestRunnerAction.class);
 
     public SecurityTestRunnerAction() {
         super("Launch Security TestRunner", "Launch command-line SecurityTestRunner for this project");

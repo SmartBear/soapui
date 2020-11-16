@@ -90,7 +90,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -142,7 +143,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class.getName() + "@resourceRoot";
     public static final String ICON_NAME = "/project.png";
     public static final SoapUIVersionInfo VERSION_IN_READY_API_PROJECT = new SoapUIVersionInfo("6.0.0");
-    protected final static Logger log = Logger.getLogger(WsdlProject.class);
+    protected final static Logger log = LogManager.getLogger(WsdlProject.class);
     private static final String XML_FILE_TYPE = "XML Files (*.xml)";
     private static final String XML_EXTENSION = ".xml";
     protected String path;

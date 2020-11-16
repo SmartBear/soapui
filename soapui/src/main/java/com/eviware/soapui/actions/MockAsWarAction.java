@@ -34,13 +34,14 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
     private XFormDialog dialog;
-    private Logger log = Logger.getLogger(MockAsWarAction.class);
+    private Logger log = LogManager.getLogger(MockAsWarAction.class);
 
     public MockAsWarAction() {
         super("Deploy As War", "Deploys Project MockServices as a WAR file");

@@ -41,7 +41,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.ibm.wsdl.util.xml.QNameUtils;
 import com.ibm.wsdl.xml.WSDLReaderImpl;
 import com.ibm.wsdl.xml.WSDLWriterImpl;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
@@ -108,7 +109,7 @@ import java.util.Map;
  */
 
 public class WsdlUtils {
-    private final static Logger log = Logger.getLogger(WsdlUtils.class);
+    private final static Logger log = LogManager.getLogger(WsdlUtils.class);
     private static WSDLReader wsdlReader;
     private final static String WSDL_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/";
 

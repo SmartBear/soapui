@@ -49,7 +49,8 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView.JE
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
@@ -92,7 +93,7 @@ import java.beans.PropertyChangeListener;
 
 public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 extends AbstractHttpRequestInterface<?>>
         extends ModelItemDesktopPanel<T> implements SubmitListener {
-    private final static Logger log = Logger.getLogger(AbstractHttpRequestDesktopPanel.class);
+    private final static Logger log = LogManager.getLogger(AbstractHttpRequestDesktopPanel.class);
     public static final String END_POINT_COMBO_BOX = "EndPointComboBox";
 
     protected EndpointsComboBoxModel endpointsModel;

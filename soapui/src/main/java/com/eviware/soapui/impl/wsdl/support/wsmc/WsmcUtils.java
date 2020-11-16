@@ -36,7 +36,7 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -126,7 +126,7 @@ public class WsmcUtils {
             cursor.toFirstChild();
 
             String sequenceIdentifier = cursor.getTextValue();
-            Logger.getLogger("wsrm").info("Sequence response Received, sequence ID: " + sequenceIdentifier);
+            LogManager.getLogger("wsrm").info("Sequence response Received, sequence ID: " + sequenceIdentifier);
 
             // WsmcInjection receiveInjection = new WsmcInjection(request);
             // request.setAfterRequestInjection(receiveInjection);

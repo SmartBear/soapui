@@ -23,7 +23,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransp
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Element;
@@ -38,7 +39,7 @@ import org.w3c.dom.Node;
 
 public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter {
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(RemoveEmptyContentRequestFilter.class);
+    private final static Logger log = LogManager.getLogger(RemoveEmptyContentRequestFilter.class);
 
     public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest) {
         if (wsdlRequest != null && !wsdlRequest.isRemoveEmptyContent()) {

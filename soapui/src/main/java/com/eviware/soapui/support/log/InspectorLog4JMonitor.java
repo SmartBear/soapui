@@ -20,7 +20,7 @@ import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 import javax.swing.JComponent;
 import java.awt.Component;
@@ -58,8 +58,8 @@ public class InspectorLog4JMonitor implements JInspectorPanel, Log4JMonitor {
     }
 
     public void logEvent(Object msg) {
-        if (msg instanceof LoggingEvent) {
-            LoggingEvent event = (LoggingEvent) msg;
+        if (msg instanceof LogEvent) {
+            LogEvent event = (LogEvent) msg;
             String loggerName = event.getLoggerName();
 
             for (Inspector inspector : inspectorPanel.getInspectors()) {

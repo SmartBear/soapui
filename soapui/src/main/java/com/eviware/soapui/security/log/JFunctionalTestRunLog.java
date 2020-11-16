@@ -25,7 +25,8 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JHyperlinkLabel;
 import com.eviware.soapui.support.components.JXToolBar;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -61,7 +62,7 @@ public class JFunctionalTestRunLog extends JPanel {
     private JList testLogList;
     private Set<String> boldTexts = new HashSet<String>();
     protected int selectedIndex;
-    private Logger log = Logger.getLogger(JSecurityTestRunLog.class);
+    private Logger log = LogManager.getLogger(JSecurityTestRunLog.class);
     // TODO see how to get this from security log options to apply here
     private boolean follow = true;
 

@@ -46,7 +46,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class PropertyExpansionUtils {
-    public final static Logger log = Logger.getLogger(PropertyExpansionUtils.class);
+    public final static Logger log = LogManager.getLogger(PropertyExpansionUtils.class);
 
     private static SettingsTestPropertyHolder globalTestPropertyHolder;
 

@@ -23,7 +23,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.resolvers.ResolverUtils;
 import com.eviware.soapui.settings.CommonSettings;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * RequestFilter that expands properties in request content
@@ -32,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 
 public class PropertyExpansionRequestFilter extends AbstractRequestFilter {
-    public final static Logger log = Logger.getLogger(PropertyExpansionRequestFilter.class);
+    public final static Logger log = LogManager.getLogger(PropertyExpansionRequestFilter.class);
 
     @Override
     public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> request) {

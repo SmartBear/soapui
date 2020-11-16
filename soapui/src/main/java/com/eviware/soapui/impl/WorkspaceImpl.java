@@ -42,7 +42,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.types.StringToStringMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 
@@ -70,7 +71,7 @@ import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.N
  */
 
 public class WorkspaceImpl extends AbstractModelItem implements Workspace {
-    private final static Logger log = Logger.getLogger(WorkspaceImpl.class);
+    private final static Logger log = LogManager.getLogger(WorkspaceImpl.class);
     public static final MessageSupport messages = MessageSupport.getMessages(WorkspaceImpl.class);
 
     private List<Project> projectList = new ArrayList<Project>();

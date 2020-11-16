@@ -29,7 +29,8 @@ import com.eviware.soapui.impl.wsdl.support.soap.TibcoSoapJMSBindingImporter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.wsdl.Binding;
@@ -55,7 +56,7 @@ public class WsdlImporter {
     @SuppressWarnings("unused")
     private static WsdlImporter instance;
 
-    private final static Logger log = Logger.getLogger(WsdlImporter.class);
+    private final static Logger log = LogManager.getLogger(WsdlImporter.class);
 
     static {
         try {

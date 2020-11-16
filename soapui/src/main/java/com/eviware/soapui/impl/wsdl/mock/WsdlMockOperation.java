@@ -36,7 +36,8 @@ import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.ImageIcon;
 import java.beans.PropertyChangeEvent;
@@ -52,7 +53,7 @@ import java.util.List;
 
 public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig, WsdlMockResponse> {
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(WsdlMockOperation.class);
+    private final static Logger log = LogManager.getLogger(WsdlMockOperation.class);
 
     public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
     public static final String ICON_NAME = "/mockOperation.gif";

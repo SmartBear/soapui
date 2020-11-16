@@ -56,7 +56,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -89,7 +90,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
     public final static String SETUP_SCRIPT_PROPERTY = WsdlTestCase.class.getName() + "@setupScript";
     public final static String TEARDOWN_SCRIPT_PROPERTY = WsdlTestCase.class.getName() + "@tearDownScript";
 
-    private final static Logger logger = Logger.getLogger(WsdlLoadTest.class);
+    private final static Logger logger = LogManager.getLogger(WsdlLoadTest.class);
     public static final int DEFAULT_STRATEGY_INTERVAL = 500;
     public static final String ICON_NAME = "/loadTest.png";
 

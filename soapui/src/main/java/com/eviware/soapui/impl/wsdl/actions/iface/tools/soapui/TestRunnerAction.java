@@ -39,7 +39,8 @@ import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.impl.swing.JTextAreaFormField;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.Action;
 import java.io.File;
@@ -88,7 +89,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
     protected XForm mainForm;
 
-    private final static Logger log = Logger.getLogger(TestRunnerAction.class);
+    private final static Logger log = LogManager.getLogger(TestRunnerAction.class);
 
     public static final String SOAPUI_ACTION_ID = "TestRunnerAction";
 

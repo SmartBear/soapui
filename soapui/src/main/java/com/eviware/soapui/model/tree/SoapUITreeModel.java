@@ -21,7 +21,8 @@ import com.eviware.soapui.model.tree.nodes.PropertiesTreeNode;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode;
 import com.eviware.soapui.model.tree.nodes.WorkspaceTreeNode;
 import com.eviware.soapui.model.workspace.Workspace;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -44,7 +45,7 @@ import java.util.Set;
 public class SoapUITreeModel implements TreeModel {
     private Set<TreeModelListener> listeners = new HashSet<TreeModelListener>();
     private SoapUITreeNode workspaceNode;
-    private final static Logger logger = Logger.getLogger(SoapUITreeModel.class);
+    private final static Logger logger = LogManager.getLogger(SoapUITreeModel.class);
     private Map<ModelItem, SoapUITreeNode> modelItemMap = new HashMap<ModelItem, SoapUITreeNode>();
     private boolean showProperties = false;
 

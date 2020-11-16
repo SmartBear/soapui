@@ -35,7 +35,9 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
-import org.apache.log4j.Logger;
+import com.smartbear.soapui.core.Logging;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.ImageIcon;
 
@@ -49,7 +51,7 @@ import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
  */
 
 public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties implements PropertyExpansionContainer {
-    private final static Logger logger = Logger.getLogger("groovy.log");
+    private final static Logger logger = LogManager.getLogger("groovy.log");
     private String scriptText = "";
     private Object scriptResult;
     private ImageIcon failedIcon;
@@ -126,7 +128,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
         if (log == null) {
             log = logger;
         } else {
-            log.addAppender(logger.getAppender("GLOBAL_GROOVY_LOG"));
+            Logging.addAppender(log.getName(), Logging.getAppender(Logging.GLOBAL_GROOVY_LOG));
         }
 
         try {

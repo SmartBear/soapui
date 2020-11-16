@@ -23,7 +23,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.dialogs.XProgressMonitor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
@@ -42,7 +43,7 @@ public abstract class AbstractWsdlDefinitionLoader extends AbstractDefinitionLoa
     private String last;
     private String username;
     private String password;
-    protected static final Logger log = Logger.getLogger(AbstractWsdlDefinitionLoader.class);
+    protected static final Logger log = LogManager.getLogger(AbstractWsdlDefinitionLoader.class);
     private XProgressMonitor monitor;
     private int progressIndex;
 

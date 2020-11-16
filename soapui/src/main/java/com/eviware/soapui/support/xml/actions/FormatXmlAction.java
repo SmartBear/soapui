@@ -18,7 +18,8 @@ package com.eviware.soapui.support.xml.actions;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
@@ -32,7 +33,7 @@ import java.awt.event.ActionEvent;
  */
 
 public class FormatXmlAction extends AbstractAction {
-    private final static Logger log = Logger.getLogger(FormatXmlAction.class);
+    private final static Logger log = LogManager.getLogger(FormatXmlAction.class);
     private final RSyntaxTextArea textArea;
 
     public FormatXmlAction(RSyntaxTextArea editArea) {

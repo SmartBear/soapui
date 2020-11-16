@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2019 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
@@ -55,7 +55,9 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
+import com.smartbear.soapui.core.Logging;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.AbstractAction;
@@ -225,7 +227,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
             buildUI();
             setPreferredSize(new Dimension(600, 440));
 
-            logger = Logger.getLogger("ScriptAssertion." + getName());
+            logger = LogManager.getLogger("ScriptAssertion." + getName());
             editor.requestFocusInWindow();
         }
 
@@ -373,14 +375,13 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
                 }
 
                 try {
-                    Logger groovyLog = SoapUI.ensureGroovyLog();
-                    logger.addAppender(groovyLog.getAppender("GLOBAL_GROOVY_LOG"));
+                    Logging.addAppender(logger.getName(), Logging.getAppender(Logging.GLOBAL_GROOVY_LOG));
                     try {
                         setScriptText(editor.getEditArea().getText());
                         String result = assertScript(exchange, new WsdlTestRunContext(testStep), logger);
                         UISupport.showInfoMessage("Script Assertion Passed" + ((result == null) ? "" : ": [" + result + "]"));
                     } finally {
-                        logger.removeAppender("GLOBAL_GROOVY_LOG");
+                        Logging.removeAppender(logger.getName(), Logging.getAppender(Logging.GLOBAL_GROOVY_LOG));
                     }
                 } catch (AssertionException e) {
                     UISupport.showErrorMessage(e.getMessage());
