@@ -1,4 +1,4 @@
-package com.eviware.soapui.ui.navigator.state;
+package com.eviware.soapui.plugins.factories.navigator;
 
 import com.eviware.soapui.model.ModelItem;
 

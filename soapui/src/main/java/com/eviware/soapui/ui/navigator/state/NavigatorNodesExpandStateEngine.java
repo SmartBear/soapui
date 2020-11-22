@@ -1,13 +1,16 @@
 package com.eviware.soapui.ui.navigator.state;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
-import com.smartbear.ready.ui.UIManager;
+import com.eviware.soapui.plugins.factories.navigator.NavigatorNodesExpandStateProvider;
+import com.eviware.soapui.plugins.factories.navigator.NavigatroNodeExpandStateProviderFactory;
 
 import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.util.List;
 
 public class NavigatorNodesExpandStateEngine {
     private JTree navigatorTree;
@@ -73,13 +76,28 @@ public class NavigatorNodesExpandStateEngine {
     }
 
     /**
+     * try to find first available provider instance
+     *
+     * @return
+     */
+    private NavigatorNodesExpandStateProvider getNavigatorNodesExpandStateProvider() {
+        List<NavigatroNodeExpandStateProviderFactory> stateProviderFactoryList = SoapUI.getFactoryRegistry().getFactories(NavigatroNodeExpandStateProviderFactory.class);
+        if (stateProviderFactoryList.size() == 0) {
+            return null;
+        }
+        NavigatroNodeExpandStateProviderFactory providerFactory = stateProviderFactoryList.get(0);
+        NavigatorNodesExpandStateProvider result = providerFactory.create();
+        return result;
+    }
+
+    /**
      * get "navigatorTree" and initialize engine.
      * if state provider is empty nothing will happen
      *
      * @param navigatorTree
      */
     public void initialize(JTree navigatorTree) {
-        navigatorNodesExpandStateProvider = UIManager.getNavigatorNodesExpandStateProvider();
+        navigatorNodesExpandStateProvider = getNavigatorNodesExpandStateProvider();
         if (navigatorNodesExpandStateProvider == null) {
             return;
         }
