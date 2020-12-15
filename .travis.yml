@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - oraclejdk8
+cache:
+  directories:
+    - $HOME/.m2
+services:
+  - xvfb
+install: mvn test-compile dependency:resolve-plugins dependency:go-offline
+script: xvfb-run mvn clean package
