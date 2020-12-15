@@ -29,6 +29,7 @@ import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.MenuBuilderHelper;
+import com.eviware.soapui.ui.navigator.state.NavigatorNodesExpandStateEngine;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -49,10 +50,6 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.dnd.Autoscroll;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -76,6 +73,8 @@ public class Navigator extends JPanel {
     private JTree mainTree;
     private SoapUITreeModel treeModel;
     private Set<NavigatorListener> listeners = new HashSet<NavigatorListener>();
+    private NavigatorNodesExpandStateEngine navigatorNodesExpandStateEngine;
+
 
     public Navigator(Workspace workspace) {
         super(new BorderLayout());
@@ -88,6 +87,8 @@ public class Navigator extends JPanel {
     private void buildUI() {
         treeModel = new SoapUITreeModel(workspace);
         mainTree = new NavigatorTree(treeModel);
+        navigatorNodesExpandStateEngine = new NavigatorNodesExpandStateEngine();
+        navigatorNodesExpandStateEngine.initialize(mainTree);
         mainTree.setRootVisible(true);
         mainTree.setExpandsSelectedPaths(true);
         mainTree.setScrollsOnExpand(true);
