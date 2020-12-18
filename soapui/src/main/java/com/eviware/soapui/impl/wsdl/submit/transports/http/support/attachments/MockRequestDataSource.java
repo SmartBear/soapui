@@ -19,9 +19,12 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.CaptureInputStream;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.Tools;
 
 import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -55,7 +58,9 @@ public class MockRequestDataSource implements DataSource {
     }
 
     public InputStream getInputStream() throws IOException {
-        return request.getInputStream();
+        // buffer the entire stream to avoid incomplete BodyParts in MultipartMessageSupport:
+        ByteArrayOutputStream out = Tools.readAll(request.getInputStream(), Tools.READ_ALL);
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
     public String getName() {
