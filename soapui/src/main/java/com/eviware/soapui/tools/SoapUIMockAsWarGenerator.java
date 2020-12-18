@@ -21,9 +21,8 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.StringUtils;
-import org.apache.commons.cli.CommandLine;
-
 import java.io.File;
+import org.apache.commons.cli.CommandLine;
 
 public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
     public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " War Generator";
@@ -127,12 +126,17 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
 
         log.info("Creating WAR file with endpoint [" + endpoint + "]");
 
-        MockAsWar mockAsWar = new MockAsWar(pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
-                includeActions, includeListeners, endpoint, enableWebUI, project);
+        MockAsWar mockAsWar = newMockAsWar(project, pFile, endpoint);
 
         mockAsWar.createMockAsWarArchive();
         log.info("WAR Generation complete");
         return true;
+    }
+
+    // allow subclasses to use an alternative implementation of MockAsWar
+    protected MockAsWar newMockAsWar(WsdlProject project, String projectPath, String endpoint) {
+        return new MockAsWar(projectPath, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
+                includeActions, includeListeners, endpoint, enableWebUI, project);
     }
 
     public boolean isIncludeActions() {
