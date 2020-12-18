@@ -765,7 +765,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         } else if (evt.getSource() == getTestCase() && evt.getPropertyName().equals("testSteps")
                 && evt.getNewValue() == null && evt.getOldValue() == startTestStep && startTestStep != null) {
             setStartStep(null);
-        } else if (evt.getSource() == startTestStep && evt.getPropertyName().equals(WsdlTestStep.NAME_PROPERTY)) {
+        } else if (evt.getSource() == startTestStep && evt.getPropertyName().equals(WsdlTestStep.NAME_PROPERTY)
+                && startTestStep.getName().equals(evt.getOldValue())) {
             mockResponseStepConfig.setStartStep(String.valueOf(evt.getNewValue()));
         }
     }
