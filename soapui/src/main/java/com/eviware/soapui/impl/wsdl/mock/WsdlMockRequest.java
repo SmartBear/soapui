@@ -93,6 +93,7 @@ public class WsdlMockRequest extends AbstractMockRequest {
         this.soapAction = soapAction;
     }
 
+    @Override
     protected void initProtocolSpecificPostContent(WsdlMockRunContext context, String contentType) throws IOException {
         if (!isMultiPart(contentType)) {
             addWSSResult(context, getRequestContent());
@@ -115,7 +116,7 @@ public class WsdlMockRequest extends AbstractMockRequest {
                         StringWriter writer = new StringWriter();
                         XmlUtils.serialize(dom, writer);
                         setActualRequestContent(requestContent);
-                        super.setRequestContent(writer.toString());
+                        setRequestContent(writer.toString());
                     }
                 } catch (Exception e) {
                     if (wssResult == null) {
