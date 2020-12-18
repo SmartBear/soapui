@@ -231,4 +231,9 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
     public void setEditable(boolean enabled) {
     }
 
+    @Override
+    public boolean supportsContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("html");
+    }
+
 }

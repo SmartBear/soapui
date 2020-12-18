@@ -129,4 +129,9 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
 
     public void setEditable(boolean enabled) {
     }
+
+    @Override
+    public boolean supportsContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("json");
+    }
 }

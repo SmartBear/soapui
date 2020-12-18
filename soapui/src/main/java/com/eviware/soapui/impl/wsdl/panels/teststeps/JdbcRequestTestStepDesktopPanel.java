@@ -604,6 +604,11 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
             }
         }
 
+        @Override
+        public String getContentType() {
+            return null;
+        }
+
         public void release() {
             super.release();
             jdbcRequestTestStep.removePropertyChangeListener(JdbcRequestTestStep.RESPONSE_PROPERTY, this);

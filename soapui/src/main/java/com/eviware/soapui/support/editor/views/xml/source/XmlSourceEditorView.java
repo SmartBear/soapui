@@ -626,6 +626,11 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         editArea.setEditable(enabled);
     }
 
+    @Override
+    public boolean supportsContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("xml");
+    }
+
     protected ValidationError[] validateXml(String xml) {
         try {
             XmlUtils.createXmlObject(xml, new XmlOptions().setLoadLineNumbers());

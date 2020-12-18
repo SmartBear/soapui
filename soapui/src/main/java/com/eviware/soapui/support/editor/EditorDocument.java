@@ -34,4 +34,6 @@ public interface EditorDocument extends PropertyChangeNotifier {
     public static enum Format {
         RAW, XML
     }
+
+    String getContentType();
 }
