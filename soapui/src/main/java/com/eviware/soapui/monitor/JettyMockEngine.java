@@ -206,6 +206,8 @@ public class JettyMockEngine implements MockEngine {
             Map<String, List<MockRunner>> map = runners.get(port);
 
             if (map == null || !map.containsKey(mockService.getPath())) {
+                log.warn("Unable to find mockService [" + mockService.getName() + "] on port [" + port +
+                        "] at path [" + mockService.getPath() + "] in order to stop it");
                 return;
             }
 
@@ -216,7 +218,7 @@ public class JettyMockEngine implements MockEngine {
 
             mockRunners.remove(runner);
 
-            log.info("Stopped MockService [" + mockService.getName() + "] on port [" + port + "]");
+            log.info("Stopped mockService [" + mockService.getName() + "] on port [" + port + "] at path [" + mockService.getPath() + "]");
 
             if (map.isEmpty() && !SoapUI.getSettings().getBoolean(HttpSettings.LEAVE_MOCKENGINE)) {
                 SoapUIConnector connector = connectors.get(port);
@@ -638,7 +640,7 @@ public class JettyMockEngine implements MockEngine {
         }
 
         private void printMockServiceList(HttpServletResponse response) throws IOException {
-            response.setStatus(HttpServletResponse.SC_OK);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.setContentType("text/html");
 
             MockRunner[] mockRunners = getMockRunners();
@@ -647,8 +649,10 @@ public class JettyMockEngine implements MockEngine {
 
             for (MockRunner mockRunner : mockRunners) {
                 out.print("<li><a href=\"");
-                out.print(mockRunner.getMockContext().getMockService().getPath() + "?WSDL");
-                out.print("\">" + mockRunner.getMockContext().getMockService().getName() + "</a></li>");
+                out.print(mockRunner.getMockContext().getMockService().getPath() + "?WSDL\">");
+                out.print(mockRunner.getMockContext().getMockService().getName());
+                out.print(" (on port " + mockRunner.getMockContext().getMockService().getPort() + ")");
+                out.print("</a></li>");
             }
 
             out.print("</ul></p></body></html>");
