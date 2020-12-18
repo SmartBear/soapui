@@ -161,7 +161,10 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
         int cnt = 1;
         while (urlToFileMap.containsValue(fileName)) {
             ix = fileName.lastIndexOf('.');
-            fileName = fileName.substring(0, ix) + "_" + cnt + fileName.substring(ix);
+			int iy = fileName.lastIndexOf("_");
+			if (iy == -1) iy = ix;
+			fileName = fileName.substring(0, iy) + "_" + cnt + fileName.substring(ix);
+            //fileName = fileName.substring(0, ix) + "_" + cnt + fileName.substring(ix);
             cnt++;
         }
 
