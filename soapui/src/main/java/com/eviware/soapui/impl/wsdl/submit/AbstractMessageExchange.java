@@ -30,7 +30,9 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
     public AbstractMessageExchange(T modelItem) {
         super();
         this.modelItem = modelItem;
-        discardResponse = modelItem.getSettings().getBoolean("discardResponse");
+        if (modelItem != null) {
+            discardResponse = modelItem.getSettings().getBoolean("discardResponse");
+        }
     }
 
     public T getModelItem() {
