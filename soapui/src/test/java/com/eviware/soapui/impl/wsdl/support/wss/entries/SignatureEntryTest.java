@@ -37,7 +37,6 @@ import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -142,7 +141,6 @@ public class SignatureEntryTest {
     }
 
     @Test
-    @Ignore("Failing every time")
     public void testProcessSignedBinarySecurityToken() throws Exception {
         signatureEntry.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
         setRequiredFields();
