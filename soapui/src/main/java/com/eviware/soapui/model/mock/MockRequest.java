@@ -32,31 +32,33 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public interface MockRequest {
-    public Attachment[] getRequestAttachments();
+    Attachment[] getRequestAttachments();
 
-    public HttpServletRequest getHttpRequest();
+    HttpServletRequest getHttpRequest();
 
-    public StringToStringsMap getRequestHeaders();
+    StringToStringsMap getRequestHeaders();
 
-    public String getRequestContent();
+    String getRequestContent();
 
-    public MockRunContext getContext();
+    MockRunContext getContext();
 
-    public MockRunContext getRequestContext();
+    MockRunContext getRequestContext();
 
-    public RestRequestInterface.HttpMethod getMethod();
+    RestRequestInterface.HttpMethod getMethod();
 
-    public XmlObject getContentElement() throws XmlException;
+    XmlObject getContentElement() throws XmlException;
 
-    public String getPath();
+    String getPath();
 
-    public byte[] getRawRequestData();
+    byte[] getRawRequestData();
 
-    public String getProtocol();
+    String getProtocol();
 
-    public HttpServletResponse getHttpResponse();
+    HttpServletResponse getHttpResponse();
 
-    public XmlObject getRequestXmlObject() throws XmlException;
+    XmlObject getRequestXmlObject() throws XmlException;
 
-    public void setRequestContent(String xml);
+    void setRequestContent(String xml);
+
+    void refreshRequestXmlObject() throws XmlException;
 }
