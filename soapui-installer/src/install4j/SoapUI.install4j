@@ -1422,7 +1422,7 @@ if (Util.isMacOS()) {
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="13">
+                        <array class="java.lang.String" length="14">
                           <void index="0">
                             <string>-XX:MinHeapFreeRatio=20</string>
                           </void>
@@ -1461,6 +1461,9 @@ if (Util.isMacOS()) {
                           </void>
                           <void index="12">
                             <string>-splash:SoapUI-Spashscreen.png</string>
+                          </void>
+                          <void index="13">
+                            <string>-Dlog4j2.formatMsgNoLookups=true</string>
                           </void>
                         </array>
                       </void>
