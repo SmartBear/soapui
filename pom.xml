@@ -81,7 +81,7 @@
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
         <xerces-xercesImpl-version>2.12.0</xerces-xercesImpl-version>
         <commons-beanutils-version>1.9.4</commons-beanutils-version>
-        <log4j2.version>2.15.0</log4j2.version>
+        <log4j2.version>2.16.0</log4j2.version>
 
     </properties>
 
