@@ -47,6 +47,10 @@ export SOAPUI_CLASSPATH
 JAVA=$SOAPUI_HOME/jre/bin/java
 
 JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin"
+
+#CVE-2021-44228
+JAVA_OPTS="$JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true"
+
 if [ $SOAPUI_HOME != "" ] 
 then
     JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.libraries=$SOAPUI_HOME/bin/ext"
