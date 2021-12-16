@@ -94,7 +94,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
                 }
             }
             PatternLayout patternLayout = PatternLayout.newBuilder().withPattern("%d{ABSOLUTE} %-5p [%c{1}] %m%n").build();
-            ConsoleAppender consoleAppender = ConsoleAppender.newBuilder().withLayout(patternLayout).build();
+            ConsoleAppender consoleAppender = ConsoleAppender.newBuilder().setName("ConsoleAppender").setLayout(patternLayout).build();
             Logging.addAppender(logger.getName(), consoleAppender);
         }
     }
