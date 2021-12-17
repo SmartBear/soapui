@@ -25,6 +25,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.protocol.BasicHttpContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -205,11 +206,10 @@ public class ProxyUtilsTestCase {
     }
 
     private void assertHttpClientProxyHost(String expectedProxyHost) {
-        // TODO:
-        /*HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
+        HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
         HttpRoute httpRoute = null;
         try {
-            httpRoute = routePlanner.determineRoute(new HttpHost("soapui.org"), httpMethod, null);
+            httpRoute = routePlanner.determineRoute(new HttpHost("soapui.org"), httpMethod, new BasicHttpContext());
         } catch (HttpException e) {
             e.printStackTrace();
             fail(e.getMessage());
@@ -218,7 +218,7 @@ public class ProxyUtilsTestCase {
             assertThat(httpRoute.getProxyHost(), is(nullValue()));
         } else {
             assertThat(expectedProxyHost, is(httpRoute.getProxyHost().getHostName()));
-        }*/
+        }
     }
 
     private void assertGlobalProxyHost(String expectedProxyHost) {

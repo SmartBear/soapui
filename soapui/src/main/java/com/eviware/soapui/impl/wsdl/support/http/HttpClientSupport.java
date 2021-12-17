@@ -427,6 +427,10 @@ public class HttpClientSupport {
             builder.setRoutePlanner(routePlanner);
             realClient = builder.build();
         }
+
+        public HttpRoutePlanner getRoutePlanner() {
+            return routePlanner;
+        }
     }
 
     private static class SoapUISchemePortResolver implements SchemePortResolver {
