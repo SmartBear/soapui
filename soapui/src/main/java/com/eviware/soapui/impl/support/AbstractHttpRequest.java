@@ -51,6 +51,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.sun.security.auth.UserPrincipal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
@@ -61,6 +62,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -72,6 +74,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
     public static final String BASIC_AUTH_PROFILE = "Basic";
     public static final String SELECTED_AUTH_PROFILE_PROPERTY_NAME = "selectedAuthProfile";
     public static final String CR_ESCAPE_SEQUENCE = "\\\\_r";
+    public static final Principal EMPTY_SSLSTATE = new UserPrincipal("");
 
     private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
     private String requestContent;

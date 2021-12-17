@@ -48,6 +48,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SoapUISSLSocketFactory extends SSLSocketFactory {
+    public static final String SSL_CONFIG_FOR_LAYERED_SOCKET_PARAM = "soapui.layered.socket.ssl.config";
+
     // a cache of factories for custom certificates/Keystores at the project level - never cleared
     private static final Map<String, SSLSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLSocketFactory>();
     private final String sslContextAlgorithm = System.getProperty("soapui.sslcontext.algorithm", "TLS");

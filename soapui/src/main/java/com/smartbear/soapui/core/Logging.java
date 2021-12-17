@@ -3,6 +3,8 @@ package com.smartbear.soapui.core;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.AppenderRef;
@@ -10,6 +12,9 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 public class Logging {
+    public static final String HTTP_CLIENT_WIRE_LOG_CATEGORY = "org.apache.http.wire";
+    public static final Marker HTTP_CLIENT_WIRE_LOG_TIMESTAMP_MARKER_OUTGOING = MarkerManager.getMarker("HTTP_WIRE_TIMESTAMP_OUTGOING");
+    public static final Marker HTTP_CLIENT_WIRE_LOG_TIMESTAMP_MARKER_INCOMING = MarkerManager.getMarker("HTTP_WIRE_TIMESTAMP_INCOMING");
     public static final String GLOBAL_GROOVY_LOG = "GLOBAL_GROOVY_LOG";
 
     public static Logger ensureGroovyLog() {
