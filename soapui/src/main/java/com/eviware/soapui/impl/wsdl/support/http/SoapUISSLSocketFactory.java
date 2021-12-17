@@ -17,12 +17,16 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.SSLUtils;
+import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.commons.ssl.KeyMaterial;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.protocol.HttpContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,10 +35,11 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -43,39 +48,25 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SoapUISSLSocketFactory extends SSLSocketFactory {
+public class SoapUISSLSocketFactory extends SSLConnectionSocketFactory {
     public static final String SSL_CONFIG_FOR_LAYERED_SOCKET_PARAM = "soapui.layered.socket.ssl.config";
 
-    // a cache of factories for custom certificates/Keystores at the project level - never cleared
-    private static final Map<String, SSLSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLSocketFactory>();
-    private final String sslContextAlgorithm = System.getProperty("soapui.sslcontext.algorithm", "TLS");
-    private final SSLContext sslContext = SSLContext.getInstance(sslContextAlgorithm);
     private final static Logger log = LogManager.getLogger(SoapUISSLSocketFactory.class);
+    // A cache of factories for custom certificates/Keystores at the project level - never cleared
+    private static final Map<String, SSLConnectionSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLConnectionSocketFactory>();
 
-    @SuppressWarnings("deprecation")
-    public SoapUISSLSocketFactory(KeyStore keyStore, String keystorePassword) throws KeyManagementException,
+    private final SSLContext sslContext;
+
+    public static SoapUISSLSocketFactory create(KeyStore keyStore, String keystorePassword) throws KeyManagementException,
             UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
-        super(keyStore);
+        final String sslContextAlgorithm = System.getProperty("soapui.sslcontext.algorithm", "TLS");
+        final SSLContext sslContext = SSLContext.getInstance(sslContextAlgorithm);
 
         // trust everyone!
-        X509TrustManager tm = new X509TrustManager() {
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        };
+        X509ExtendedTrustManager tm = SSLUtils.getTrustAllManager();
 
         if (keyStore != null) {
             KeyManagerFactory kmfactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -86,115 +77,166 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory {
             sslContext.init(null, new TrustManager[]{tm}, null);
         }
 
-        setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
+        return new SoapUISSLSocketFactory(sslContext);
     }
 
-    private static SSLSocket enableSocket(SSLSocket socket) {
-        String invalidateSession = System.getProperty("soapui.https.session.invalidate");
-        String protocols = System.getProperty("soapui.https.protocols");
-        String ciphers = System.getProperty("soapui.https.ciphers");
+    private SoapUISSLSocketFactory(SSLContext sslContext) throws KeyManagementException,
+            UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+        super(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        this.sslContext = sslContext;
+    }
 
-        if (StringUtils.hasContent(invalidateSession)) {
-            socket.getSession().invalidate();
-        }
+    private static Socket enableSocket(Socket socket) {
+        if (socket instanceof SSLSocket) {
+            SSLSocket sslSocket = (SSLSocket) socket;
 
-        if (StringUtils.hasContent(protocols)) {
-            socket.setEnabledProtocols(protocols.split(","));
-        }
-        //		else if( socket.getSupportedProtocols() != null )
-        //		{
-        //			socket.setEnabledProtocols( socket.getSupportedProtocols() );
-        //		}
+            String invalidateSession = System.getProperty("soapui.https.session.invalidate");
+            String protocols = System.getProperty("soapui.https.protocols");
+            String ciphers = System.getProperty("soapui.https.ciphers");
 
-        if (StringUtils.hasContent(ciphers)) {
-            socket.setEnabledCipherSuites(ciphers.split(","));
+            if (StringUtils.hasContent(invalidateSession)) {
+                sslSocket.getSession().invalidate();
+            }
+
+            if (StringUtils.hasContent(protocols)) {
+                sslSocket.setEnabledProtocols(protocols.split(","));
+            }
+            //		else if( socket.getSupportedProtocols() != null )
+            //		{
+            //			socket.setEnabledProtocols( socket.getSupportedProtocols() );
+            //		}
+
+            if (StringUtils.hasContent(ciphers)) {
+                sslSocket.setEnabledCipherSuites(ciphers.split(","));
+            }
+            //		else if( socket.getSupportedCipherSuites() != null )
+            //		{
+            //			socket.setEnabledCipherSuites(  socket.getSupportedCipherSuites()  );
+            //		}
         }
-        //		else if( socket.getSupportedCipherSuites() != null )
-        //		{
-        //			socket.setEnabledCipherSuites(  socket.getSupportedCipherSuites()  );
-        //		}
 
         return socket;
     }
 
+    private String getSSLConfig(HttpContext context) {
+        //TODO: still used deprecated getParams
+        HttpClientContext clientContext = HttpClientContext.adapt(context);
+        org.apache.http.HttpRequest request = clientContext.getRequest();
+        if (request == null) {
+            return "";
+        } else {
+            Object result = request.getParams().getParameter(SoapUIHttpRoute.SOAPUI_SSL_CONFIG);
+            if (result == null) {
+                result = request.getParams().getParameter(SoapUIHttpRoute.TESTSERVER_SSL_CONFIG);
+            }
+            if (result != null) {
+                return (String) result;
+            }
+            return null;
+        }
+    }
+
     @Override
-    public Socket createSocket(HttpParams params) throws IOException {
-        String sslConfig = (String) params.getParameter(SoapUIHttpRoute.SOAPUI_SSL_CONFIG);
+    public Socket createSocket(HttpContext context) throws IOException {
+        String sslConfig = getSSLConfig(context);
 
         if (StringUtils.isNullOrEmpty(sslConfig)) {
-            return enableSocket((SSLSocket) sslContext.getSocketFactory().createSocket());
+            return enableSocket(createSocketWithProxy(context));
         }
 
-        SSLSocketFactory factory = factoryMap.get(sslConfig);
+        SSLConnectionSocketFactory factory = factoryMap.get(sslConfig);
 
         if (factory != null) {
             if (factory == this) {
-                return enableSocket((SSLSocket) sslContext.getSocketFactory().createSocket());
+                return enableSocket(createSslSocketWithProxy(context));
             } else {
-                return enableSocket((SSLSocket) factory.createSocket(params));
+                return enableSocket(factory.createSocket(context));
             }
         }
 
         try {
-            // try to create new factory for specified config
-            int ix = sslConfig.lastIndexOf(' ');
-            String keyStore = sslConfig.substring(0, ix);
-            String pwd = sslConfig.substring(ix + 1);
-
-            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-
-            if (keyStore.trim().length() > 0) {
-                File f = new File(keyStore);
-
-                if (f.exists()) {
-                    log.info("Initializing Keystore from [" + keyStore + "]");
-
-                    try {
-                        KeyMaterial km = new KeyMaterial(f, pwd.toCharArray());
-                        ks = km.getKeyStore();
-                    } catch (Exception e) {
-                        SoapUI.logError(e);
-                        pwd = null;
-                    }
-                }
-            }
-
-            factory = new SoapUISSLSocketFactory(ks, pwd);
+            factory = SoapUISSLSocketFactory.create(getKeyAndPassword(sslConfig).getKey(), getKeyAndPassword(sslConfig).getPassword());
             factoryMap.put(sslConfig, factory);
 
-            return enableSocket((SSLSocket) factory.createSocket(params));
+            return enableSocket(factory.createSocket(context));
         } catch (Exception gse) {
-            SoapUI.logError(gse);
-            return enableSocket((SSLSocket) super.createSocket(params));
+            //Logging.logError(gse);
+            return enableSocket(createSocketWithProxy(context));
         }
+    }
+
+    private Socket createSocketWithProxy(HttpContext context) throws IOException {
+        Settings settings = SoapUI.getSettings();
+        if (ProxyUtils.isProxyEnabled() && !ProxyUtils.isAutoProxy() && ProxyUtils.getProxyType(settings) == Proxy.Type.SOCKS) {
+            Proxy proxy = ProxyUtils.getProxy(settings);
+            if (proxy != null) {
+                return new Socket(proxy);
+            }
+        }
+
+        return super.createSocket(context);
+    }
+
+    private Socket createSslSocketWithProxy(HttpContext context) throws IOException {
+        Settings settings = SoapUI.getSettings();
+        if (ProxyUtils.isProxyEnabled() && !ProxyUtils.isAutoProxy() && ProxyUtils.getProxyType(settings) == Proxy.Type.SOCKS) {
+            Proxy proxy = ProxyUtils.getProxy(settings);
+            if (proxy != null) {
+                Socket socket = new Socket(proxy);
+
+                HttpHost targetHost = (HttpHost) context.getAttribute("http.target_host");
+
+                HttpClientContext clientContext = HttpClientContext.adapt(context);
+                RequestConfig requestConfig = clientContext.getRequestConfig();
+
+                int connectionTimeout = requestConfig.getConnectTimeout();
+                int soTimeout = requestConfig.getSocketTimeout();
+                connectionTimeout = connectionTimeout < 0 ? 0 : connectionTimeout;
+                soTimeout = soTimeout < 0 ? 0 : soTimeout;
+
+                socket.setSoTimeout(soTimeout);
+                socket.connect(new InetSocketAddress(targetHost.getHostName(), targetHost.getPort()), connectionTimeout);
+
+                InetSocketAddress proxyAddress = (InetSocketAddress) proxy.address();
+                return sslContext.getSocketFactory().createSocket(socket, proxyAddress.getHostName(), proxyAddress.getPort(), true);
+            }
+        }
+
+        return sslContext.getSocketFactory().createSocket();
     }
 
     /**
      * @since 4.1
      */
     @Override
-    public Socket connectSocket(final Socket socket, final InetSocketAddress remoteAddress,
-                                final InetSocketAddress localAddress, final HttpParams params) throws IOException, UnknownHostException,
-            ConnectTimeoutException {
+    public Socket connectSocket(int connectTimeout, Socket socket, HttpHost host, InetSocketAddress remoteAddress, InetSocketAddress localAddress, HttpContext context) throws IOException,
+            UnknownHostException, ConnectTimeoutException {
         if (remoteAddress == null) {
             throw new IllegalArgumentException("Remote address may not be null");
         }
-        if (params == null) {
-            throw new IllegalArgumentException("HTTP parameters may not be null");
+        if (context == null) {
+            throw new IllegalArgumentException("HTTP context  may not be null");
         }
         Socket sock = socket != null ? socket : new Socket();
         if (localAddress != null) {
-            sock.setReuseAddress(HttpConnectionParams.getSoReuseaddr(params));
+            //TODO: not implemented, SoReuseAddress flag can be extracted form the SocketConfig (available through PoolingHttpClientConnectionManager.getSocketConfig)
+            //sock.setReuseAddress(HttpConnectionParams.getSoReuseaddr(params));
             sock.bind(localAddress);
         }
 
-        int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
-        int soTimeout = HttpConnectionParams.getSoTimeout(params);
+        HttpClientContext clientContext = HttpClientContext.adapt(context);
+        RequestConfig cfg = clientContext.getRequestConfig();
+
+        int connTimeout = cfg.getConnectTimeout();
+        int soTimeout = cfg.getSocketTimeout();
+        connTimeout = connTimeout < 0 ? 0 : connTimeout;
+        soTimeout = soTimeout < 0 ? 0 : soTimeout;
 
         try {
             sock.setSoTimeout(soTimeout);
-            sock.connect(remoteAddress, connTimeout);
+            if (!sock.isConnected()) {
+                sock.connect(remoteAddress, connTimeout);
+            }
         } catch (SocketTimeoutException ex) {
             throw new ConnectTimeoutException("Connect to " + remoteAddress.getHostName() + "/"
                     + remoteAddress.getAddress() + " timed out");
@@ -204,9 +246,9 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory {
         if (sock instanceof SSLSocket) {
             sslsock = (SSLSocket) sock;
         } else {
-            sslsock = (SSLSocket)sslContext.getSocketFactory().createSocket(sock, remoteAddress.getHostName(),
+            sslsock = (SSLSocket) sslContext.getSocketFactory().createSocket(sock, remoteAddress.getHostName(),
                     remoteAddress.getPort(), true);
-            sslsock = enableSocket(sslsock);
+            sslsock = (SSLSocket) enableSocket(sslsock);
         }
         // do we need it? trust all hosts
 //		if( getHostnameVerifier() != null )
@@ -232,19 +274,68 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory {
         return sslsock;
     }
 
-    /**
-     * @since 4.1
-     */
     @Override
-    public Socket createLayeredSocket(final Socket socket, final String host, final int port, final boolean autoClose)
-            throws IOException, UnknownHostException {
-        SSLSocket sslSocket = (SSLSocket)sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
-        sslSocket = enableSocket(sslSocket);
-//		if( getHostnameVerifier() != null )
-//		{
-//			getHostnameVerifier().verify( host, sslSocket );
-//		}
-        // verifyHostName() didn't blowup - good!
+    public Socket createLayeredSocket(Socket socket, String host, int port, HttpContext context)
+            throws IOException {
+        Socket sslSocket;
+        String sslConfigForLayeredSocket = (String) context.getAttribute(SSL_CONFIG_FOR_LAYERED_SOCKET_PARAM);
+        if (StringUtils.isNullOrEmpty(sslConfigForLayeredSocket)) {
+            sslSocket = sslContext.getSocketFactory().createSocket(socket, host, port, true);
+            sslSocket = enableSocket(sslSocket);
+        } else {
+            try {
+                SSLConnectionSocketFactory factory = SoapUISSLSocketFactory.create(getKeyAndPassword(sslConfigForLayeredSocket).getKey(),
+                        getKeyAndPassword(sslConfigForLayeredSocket).getPassword());
+                SSLContext sslContext = ((SoapUISSLSocketFactory) factory).getSSLContext();
+                sslSocket = enableSocket(sslContext.getSocketFactory().createSocket(socket, host, port, true));
+            } catch (Exception gse) {
+                //Logging.logError(gse);
+                sslSocket = enableSocket(sslContext.getSocketFactory().createSocket(socket, host, port, true));
+            }
+        }
         return sslSocket;
+    }
+
+    private SSLContext getSSLContext() {
+        return this.sslContext;
+    }
+
+    private KeyAndPassword getKeyAndPassword(String sslConfig) throws KeyStoreException {
+        int ix = sslConfig.lastIndexOf(' ');
+        String keyStore = sslConfig.substring(0, ix);
+        String pwd = sslConfig.substring(ix + 1);
+        KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+        if (keyStore.trim().length() > 0) {
+            File f = new File(keyStore);
+            if (f.exists()) {
+                log.info("Initializing Keystore from [" + keyStore + "]");
+                try {
+                    KeyMaterial km = new KeyMaterial(f, pwd.toCharArray());
+                    ks = km.getKeyStore();
+                } catch (Exception e) {
+                    //Logging.logError(e);
+                    pwd = null;
+                }
+            }
+        }
+        return new KeyAndPassword(ks, pwd);
+    }
+
+    private final class KeyAndPassword {
+        private final KeyStore key;
+        private final String password;
+
+        protected KeyAndPassword(KeyStore key, String password) {
+            this.key = key;
+            this.password = password;
+        }
+
+        protected KeyStore getKey() {
+            return this.key;
+        }
+
+        protected String getPassword() {
+            return this.password;
+        }
     }
 }

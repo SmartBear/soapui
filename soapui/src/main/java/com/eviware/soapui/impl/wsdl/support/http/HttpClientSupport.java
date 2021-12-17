@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.support.http;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUISystemProperties;
+import com.eviware.soapui.impl.support.SSLUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
@@ -79,6 +80,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.util.PublicSuffixMatcher;
 import org.apache.http.conn.util.PublicSuffixMatcherLoader;
 import org.apache.http.cookie.CookieSpecProvider;
@@ -163,43 +165,20 @@ public class HttpClientSupport {
         /*OT*/
         private final String DEFAULT_VALUE_MESSAGE = "The value has been set to default: {0}";
 
-        public SoapUISSLSocketFactory initSocketFactory() throws KeyStoreException, NoSuchAlgorithmException,
-                CertificateException, IOException, UnrecoverableKeyException, KeyManagementException {
-            KeyStore keyStore = null;
-            Settings settings = SoapUI.getSettings();
+        public static SSLConnectionSocketFactory initSSLSocketFactory()
+                throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException,
+                CertificateException, IOException {
+            KeyStore keyStore = SSLUtils.getReadyApiKeystore(log);
+            String password = SSLUtils.getKeyStorePassword();
 
-            String keyStoreUrl = System.getProperty(SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_LOCATION,
-                    settings.getString(SSLSettings.KEYSTORE, null));
-
-            keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
-
-            String pass = System.getProperty(SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_PASSWORD,
-                    settings.getString(SSLSettings.KEYSTORE_PASSWORD, ""));
-
-            char[] pwd = pass.toCharArray();
-
-            if (keyStoreUrl.trim().length() > 0) {
-                File f = new File(keyStoreUrl);
-                if (f.exists()) {
-                    log.info("Initializing KeyStore");
-
-                    try {
-                        KeyMaterial km = new KeyMaterial(f, pwd);
-                        keyStore = km.getKeyStore();
-                    } catch (Exception e) {
-                        SoapUI.logError(e);
-                    }
-                }
-            }
-
-            return new SoapUISSLSocketFactory(keyStore, pass);
+            return SoapUISSLSocketFactory.create(keyStore, password);
         }
 
         private SoapUIMultiThreadedHttpConnectionManager buildConnectionManager() {
             RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
             registryBuilder.register("http", new SoapUIPlainSocketFactory());
             try {
-                SoapUISSLSocketFactory socketFactory = initSocketFactory();
+                SSLConnectionSocketFactory socketFactory = initSSLSocketFactory();
                 registryBuilder.register("https", socketFactory);
             } catch (Throwable e) {
                 // TODO:
