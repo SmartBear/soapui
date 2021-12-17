@@ -72,6 +72,8 @@ public class UrlWsdlLoader extends WsdlLoader {
     private boolean useWorker;
     private ModelItem contextModelItem;
     private org.apache.http.HttpResponse httpResponse;
+    private static Credentials proxyCredentials;
+    private static boolean isProxyCredentialsUsed;
 
     public UrlWsdlLoader(String url) {
         this(url, null);
@@ -219,6 +221,10 @@ public class UrlWsdlLoader extends WsdlLoader {
 
             return null;
         }
+    }
+
+    public static void setProxyCredentials(Credentials proxyCredentials) {
+        UrlWsdlLoader.proxyCredentials = proxyCredentials;
     }
 
     public boolean abort() {
