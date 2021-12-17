@@ -43,6 +43,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolVersion;
+import org.apache.http.auth.AuthScheme;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthState;
@@ -431,6 +432,15 @@ public class HttpClientSupport {
         public HttpRoutePlanner getRoutePlanner() {
             return routePlanner;
         }
+
+        public AuthScheme getAuthScheme(String schemeName) {
+            AuthSchemeProvider provider = authProviders.lookup(schemeName);
+            if (provider != null) {
+                return provider.create(null);
+            } else {
+                throw new IllegalStateException("Unsupported authentication scheme: " + schemeName);
+            }
+        }
     }
 
     private static class SoapUISchemePortResolver implements SchemePortResolver {
@@ -615,6 +625,10 @@ public class HttpClientSupport {
 
     public static SoapUIHttpClient getHttpClient() {
         return helper.getHttpClient();
+    }
+
+    public static AuthScheme getAuthScheme(String schemeName) {
+        return getHttpClient().getAuthScheme(schemeName);
     }
 
     public static int getDefaultPort(ExtendedHttpMethod httpMethod, HttpClient httpClient) {

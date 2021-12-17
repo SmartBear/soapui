@@ -96,7 +96,6 @@ public class HttpAuthenticationRequestFilterTest {
         return (CredentialsProvider) httpContext.getAttribute(ClientContext.CREDS_PROVIDER);
     }
 
-    @Ignore
     @Test
     public void selectingAuthTypeNtlmReturnsNtlmIfNtlmRequested() {
         selectAuthMethod(CredentialsConfig.AuthType.NTLM);
@@ -107,7 +106,6 @@ public class HttpAuthenticationRequestFilterTest {
         assertThat(scheme, instanceOf(NTLMScheme.class));
     }
 
-    @Ignore
     @Test
     public void selectingAuthTypeSpnegoReturnsSpnegoIfSpnegoRequested() {
         selectAuthMethod(CredentialsConfig.AuthType.SPNEGO_KERBEROS);
@@ -118,7 +116,6 @@ public class HttpAuthenticationRequestFilterTest {
         assertThat(scheme, instanceOf(SPNegoScheme.class));
     }
 
-    @Ignore
     @Test
     public void selectingAuthTypeSpnegoReturnsNtlmIfNtlmRequested() {
         selectAuthMethod(CredentialsConfig.AuthType.SPNEGO_KERBEROS);
@@ -130,9 +127,7 @@ public class HttpAuthenticationRequestFilterTest {
     }
 
     private AuthScheme getSchemeFor(String schemeName) {
-        //return HttpClientSupport.getHttpClient().getAuthSchemes().getAuthScheme(schemeName, null);
-        //TODO:
-        return null;
+        return HttpClientSupport.getAuthScheme(schemeName);
     }
 
     private void selectAuthMethod(CredentialsConfig.AuthType.Enum authType) {
