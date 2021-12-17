@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import java.net.Authenticator;
 import java.net.InetAddress;
 import java.net.PasswordAuthentication;
+import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -197,8 +198,12 @@ public class ProxyUtils {
         }
         ProxySelector.setDefault(proxySelector);
         Authenticator.setDefault(authenticator);
-        HttpClientSupport.setProxySelector(proxySelector);
-        HttpClientSupport.getHttpClient().setCredentialsProvider(getProxyCredentialsProvider(settings));
+        HttpClientSupport.setProxy(proxySelector, getProxyCredentialsProvider(settings));
+    }
+
+    public static Proxy.Type getProxyType(Settings settings) {
+        // Open source can work only with this type
+        return Proxy.Type.HTTP;
     }
 
     public static ProxySelector filterHttpHttpsProxy(ProxySelector proxySelector) {
