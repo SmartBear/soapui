@@ -20,6 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -74,9 +75,11 @@ public class AssertionsSupport implements PropertyChangeListener {
         }
     }
 
-    public void propertyChange(PropertyChangeEvent arg0) {
+    public void propertyChange(PropertyChangeEvent event) {
         if (assertable instanceof PropertyChangeListener) {
-            ((PropertyChangeListener) assertable).propertyChange(arg0);
+            if (!ModelItem.NAME_PROPERTY.equals(event.getPropertyName())) {
+                ((PropertyChangeListener) assertable).propertyChange(event);
+            }
         }
     }
 
