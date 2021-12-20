@@ -22,6 +22,7 @@ import org.apache.http.util.LangUtils;
 public class SoapUIHttpRoute {
 
     public static final String SOAPUI_SSL_CONFIG = "soapui.sslConfig";
+    public static final String TESTSERVER_SSL_CONFIG = "testserver.sslConfig";
     private HttpRoute httpRoute;
     private String param;
 
