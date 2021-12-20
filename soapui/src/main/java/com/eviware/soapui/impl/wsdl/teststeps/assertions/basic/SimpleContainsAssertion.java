@@ -51,6 +51,8 @@ import org.apache.xmlbeans.XmlObject;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Assertion that checks for a specified text token in the associated
@@ -113,7 +115,10 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
             int ix = -1;
 
             if (useRegEx) {
-                if (content.matches(replToken)) {
+                String tokenToUse = ignoreCase ? "(?i)" + replToken : replToken;
+                Pattern p = Pattern.compile(tokenToUse, Pattern.DOTALL);
+                Matcher m = p.matcher(content);
+                if (m.find()) {
                     ix = 0;
                 }
             } else {
@@ -201,7 +206,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
         mainForm.addTextField(CONTENT, "Content to check for", XForm.FieldType.TEXTAREA).setWidth(40);
 
         mainFormLayout.setRowSpec(mainFormLayout.getRowCount(), new RowSpec("top:default:grow(1.0)"));
-        mainFormPanel.add(mainFormPanel.getComponent(mainFormPanel.getComponents().length-1),cc.xy(4,mainFormLayout.getRowCount(),"fill,fill"));
+        mainFormPanel.add(mainFormPanel.getComponent(mainFormPanel.getComponents().length - 1), cc.xy(4, mainFormLayout.getRowCount(), "fill,fill"));
 
         mainForm.addCheckBox(IGNORE_CASE, "Ignore case in comparison");
         mainForm.addCheckBox(USE_REGEX, "Use token as Regular Expression");
