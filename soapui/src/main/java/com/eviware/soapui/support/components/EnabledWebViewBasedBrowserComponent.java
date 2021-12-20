@@ -231,7 +231,11 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
     private void release() {
         setContent("");
-        browserPanel.setScene(null);
+        Platform.runLater(new Runnable() {
+            public void run() {
+                browserPanel.setScene(null);
+            }
+        });
     }
 
     @Override
