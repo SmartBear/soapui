@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.support.SSLUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
@@ -31,9 +30,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
-import com.smartbear.soapui.core.Logging;
 import org.apache.commons.lang.NullArgumentException;
-import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.Header;
 import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpException;
@@ -56,6 +53,7 @@ import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.protocol.ClientContext;
@@ -76,9 +74,6 @@ import org.apache.http.conn.SchemePortResolver;
 import org.apache.http.conn.UnsupportedSchemeException;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.util.PublicSuffixMatcher;
@@ -88,7 +83,6 @@ import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.CookieSpecRegistries;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.impl.conn.DefaultRoutePlanner;
@@ -110,8 +104,6 @@ import org.apache.http.util.VersionInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.net.ssl.SSLSession;
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ProxySelector;
@@ -487,8 +479,8 @@ public class HttpClientSupport {
 
             HttpRequest original = request;
 
-            if (original instanceof RequestWrapper) {
-                RequestWrapper w = (RequestWrapper) request;
+            if (original instanceof HttpRequestWrapper) {
+                HttpRequestWrapper w = (HttpRequestWrapper) request;
                 original = w.getOriginal();
             }
 
@@ -524,11 +516,10 @@ public class HttpClientSupport {
 
             } // while intermediate response
 
-            /* TODO:
             if (original instanceof ExtendedHttpMethod) {
                 ExtendedHttpMethod extendedHttpMethod = (ExtendedHttpMethod) original;
-                extendedHttpMethod.afterReadResponse(((SoapUIMultiThreadedHttpConnectionManager.SoapUIBasicPooledConnAdapter) conn).getSSLSession());
-            }*/
+                extendedHttpMethod.afterReadResponse(((ManagedHttpClientConnection) conn).getSSLSession());
+            }
 
             return response;
         }
