@@ -227,11 +227,7 @@
   <launchers>
     <launcher name="SoapUI GUI" id="64" menuName="SoapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns">
       <executable name="${compiler:EXECUTABLE_NAME}" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" executableDir="bin" executableMode="gui" />
-      <splashScreen show="true" bitmapFile="${compiler:DIST_ROOT}/bin/SoapUI-Spashscreen.png">
-        <text>
-          <versionLine y="40" />
-        </text>
-      </splashScreen>
+      <splashScreen show="true" bitmapFile="${compiler:DIST_ROOT}/bin/SoapUI-Spashscreen.png" />
       <java mainClass="com.eviware.soapui.SoapUI">
         <classPath>
           <archive location="bin/soapui-${compiler:VERSION_NUMBER}.jar" failOnError="false" />
@@ -531,50 +527,6 @@ Be sure to have write permissions for this directory.</property>
                     </object>
                   </property>
                   <property name="variableName" type="string">tutorialsLocation</property>
-                </serializedBean>
-                <externalParametrizationPropertyNames>
-                  <propertyName>directoryDescription</propertyName>
-                  <propertyName>initialFile</propertyName>
-                  <propertyName>standardDirectoryName</propertyName>
-                  <propertyName>variableName</propertyName>
-                  <propertyName>allowSpacesOnUnix</propertyName>
-                  <propertyName>manualEntryAllowed</propertyName>
-                  <propertyName>validationScript</propertyName>
-                  <propertyName>standardValidation</propertyName>
-                  <propertyName>allowSpacesOnUnix</propertyName>
-                  <propertyName>onlyWritable</propertyName>
-                </externalParametrizationPropertyNames>
-              </formComponent>
-            </formComponents>
-          </screen>
-          <screen name="Select JxBrowser directory" id="2544" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="false">
-            <serializedBean>
-              <property name="title" type="string">JxBrowser directory location</property>
-            </serializedBean>
-            <formComponents>
-              <formComponent id="5520" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="25" useExternalParametrization="true" externalParametrizationName="Header" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="hideIfBlank" type="boolean" value="true" />
-                  <property name="labelText" type="string">Please select the target directory for unpacking the Integrated Browser component.
-Be sure to have write permissions for this directory. </property>
-                </serializedBean>
-                <visibilityScript>!context.isConsole()</visibilityScript>
-                <externalParametrizationPropertyNames>
-                  <propertyName>labelText</propertyName>
-                </externalParametrizationPropertyNames>
-              </formComponent>
-              <formComponent id="5521" beanClass="com.install4j.runtime.beans.formcomponents.DirectoryChooserComponent" useExternalParametrization="true" externalParametrizationName="Directory" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="initialFile" type="string">${compiler:SOAPUI_HOME}</property>
-                  <property name="nextOnEnter" type="boolean" value="true" />
-                  <property name="onlyWritable" type="boolean" value="true" />
-                  <property name="standardDirectoryName" type="string">.JxBrowser</property>
-                  <property name="validationScript">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string" />
-                    </object>
-                  </property>
-                  <property name="variableName" type="string">jxBrowserInstallLocation</property>
                 </serializedBean>
                 <externalParametrizationPropertyNames>
                   <propertyName>directoryDescription</propertyName>
