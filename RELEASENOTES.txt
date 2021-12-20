@@ -2,7 +2,7 @@
 
 #### Released on 2021-12-20 ####
 
-New version includes a fix for the Apache Log4j CVE-2021-44228 vulnerability issue.
+This release updates the Apache Log4j library to v. 2.16 that mitigates CVE-2021-44228 (Log4Shell) and CVE-2021-45046.
 
 -------------------------------------------------------------------------------
 
