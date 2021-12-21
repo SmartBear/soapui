@@ -1,0 +1,23 @@
+FROM ubuntu:18.04
+
+WORKDIR /usr/local/SmartBear
+
+ENV SOAPUI_VERSION 5.5.0
+ENV PROJECT_DIR ./project
+ENV REPORTS_DIR ./reports
+ENV MOUNTED_PROJECT_DIR ./project
+ENV MOUNTED_EXT_DIR ./ext
+ENV SOAPUI_DIR ./SoapUI-$SOAPUI_VERSION
+
+COPY Files/SoapUI-x64-$SOAPUI_VERSION.sh ./
+
+RUN ./SoapUI-x64-$SOAPUI_VERSION.sh -q -dir $SOAPUI_DIR
+RUN rm ./SoapUI-x64-$SOAPUI_VERSION.sh
+
+ENV JAVA_HOME $SOAPUI_DIR/jre/bin
+ENV PATH $PATH:$JAVA_HOME
+
+COPY Files/RunProject.sh ./
+COPY Files/EntryPoint.sh ./
+
+ENTRYPOINT ./EntryPoint.sh
