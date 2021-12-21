@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
+import com.btr.proxy.selector.direct.NoProxySelector;
 import com.btr.proxy.selector.whitelist.ProxyBypassListSelector;
 import com.btr.proxy.util.UriFilter;
 import com.eviware.soapui.SoapUI;
@@ -36,7 +37,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.Authenticator;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
+import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -195,10 +198,31 @@ public class ProxyUtils {
             }
             authenticator = new ProxySettingsAuthenticator();
         }
+
+        if (proxySelector == null) {
+            proxySelector = NoProxySelector.getInstance();
+        }
+
         ProxySelector.setDefault(proxySelector);
         Authenticator.setDefault(authenticator);
-        HttpClientSupport.setProxySelector(proxySelector);
-        HttpClientSupport.getHttpClient().setCredentialsProvider(getProxyCredentialsProvider(settings));
+        HttpClientSupport.setProxy(proxySelector, getProxyCredentialsProvider(settings));
+    }
+
+    public static Proxy.Type getProxyType(Settings settings) {
+        // Open source can work only with this type
+        return Proxy.Type.HTTP;
+    }
+
+    public static Proxy getProxy(Settings settings) {
+        String proxyHost = getExpandedProperty(null, settings, ProxySettings.HOST);
+        String proxyPort = getExpandedProperty(null, settings, ProxySettings.PORT);
+        Proxy.Type proxyType = getProxyType(settings);
+        if (StringUtils.isNullOrEmpty(proxyHost) || StringUtils.isNullOrEmpty(proxyPort)) {
+            return null;
+        }
+
+        InetSocketAddress socketAddress = new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort));
+        return new Proxy(proxyType, socketAddress);
     }
 
     public static ProxySelector filterHttpHttpsProxy(ProxySelector proxySelector) {

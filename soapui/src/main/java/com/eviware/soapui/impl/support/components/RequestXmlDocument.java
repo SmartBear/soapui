@@ -54,6 +54,11 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
         }
     }
 
+    @Override
+    public String getContentType() {
+        return "application/soap+xml";
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
         if (!updating) {
             updating = true;

@@ -76,6 +76,7 @@ import java.util.List;
 
 public class HttpClientRequestTransport implements BaseHttpRequestTransport {
     private List<RequestFilter> filters = new ArrayList<RequestFilter>();
+    public static final String USER_TOKEN_FOR_SSL = "http.user-token-ssl";
 
     public HttpClientRequestTransport() {
     }
@@ -457,8 +458,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
     }
 
     protected int getDefaultHttpPort(ExtendedHttpMethod httpMethod, HttpClient httpClient) {
-        return httpClient.getConnectionManager().getSchemeRegistry().getScheme(httpMethod.getURI().getScheme())
-                .getDefaultPort();
+        return HttpClientSupport.getDefaultPort(httpMethod, httpClient);
     }
 
     private void saveRequestHeaders(ExtendedHttpMethod httpMethod, HttpContext httpContext) {

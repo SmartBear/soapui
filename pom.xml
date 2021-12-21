@@ -81,7 +81,7 @@
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
         <xerces-xercesImpl-version>2.12.0</xerces-xercesImpl-version>
         <commons-beanutils-version>1.9.4</commons-beanutils-version>
-        <log4j2.version>2.16.0</log4j2.version>
+        <log4j2.version>2.17.0</log4j2.version>
         <mockito-all.version>1.9.5</mockito-all.version>
         <extra-enforcer-rules.version>1.3</extra-enforcer-rules.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
@@ -98,7 +98,7 @@
         <rsyntaxtextarea.version>2.5.0</rsyntaxtextarea.version>
         <jetty.version>6.1.26</jetty.version>
         <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
-        <wss4j.version>1.6.16</wss4j.version>
+        <wss4j.version>1.6.17</wss4j.version>
         <htmlunit.version>2.7</htmlunit.version>
         <sac.version>1.3</sac.version>
         <httpcomponents.version>4.5.5</httpcomponents.version>
@@ -124,7 +124,7 @@
         <nekohtml.version>1.9.14</nekohtml.version>
         <jcifs.version>1.2.9</jcifs.version>
         <l2fprod.version>7.3</l2fprod.version>
-        <xmlsec.version>1.4.5</xmlsec.version>
+        <xmlsec.version>2.1.7</xmlsec.version>
         <xml-apis.version>2.9.1</xml-apis.version>
         <ws-commons-util.version>1.0.2</ws-commons-util.version>
         <proxy-vole.version>20131209</proxy-vole.version>

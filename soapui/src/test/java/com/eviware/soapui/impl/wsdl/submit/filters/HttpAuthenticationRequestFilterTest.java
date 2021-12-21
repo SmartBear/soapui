@@ -33,6 +33,7 @@ import org.apache.http.impl.auth.SPNegoScheme;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -126,7 +127,7 @@ public class HttpAuthenticationRequestFilterTest {
     }
 
     private AuthScheme getSchemeFor(String schemeName) {
-        return HttpClientSupport.getHttpClient().getAuthSchemes().getAuthScheme(schemeName, null);
+        return HttpClientSupport.getAuthScheme(schemeName);
     }
 
     private void selectAuthMethod(CredentialsConfig.AuthType.Enum authType) {

@@ -115,6 +115,11 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             }
         }
 
+        @Override
+        public String getContentType() {
+            return request.getMediaType();
+        }
+
         private void processNullsAndEmptyValuesIn(JSON json) {
             String requestContent = request.getRequestContent();
             if (!StringUtils.hasContent(requestContent)) {
@@ -197,6 +202,11 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             if (response != null) {
                 response.setResponseContent(documentContent.getContentAsString());
             }
+        }
+
+        @Override
+        public String getContentType() {
+            return modelItem.getResponse() == null ? null : modelItem.getResponse().getContentType();
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

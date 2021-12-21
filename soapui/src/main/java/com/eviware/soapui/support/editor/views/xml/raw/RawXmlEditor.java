@@ -63,7 +63,10 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
     }
 
     public void setEditable(boolean enabled) {
-
     }
 
+    @Override
+    public boolean supportsContentType(String contentType) {
+        return true;
+    }
 }
