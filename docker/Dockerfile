@@ -1,8 +1,8 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 WORKDIR /usr/local/SmartBear
 
-ENV SOAPUI_VERSION 5.5.0
+ARG SOAPUI_VERSION 5.6.0
 ENV PROJECT_DIR ./project
 ENV REPORTS_DIR ./reports
 ENV MOUNTED_PROJECT_DIR ./project

@@ -9,7 +9,7 @@ Perform the following steps to build an image:
 * Update the line endings in the files _EntryPoint.sh_ and _RunProject.sh_ from Windows format to Unix (from CRLF to LF).
 * Open *cmd.exe* in the repository root folder and execute the following command:
   ```
-  docker build -t smartbear/soapuios-testrunner .
+  docker build --build-arg SOAPUI_VERSION=5.6.0 -t smartbear/soapuios-testrunner .
   ```
 
 ## Running Containers
