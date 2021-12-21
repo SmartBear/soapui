@@ -27,7 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <requireMavenVersion-value>3.0.5</requireMavenVersion-value>
-        <maxJdkVersion-value>12</maxJdkVersion-value>
+        <maxJdkVersion-value>16</maxJdkVersion-value>
 
         <!-- Custom properties -->
         <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
@@ -43,7 +43,7 @@
         <groovy-all.version>3.0.6</groovy-all.version>
 
         <!-- org.apache.maven.plugins -->
-        <maven-enforcer-plugin-version>3.0.0-M2</maven-enforcer-plugin-version>
+        <maven-enforcer-plugin-version>3.0.0-M3</maven-enforcer-plugin-version>
         <maven-clean-plugin-version>3.1.0</maven-clean-plugin-version>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
         <maven-javadoc-plugin-version>3.1.0</maven-javadoc-plugin-version>
@@ -64,7 +64,7 @@
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
         <xmlbeans-maven-plugin-version>2.3.5-sb-fixed</xmlbeans-maven-plugin-version>
         <!-- org.openjfx-->
-        <javafx.version>15</javafx.version>
+        <javafx.version>16</javafx.version>
         <javafx-base-version>${javafx.version}</javafx-base-version>
         <javafx-controls-version>${javafx.version}</javafx-controls-version>
         <javafx-graphics-version>${javafx.version}</javafx-graphics-version>
@@ -82,7 +82,62 @@
         <xerces-xercesImpl-version>2.12.0</xerces-xercesImpl-version>
         <commons-beanutils-version>1.9.4</commons-beanutils-version>
         <log4j2.version>2.16.0</log4j2.version>
-
+        <mockito-all.version>1.9.5</mockito-all.version>
+        <extra-enforcer-rules.version>1.3</extra-enforcer-rules.version>
+        <hamcrest-all.version>1.3</hamcrest-all.version>
+        <jsr173_api.version>1.0</jsr173_api.version>
+        <com.google.code.findbugs.version>2.0.0</com.google.code.findbugs.version>
+        <jsr305.version>2.0.0</jsr305.version>
+        <guava.version>14.0</guava.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-lang.version>2.4</commons-lang.version>
+        <commons-io.version>2.4</commons-io.version>
+        <jgoodies-forms.version>1.0.7</jgoodies-forms.version>
+        <jgoodies-looks.version>2.2.0</jgoodies-looks.version>
+        <jgoodies-binding.version>2.0.1</jgoodies-binding.version>
+        <rsyntaxtextarea.version>2.5.0</rsyntaxtextarea.version>
+        <jetty.version>6.1.26</jetty.version>
+        <jetty-servlet-api.version>2.5-20081211</jetty-servlet-api.version>
+        <wss4j.version>1.6.16</wss4j.version>
+        <htmlunit.version>2.7</htmlunit.version>
+        <sac.version>1.3</sac.version>
+        <httpcomponents.version>4.5.5</httpcomponents.version>
+        <httpcore.version>4.4.9</httpcore.version>
+        <org.apache.oltu.oauth2.version>0.31</org.apache.oltu.oauth2.version>
+        <google-oauth-client.version>1.21.0</google-oauth-client.version>
+        <maven-plugin-api.version>2.0</maven-plugin-api.version>
+        <javax.activation.version>1.1</javax.activation.version>
+        <javax.mail.version>1.4</javax.mail.version>
+        <wsdl4j.version>1.6.2-fixed</wsdl4j.version>
+        <commons-cli.version>1.2</commons-cli.version>
+        <json-lib.version>2.2.2-jdk15</json-lib.version>
+        <ezmorph.version>1.0.5</ezmorph.version>
+        <xom.version>1.1</xom.version>
+        <commons-codec.version>1.10</commons-codec.version>
+        <rhino-js.version>1.7R2</rhino-js.version>
+        <saxon.version>9.1.0.8j</saxon.version>
+        <xmlunit.version>1.2</xmlunit.version>
+        <javax.jms.version>1.1</javax.jms.version>
+        <hermes.version>1.14</hermes.version>
+        <amf.version>1.0</amf.version>
+        <cssparser.version>0.9.5</cssparser.version>
+        <nekohtml.version>1.9.14</nekohtml.version>
+        <jcifs.version>1.2.9</jcifs.version>
+        <l2fprod.version>7.3</l2fprod.version>
+        <xmlsec.version>1.4.5</xmlsec.version>
+        <xml-apis.version>2.9.1</xml-apis.version>
+        <ws-commons-util.version>1.0.2</ws-commons-util.version>
+        <proxy-vole.version>20131209</proxy-vole.version>
+        <json-path.version>0.9.1</json-path.version>
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+        <i4jruntime.version>5.1.14</i4jruntime.version>
+        <animal-sniffer-annotations.version>1.11</animal-sniffer-annotations.version>
+        <reflections.version>0.9.9-RC1</reflections.version>
+        <install4j-maven-plugin.version>1.1.1</install4j-maven-plugin.version>
+        <info.cukes.version>1.1.5</info.cukes.version>
+        <picocontainer.version>2.14.3</picocontainer.version>
+        <fest-swing.version>1.2.1</fest-swing.version>
+        <maven-checksum-plugin.version>1.0</maven-checksum-plugin.version>
     </properties>
 
     <modules>
@@ -173,7 +228,7 @@
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.1</version>
+                        <version>${extra-enforcer-rules.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
