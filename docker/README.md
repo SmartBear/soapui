@@ -17,13 +17,13 @@ Perform the following steps to build an image:
 Use the following command line to run a new container:
 
 ```
-docker run -v="Local_Project_Folder":/project -v="Local_Reports_Folder":/reports -v="Local_Extensions_Folder":/ext -e COMMAND_LINE="SoapUI_TestRunner_Command_Line" -it smartbear/soapui-testrunner:latest
+docker run -v="Local_Project_Folder":/project -v="Local_Reports_Folder":/reports -v="Local_Extensions_Folder":/ext -e COMMAND_LINE="SoapUI_TestRunner_Command_Line" -it smartbear/soapuios-testrunner:latest
 ```
 
 For example:
 
 ```
-docker run -v="C:\Users\avdee\Documents\bitbucket\soapui-docker-testrunner\Sample":/project -v="C:\Users\avdee\Documents\bitbucket\soapui-docker-testrunner\Sample\Reports":/reports -v="C:\Users\avdee\Documents\bitbucket\soapui-docker-testrunner\Sample\Extensions":/ext -e COMMAND_LINE="-f/%reports% -a -j '/%project%/sample-soapui-project.xml'" -it smartbear/soapui-testrunner:latest
+docker run -v="C:\Users\avdee\Documents\bitbucket\soapui-docker-testrunner\Sample":/project -v="C:\Users\avdee\Documents\bitbucket\soapui-docker-testrunner\Sample\Reports":/reports -v="C:\Users\avdee\Documents\bitbucket\soapui-docker-testrunner\Sample\Extensions":/ext -e COMMAND_LINE="-f/%reports% -a -j '/%project%/sample-soapui-project.xml'" -it smartbear/soapuios-testrunner:latest
 ```
 
 **Note:** on some systems the paths that are specified for _-v_ must be changed in the following way: _"C:\TestRunner\Project"_ to _"/host_mnt/C/TestRunner/Project"_.
