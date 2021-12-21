@@ -48,8 +48,8 @@ JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.sou
 #CVE-2021-44228
 JAVA_OPTS="$JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true"
 
-#JAVA 12
-JAVA_OPTS="$JAVA_OPTS --illegal-access=permit --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED --add-opens java.desktop/java.beans=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED"
+#JAVA 16
+JAVA_OPTS="$JAVA_OPTS --illegal-access=permit"
 
 if [ $SOAPUI_HOME != "" ] 
 then
