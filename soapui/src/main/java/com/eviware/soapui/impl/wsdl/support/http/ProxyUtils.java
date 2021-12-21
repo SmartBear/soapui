@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
+import com.btr.proxy.selector.direct.NoProxySelector;
 import com.btr.proxy.selector.whitelist.ProxyBypassListSelector;
 import com.btr.proxy.util.UriFilter;
 import com.eviware.soapui.SoapUI;
@@ -197,6 +198,11 @@ public class ProxyUtils {
             }
             authenticator = new ProxySettingsAuthenticator();
         }
+
+        if (proxySelector == null) {
+            proxySelector = NoProxySelector.getInstance();
+        }
+
         ProxySelector.setDefault(proxySelector);
         Authenticator.setDefault(authenticator);
         HttpClientSupport.setProxy(proxySelector, getProxyCredentialsProvider(settings));
