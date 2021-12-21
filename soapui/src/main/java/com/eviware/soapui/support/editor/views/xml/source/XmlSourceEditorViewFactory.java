@@ -44,6 +44,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.GraphQLTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
@@ -110,6 +111,8 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
             return new WsdlResponseXmlSourceEditor((XmlEditor) editor, (WsdlRequest) modelItem);
         } else if (modelItem instanceof WsdlMockResponse) {
             return new WsdlMockResponseXmlSourceEditor((XmlEditor) editor, (WsdlMockResponse) modelItem);
+        } else if (modelItem instanceof GraphQLTestRequest) {
+            return null;
         } else if (modelItem instanceof HttpRequestInterface<?>) {
             return new RestResponseXmlSourceEditor((XmlEditor) editor, (HttpRequestInterface<?>) modelItem);
         } else if (modelItem instanceof MessageExchangeModelItem) {

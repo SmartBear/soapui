@@ -696,6 +696,10 @@
 
     </tns:actionGroup>
 
+    <tns:actionGroup name="GraphQL RequestStep Actions" id="GraphQLRequestTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    </tns:actionGroup>
+
     <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
                      class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 

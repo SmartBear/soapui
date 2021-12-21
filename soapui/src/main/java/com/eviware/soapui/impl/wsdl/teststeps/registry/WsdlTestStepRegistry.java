@@ -39,6 +39,7 @@ public class WsdlTestStepRegistry implements SoapUIFactoryRegistryListener {
         addFactory(new HttpRequestStepFactory());
         addFactory(new AMFRequestStepFactory());
         addFactory(new JdbcRequestTestStepFactory());
+        addFactory(new GraphQLRequestTestStepFactory());
 
         addFactory(new PropertiesStepFactory());
         addFactory(new PropertyTransfersStepFactory());
