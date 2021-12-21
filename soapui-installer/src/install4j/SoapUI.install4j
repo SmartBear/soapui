@@ -2197,7 +2197,7 @@ if (context.isUnattended()) {
       <variables>
         <variable name="OS_EXT" value="MAC" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="macosx-amd64-16" />
+      <jreBundle jreBundleSource="preCreated" includedJre="macosx-amd64-16.0.1" />
     </macos>
     <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" failOnPostProcessorError="true">
       <exclude>
@@ -2213,7 +2213,7 @@ if (context.isUnattended()) {
       <variables>
         <variable name="OS_EXT" value="64bit" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="windows-amd64-16" />
+      <jreBundle jreBundleSource="preCreated" includedJre="windows-amd64-16.0.1" />
     </windows>
     <unixInstaller name="Unix Installer x64" id="4755" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}">
       <excludedBeans>
@@ -2232,7 +2232,7 @@ if (context.isUnattended()) {
       <variables>
         <variable name="32-BIT-INSTALLER" value="false" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="linux-amd64-16" />
+      <jreBundle jreBundleSource="preCreated" includedJre="linux-amd64-16.0.1" />
     </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
