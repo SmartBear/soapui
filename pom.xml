@@ -137,6 +137,7 @@
         <picocontainer.version>2.14.3</picocontainer.version>
         <fest-swing.version>1.2.1</fest-swing.version>
         <maven-checksum-plugin.version>1.0</maven-checksum-plugin.version>
+        <jackson-version>2.13.0</jackson-version>
     </properties>
 
     <modules>
