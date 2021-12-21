@@ -43,7 +43,7 @@
         <groovy-all.version>3.0.6</groovy-all.version>
 
         <!-- org.apache.maven.plugins -->
-        <maven-enforcer-plugin-version>3.0.0-M3</maven-enforcer-plugin-version>
+        <maven-enforcer-plugin-version>3.0.0-M2</maven-enforcer-plugin-version>
         <maven-clean-plugin-version>3.1.0</maven-clean-plugin-version>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
         <maven-javadoc-plugin-version>3.1.0</maven-javadoc-plugin-version>
@@ -87,7 +87,6 @@
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <jsr173_api.version>1.0</jsr173_api.version>
         <com.google.code.findbugs.version>2.0.0</com.google.code.findbugs.version>
-        <jsr305.version>2.0.0</jsr305.version>
         <guava.version>14.0</guava.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-lang.version>2.4</commons-lang.version>
