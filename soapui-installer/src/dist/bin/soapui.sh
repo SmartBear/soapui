@@ -47,6 +47,9 @@ JAVA_OPTS="-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -D
 #CVE-2021-44228
 JAVA_OPTS="$JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true"
 
+#JAVA 16
+JAVA_OPTS="$JAVA_OPTS --illegal-access=permit"
+
 JFXRTPATH=`java -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
 SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
