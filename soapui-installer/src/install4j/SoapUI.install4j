@@ -245,7 +245,7 @@
       </iconImageFiles>
     </launcher>
   </launchers>
-  <installerGui suggestPreviousLocations="false" autoUpdateDescriptorUrl="http://dl.eviware.com/version-update/soapui-updates-os.xml">
+  <installerGui suggestPreviousLocations="false" autoUpdateDescriptorUrl="https://dl.eviware.com/version-update/soapui-updates-os.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://dl.eviware.com/soapuios/${compiler:VERSION_NUMBER}/">
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" styleId="7375" customIcnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" customIcoFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" launchInNewProcess="false">
         <serializedBean>
