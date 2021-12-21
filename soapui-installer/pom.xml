@@ -101,7 +101,7 @@
           <plugin>
             <groupId>org.sonatype.install4j</groupId>
             <artifactId>install4j-maven-plugin</artifactId>
-            <version>1.1.1</version>
+            <version>${install4j-maven-plugin.version}</version>
             <configuration>
               <installDir>${install4j.home}</installDir>
               <release>${project.version}</release>
@@ -160,7 +160,7 @@
           <plugin>
             <groupId>net.ju-n.maven.plugins</groupId>
             <artifactId>maven-checksum-plugin</artifactId>
-            <version>1.0</version>
+            <version>${maven-checksum-plugin.version}</version>
             <configuration>
               <!-- TODO parameterize this better-->
               <files>
@@ -212,7 +212,7 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>2.0</version>
+      <version>${maven-plugin-api.version}</version>
     </dependency>
   </dependencies>
 
