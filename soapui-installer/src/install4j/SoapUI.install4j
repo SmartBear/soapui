@@ -788,7 +788,7 @@ if (Util.isMacOS()) {
               <action id="1073" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="launcherId" type="string">64</property>
-                  <property name="vmOptions" type="array" elementType="string" length="14">
+                  <property name="vmOptions" type="array" elementType="string" length="15">
                     <element index="0">-XX:MinHeapFreeRatio=20</element>
                     <element index="1">-XX:MaxHeapFreeRatio=40</element>
                     <element index="2">-Xms128m</element>
