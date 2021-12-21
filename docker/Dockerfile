@@ -1,5 +1,12 @@
 FROM ubuntu:20.04
 
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		fontconfig libfreetype6 \
+	; \
+	rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usr/local/SmartBear
 
 ARG SOAPUI_VERSION 5.6.1
