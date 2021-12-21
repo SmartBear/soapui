@@ -2197,7 +2197,7 @@ if (context.isUnattended()) {
       <variables>
         <variable name="OS_EXT" value="MAC" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="macosx-amd64-16.0.1" />
+      <jreBundle jreBundleSource="preCreated" includedJre="macos-amd64-16.0.1" />
     </macos>
     <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" failOnPostProcessorError="true">
       <exclude>
