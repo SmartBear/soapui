@@ -34,7 +34,7 @@ public class WsdlTestStepsModelItem extends BaseTestsModelItem {
     private TestSuiteListener listener = new InternalTestSuiteListener();
 
     public WsdlTestStepsModelItem(TestCase testCase) {
-        super(testCase, createLabel(testCase), UISupport.createImageIcon("/teststeps.gif"));
+        super(testCase, createLabel(testCase), UISupport.createImageIcon("/teststeps.png"));
 
         testCase.getTestSuite().addTestSuiteListener(listener);
     }
