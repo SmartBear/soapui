@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.json;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.json.actions.FormatJsonAction;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -32,17 +33,25 @@ import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
 import com.eviware.soapui.support.xml.actions.GoToLineAction;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 @SuppressWarnings("unchecked")
 public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener {
@@ -55,6 +64,7 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
     private EnableLineNumbersAction enableLineNumbersAction;
     private GoToLineAction goToLineAction;
     private FindAndReplaceDialog findAndReplaceDialog;
+    private SaveJsonTextAreaAction saveJsonAction;
 
     public JsonResponseView(HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest) {
         super("JSON", httpRequestMessageEditor, JsonResponseViewFactory.VIEW_ID);
@@ -113,7 +123,9 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
         findAndReplaceDialog = new FindAndReplaceDialog(editArea);
         enableLineNumbersAction = new EnableLineNumbersAction(editorScrollPane, "Toggle Line Numbers");
         goToLineAction = new GoToLineAction(editArea, "Go To Line");
+        saveJsonAction = new SaveJsonTextAreaAction(editArea, "Save");
 
+        inputPopup.add(saveJsonAction);
         inputPopup.addSeparator();
         inputPopup.add(findAndReplaceDialog);
         inputPopup.addSeparator();
@@ -177,6 +189,50 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
         @Override
         public JComponent getEditComponent() {
             return this;
+        }
+    }
+
+    private final class SaveJsonTextAreaAction extends AbstractAction {
+        private final RSyntaxTextArea textArea;
+        private String dialogTitle;
+        private final Logger log = LogManager.getLogger(SaveJsonTextAreaAction.class);
+
+        public SaveJsonTextAreaAction(RSyntaxTextArea editArea, String dialogTitle) {
+            super("Save as...");
+            this.textArea = editArea;
+            this.dialogTitle = dialogTitle;
+            if (UISupport.isMac()) {
+                putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu S"));
+            } else {
+                putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("ctrl S"));
+            }
+        }
+
+        public void actionPerformed(ActionEvent event) {
+            File file = UISupport.getFileDialogs().saveAs(this, dialogTitle, ".json", "JSON Files (*.json)", null);
+            if (file == null) {
+                return;
+            }
+
+            FileWriter writer = null;
+
+            try {
+                writer = new FileWriter(file);
+                writer.write(textArea.getText());
+                writer.close();
+
+                log.info("JSON written to [" + file.getAbsolutePath() + "]");
+            } catch (IOException e1) {
+                UISupport.showErrorMessage("Error saving json to file: " + e1.getMessage());
+            } finally {
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (IOException e) {
+                        SoapUI.logError(e);
+                    }
+                }
+            }
         }
     }
 }
