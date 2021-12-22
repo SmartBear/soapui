@@ -127,7 +127,7 @@
         <xml-apis.version>2.9.1</xml-apis.version>
         <ws-commons-util.version>1.0.2</ws-commons-util.version>
         <proxy-vole.version>20131209</proxy-vole.version>
-        <json-path.version>0.9.1</json-path.version>
+        <json-path.version>2.4.0-fixed</json-path.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
         <i4jruntime.version>5.1.14</i4jruntime.version>
         <animal-sniffer-annotations.version>1.11</animal-sniffer-annotations.version>
