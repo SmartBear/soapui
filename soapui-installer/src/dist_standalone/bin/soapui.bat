@@ -34,6 +34,9 @@ set JAVA_OPTS=-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40
 rem CVE-2021-44228
 set JAVA_OPTS=%JAVA_OPTS% -Dlog4j2.formatMsgNoLookups=true
 
+rem JAVA 16
+set JAVA_OPTS=%JAVA_OPTS% --illegal-access=permit
+
 if "%SOAPUI_HOME%" == "" goto START
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.listeners="%SOAPUI_HOME%listeners"

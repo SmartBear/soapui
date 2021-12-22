@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -53,6 +53,7 @@ import com.eviware.soapui.impl.wsdl.panels.request.WsdlRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCasePanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.DelayTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GotoStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.GraphQLRequestTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GroovyScriptStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.HttpTestRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequestTestStepPanelBuilder;
@@ -67,6 +68,8 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequestTestStepPanel
 import com.eviware.soapui.impl.wsdl.panels.testsuite.WsdlTestSuitePanelBuilder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.GraphQLRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.GraphQLTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.ManualTestStep;
@@ -130,6 +133,7 @@ public class PanelBuilderRegistry {
         register(ManualTestStep.class, new ManualTestStepPanelBuilder());
         register(RestTestRequestStep.class, new RestTestRequestPanelBuilder());
         register(HttpTestRequestStep.class, new HttpTestRequestPanelBuilder());
+        register(GraphQLRequestTestStep.class, new GraphQLRequestTestStepPanelBuilder());
         register(WsdlTestRequestStep.class, new WsdlTestRequestPanelBuilder());
         register(WsdlPropertiesTestStep.class, new PropertiesStepPanelBuilder());
         register(WsdlGroovyScriptTestStep.class, new GroovyScriptStepPanelBuilder());

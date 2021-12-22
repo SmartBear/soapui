@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -217,9 +217,11 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
         // enforceMaxResults( getTestRunnable().getMaxResults() );
         enforceMaxResults(getTestCase().getMaxResults());
 
-        for (int i = 0; i < testRunListeners.length; i++) {
-            if (Arrays.asList(getTestCase().getTestRunListeners()).contains(testRunListeners[i])) {
-                testRunListeners[i].afterStep(this, getRunContext(), stepResult);
+        if (testRunListeners != null) {
+            for (int i = 0; i < testRunListeners.length; i++) {
+                if (Arrays.asList(getTestCase().getTestRunListeners()).contains(testRunListeners[i])) {
+                    testRunListeners[i].afterStep(this, getRunContext(), stepResult);
+                }
             }
         }
 
@@ -245,6 +247,9 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
     }
 
     protected boolean runBeforeSteps(TestStep testStep) {
+        if (testRunListeners == null || testRunListeners.length == 0) {
+            return true;
+        }
         for (TestRunListener testRunListener : testRunListeners) {
             if (Arrays.asList(getTestCase().getTestRunListeners()).contains(testRunListener)) {
                 testRunListener.beforeStep(this, getRunContext(), testStep);

@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -412,5 +412,16 @@ public class StringUtils {
      */
     public static String getSubstringBeforeFirstWhitespace(String originalString) {
         return originalString.split("\\s+")[0];
+    }
+
+    /**
+     * Converts the {@code String} into a null safe parameter
+     *
+     * @param baseString the null safe {@code String}
+     * @return the empty {@code String} in case when provided {@code baseString} is null or empty,
+     * else the method returns initial {@code baseString}
+     */
+    public static String emptyIfNull(String baseString) {
+        return StringUtils.isNullOrEmpty(baseString) ? "" : baseString;
     }
 }

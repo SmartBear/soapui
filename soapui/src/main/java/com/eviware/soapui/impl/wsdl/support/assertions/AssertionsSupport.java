@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -313,5 +313,20 @@ public class AssertionsSupport implements PropertyChangeListener {
         for (WsdlMessageAssertion assertion : assertions) {
             assertion.resolve(context);
         }
+    }
+
+    public Assertable.AssertionStatus getAssertionStatus() {
+        Assertable.AssertionStatus assertionStatus = Assertable.AssertionStatus.UNKNOWN;
+        for (int i = 0; i < getAssertionCount(); i++) {
+            WsdlMessageAssertion assertion = getAssertionAt(i);
+            if (!assertion.isDisabled()) {
+                if (assertion.getStatus() == Assertable.AssertionStatus.FAILED) {
+                    return Assertable.AssertionStatus.FAILED;
+                } else if (assertion.getStatus() == Assertable.AssertionStatus.VALID) {
+                    assertionStatus = Assertable.AssertionStatus.VALID;
+                }
+            }
+        }
+        return assertionStatus;
     }
 }
