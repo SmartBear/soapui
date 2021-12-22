@@ -314,4 +314,19 @@ public class AssertionsSupport implements PropertyChangeListener {
             assertion.resolve(context);
         }
     }
+
+    public Assertable.AssertionStatus getAssertionStatus() {
+        Assertable.AssertionStatus assertionStatus = Assertable.AssertionStatus.UNKNOWN;
+        for (int i = 0; i < getAssertionCount(); i++) {
+            WsdlMessageAssertion assertion = getAssertionAt(i);
+            if (!assertion.isDisabled()) {
+                if (assertion.getStatus() == Assertable.AssertionStatus.FAILED) {
+                    return Assertable.AssertionStatus.FAILED;
+                } else if (assertion.getStatus() == Assertable.AssertionStatus.VALID) {
+                    assertionStatus = Assertable.AssertionStatus.VALID;
+                }
+            }
+        }
+        return assertionStatus;
+    }
 }

@@ -452,8 +452,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
             super(document, request);
 
             XmlSourceEditorView<?> editor = getSourceEditor();
-
-            inputArea = editor.getInputArea();
+            if (editor != null) {
+                inputArea = editor.getInputArea();
+            }
             if (inputArea != null) {
                 resultAreaFocusListener = new ResultAreaFocusListener(editor);
                 inputArea.addFocusListener(resultAreaFocusListener);

@@ -2162,6 +2162,14 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="GraphQLTestRequest">
+        <xsd:complexContent>
+            <xsd:extension base="tns:AbstractRequest">
+                <xsd:attribute name="method" type="xsd:string"></xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:element name="reportTemplate" type="tns:ReportTemplate"></xsd:element>
 
     <xsd:simpleType name="scopeType">

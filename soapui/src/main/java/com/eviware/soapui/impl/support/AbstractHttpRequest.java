@@ -89,7 +89,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
         if (!forLoadTest) {
             iconAnimator = initIconAnimator();
-            if (SoapUI.usingGraphicalEnvironment()) {
+            if (SoapUI.usingGraphicalEnvironment() && iconAnimator != null) {
                 addSubmitListener(iconAnimator);
             }
         }
