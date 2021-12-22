@@ -60,7 +60,7 @@ public class SyntaxEditorUtil {
         return decorateSyntaxArea(textArea);
     }
 
-    private static RSyntaxTextArea decorateSyntaxArea(RSyntaxTextArea textArea) {
+    public static RSyntaxTextArea decorateSyntaxArea(RSyntaxTextArea textArea) {
         textArea.setFont(UISupport.getEditorFont());
         textArea.setCodeFoldingEnabled(true);
         textArea.setAntiAliasingEnabled(true);
