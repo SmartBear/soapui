@@ -86,11 +86,11 @@ public class PluginLoader extends LoaderBase {
     Plugin loadPlugin(Class<?> pluginClass, Reflections jarFileScanner) {
         try {
             PluginConfiguration configurationAnnotation = pluginClass.getAnnotation(PluginConfiguration.class);
-            Version minimumReadyApiVersion = Version.fromString(configurationAnnotation.minimumReadyApiVersion());
-            Version installedReadyApiVersion = Version.fromString(SoapUI.SOAPUI_VERSION);
-            if (minimumReadyApiVersion.compareTo(installedReadyApiVersion) > 0) {
+            Version minimumSoapUIOSVersion = Version.fromString(configurationAnnotation.minimumSoapUIVersion());
+            Version installedSoapUIOSVersion = Version.fromString(SoapUI.SOAPUI_VERSION);
+            if (minimumSoapUIOSVersion.compareTo(installedSoapUIOSVersion) > 0) {
                 throw new InvalidPluginException("Plugin " + configurationAnnotation.name() + " requires version " +
-                        minimumReadyApiVersion + " of ReadyAPI. Current application version: " + installedReadyApiVersion);
+                        minimumSoapUIOSVersion + " of SoapUI OS. Current application version: " + installedSoapUIOSVersion);
             }
             Plugin plugin;
             if (Plugin.class.isAssignableFrom(pluginClass)) {
