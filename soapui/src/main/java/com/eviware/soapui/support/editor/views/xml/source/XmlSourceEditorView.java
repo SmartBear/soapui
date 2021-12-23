@@ -627,8 +627,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
     }
 
     @Override
-    public boolean supportsContentType(String contentType ) {
-        return contentType.toLowerCase().endsWith("xml");
+    public int getSupportScoreForContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("xml")? 2 : 0;
     }
 
     protected ValidationError[] validateXml(String xml) {

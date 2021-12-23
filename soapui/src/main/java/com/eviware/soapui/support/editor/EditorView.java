@@ -59,5 +59,5 @@ public interface EditorView<T extends EditorDocument> extends PropertyChangeNoti
 
     public void requestFocus();
 
-    boolean supportsContentType(String contentType );
+    int getSupportScoreForContentType(String contentType );
 }

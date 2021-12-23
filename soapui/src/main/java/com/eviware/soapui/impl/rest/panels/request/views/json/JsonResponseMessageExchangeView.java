@@ -142,7 +142,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
     }
 
     @Override
-    public boolean supportsContentType(String contentType ) {
-        return contentType.toLowerCase().endsWith("json");
+    public int getSupportScoreForContentType(String contentType ) {
+        return contentType.toLowerCase().startsWith("application/json")? 2 : 0;
     }
 }

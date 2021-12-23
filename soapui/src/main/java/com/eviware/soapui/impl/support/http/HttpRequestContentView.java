@@ -279,8 +279,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     }
 
     @Override
-    public boolean supportsContentType(String contentType ) {
-        return false;
+    public int getSupportScoreForContentType(String contentType ) {
+        return 0;
     }
 
     public RestParamsTable getParamsTable() {

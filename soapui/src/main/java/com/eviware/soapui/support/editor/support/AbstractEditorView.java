@@ -162,7 +162,7 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
     }
 
     @Override
-    public boolean supportsContentType(String contentType) {
-        return false;
+    public int getSupportScoreForContentType(String contentType) {
+        return 0;
     }
 }
