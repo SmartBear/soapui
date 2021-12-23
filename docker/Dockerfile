@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 AS basic
 
 RUN set -eux; \
 	apt-get update; \
@@ -29,3 +29,26 @@ COPY Files/RunProject.sh ./
 COPY Files/EntryPoint.sh ./
 
 ENTRYPOINT ./EntryPoint.sh
+
+FROM ubuntu:20.04
+
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		fontconfig libfreetype6 \
+	; \
+	rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/local/SmartBear
+
+ARG SOAPUI_VERSION 5.6.1
+ENV PROJECT_DIR ./project
+ENV REPORTS_DIR ./reports
+ENV MOUNTED_PROJECT_DIR ./project
+ENV MOUNTED_EXT_DIR ./ext
+ENV SOAPUI_DIR ./SoapUI-$SOAPUI_VERSION
+
+COPY --from=basic /usr/local/SmartBear $WORKING_FOLDER
+#RUN ls -a -R /usr/local/SmartBear
+
+ENTRYPOINT $WORKING_FOLDER/EntryPoint.sh
