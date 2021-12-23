@@ -109,6 +109,7 @@ import com.eviware.soapui.support.swing.MenuBuilderHelper;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.tools.CmdLineRunner;
+import com.eviware.soapui.tools.SecureTools;
 import com.eviware.soapui.ui.JDesktopPanelsList;
 import com.eviware.soapui.ui.navigator.Navigator;
 import com.eviware.soapui.ui.navigator.NavigatorListener;
@@ -924,6 +925,7 @@ public class SoapUI {
         setBackgroundsToWhite();
         mainArgs = args;
 
+        SecureTools.setTrustSSL();
         SoapUIRunner soapuiRunner = new SoapUIRunner();
         SwingUtilities.invokeLater(soapuiRunner);
     }
