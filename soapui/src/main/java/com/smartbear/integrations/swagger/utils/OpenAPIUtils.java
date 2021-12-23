@@ -1,4 +1,4 @@
-package com.smartbear.integrations.swaggerhub.utils;
+package com.smartbear.integrations.swagger.utils;
 
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
@@ -10,10 +10,13 @@ import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.support.JsonUtil;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.ModelItemNamer;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.smartbear.integrations.swaggerhub.importers.OpenAPI3Importer;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
 import io.swagger.v3.oas.integration.IntegrationObjectMapperFactory;
@@ -36,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -404,7 +408,7 @@ public class OpenAPIUtils {
     }
 
     private static boolean isOperationHasSameResponse(RestMockAction restMockAction, String contentType, String responseCode) {
-        for (RestMockResponse mockResponse : restMockAction.getMockResponses()) {
+        for (MockResponse mockResponse : restMockAction.getMockResponses()) {
             if (mockResponse.getResponseHttpStatus() == NumberUtils.toInt(responseCode) && mockResponse.getContentType().equals(contentType)) {
                 return true;
             }
@@ -480,11 +484,23 @@ public class OpenAPIUtils {
             }
         } else if (contentType.equals("application/xml")) {
             try {
-                return XmlUtils.prettyPrintXml(JsonUtil.getXmlMapper().writeValueAsString(example));
+                return XmlUtils.prettyPrintXml(new XmlMapper().writeValueAsString(example));
             } catch (JsonProcessingException e) {
                 LOG.warn("Failed to serialize example to XML", e);
             }
         }
         return Json.pretty(example);
+    }
+
+    public static boolean shouldOverwriteFileIfExists(String fileName, String folderName) {
+        File apiFile = new File(fileName);
+        if (folderName != null) {
+            apiFile = new File(folderName + File.separatorChar + fileName);
+        }
+        if (apiFile.exists()) {
+            return (UISupport.confirm(String.format("%s already exists.\nDo you want to replace it?", apiFile.getName()),
+                    "Export Swagger/OpenAPI Definition"));
+        }
+        return true;
     }
 }

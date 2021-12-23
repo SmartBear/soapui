@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.support;
 
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
@@ -106,6 +107,28 @@ public class HttpUtils {
                                          String escapedQuery, String escapedFragment) throws URISyntaxException {
         return URIUtils.createURI(scheme, (userinfo == null ? "" : (userinfo + "@")) + host, port, escapedPath,
                 escapedQuery, escapedFragment);
+    }
+
+    public static boolean canHavePayload(RestRequestInterface.HttpMethod method) {
+        switch (method) {
+            case POST:
+            case PUT:
+            case DELETE:
+            case PROPFIND:
+            case PATCH:
+            case LOCK: {
+                return true;
+            }
+            case GET:
+            case HEAD:
+            case OPTIONS:
+            case TRACE:
+            case UNLOCK:
+            case COPY:
+            case PURGE:
+                return false;
+        }
+        return false;
     }
 }
 

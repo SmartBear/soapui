@@ -10,6 +10,8 @@ import com.eviware.soapui.support.UISupport;
 import com.google.common.io.ByteStreams;
 //import com.smartbear.integrations.swaggerhub.importers.Swagger2Importer;
 //import com.smartbear.integrations.swaggerhub.importers.OpenAPI3Importer;
+import com.smartbear.integrations.swaggerhub.importers.OpenAPI3Importer;
+import com.smartbear.integrations.swaggerhub.importers.Swagger2Importer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -220,9 +222,9 @@ public class ImportFromHubDialog extends Dialog {
             SwaggerImporter importer = null;
 
             if (StringUtils.equals(descriptor.oasVersion, "3.0.0")) {
-                //importer = new OpenAPI3Importer(project, "application/json", false);
+                importer = new OpenAPI3Importer(project, "application/json", false);
             } else {
-                //importer = new Swagger2Importer(project, "application/json", false);
+                importer = new Swagger2Importer(project, "application/json", false);
             }
 
             int selectedVersion = model.getVersionCombo().getSelectionModel().getSelectedIndex();

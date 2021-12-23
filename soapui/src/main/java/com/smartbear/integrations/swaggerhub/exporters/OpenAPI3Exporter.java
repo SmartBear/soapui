@@ -4,9 +4,9 @@ package com.smartbear.integrations.swaggerhub.exporters;
 import com.eviware.soapui.config.OAuth2FlowConfig;
 import com.eviware.soapui.impl.AuthRepository.AuthEntries.BaseAuthEntry;
 import com.eviware.soapui.impl.AuthRepository.AuthRepository;*/
-import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.StringUtils;
@@ -17,27 +17,20 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.SimpleType;
 import com.smartbear.integrations.swaggerhub.utils.ApiResponsesSerializer;
-import com.smartbear.integrations.swaggerhub.utils.OpenAPIUtils;
-import com.smartbear.swagger.utils.ResponseCodeSerializer;
-import com.smartbear.swagger.utils.YamlFactoryExtended;
-import io.swagger.v3.oas.models.Components;
+import com.smartbear.integrations.swagger.utils.OpenAPIUtils;
+import com.smartbear.integrations.swagger.utils.YamlFactoryExtended;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
-import io.swagger.v3.oas.models.security.OAuthFlow;
-import io.swagger.v3.oas.models.security.OAuthFlows;
-import io.swagger.v3.oas.models.security.Scopes;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.ObjectMapperFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class OpenAPI3Exporter implements SwaggerExporter {
@@ -53,8 +46,8 @@ public class OpenAPI3Exporter implements SwaggerExporter {
     }
 
     @Override
-    public String exportToFileSystem(String fileName, String apiVersion, String format, AbstractRestService[] services, String basePath) {
-        if (!ExportSwaggerAction.shouldOverwriteFileIfExists(fileName, null)) {
+    public String exportToFileSystem(String fileName, String apiVersion, String format, RestService[] services, String basePath) {
+        if (!OpenAPIUtils.shouldOverwriteFileIfExists(fileName, null)) {
             return null;
         }
 
@@ -76,7 +69,7 @@ public class OpenAPI3Exporter implements SwaggerExporter {
      * @param services          rest services from where will be filled resources, methods and etc. to OpenApi info
      * @return filled OpenApi object
      */
-    public OpenAPI createOpenAPI(ModelItem baseInfoModelItem, AbstractRestService[] services) {
+    public OpenAPI createOpenAPI(ModelItem baseInfoModelItem, RestService[] services) {
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info();
         info.setVersion(DEFAULT_VERSION);
@@ -87,7 +80,7 @@ public class OpenAPI3Exporter implements SwaggerExporter {
         openAPI.setInfo(info);
 
         Paths paths = new Paths();
-        for (AbstractRestService restService : services) {
+        for (RestService restService : services) {
             copyEndpoints(openAPI, restService);
             for (RestResource restResource : restService.getResourceList()) {
                 PathItem pathItem = new PathItem();
@@ -102,7 +95,7 @@ public class OpenAPI3Exporter implements SwaggerExporter {
             }
         }
         openAPI.setPaths(paths);
-        createSecurityComponent(openAPI);
+        //createSecurityComponent(openAPI);
 
         return openAPI;
     }
@@ -126,7 +119,7 @@ public class OpenAPI3Exporter implements SwaggerExporter {
         return mapper;
     }
 
-    private void copyEndpoints(OpenAPI openAPI, AbstractRestService restService) {
+    private void copyEndpoints(OpenAPI openAPI, RestService restService) {
         List<Server> serverList = new ArrayList<>();
         for (String endpoint : restService.getEndpoints()) {
             Server server = new Server();
@@ -136,7 +129,7 @@ public class OpenAPI3Exporter implements SwaggerExporter {
         openAPI.setServers(serverList);
     }
 
-    private void createSecurityComponent(OpenAPI openAPI) {
+    /*private void createSecurityComponent(OpenAPI openAPI) {
         AuthRepository authRepository = project.getAuthRepository();
         HashMap<String, SecurityScheme> securitySchemes = new HashMap<>();
 
@@ -202,5 +195,5 @@ public class OpenAPI3Exporter implements SwaggerExporter {
         securityScheme.setType(SecurityScheme.Type.HTTP);
         securityScheme.setScheme("basic");
         securitySchemes.put(authEntry.getName(), securityScheme);
-    }
+    }*/
 }

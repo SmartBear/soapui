@@ -1,8 +1,9 @@
-package com.smartbear.swagger.utils;
+package com.smartbear.integrations.swagger.utils;
 
 import com.fasterxml.jackson.core.io.IOContext;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.smartbear.integrations.swaggerhub.utils.OpenApiYamlGenerator;
 
 import java.io.IOException;
 import java.io.Writer;

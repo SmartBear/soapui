@@ -1,28 +1,19 @@
 package com.smartbear.integrations.swaggerhub.importers;
 
-/*import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.impl.rest.AbstractRestService;
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestServiceEx;
-import com.eviware.soapui.impl.rest.RestServiceExFactory;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.impl.rest.*;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.support.MediaTypeUtils;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.impl.wsdl.support.wsdl.Swagger2UrlClientLoader;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.smartbear.integrations.swaggerhub.utils.OpenAPIUtils;
+import com.smartbear.integrations.swagger.utils.OpenAPIUtils;
 import io.swagger.inflector.examples.ExampleBuilder;
 import io.swagger.inflector.examples.XmlExampleSerializer;
 import io.swagger.inflector.examples.models.Example;
@@ -64,7 +55,7 @@ import java.util.Map;
 
 
 public class Swagger2Importer extends AbstractSwaggerImporter {
-    /*OT*/ /*private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
+    /*OT*/ private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
 
     private static Logger logger = LogManager.getLogger(Swagger2Importer.class);
 
@@ -105,13 +96,13 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
     }
 
     @Override
-    public AbstractRestService[] importSwagger(String url) {
+    public RestService[] importSwagger(String url) {
         return importSwagger(url, null);
     }
 
     @Override
-    public AbstractRestService[] importSwagger(String url, String apiKey, boolean disableLogger) {
-        List<AbstractRestService> result = new ArrayList<>();
+    public RestService[] importSwagger(String url, String apiKey, boolean disableLogger) {
+        List<RestService> result = new ArrayList<>();
         Map<String, Object> context = new HashMap<>();
         context.put("swaggerUrl", url);
 
@@ -132,19 +123,19 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
             authorizationValue.setKeyName(AUTHORIZATION_HEADER);
             authorizationValue.setType(TYPE_HEADER);
             authorizationValue.setValue(apiKey);
-            swagger = SwaggerUtils.getSwagger(url, Collections.singletonList(authorizationValue), true, disableLogger);
+            swagger = com.smartbear.swagger.SwaggerUtils.getSwagger(url, Collections.singletonList(authorizationValue), true, disableLogger);
         } else {
             swagger = SwaggerUtils.getSwagger(url, null, true, disableLogger);
         }
 
         if (swagger == null) {
-            return new AbstractRestService[]{null};
+            return new RestService[]{null};
         }
 
         if (swagger.getPaths() == null) {
-            return new AbstractRestService[]{null};
+            return new RestService[]{null};
         }
-        RestServiceEx restService = createRestService(swagger, url);
+        RestService restService = createRestService(swagger, url);
         swagger.getPaths().forEach((key, value) -> importPath(restService, key, value, context));
 
         result.add(restService);
@@ -152,15 +143,15 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
 
         Analytics.trackAction(SWAGGER_OAS_IMPORT_VERSION, "SwaggerOAS_version", swagger.getSwagger());
 
-        return result.toArray(new AbstractRestService[result.size()]);
+        return result.toArray(new RestService[result.size()]);
     }
 
     @Override
-    public AbstractRestService[] importSwagger(String url, String apiKey) {
+    public RestService[] importSwagger(String url, String apiKey) {
         return importSwagger(url, apiKey, false);
     }
 
-    private void ensureEndpoint(RestServiceEx restService, String url) {
+    private void ensureEndpoint(RestService restService, String url) {
         if (restService != null && restService.getEndpoints().length == 0) {
             int ix = url.indexOf("://");
             if (ix > 0) {
@@ -172,7 +163,7 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
         }
     }
 
-    private RestResource importPath(RestServiceEx restService, String path, Path resource, Map<String, Object> context) {
+    private RestResource importPath(RestService restService, String path, Path resource, Map<String, Object> context) {
         if (restService == null) {
             return null;
         }
@@ -472,7 +463,7 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
         return sampleValue;
     }
 
-    private RestServiceEx createRestService(Swagger swagger, String url) {
+    private RestService createRestService(Swagger swagger, String url) {
         Info swaggerInfo = swagger.getInfo();
         String name = swaggerInfo != null && swaggerInfo.getTitle() != null ? swaggerInfo.getTitle() : null;
         if (name == null) {
@@ -489,9 +480,7 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
             }
         }
 
-        RestServiceEx restService = (RestServiceEx) project.addNewInterface(name, RestServiceExFactory.REST_EX_TYPE);
-        restService.setDefinitionType(Constants.SWAGGER);
-        restService.setDefinitionUrl(url);
+        RestService restService = (RestService) project.addNewInterface(name, RestServiceFactory.REST_TYPE);
 
         String expandedUrl = PathUtils.expandPath(url, project);
         if (new File(expandedUrl).exists()) {
@@ -555,4 +544,3 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
         return authorizationValue;
     }
 }
-*/

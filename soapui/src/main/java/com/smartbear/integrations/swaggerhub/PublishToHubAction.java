@@ -17,6 +17,7 @@ import com.eviware.x.form.support.AForm;
 import com.google.common.io.Files;
 //import com.smartbear.integrations.swaggerhub.exporters.OpenAPI3Exporter;
 //import com.smartbear.integrations.swaggerhub.exporters.Swagger2Exporter;
+import com.smartbear.integrations.swaggerhub.exporters.OpenAPI3Exporter;
 import com.smartbear.integrations.swaggerhub.exporters.SwaggerExporter;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -94,9 +95,9 @@ public class PublishToHubAction extends AbstractSoapUIAction<RestService> {
 
             SwaggerExporter exporter = null;
             if (dialog.getValue(Form.OAS_VERSION).equals(SWAGGER_2_0)) {
-                //exporter = new Swagger2Exporter(restService.getProject());
+                exporter = new Swagger2Exporter(restService.getProject());
             } else {
-                //exporter = new OpenAPI3Exporter(restService.getProject());
+                exporter = new OpenAPI3Exporter(restService.getProject());
             }
             String tempDirectoryPath = Files.createTempDir().getAbsolutePath();
             String tempFilePath = tempDirectoryPath + File.separator + "api-docs.json";

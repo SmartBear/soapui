@@ -1,27 +1,22 @@
 package com.smartbear.integrations.swaggerhub.importers;
 
-/*import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.config.AuthEntryTypeConfig;
-import com.eviware.soapui.config.OAuth2FlowConfig;
-import com.eviware.soapui.impl.AuthRepository.AuthRepository;
-import com.eviware.soapui.impl.rest.AbstractRestService;
-import com.eviware.soapui.impl.rest.OAuth2Profile;
+//import com.eviware.soapui.analytics.Analytics;
+//import com.eviware.soapui.config.AuthEntryTypeConfig;
+//import com.eviware.soapui.config.OAuth2FlowConfig;
+//import com.eviware.soapui.impl.AuthRepository.AuthRepository;
+import com.eviware.soapui.impl.rest.RestService;
+//import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestServiceEx;
-import com.eviware.soapui.impl.rest.RestServiceExFactory;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.HttpUtils;
-import com.eviware.soapui.impl.support.MediaTypeUtils;
-import com.eviware.soapui.impl.swagger.support.ReadyApiOpenAPIParser;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.impl.wsdl.support.wsdl.OpenAPI3UrlClientLoader;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.StringUtils;
@@ -31,7 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.Lists;
-import com.smartbear.integrations.swaggerhub.utils.OpenAPIUtils;
+import com.smartbear.integrations.swagger.utils.OpenAPIUtils;
 import io.swagger.oas.inflector.examples.ExampleBuilder;
 import io.swagger.oas.inflector.examples.XmlExampleSerializer;
 import io.swagger.oas.inflector.examples.models.ObjectExample;
@@ -76,7 +71,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenAPI3Importer extends AbstractSwaggerImporter {
-    /*OT*/ /*private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
+    /*OT*/ private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
 
     public static final String COOKIE_PARAMETER_NAME = "Cookie";
     private static final Logger logger = LogManager.getLogger(OpenAPI3Importer.class);
@@ -87,7 +82,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
     private final WsdlProject project;
     private final String defaultMediaType;
     private final HashMap context = new HashMap();
-    private final OpenAPI3TestCaseGenerator testCaseGenerator = new OpenAPI3TestCaseGenerator();
+    private final com.smartbear.swagger.OpenAPI3TestCaseGenerator testCaseGenerator = new OpenAPI3TestCaseGenerator();
     private final boolean generateTestCase;
     private String definitionHostLocation;
 
@@ -119,13 +114,13 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
     }
 
     @Override
-    public RestServiceEx[] importSwagger(String swaggerUrl) {
+    public RestService[] importSwagger(String swaggerUrl) {
         return importSwagger(swaggerUrl, null);
     }
 
     @Override
-    public RestServiceEx[] importSwagger(String swaggerUrl, String apiKey) {
-        RestServiceEx restService = null;
+    public RestService[] importSwagger(String swaggerUrl, String apiKey) {
+        RestService restService = null;
         OpenAPIParser parser = new ReadyApiOpenAPIParser();
         ParseOptions options = new ParseOptions();
         boolean resolveFully = Boolean.parseBoolean(System.getProperty("soapui.swagger.resolvefully", "true"));
@@ -151,7 +146,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
 
         context.put("swaggerUrl", swaggerUrl);
         Analytics.trackAction(SWAGGER_OAS_IMPORT_VERSION, "SwaggerOAS_version", result.getOpenAPI().getOpenapi());
-        return new RestServiceEx[]{restService};
+        return new RestService[]{restService};
     }
 
     private String extractHostLocation(String swaggerUrl) {
@@ -169,7 +164,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
         return url.toLowerCase().startsWith(HttpUtils.HTTP_PROTOCOL) || url.toLowerCase().startsWith(HttpUtils.HTTPS_PROTOCOL);
     }
 
-    private RestServiceEx createRestService(SwaggerParseResult parseResult, String url) {
+    private RestService createRestService(SwaggerParseResult parseResult, String url) {
         if (parseResult == null || parseResult.getOpenAPI() == null) {
             return null;
         }
@@ -199,7 +194,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
             }
         }
 
-        RestServiceEx restService = (RestServiceEx) project.addNewInterface(name, RestServiceExFactory.REST_EX_TYPE);
+        RestService restService = (RestService) project.addNewInterface(name, RestServiceExFactory.REST_EX_TYPE);
         restService.setDescription(description);
         restService.setDefinitionType(Constants.OPENAPI_V3);
         restService.setDefinitionUrl(url);
@@ -228,7 +223,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
         return restService;
     }
 
-    private void addEndpoints(List<Server> servers, AbstractRestService restService) {
+    private void addEndpoints(List<Server> servers, RestService restService) {
         final String DEFAULT_ENDPOINT = "/";
         if (servers != null) {
             for (Server server : servers) {
@@ -271,7 +266,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
         return url.startsWith("/");
     }
 
-    private void createResources(RestServiceEx restService) {
+    private void createResources(RestService restService) {
         if (openAPI == null || openAPI.getPaths() == null) {
             return;
         }
@@ -304,7 +299,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
      * @param paramProperty project service property object
      * @param parameter external definition property object
      */
-    /*private void setDefaultParamValue(RestParamProperty paramProperty, Parameter parameter) {
+    private void setDefaultParamValue(RestParamProperty paramProperty, Parameter parameter) {
         if (paramProperty == null || parameter == null) {
             return;
         }
@@ -671,4 +666,3 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
         }
     }
 }
-*/
