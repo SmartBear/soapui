@@ -107,11 +107,10 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
         if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             inputTabsChangeListener.refreshVisibleInspectors();
-            selectDefaultView();
         }
     }
 
-    private void selectDefaultView() {
+    protected void selectDefaultView() {
         String contentType = document.getContentType();
         if( contentType != null ) {
             if (!getCurrentView().supportsContentType(contentType)) {
