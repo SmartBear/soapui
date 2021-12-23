@@ -1,6 +1,6 @@
 package com.smartbear.integrations.swaggerhub.importers;
 
-import com.eviware.soapui.analytics.Analytics;
+/*import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.AuthEntryTypeConfig;
 import com.eviware.soapui.config.OAuth2FlowConfig;
 import com.eviware.soapui.impl.AuthRepository.AuthRepository;
@@ -31,7 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.Lists;
-import com.smartbear.swagger.utils.OpenAPIUtils;
+import com.smartbear.integrations.swaggerhub.utils.OpenAPIUtils;
 import io.swagger.oas.inflector.examples.ExampleBuilder;
 import io.swagger.oas.inflector.examples.XmlExampleSerializer;
 import io.swagger.oas.inflector.examples.models.ObjectExample;
@@ -76,7 +76,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenAPI3Importer extends AbstractSwaggerImporter {
-    /*OT*/ private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
+    /*OT*/ /*private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
 
     public static final String COOKIE_PARAMETER_NAME = "Cookie";
     private static final Logger logger = LogManager.getLogger(OpenAPI3Importer.class);
@@ -304,7 +304,7 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
      * @param paramProperty project service property object
      * @param parameter external definition property object
      */
-    private void setDefaultParamValue(RestParamProperty paramProperty, Parameter parameter) {
+    /*private void setDefaultParamValue(RestParamProperty paramProperty, Parameter parameter) {
         if (paramProperty == null || parameter == null) {
             return;
         }
@@ -671,3 +671,4 @@ public class OpenAPI3Importer extends AbstractSwaggerImporter {
         }
     }
 }
+*/

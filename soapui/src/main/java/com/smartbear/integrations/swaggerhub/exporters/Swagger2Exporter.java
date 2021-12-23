@@ -1,6 +1,6 @@
 package com.smartbear.integrations.swaggerhub.exporters;
 
-import com.eviware.soapui.impl.rest.RestService;
+/*import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -131,4 +131,4 @@ public class Swagger2Exporter implements SwaggerExporter {
 
         return false
     }
-}
+}*/

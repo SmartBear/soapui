@@ -1,6 +1,6 @@
 package com.smartbear.integrations.swaggerhub.importers;
 
-import com.eviware.soapui.analytics.Analytics;
+/*import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.rest.AbstractRestService;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
@@ -22,7 +22,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.smartbear.swagger.utils.OpenAPIUtils;
+import com.smartbear.integrations.swaggerhub.utils.OpenAPIUtils;
 import io.swagger.inflector.examples.ExampleBuilder;
 import io.swagger.inflector.examples.XmlExampleSerializer;
 import io.swagger.inflector.examples.models.Example;
@@ -62,10 +62,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static com.eviware.soapui.analytics.ReadyApiActions.SWAGGER_OAS_IMPORT_VERSION;
 
 public class Swagger2Importer extends AbstractSwaggerImporter {
-    /*OT*/ private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
+    /*OT*/ /*private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
 
     private static Logger logger = LogManager.getLogger(Swagger2Importer.class);
 
@@ -556,3 +555,4 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
         return authorizationValue;
     }
 }
+*/

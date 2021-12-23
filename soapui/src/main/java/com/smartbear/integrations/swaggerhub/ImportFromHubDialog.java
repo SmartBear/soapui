@@ -8,9 +8,8 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.UISupport;
 import com.google.common.io.ByteStreams;
-import com.smartbear.integrations.swaggerhub.importers.Swagger2Importer;
-import com.smartbear.soapui.core.Logging;
-import com.smartbear.integrations.swaggerhub.importers.OpenAPI3Importer;
+//import com.smartbear.integrations.swaggerhub.importers.Swagger2Importer;
+//import com.smartbear.integrations.swaggerhub.importers.OpenAPI3Importer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -218,12 +217,12 @@ public class ImportFromHubDialog extends Dialog {
             ApiDescriptor descriptor = model.getDescriptor();
             String defaultVersionUrl = descriptor.swaggerUrl;
 
-            SwaggerImporter importer;
+            SwaggerImporter importer = null;
 
             if (StringUtils.equals(descriptor.oasVersion, "3.0.0")) {
-                importer = new OpenAPI3Importer(project, "application/json", false);
+                //importer = new OpenAPI3Importer(project, "application/json", false);
             } else {
-                importer = new Swagger2Importer(project, "application/json", false);
+                //importer = new Swagger2Importer(project, "application/json", false);
             }
 
             int selectedVersion = model.getVersionCombo().getSelectionModel().getSelectedIndex();

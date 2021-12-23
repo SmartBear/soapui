@@ -1,10 +1,9 @@
 package com.smartbear.integrations.swaggerhub.exporters;
 
-import com.eviware.soapui.config.AuthEntryTypeConfig;
+/*import com.eviware.soapui.config.AuthEntryTypeConfig;
 import com.eviware.soapui.config.OAuth2FlowConfig;
 import com.eviware.soapui.impl.AuthRepository.AuthEntries.BaseAuthEntry;
-import com.eviware.soapui.impl.AuthRepository.AuthRepository;
-import com.eviware.soapui.impl.rest.AbstractRestService;
+import com.eviware.soapui.impl.AuthRepository.AuthRepository;*/
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -17,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.SimpleType;
-import com.smartbear.swagger.utils.ApiResponsesSerializer;
-import com.smartbear.swagger.utils.OpenAPIUtils;
+import com.smartbear.integrations.swaggerhub.utils.ApiResponsesSerializer;
+import com.smartbear.integrations.swaggerhub.utils.OpenAPIUtils;
 import com.smartbear.swagger.utils.ResponseCodeSerializer;
 import com.smartbear.swagger.utils.YamlFactoryExtended;
 import io.swagger.v3.oas.models.Components;
