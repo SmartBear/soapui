@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.support;
 
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
@@ -27,6 +28,12 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 public class HttpUtils {
+    public static final String PROTOCOL_ENDPOINT_DELIMITER = "://";
+    public static final String DELIMITER_FREE_HTTP_PROTOCOL = "http";
+    public static final String DELIMITER_FREE_HTTPS_PROTOCOL = "https";
+    public static final String HTTP_PROTOCOL = DELIMITER_FREE_HTTP_PROTOCOL + PROTOCOL_ENDPOINT_DELIMITER;
+    public static final String HTTPS_PROTOCOL = DELIMITER_FREE_HTTPS_PROTOCOL + PROTOCOL_ENDPOINT_DELIMITER;
+
     private static String pingErrorMessage;
 
     public static boolean isErrorStatus(int statusCode) {
@@ -106,6 +113,28 @@ public class HttpUtils {
                                          String escapedQuery, String escapedFragment) throws URISyntaxException {
         return URIUtils.createURI(scheme, (userinfo == null ? "" : (userinfo + "@")) + host, port, escapedPath,
                 escapedQuery, escapedFragment);
+    }
+
+    public static boolean canHavePayload(RestRequestInterface.HttpMethod method) {
+        switch (method) {
+            case POST:
+            case PUT:
+            case DELETE:
+            case PROPFIND:
+            case PATCH:
+            case LOCK: {
+                return true;
+            }
+            case GET:
+            case HEAD:
+            case OPTIONS:
+            case TRACE:
+            case UNLOCK:
+            case COPY:
+            case PURGE:
+                return false;
+        }
+        return false;
     }
 }
 

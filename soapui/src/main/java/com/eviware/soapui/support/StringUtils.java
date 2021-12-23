@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 public class StringUtils {
     public static final String NEWLINE = System.getProperty("line.separator");
     public static final char DEFAULT_FILENAME_WHITESPACE_CHAR = '-';
+    public static final String EMPTY = "";
 
     public static String unquote(String str) {
         int length = str == null ? -1 : str.length();

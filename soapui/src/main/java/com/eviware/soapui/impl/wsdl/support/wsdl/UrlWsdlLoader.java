@@ -64,7 +64,7 @@ import java.util.Map;
  */
 
 public class UrlWsdlLoader extends WsdlLoader {
-    private HttpContext state;
+    protected HttpContext state;
     protected HttpGet getMethod;
     private boolean aborted;
     protected Map<String, byte[]> urlCache = new HashMap<String, byte[]>();
