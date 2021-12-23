@@ -185,31 +185,31 @@ public class AssertionConfigurationDialog {
 
         allowWildcardsCheckBox = new JCheckBox("Allow Wildcards");
         Dimension dim = new Dimension(120, 20);
-        allowWildcardsCheckBox.setSize(dim);
+        allowWildcardsCheckBox.setMinimumSize(dim);
         allowWildcardsCheckBox.setPreferredSize(dim);
         allowWildcardsCheckBox.setOpaque(false);
 
         Dimension largerDim = new Dimension(170, 20);
         ignoreNamespaceDifferencesCheckBox = new JCheckBox("Ignore namespace prefixes");
-        ignoreNamespaceDifferencesCheckBox.setSize(largerDim);
+        ignoreNamespaceDifferencesCheckBox.setMinimumSize(largerDim);
         ignoreNamespaceDifferencesCheckBox.setPreferredSize(largerDim);
         ignoreNamespaceDifferencesCheckBox.setOpaque(false);
 
         ignoreCommentsCheckBox = new JCheckBox("Ignore XML Comments");
-        ignoreCommentsCheckBox.setSize(largerDim);
+        ignoreCommentsCheckBox.setMinimumSize(largerDim);
         ignoreCommentsCheckBox.setPreferredSize(largerDim);
         ignoreCommentsCheckBox.setOpaque(false);
 
         if (assertion.canAssertXmlContent()) {
 
             toolbar.addRelatedGap();
-            toolbar.addFixed(allowWildcardsCheckBox);
+            toolbar.addWithOnlyMinimumHeight(allowWildcardsCheckBox);
 
             toolbar.addRelatedGap();
-            toolbar.addFixed(ignoreNamespaceDifferencesCheckBox);
+            toolbar.addWithOnlyMinimumHeight(ignoreNamespaceDifferencesCheckBox);
 
             toolbar.addRelatedGap();
-            toolbar.addFixed(ignoreCommentsCheckBox);
+            toolbar.addWithOnlyMinimumHeight(ignoreCommentsCheckBox);
         }
     }
 
