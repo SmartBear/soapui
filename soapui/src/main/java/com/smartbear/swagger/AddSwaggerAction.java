@@ -13,11 +13,11 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import java.io.File;
-import javax.swing.JDialog;
 
 public class AddSwaggerAction extends AbstractSoapUIAction<ModelItem> {
+    public static final String DEFAULT_MEDIA_TYPE = "application/json";
+
     private XFormDialog dialog;
-    private JDialog owner;
 
     public AddSwaggerAction() {
         super("Import Swagger/OpenAPI Definition", "Imports a Swagger/OpenAPI definition into SoapUI");
@@ -26,8 +26,8 @@ public class AddSwaggerAction extends AbstractSoapUIAction<ModelItem> {
     @Override
     public void perform(ModelItem modelItem, Object param) {
         if (dialog == null) {
-            dialog = ADialogBuilder.buildDialog(Form.class, null, null, owner);
-            dialog.setValue(Form.DEFAULT_MEDIA_TYPE, SwaggerUtils.DEFAULT_MEDIA_TYPE);
+            dialog = ADialogBuilder.buildDialog(Form.class, null, null);
+            dialog.setValue(Form.DEFAULT_MEDIA_TYPE, DEFAULT_MEDIA_TYPE);
         } else {
             dialog.setValue(Form.SWAGGER_URL, "");
         }
@@ -37,7 +37,7 @@ public class AddSwaggerAction extends AbstractSoapUIAction<ModelItem> {
                 // get the specified URL
                 String url = dialog.getValue(Form.SWAGGER_URL).trim();
                 if (StringUtils.hasContent(url)) {
-                    WsdlProject wsdlProject = ModelSupport.getModelItemProject(modelItem);
+                    WsdlProject wsdlProject = (WsdlProject) ModelSupport.getModelItemProject(modelItem);
 
                     // expand any property-expansions
                     String expUrl = PathUtils.expandPath(url, wsdlProject);
@@ -51,13 +51,9 @@ public class AddSwaggerAction extends AbstractSoapUIAction<ModelItem> {
                     break;
                 }
             } catch (Exception ex) {
-                UISupport.showPlainErrorMessage(ex);
+                UISupport.showErrorMessage(ex);
             }
         }
-    }
-
-    public void setOwner(JDialog owner) {
-        this.owner = owner;
     }
 
     public SwaggerImporter importSwaggerDefinition(final WsdlProject project,
