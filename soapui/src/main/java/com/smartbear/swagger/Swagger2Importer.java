@@ -352,7 +352,7 @@ public class Swagger2Importer extends AbstractSwaggerImporter {
                             ExampleBuilder.fromModel(null, bodyParameterModel, swagger.getDefinitions(), new HashSet<String>());
                     if (output != null) {
                         request.setRequestContent(serializeExample(mediaType, output));
-                        representation.setSampleContent(request.getRequestContent());
+                        //representation.setSampleContent(request.getRequestContent());
                     }
                 }
             });
