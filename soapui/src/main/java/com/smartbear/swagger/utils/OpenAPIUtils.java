@@ -8,8 +8,6 @@ import io.swagger.util.Yaml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.eviware.soapui.impl.support.HttpUtils.canHavePayload;
-
 public class OpenAPIUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenAPIUtils.class);
