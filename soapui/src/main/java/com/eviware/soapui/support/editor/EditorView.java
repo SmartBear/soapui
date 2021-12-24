@@ -59,5 +59,11 @@ public interface EditorView<T extends EditorDocument> extends PropertyChangeNoti
 
     public void requestFocus();
 
-    int getSupportScoreForContentType(String contentType );
+    /**
+     * Returns the score of how well a given content type is supported by this editor view
+     * @param contentType http payload's content type
+     * @return a non-negative integer: greater values mean better support,
+     * 0 means the given content type is not supported by this view
+     */
+    int getSupportScoreForContentType(String contentType);
 }

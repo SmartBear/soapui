@@ -110,6 +110,9 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
     }
 
+    /**
+     * Selects the view best suited for the document's content type
+     */
     protected void selectDefaultView() {
         String contentType = document.getContentType();
         if( contentType != null ) {
