@@ -36,6 +36,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.EditorDocument;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
@@ -311,6 +312,14 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
             return editor;
         }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            super.propertyChange(evt);
+            if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
+                selectDefaultView();
+            }
+        }
     }
 
     public class MockResponseMessageEditor extends ResponseMessageXmlEditor<MockResponse, XmlDocument> {
@@ -339,6 +348,11 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
                 JPopupMenu inputPopup = editor.getEditorPopup();
                 inputPopup.insert(new JSeparator(), 2);
             }
+        }
+
+        @Override
+        protected void selectDefaultView() {
+            // not needed for mock responses
         }
 
         public RSyntaxTextArea getInputArea() {

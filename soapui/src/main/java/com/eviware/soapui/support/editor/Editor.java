@@ -107,20 +107,26 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
         if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             inputTabsChangeListener.refreshVisibleInspectors();
-            selectDefaultView();
         }
     }
 
-    private void selectDefaultView() {
+    /**
+     * Selects the view best suited for the document's content type
+     */
+    protected void selectDefaultView() {
         String contentType = document.getContentType();
         if( contentType != null ) {
-            if (!getCurrentView().supportsContentType(contentType)) {
-                for (EditorView view : views) {
-                    if (view.supportsContentType(contentType)) {
-                        selectView(view.getViewId());
-                        break;
-                    }
+            int maxScore = getCurrentView().getSupportScoreForContentType(contentType);
+            EditorView defaultView = null;
+            for (EditorView view : views) {
+                int score = view.getSupportScoreForContentType(contentType);
+                if (score > maxScore) {
+                    maxScore = score;
+                    defaultView = view;
                 }
+            }
+            if (defaultView != null) {
+                selectView(defaultView.getViewId());
             }
         }
     }

@@ -232,8 +232,8 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
     }
 
     @Override
-    public boolean supportsContentType(String contentType ) {
-        return contentType.toLowerCase().endsWith("html");
+    public int getSupportScoreForContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("html")? 2 : 0;
     }
 
 }

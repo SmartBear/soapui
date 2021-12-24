@@ -66,7 +66,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
     }
 
     @Override
-    public boolean supportsContentType(String contentType) {
-        return true;
+    public int getSupportScoreForContentType(String contentType) {
+        return 1;
     }
 }

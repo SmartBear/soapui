@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.panels.request.views.content;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.GraphQLRequestTestStepDesktopPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.GraphQLTestRequestInterface;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -134,7 +135,7 @@ public class GraphQLRequestContentView extends AbstractXmlEditorView<XmlDocument
     }
 
     @Override
-    public boolean supportsContentType(String contentType) {
-        return contentType.toLowerCase().endsWith("json");
+    public int getSupportScoreForContentType(String contentType) {
+        return JsonUtil.seemsToBeJsonContentType(contentType)? 2 : 0;
     }
 }

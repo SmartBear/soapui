@@ -175,8 +175,8 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
     }
 
     @Override
-    public boolean supportsContentType(String contentType ) {
-        return contentType.toLowerCase().endsWith("json");
+    public int getSupportScoreForContentType(String contentType ) {
+        return JsonUtil.seemsToBeJsonContentType(contentType)? 2 : 0;
     }
 
     private static class FindAndReplaceableTextArea extends RSyntaxTextArea implements FindAndReplaceable {
