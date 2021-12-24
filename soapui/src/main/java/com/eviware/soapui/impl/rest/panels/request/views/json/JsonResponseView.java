@@ -132,6 +132,6 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
 
     @Override
     public int getSupportScoreForContentType(String contentType ) {
-        return contentType.toLowerCase().startsWith("application/json")? 2 : 0;
+        return JsonUtil.seemsToBeJsonContentType(contentType)? 2 : 0;
     }
 }
