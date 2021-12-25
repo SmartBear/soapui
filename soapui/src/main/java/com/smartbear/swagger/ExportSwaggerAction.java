@@ -16,16 +16,13 @@
 
 package com.smartbear.swagger;
 
-import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.impl.rest.AbstractRestService;
-import com.eviware.soapui.impl.rest.RestServiceExFactory;
+//import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.plugins.ActionConfiguration;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -41,15 +38,13 @@ import com.eviware.x.impl.swing.FileFormField;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import java.io.File;
 import java.util.List;
-import javafx.stage.FileChooser;
-import javax.swing.JFileChooser;
-import javax.swing.JRadioButton;
+//import javafx.stage.FileChooser;
+//import javax.swing.JFileChooser;
+//import javax.swing.JRadioButton;
 
 
-import static com.eviware.soapui.analytics.ReadyApiActions.EXPORT_DEFINITION;
-import static com.eviware.soapui.support.action.ActionGroups.OPEN_PROJECT_ACTIONS;
+//import static com.eviware.soapui.analytics.ReadyApiActions.EXPORT_DEFINITION;
 
-@ActionConfiguration(targetType = WsdlProject.class, actionGroup = OPEN_PROJECT_ACTIONS, afterAction = "AddSwaggerAction")
 public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
     private static final MessageSupport messages = MessageSupport.getMessages(ExportSwaggerAction.class);
 
@@ -76,7 +71,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
     @Override
     public void perform(WsdlProject project, Object param) {
         if (project.getInterfaces(RestServiceFactory.REST_TYPE).isEmpty() &&
-                project.getInterfaces(RestServiceExFactory.REST_EX_TYPE).isEmpty()) {
+                project.getInterfaces(RestServiceFactory.REST_TYPE).isEmpty()) {
             UISupport.showErrorMessage("Project is missing REST APIs");
             return;
         }
@@ -93,29 +88,29 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
             dialog.setValue(Form.SWAGGER_VERSION, version);
 
             FileFormField fileFormField = (FileFormField) dialog.getFormField(Form.FILE);
-            fileFormField.setDialogState(JFileChooser.SAVE_DIALOG);
+            //fileFormField.setDialogState(JFileChooser.SAVE_DIALOG);
             if (version.equals(SWAGGER_1_2)) {
                 dialog.setValue(Form.FOLDER, settings.getString(TARGET_PATH, ""));
             } else {
-                fileFormField.setCurrentFile(project.getName());
+                //fileFormField.setCurrentFile(project.getName());
             }
         }
 
         XFormRadioGroup versionRadioGroup = (XFormRadioGroup) dialog.getFormField(Form.SWAGGER_VERSION);
-        final JRadioButton openApiOption = versionRadioGroup.getComponentFromGroup(OPEN_API_3_0);
+        /*final JRadioButton openApiOption = versionRadioGroup.getComponentFromGroup(OPEN_API_3_0);
         hideOrShowFields(openApiOption.isSelected(), dialog);
         openApiOption.addItemListener(e -> hideOrShowFields(openApiOption.isSelected(), dialog));
         final JRadioButton api12Option = versionRadioGroup.getComponentFromGroup(SWAGGER_1_2);
         showFileOrFolderComponent(api12Option.isSelected(), dialog);
-        api12Option.addItemListener(e -> showFileOrFolderComponent(api12Option.isSelected(), dialog));
+        api12Option.addItemListener(e -> showFileOrFolderComponent(api12Option.isSelected(), dialog));*/
 
         XFormRadioGroup formatRadioGroup = (XFormRadioGroup) dialog.getFormField(Form.FORMAT);
         setFileFilter(dialog.getValue(Form.FORMAT));
         formatRadioGroup.addFormFieldListener((sourceField, newValue, oldValue) -> setFileFilter(newValue));
 
         XFormOptionsField apis = (XFormOptionsField) dialog.getFormField(Form.APIS);
-        List<AbstractInterface<?, ? extends Operation>> restServices = project.getInterfaces(RestServiceFactory.REST_TYPE);
-        restServices.addAll(project.getInterfaces(RestServiceExFactory.REST_EX_TYPE));
+        List<AbstractInterface<?>> restServices = project.getInterfaces(RestServiceFactory.REST_TYPE);
+        restServices.addAll(project.getInterfaces(RestServiceFactory.REST_TYPE));
         apis.setOptions(ModelSupport.getNames(restServices));
 
         while (dialog.show()) {
@@ -125,9 +120,9 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                     throw new Exception("You must select at least one REST API ");
                 }
 
-                AbstractRestService[] services = new AbstractRestService[options.length];
+                RestService[] services = new RestService[options.length];
                 for (int c = 0; c < options.length; c++) {
-                    services[c] = (AbstractRestService) project.getInterfaceByName(String.valueOf(options[c]));
+                    services[c] = (RestService) project.getInterfaceByName(String.valueOf(options[c]));
                     if (services[c].getEndpoints().length == 0) {
                         throw new Exception("Selected APIs must contain at least one endpoint");
                     }
@@ -154,18 +149,24 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                     version = "1.0";
                 }
 
-                SwaggerExporter exporter;
-                String target;
+                SwaggerExporter exporter = null;
+                String target = null;
 
-                if (swaggerVersion.equals(SWAGGER_1_2)) {
-                    exporter = new Swagger1XExporter(project);
-                    target = dialog.getValue(Form.FOLDER);
-                } else if (swaggerVersion.equals(SWAGGER_2_0)) {
+                //if (swaggerVersion.equals(SWAGGER_1_2)) {
+                    //exporter = new Swagger1XExporter(project);
+                    //target = dialog.getValue(Form.FOLDER);
+                //} else
+                if (swaggerVersion.equals(SWAGGER_2_0)) {
                     exporter = new Swagger2Exporter(project);
                     target = dialog.getValue(Form.FILE);
-                } else {
+                } /*else {
                     exporter = new OpenAPI3Exporter(project);
                     target = dialog.getValue(Form.FILE);
+                }*/
+
+                //temp condition
+                if(exporter == null) {
+                    return;
                 }
 
                 String path = exporter.exportToFileSystem(target, version, format, services, dialog.getValue(Form.BASEPATH));
@@ -182,11 +183,11 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                 settings.setString(VERSION, dialog.getValue(Form.VERSION));
                 settings.setString(SWAGGER_VERSION, dialog.getValue(Form.SWAGGER_VERSION));
 
-                Analytics.trackAction(EXPORT_DEFINITION,
+                /*Analytics.trackAction(EXPORT_DEFINITION,
                         "Type", "Swagger",
                         "ExportedDefinitionType", "Swagger",
                         "Version", dialog.getValue(Form.SWAGGER_VERSION),
-                        "Format", dialog.getValue(Form.FORMAT));
+                        "Format", dialog.getValue(Form.FORMAT));*/
 
                 break;
             } catch (Exception ex) {
@@ -201,7 +202,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
             apiFile = new File(folderName + File.separatorChar + fileName);
         }
         if (apiFile.exists()) {
-             return (UISupport.confirm(String.format(messages.get("ExportSwaggerAction.ConfirmDialog.Question"), apiFile.getName()),
+            return (UISupport.confirm(String.format(messages.get("ExportSwaggerAction.ConfirmDialog.Question"), apiFile.getName()),
                     messages.get("ExportSwaggerAction.ConfirmDialog.Title")));
         }
         return true;
@@ -210,20 +211,20 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
     private void hideOrShowFields(boolean isSelected, XFormDialog dialog) {
         JTextFieldFormField basePath = (JTextFieldFormField) dialog.getFormField(Form.BASEPATH);
         JTextFieldFormField versionField = (JTextFieldFormField) dialog.getFormField(Form.VERSION);
-        basePath.setVisible(!isSelected);
-        versionField.setVisible(!isSelected);
-        dialog.adjustSize();
+        //basePath.setVisible(!isSelected);
+        //versionField.setVisible(!isSelected);
+        //dialog.adjustSize();
     }
 
     private void showFileOrFolderComponent(boolean showFolder, XFormDialog dialog) {
-        dialog.getFormField(Form.FOLDER).setVisible(showFolder);
-        dialog.getFormField(Form.FILE).setVisible(!showFolder);
-        dialog.adjustSize();
+        //dialog.getFormField(Form.FOLDER).setVisible(showFolder);
+        //dialog.getFormField(Form.FILE).setVisible(!showFolder);
+        //dialog.adjustSize();
     }
 
     private void setFileFilter(String format) {
         FileFormField fileFormField = (FileFormField) dialog.getFormField(Form.FILE);
-        fileFormField.setFileFilter(new FileChooser.ExtensionFilter(format.toUpperCase() + " file (*." + format + ")", format));
+        //fileFormField.setFileFilter(new FileChooser.ExtensionFilter(format.toUpperCase() + " file (*." + format + ")", format));
     }
 
     @AForm(name = "Export Swagger/OpenAPI Definition", description = "Creates a Swagger/OpenAPI definition for selected REST APIs in this project")
@@ -249,5 +250,4 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
         @AField(name = "Base Path", description = "Base Path that the Swagger definition will be hosted on", type = AFieldType.STRING)
         String BASEPATH = "Base Path";
     }
-
 }
