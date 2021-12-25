@@ -770,10 +770,6 @@
                     <groupId>om.fasterxml.jackson.jaxrs</groupId>
                     <artifactId>jackson-jaxrs-xml-provider</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>com.github.java-json-tools</groupId>
-                    <artifactId>json-schema-validator</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 

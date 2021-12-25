@@ -290,11 +290,11 @@ public class Swagger2Importer implements SwaggerImporter {
 
             try {
                 restParameter.setStyle(getParameterStyle(parameter));
-                String parameterType = "";
+                /*String parameterType = "";
                 if (parameter instanceof SerializableParameter) {
                     parameterType = ((SerializableParameter) parameter).getType();
-                }
-                SwaggerUtils.setParameterType(restParameter, parameterType);
+                }*/
+                //SwaggerUtils.setParameterType(restParameter, parameterType);
             } catch (IllegalArgumentException e) {
                 logger.error(e.getMessage(), e);
             }
