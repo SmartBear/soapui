@@ -51,6 +51,6 @@ ENV MOUNTED_EXT_DIR ./ext
 ENV SOAPUI_DIR ./SoapUI-$SOAPUI_VERSION
 
 COPY --from=basic /usr/local/SmartBear .
-RUN ls -a -R /usr/local/SmartBear
+#RUN ls -a -R /usr/local/SmartBear
 
 ENTRYPOINT ./EntryPoint.sh
