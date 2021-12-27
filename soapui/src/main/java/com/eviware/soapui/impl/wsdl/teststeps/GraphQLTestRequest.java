@@ -305,7 +305,12 @@ public class GraphQLTestRequest extends AbstractHttpRequest<GraphQLTestRequestCo
     private void setBodyRequest(String request) {
         ObjectNode bodyNode;
         try {
-            bodyNode = (ObjectNode) mapper.readTree(request);
+            JsonNode jsonNode = mapper.readTree(request);
+            if ((jsonNode == null) || !jsonNode.isObject()) {
+                return;
+            }
+
+            bodyNode = (ObjectNode) jsonNode;
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
