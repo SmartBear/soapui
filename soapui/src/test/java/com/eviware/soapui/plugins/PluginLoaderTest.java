@@ -130,7 +130,7 @@ public class PluginLoaderTest {
     }
 
     @PluginConfiguration(groupId = "com.smartbear.ready", name = "Time warp plugin", version = "0.1",
-            minimumReadyApiVersion = "99.0.0", autoDetect = false)
+            minimumSoapUIVersion = "99.0.0", autoDetect = false)
     public static class ScienceFictionPlugin extends PluginAdapter {
 
     }
