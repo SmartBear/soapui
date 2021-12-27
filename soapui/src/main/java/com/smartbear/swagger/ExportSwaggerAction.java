@@ -51,7 +51,6 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
     private static final String VERSION = Form.class.getName() + Form.VERSION;
     private static final String SWAGGER_VERSION = Form.class.getName() + Form.SWAGGER_VERSION;
 
-    private static final String SWAGGER_1_2 = "Swagger 1.2";
     private static final String SWAGGER_2_0 = "Swagger 2.0";
     private static final String OPEN_API_3_0 = "OpenAPI 3.0";
 
@@ -113,10 +112,6 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
 
                 if (format.equals("xml") && (swaggerVersion.equals(SWAGGER_2_0) || swaggerVersion.equals(OPEN_API_3_0))) {
                     throw new Exception("XML format is only supported for Swagger Version 1.2");
-                }
-
-                if (format.equals("yaml") && swaggerVersion.equals(SWAGGER_1_2)) {
-                    throw new Exception("YAML format is only supported for Swagger Version 2.0 and OpenAPI 3.0");
                 }
 
                 String version = dialog.getValue(Form.VERSION);
@@ -190,7 +185,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
         @AField(name = "Base Path", description = "Base Path that the Swagger definition will be hosted on", type = AFieldType.STRING)
         public final static String BASEPATH = "Base Path";
 
-        @AField(name = "Swagger Version", description = "Select Swagger version", type = AFieldType.RADIOGROUP, values = {"1.2", "2.0"})
+        @AField(name = "Swagger Version", description = "Select Swagger version", type = AFieldType.RADIOGROUP, values = {"2.0"})
         public final static String SWAGGER_VERSION = "Swagger Version";
 
         @AField(name = "Format", description = "Select Swagger format", type = AFieldType.RADIOGROUP, values = {"json", "yaml", "xml"})
