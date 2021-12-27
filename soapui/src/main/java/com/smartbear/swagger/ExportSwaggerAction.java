@@ -16,7 +16,6 @@
 
 package com.smartbear.swagger;
 
-//import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
@@ -33,17 +32,11 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.XFormRadioGroup;
 import com.eviware.x.impl.swing.FileFormField;
-import com.eviware.x.impl.swing.JTextFieldFormField;
+import com.smartbear.analytics.Analytics;
+
 import java.io.File;
 import java.util.List;
-//import javafx.stage.FileChooser;
-//import javax.swing.JFileChooser;
-//import javax.swing.JRadioButton;
-
-
-//import static com.eviware.soapui.analytics.ReadyApiActions.EXPORT_DEFINITION;
 
 public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
     private static final MessageSupport messages = MessageSupport.getMessages(ExportSwaggerAction.class);
@@ -82,31 +75,13 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
             dialog = ADialogBuilder.buildDialog(Form.class);
 
             dialog.setValue(Form.FORMAT, settings.getString(FORMAT, "json"));
-            dialog.setValue(Form.VERSION, settings.getString(VERSION, "1.0"));
+            dialog.setValue(Form.VERSION, settings.getString(VERSION, "2.0"));
             dialog.setValue(Form.BASEPATH, settings.getString(BASE_PATH, ""));
             String version = settings.getString(SWAGGER_VERSION, OPEN_API_3_0);
             dialog.setValue(Form.SWAGGER_VERSION, version);
 
-            FileFormField fileFormField = (FileFormField) dialog.getFormField(Form.FILE);
-            //fileFormField.setDialogState(JFileChooser.SAVE_DIALOG);
-            if (version.equals(SWAGGER_1_2)) {
-                dialog.setValue(Form.FOLDER, settings.getString(TARGET_PATH, ""));
-            } else {
-                //fileFormField.setCurrentFile(project.getName());
-            }
+            FileFormField fileFormField = (FileFormField) dialog.getFormField(Form.FOLDER);
         }
-
-        XFormRadioGroup versionRadioGroup = (XFormRadioGroup) dialog.getFormField(Form.SWAGGER_VERSION);
-        /*final JRadioButton openApiOption = versionRadioGroup.getComponentFromGroup(OPEN_API_3_0);
-        hideOrShowFields(openApiOption.isSelected(), dialog);
-        openApiOption.addItemListener(e -> hideOrShowFields(openApiOption.isSelected(), dialog));
-        final JRadioButton api12Option = versionRadioGroup.getComponentFromGroup(SWAGGER_1_2);
-        showFileOrFolderComponent(api12Option.isSelected(), dialog);
-        api12Option.addItemListener(e -> showFileOrFolderComponent(api12Option.isSelected(), dialog));*/
-
-        XFormRadioGroup formatRadioGroup = (XFormRadioGroup) dialog.getFormField(Form.FORMAT);
-        setFileFilter(dialog.getValue(Form.FORMAT));
-        formatRadioGroup.addFormFieldListener((sourceField, newValue, oldValue) -> setFileFilter(newValue));
 
         XFormOptionsField apis = (XFormOptionsField) dialog.getFormField(Form.APIS);
         List<AbstractInterface<?>> restServices = project.getInterfaces(RestServiceFactory.REST_TYPE);
@@ -152,17 +127,10 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                 SwaggerExporter exporter = null;
                 String target = null;
 
-                //if (swaggerVersion.equals(SWAGGER_1_2)) {
-                    //exporter = new Swagger1XExporter(project);
-                    //target = dialog.getValue(Form.FOLDER);
-                //} else
                 if (swaggerVersion.equals(SWAGGER_2_0)) {
                     exporter = new Swagger2Exporter(project);
-                    target = dialog.getValue(Form.FILE);
-                } /*else {
-                    exporter = new OpenAPI3Exporter(project);
-                    target = dialog.getValue(Form.FILE);
-                }*/
+                    target = dialog.getValue(Form.FOLDER);
+                }
 
                 //temp condition
                 if(exporter == null) {
@@ -183,11 +151,11 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                 settings.setString(VERSION, dialog.getValue(Form.VERSION));
                 settings.setString(SWAGGER_VERSION, dialog.getValue(Form.SWAGGER_VERSION));
 
-                /*Analytics.trackAction(EXPORT_DEFINITION,
+                Analytics.trackAction("ExportSwagger",
                         "Type", "Swagger",
                         "ExportedDefinitionType", "Swagger",
                         "Version", dialog.getValue(Form.SWAGGER_VERSION),
-                        "Format", dialog.getValue(Form.FORMAT));*/
+                        "Format", dialog.getValue(Form.FORMAT));
 
                 break;
             } catch (Exception ex) {
@@ -208,46 +176,24 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
         return true;
     }
 
-    private void hideOrShowFields(boolean isSelected, XFormDialog dialog) {
-        JTextFieldFormField basePath = (JTextFieldFormField) dialog.getFormField(Form.BASEPATH);
-        JTextFieldFormField versionField = (JTextFieldFormField) dialog.getFormField(Form.VERSION);
-        //basePath.setVisible(!isSelected);
-        //versionField.setVisible(!isSelected);
-        //dialog.adjustSize();
-    }
-
-    private void showFileOrFolderComponent(boolean showFolder, XFormDialog dialog) {
-        //dialog.getFormField(Form.FOLDER).setVisible(showFolder);
-        //dialog.getFormField(Form.FILE).setVisible(!showFolder);
-        //dialog.adjustSize();
-    }
-
-    private void setFileFilter(String format) {
-        FileFormField fileFormField = (FileFormField) dialog.getFormField(Form.FILE);
-        //fileFormField.setFileFilter(new FileChooser.ExtensionFilter(format.toUpperCase() + " file (*." + format + ")", format));
-    }
-
-    @AForm(name = "Export Swagger/OpenAPI Definition", description = "Creates a Swagger/OpenAPI definition for selected REST APIs in this project")
+    @AForm(name = "Export Swagger Definition", description = "Creates a Swagger definition for selected REST APIs in this project")
     public interface Form {
-        @AField(name = "APIs", description = "Select which REST APIs to include in the Swagger/OpenAPI definition", type = AFieldType.MULTILIST)
-        String APIS = "APIs";
+        @AField(name = "APIs", description = "Select which REST APIs to include in the Swagger definition", type = AFieldType.MULTILIST)
+        public final static String APIS = "APIs";
 
-        @AField(name = "Version", description = "Select version", type = AFieldType.RADIOGROUP, values = {OPEN_API_3_0, SWAGGER_2_0, SWAGGER_1_2})
-        String SWAGGER_VERSION = "Version";
-
-        @AField(name = "Format", description = "Select format", type = AFieldType.RADIOGROUP, values = {"json", "yaml", "xml"})
-        String FORMAT = "Format";
-
-        @AField(name = "Target Path", description = "Folder to save the Swagger definition", type = AFieldType.FOLDER)
-        String FOLDER = "Target Path";
-
-        @AField(name = "Target File", description = "File to save the Swagger/OpenAPI definition", type = AFieldType.FILE)
-        String FILE = "Target File";
+        @AField(name = "Target Folder", description = "Where to save the Swagger definition", type = AFieldType.FOLDER)
+        public final static String FOLDER = "Target Folder";
 
         @AField(name = "API Version", description = "API Version", type = AFieldType.STRING)
-        String VERSION = "API Version";
+        public final static String VERSION = "API Version";
 
         @AField(name = "Base Path", description = "Base Path that the Swagger definition will be hosted on", type = AFieldType.STRING)
-        String BASEPATH = "Base Path";
+        public final static String BASEPATH = "Base Path";
+
+        @AField(name = "Swagger Version", description = "Select Swagger version", type = AFieldType.RADIOGROUP, values = {"1.2", "2.0"})
+        public final static String SWAGGER_VERSION = "Swagger Version";
+
+        @AField(name = "Format", description = "Select Swagger format", type = AFieldType.RADIOGROUP, values = {"json", "yaml", "xml"})
+        public final static String FORMAT = "Format";
     }
 }
