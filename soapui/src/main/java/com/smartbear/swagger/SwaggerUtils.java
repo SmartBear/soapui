@@ -17,7 +17,6 @@
 package com.smartbear.swagger;
 
 import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.support.StringUtils;
@@ -35,9 +34,6 @@ import io.swagger.parser.util.ClasspathHelper;
 import io.swagger.parser.util.DeserializationUtils;
 import io.swagger.parser.util.SwaggerDeserializationResult;
 import io.swagger.util.Json;
-//import com.networknt.schema.JsonType;
-//import io.swagger.v3.parser.util.ClasspathHelper;
-//import io.swagger.v3.parser.util.DeserializationUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -73,22 +69,12 @@ class SwaggerUtils {
     static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType,
                                                  boolean generateTestCase) throws Exception {
         if (url.endsWith(".yaml") || url.endsWith(".yml")) {
-            /*if (isOpenApi(url)) {
-                return new OpenAPI3Importer(project, defaultMediaType, generateTestCase);
-            }*/
-            //return new Swagger2Importer(project, defaultMediaType, generateTestCase);
             return new Swagger2Importer(project, defaultMediaType);
         }
-
-        /*if (url.endsWith(".xml"))
-            return new Swagger1XResourceListingImporter(project, defaultMediaType);*/
 
         UrlWsdlLoader loader = new UrlWsdlLoader(url);
         Object json = new JsonSlurper().parse(loader.load());
 
-        /*if (isOAS3Definition(String.valueOf(json?.openapi))) {
-            return new OpenAPI3Importer(project, defaultMediaType);
-        } else*/
         if (json instanceof Map){
             Map mapJson  = (Map)json;
             Object swagger = mapJson.get("swagger");
@@ -98,24 +84,6 @@ class SwaggerUtils {
             }
         }
         return null;
-        /*else {
-            def version = json?.swaggerVersion;
-            // in 1.2 only api-declarations have a basePath, see
-            // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/1.2.md#52-api-declaration
-            if (version == "1.1") {
-                if (json?.models != null || json?.resourcePath != null) {
-                    return new Swagger1XApiDeclarationImporter(project, defaultMediaType);
-                } else {
-                    return new Swagger1XResourceListingImporter(project, defaultMediaType);
-                }
-            } else {
-                if (json?.basePath != null) {
-                    return new Swagger1XApiDeclarationImporter(project, defaultMediaType);
-                } else {
-                    return new Swagger1XResourceListingImporter(project, defaultMediaType);
-                }
-            }
-        }*/
     }
 
     static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType) throws Exception {
@@ -205,14 +173,6 @@ class SwaggerUtils {
 
         return importer;
     }
-
-    /*static void setParameterType(RestParameter parameter, String type) {
-        if (JSON_SIMPLE_TYPES.contains(type)) {
-            parameter.setDataType(type);
-        } else {
-            parameter.setDataType(JsonType.STRING.toString());
-        }
-    }*/
 
     public static boolean matchesPath(String path, String swaggerPath) {
 

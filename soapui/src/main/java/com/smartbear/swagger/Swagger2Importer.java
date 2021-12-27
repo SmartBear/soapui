@@ -1,6 +1,5 @@
 package com.smartbear.swagger;
 
-//import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
@@ -13,7 +12,6 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.MediaTypeUtils;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-//import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.support.StringUtils;
@@ -36,23 +34,18 @@ import io.swagger.models.RefModel;
 import io.swagger.models.Response;
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
-import io.swagger.models.auth.AuthorizationValue;
 import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.PathParameter;
 import io.swagger.models.parameters.RefParameter;
-import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.models.properties.ObjectProperty;
-import io.swagger.parser.SwaggerParser;
-import io.swagger.parser.util.SwaggerDeserializationResult;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,15 +53,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
-//import static com.eviware.soapui.analytics.ReadyApiActions.SWAGGER_OAS_IMPORT_VERSION;
-
 public class Swagger2Importer implements SwaggerImporter {
     /*OT*/ private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
 
     private static Logger logger = LogManager.getLogger(Swagger2Importer.class);
 
-    private static AuthorizationValue authorizationValue;
     private static ObjectMapper yamlMapper;
     private static ObjectMapper jsonMapper;
     private final WsdlProject project;
@@ -119,17 +108,7 @@ public class Swagger2Importer implements SwaggerImporter {
 
         logger.info(String.format("Importing swagger %s", url));
 
-        SwaggerDeserializationResult swaggerDeserializationResult;
-        SwaggerParser swaggerParser = new SwaggerParser();
-        if (StringUtils.hasContent(apiKey)) {
-            authorizationValue = new AuthorizationValue();
-            authorizationValue.setKeyName(AUTHORIZATION_HEADER);
-            authorizationValue.setType(TYPE_HEADER);
-            authorizationValue.setValue(apiKey);
-            swagger = SwaggerUtils.getSwagger(url, Collections.singletonList(authorizationValue), true, disableLogger);
-        } else {
-            swagger = SwaggerUtils.getSwagger(url, null, true, disableLogger);
-        }
+        swagger = SwaggerUtils.getSwagger(url, null, true, disableLogger);
 
         if (swagger == null) {
             return new RestService[]{null};
@@ -143,8 +122,6 @@ public class Swagger2Importer implements SwaggerImporter {
 
         result.add(restService);
         ensureEndpoint(restService, url);
-
-        //Analytics.trackAction(SWAGGER_OAS_IMPORT_VERSION, "SwaggerOAS_version", swagger.getSwagger());
 
         return result.toArray(new RestService[result.size()]);
     }
@@ -290,11 +267,6 @@ public class Swagger2Importer implements SwaggerImporter {
 
             try {
                 restParameter.setStyle(getParameterStyle(parameter));
-                /*String parameterType = "";
-                if (parameter instanceof SerializableParameter) {
-                    parameterType = ((SerializableParameter) parameter).getType();
-                }*/
-                //SwaggerUtils.setParameterType(restParameter, parameterType);
             } catch (IllegalArgumentException e) {
                 logger.error(e.getMessage(), e);
             }
@@ -342,7 +314,6 @@ public class Swagger2Importer implements SwaggerImporter {
                             ExampleBuilder.fromModel(null, bodyParameterModel, swagger.getDefinitions(), new HashSet<String>());
                     if (output != null) {
                         request.setRequestContent(serializeExample(mediaType, output));
-                        //representation.setSampleContent(request.getRequestContent());
                     }
                 }
             });
@@ -385,7 +356,6 @@ public class Swagger2Importer implements SwaggerImporter {
             Map<String, Object> responseExamples = response.getExamples();
             if (responseExamples != null && !responseExamples.isEmpty()) {
                 representation.setMediaType(responseExamples.keySet().iterator().next());
-                //representation.setSampleContent(responseExamples.get(representation.getMediaType()).toString());
             }
         } else {
             produces.forEach(mediaType -> {
@@ -397,22 +367,6 @@ public class Swagger2Importer implements SwaggerImporter {
                     statusList.add(responseCode);
                 }
                 representation.setStatus(statusList);
-
-                Map<String, Object> responseExamples = response.getExamples();
-                if (responseExamples != null && !responseExamples.isEmpty()) {
-                    Object example = responseExamples.get(representation.getMediaType());
-                    if (example != null) {
-                        String sampleContent = OpenAPIUtils.extractStringFromExampleObject(mediaType, example);
-                        //representation.setSampleContent(sampleContent);
-                    }
-                }
-
-                /*if (representation.getSampleContent() == null) {
-                    Example output = ExampleBuilder.fromProperty(response.getSchema(), swagger.getDefinitions());
-                    if (output != null) {
-                        representation.setSampleContent(serializeExample(representation.getMediaType(), output));
-                    }
-                }*/
             });
         }
     }
@@ -481,8 +435,6 @@ public class Swagger2Importer implements SwaggerImporter {
         }
 
         RestService restService = (RestService) project.addNewInterface(name, RestServiceFactory.REST_TYPE);
-        //restService.setDefinitionType(Constants.SWAGGER);
-        //restService.setDefinitionUrl(url);
 
         String expandedUrl = PathUtils.expandPath(url, project);
         if (new File(expandedUrl).exists()) {
@@ -494,7 +446,6 @@ public class Swagger2Importer implements SwaggerImporter {
         }
 
         try {
-            //restService.getDefinitionContext().load(new Swagger2UrlClientLoader(expandedUrl, authorizationValue));
             restService.getDefinitionContext().load(new UrlWsdlLoader(expandedUrl));
         } catch (Exception e) {
             project.removeInterface(restService);
@@ -541,9 +492,5 @@ public class Swagger2Importer implements SwaggerImporter {
 
     public Swagger getSwagger() {
         return swagger;
-    }
-
-    public static AuthorizationValue getAuthorizationValue() {
-        return authorizationValue;
     }
 }
