@@ -64,7 +64,7 @@ class Swagger2Exporter implements SwaggerExporter {
 
                     Map<String, Response> responses = operation.getResponses();
 
-                    if (responses != null || responses.isEmpty()) {
+                    if (responses != null && responses.isEmpty()) {
                         operation.addResponse("200", new Response());
                     }
 
