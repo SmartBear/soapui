@@ -25,10 +25,12 @@ RUN chmod 755 ./SoapUI-x64-$SOAPUI_VERSION.sh && \
 ENV JAVA_HOME $SOAPUI_DIR/jre/bin
 ENV PATH $PATH:$JAVA_HOME
 
-COPY Files/RunProject.sh ./
-COPY Files/EntryPoint.sh ./
+COPY Files/RunProject.sh .
+COPY Files/EntryPoint.sh .
+RUN chmod 755 ./EntryPoint.sh
+RUN chmod 755 ./RunProject.sh
 
-ENTRYPOINT ./EntryPoint.sh
+ENTRYPOINT $WORKDIR/EntryPoint.sh
 
 FROM ubuntu:20.04
 
@@ -48,7 +50,7 @@ ENV MOUNTED_PROJECT_DIR ./project
 ENV MOUNTED_EXT_DIR ./ext
 ENV SOAPUI_DIR ./SoapUI-$SOAPUI_VERSION
 
-COPY --from=basic /usr/local/SmartBear $WORKING_FOLDER
-#RUN ls -a -R /usr/local/SmartBear
+COPY --from=basic /usr/local/SmartBear .
+RUN ls -a -R /usr/local/SmartBear
 
-ENTRYPOINT $WORKING_FOLDER/EntryPoint.sh
+ENTRYPOINT ./EntryPoint.sh
