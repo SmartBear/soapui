@@ -179,12 +179,6 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans-xmlpublic</artifactId>
-			<version>2.6.0</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>xmlbeans</groupId>
 			<artifactId>jsr173_1.0_api</artifactId>
 			<version>xmlbeans-2.4.0</version>

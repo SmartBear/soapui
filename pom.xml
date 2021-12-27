@@ -58,7 +58,6 @@
         <!-- org.apache.xmlbeans -->
         <xmlbeans-version>3.1.1-sb-fixed</xmlbeans-version>
         <xmlbeans-xpath-version>2.6.0</xmlbeans-xpath-version>
-        <xmlbeans-xmlpublic-version>2.6.0</xmlbeans-xmlpublic-version>
         <!-- org.codehaus.mojo -->
         <versions-maven-plugin-version>2.7</versions-maven-plugin-version>
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
