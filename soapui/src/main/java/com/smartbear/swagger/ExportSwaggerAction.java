@@ -74,7 +74,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
             dialog = ADialogBuilder.buildDialog(Form.class);
 
             dialog.setValue(Form.FORMAT, settings.getString(FORMAT, "json"));
-            dialog.setValue(Form.VERSION, settings.getString(VERSION, "2.0"));
+            dialog.setValue(Form.VERSION, settings.getString(VERSION, SWAGGER_2_0));
             dialog.setValue(Form.BASEPATH, settings.getString(BASE_PATH, ""));
             String version = settings.getString(SWAGGER_VERSION, OPEN_API_3_0);
             dialog.setValue(Form.SWAGGER_VERSION, version);
@@ -185,7 +185,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
         @AField(name = "Base Path", description = "Base Path that the Swagger definition will be hosted on", type = AFieldType.STRING)
         public final static String BASEPATH = "Base Path";
 
-        @AField(name = "Swagger Version", description = "Select Swagger version", type = AFieldType.RADIOGROUP, values = {"2.0"})
+        @AField(name = "Swagger Version", description = "Select Swagger version", type = AFieldType.RADIOGROUP, values = {SWAGGER_2_0})
         public final static String SWAGGER_VERSION = "Swagger Version";
 
         @AField(name = "Format", description = "Select Swagger format", type = AFieldType.RADIOGROUP, values = {"json", "yaml", "xml"})
