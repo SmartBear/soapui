@@ -23,14 +23,17 @@ import java.io.File;
 import java.util.List;
 
 public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
-    private static final MessageSupport messages = MessageSupport.getMessages(ExportSwaggerAction.class);
+    private static final String INFO_MESSAGE_NOTHING_CREATED = "Failed to create the Swagger definition file.";
+    private static final String INFO_MESSAGE_LISTING_HAS_BEEN_CREATED ="The Swagger definition has been created at [%s]";
+    private static final String CONFIRM_DIALOG_QUESTION = "%s already exists.\\nDo you want to replace it?";
+    private static final String CONFIRM_DIALOG_TITLE = "Export Swagger/OpenAPI Definition";
 
     public static final String SWAGGER_EXTENSION = ".swagger";
     public static final String JSON_EXTENSION = ".json";
     public static final String YAML_EXTENSION = ".yaml";
 
     private static final String BASE_PATH = Form.class.getName() + Form.BASEPATH;
-    private static final String TARGET_PATH = Form.class.getName() + Form.FOLDER;
+    private static final String TARGET_PATH = Form.class.getName() + Form.FILE;
     private static final String FORMAT = Form.class.getName() + Form.FORMAT;
     private static final String VERSION = Form.class.getName() + Form.VERSION;
     private static final String SWAGGER_VERSION = Form.class.getName() + Form.SWAGGER_VERSION;
@@ -46,8 +49,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
 
     @Override
     public void perform(WsdlProject project, Object param) {
-        if (project.getInterfaces(RestServiceFactory.REST_TYPE).isEmpty() &&
-                project.getInterfaces(RestServiceFactory.REST_TYPE).isEmpty()) {
+        if (project.getInterfaces(RestServiceFactory.REST_TYPE).isEmpty()) {
             UISupport.showErrorMessage("Project is missing REST APIs");
             return;
         }
@@ -60,15 +62,11 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
             dialog.setValue(Form.FORMAT, settings.getString(FORMAT, "json"));
             dialog.setValue(Form.VERSION, settings.getString(VERSION, SWAGGER_2_0));
             dialog.setValue(Form.BASEPATH, settings.getString(BASE_PATH, ""));
-            String version = settings.getString(SWAGGER_VERSION, OPEN_API_3_0);
-            dialog.setValue(Form.SWAGGER_VERSION, version);
-
-            FileFormField fileFormField = (FileFormField) dialog.getFormField(Form.FOLDER);
+            dialog.setValue(Form.SWAGGER_VERSION, SWAGGER_2_0);
         }
 
         XFormOptionsField apis = (XFormOptionsField) dialog.getFormField(Form.APIS);
         List<AbstractInterface<?>> restServices = project.getInterfaces(RestServiceFactory.REST_TYPE);
-        restServices.addAll(project.getInterfaces(RestServiceFactory.REST_TYPE));
         apis.setOptions(ModelSupport.getNames(restServices));
 
         while (dialog.show()) {
@@ -94,10 +92,6 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                 String swaggerVersion = dialog.getValue(Form.SWAGGER_VERSION);
                 String format = dialog.getValue(Form.FORMAT);
 
-                if (format.equals("xml") && (swaggerVersion.equals(SWAGGER_2_0) || swaggerVersion.equals(OPEN_API_3_0))) {
-                    throw new Exception("XML format is only supported for Swagger Version 1.2");
-                }
-
                 String version = dialog.getValue(Form.VERSION);
                 if (StringUtils.isNullOrEmpty(version)) {
                     version = "1.0";
@@ -108,7 +102,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
 
                 if (swaggerVersion.equals(SWAGGER_2_0)) {
                     exporter = new Swagger2Exporter(project);
-                    target = dialog.getValue(Form.FOLDER);
+                    target = dialog.getValue(Form.FILE);
                 }
 
                 //temp condition
@@ -119,13 +113,14 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
                 String path = exporter.exportToFileSystem(target, version, format, services, dialog.getValue(Form.BASEPATH));
 
                 if (path == null) {
-                    UISupport.showInfoMessage(messages.get("ExportSwaggerAction.InfoMessage.NothingCreated"));
+                    UISupport.showInfoMessage(INFO_MESSAGE_NOTHING_CREATED);
                 } else {
-                    UISupport.showInfoMessage(String.format(messages.get("ExportSwaggerAction.InfoMessage.ListingHasBeenCreated"), path));
+                    String message = String.format(INFO_MESSAGE_LISTING_HAS_BEEN_CREATED, path);
+                    UISupport.showInfoMessage(message);
                 }
 
                 settings.setString(BASE_PATH, dialog.getValue(Form.BASEPATH));
-                settings.setString(TARGET_PATH, dialog.getValue(Form.FOLDER));
+                settings.setString(TARGET_PATH, dialog.getValue(Form.FILE));
                 settings.setString(FORMAT, dialog.getValue(Form.FORMAT));
                 settings.setString(VERSION, dialog.getValue(Form.VERSION));
                 settings.setString(SWAGGER_VERSION, dialog.getValue(Form.SWAGGER_VERSION));
@@ -149,8 +144,8 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
             apiFile = new File(folderName + File.separatorChar + fileName);
         }
         if (apiFile.exists()) {
-            return (UISupport.confirm(String.format(messages.get("ExportSwaggerAction.ConfirmDialog.Question"), apiFile.getName()),
-                    messages.get("ExportSwaggerAction.ConfirmDialog.Title")));
+            return (UISupport.confirm(String.format(CONFIRM_DIALOG_QUESTION, apiFile.getName()),
+                    CONFIRM_DIALOG_TITLE));
         }
         return true;
     }
@@ -160,8 +155,8 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
         @AField(name = "APIs", description = "Select which REST APIs to include in the Swagger definition", type = AFieldType.MULTILIST)
         public final static String APIS = "APIs";
 
-        @AField(name = "Target Folder", description = "Where to save the Swagger definition", type = AFieldType.FOLDER)
-        public final static String FOLDER = "Target Folder";
+        @AField(name = "Target File", description = "File to save the Swagger/OpenAPI definition", type = AFieldType.FILE)
+        String FILE = "Target File";
 
         @AField(name = "API Version", description = "API Version", type = AFieldType.STRING)
         public final static String VERSION = "API Version";
@@ -172,7 +167,7 @@ public class ExportSwaggerAction extends AbstractSoapUIAction<WsdlProject> {
         @AField(name = "Swagger Version", description = "Select Swagger version", type = AFieldType.RADIOGROUP, values = {SWAGGER_2_0})
         public final static String SWAGGER_VERSION = "Swagger Version";
 
-        @AField(name = "Format", description = "Select Swagger format", type = AFieldType.RADIOGROUP, values = {"json", "yaml", "xml"})
+        @AField(name = "Format", description = "Select Swagger format", type = AFieldType.RADIOGROUP, values = {"json", "yaml"})
         public final static String FORMAT = "Format";
     }
 }

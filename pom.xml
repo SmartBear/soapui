@@ -140,9 +140,6 @@
 
         <!-- Swagger/OpenAPI -->
 
-        <io.swagger.core.v3.swagger-models.version>2.1.7</io.swagger.core.v3.swagger-models.version>
-        <io.swagger.swagger-models.version>1.6.2</io.swagger.swagger-models.version>
-        <io.swagger.parser.v3.swagger-parser.version>2.0.24</io.swagger.parser.v3.swagger-parser.version>
         <io.swagger.swagger-parser.version>1.0.54</io.swagger.swagger-parser.version>
         <io.swagger.swagger-core.version>1.6.2</io.swagger.swagger-core.version>
     </properties>
