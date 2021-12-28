@@ -137,6 +137,11 @@
         <fest-swing.version>1.2.1</fest-swing.version>
         <maven-checksum-plugin.version>1.0</maven-checksum-plugin.version>
         <jackson-version>2.13.0</jackson-version>
+
+        <!-- Swagger/OpenAPI -->
+
+        <io.swagger.swagger-parser.version>1.0.54</io.swagger.swagger-parser.version>
+        <io.swagger.swagger-core.version>1.6.2</io.swagger.swagger-core.version>
     </properties>
 
     <modules>
