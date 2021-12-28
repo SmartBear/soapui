@@ -146,7 +146,9 @@ public class JLogList extends JPanel {
 
         if (line instanceof LogEvent) {
             LogEvent ev = (LogEvent) line;
-            linesToAdd.add(new LoggingEventWrapper(ev));
+            LoggingEventWrapper eventWrapper = new LoggingEventWrapper(ev);
+            appendTimeStampBeforeRequestOrResponseLine(eventWrapper);
+            linesToAdd.add(eventWrapper);
 
             if (ev.getThrown() != null) {
                 Throwable t = ev.getThrown();
@@ -162,6 +164,28 @@ public class JLogList extends JPanel {
             linesToAdd.add(line);
         }
         model.ensureUpdateIsStarted();
+    }
+
+    private void appendTimeStampBeforeRequestOrResponseLine(LoggingEventWrapper eventWrapper) {
+        if (eventWrapper.loggingEvent.getLoggerName().equals(Logging.HTTP_CLIENT_WIRE_LOG_CATEGORY)) {
+            if (Logging.HTTP_CLIENT_WIRE_LOG_TIMESTAMP_MARKER_OUTGOING.equals(eventWrapper.loggingEvent.getMarker())) {
+                appendMessageSeparator();
+                linesToAdd.add(formatTimestamp(eventWrapper.loggingEvent.getTimeMillis()) + ": " + eventWrapper.getLevel() + ": http-outgoing >> ");
+            } else if (Logging.HTTP_CLIENT_WIRE_LOG_TIMESTAMP_MARKER_INCOMING.equals(eventWrapper.loggingEvent.getMarker())) {
+                appendMessageSeparator();
+                linesToAdd.add(formatTimestamp(eventWrapper.loggingEvent.getTimeMillis()) + ": " + eventWrapper.getLevel() + ": http-incoming << ");
+            }
+        }
+    }
+
+    private void appendMessageSeparator() {
+        if (model.getSize() != 0 || linesToAdd.size() != 0) {
+            linesToAdd.add("");
+        }
+    }
+
+    private static String formatTimestamp(long timeStamp) {
+        return String.valueOf(new Date(timeStamp));
     }
 
     public void setEnabled(boolean enabled) {
@@ -217,10 +241,14 @@ public class JLogList extends JPanel {
 
         public String toString() {
             if (str == null) {
-                StringBuilder builder = new StringBuilder();
-                builder.append(new Date(loggingEvent.getTimeMillis()));
-                builder.append(':').append(loggingEvent.getLevel()).append(':').append(loggingEvent.getMessage());
-                str = builder.toString();
+                if (loggingEvent.getLoggerName().equals(Logging.HTTP_CLIENT_WIRE_LOG_CATEGORY)) {
+                    str = loggingEvent.getMessage().toString();
+                } else {
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(new Date(loggingEvent.getTimeMillis()));
+                    builder.append(':').append(loggingEvent.getLevel()).append(':').append(loggingEvent.getMessage());
+                    str = builder.toString();
+                }
             }
 
             return str;
