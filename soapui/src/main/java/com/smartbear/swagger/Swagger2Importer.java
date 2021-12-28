@@ -445,13 +445,6 @@ public class Swagger2Importer implements SwaggerImporter {
             }
         }
 
-        try {
-            restService.getDefinitionContext().load(new UrlWsdlLoader(expandedUrl));
-        } catch (Exception e) {
-            project.removeInterface(restService);
-            throw new RuntimeException(e);
-        }
-
         if (swaggerInfo != null) {
             restService.setDescription(swaggerInfo.getDescription());
         }
