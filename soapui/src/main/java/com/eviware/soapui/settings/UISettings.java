@@ -36,9 +36,6 @@ public interface UISettings {
     @Setting(name = "Order Services", description = "(orders services alphabetically in tree)", type = SettingType.BOOLEAN)
     public final static String ORDER_SERVICES = UISettings.class.getSimpleName() + "@order-services";
 
-    @Setting(name = "Order Mock Services", description = "(orders mock services alphabetically in tree)", type = SettingType.BOOLEAN)
-    public final static String ORDER_MOCK_SERVICES = UISettings.class.getSimpleName() + "@order-mock-services";
-
     @Setting(name = "Order Requests", description = "(orders Requests alphabetically in tree)", type = SettingType.BOOLEAN)
     public final static String ORDER_REQUESTS = UISettings.class.getSimpleName() + "@order-requests";
 

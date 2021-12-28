@@ -69,7 +69,6 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project> {
         }
 
         initOrdering(interfaceNodes, UISettings.ORDER_SERVICES);
-        initOrdering(mockServiceNodes, UISettings.ORDER_MOCK_SERVICES);
 
         getTreeModel().mapModelItems(interfaceNodes);
         getTreeModel().mapModelItems(testSuiteNodes);
