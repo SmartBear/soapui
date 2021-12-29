@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.smartbear.analytics.AnalyticsManager.Category.CUSTOM_PLUGIN_ACTION;
-import static com.smartbear.integrations.swaggerhub.ImportFromHubDialog.*;
+import static com.smartbear.integrations.swaggerhub.component.ImportFromSwaggerHubDialog.*;
 
 public class PublishToSwaggerHubAction extends AbstractSoapUIAction<RestService> {
     private static final Logger LOG = LoggerFactory.getLogger(PublishToSwaggerHubAction.class);

@@ -1,4 +1,4 @@
-package com.smartbear.integrations.swaggerhub;
+package com.smartbear.integrations.swaggerhub.component;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
@@ -7,6 +7,8 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.UISupport;
 import com.google.common.io.ByteStreams;
+import com.smartbear.integrations.swaggerhub.engine.ApiDescriptor;
+import com.smartbear.integrations.swaggerhub.engine.ApisJsonImporter;
 import com.smartbear.swagger.Swagger2Importer;
 import com.smartbear.swagger.SwaggerImporter;
 import javafx.application.Platform;
@@ -40,8 +42,8 @@ import static com.smartbear.integrations.swaggerhub.PublishToSwaggerHubAction.SW
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
-public class ImportFromHubDialog extends Dialog {
-    public static final Logger log = LoggerFactory.getLogger(ImportFromHubDialog.class);
+public class ImportFromSwaggerHubDialog extends Dialog {
+    public static final Logger log = LoggerFactory.getLogger(ImportFromSwaggerHubDialog.class);
     private static final String GETTING_LIST_OF_DEFINITIONS_ERROR = "Cannot get list of definitions from SwaggerHub";
     private static final int CONTENT_PANE_WIDTH = 710;
     private static final int CONTENT_PANE_HEIGHT = 525;
@@ -58,7 +60,7 @@ public class ImportFromHubDialog extends Dialog {
     private String apiKey;
 
 
-    public ImportFromHubDialog(WsdlProject project) {
+    public ImportFromSwaggerHubDialog(WsdlProject project) {
         this.project = project;
         buildDialog();
     }

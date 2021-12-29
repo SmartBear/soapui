@@ -1,6 +1,7 @@
-package com.smartbear.integrations.swaggerhub;
+package com.smartbear.integrations.swaggerhub.component;
 
 import com.eviware.soapui.support.StringUtils;
+import com.smartbear.integrations.swaggerhub.engine.ApiDescriptor;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

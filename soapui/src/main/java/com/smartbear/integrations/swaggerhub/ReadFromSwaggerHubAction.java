@@ -1,8 +1,8 @@
 package com.smartbear.integrations.swaggerhub;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.smartbear.integrations.swaggerhub.component.ImportFromSwaggerHubDialog;
 import javafx.application.Platform;
 
 public class ReadFromSwaggerHubAction extends AbstractSoapUIAction<WsdlProject> {
@@ -14,7 +14,7 @@ public class ReadFromSwaggerHubAction extends AbstractSoapUIAction<WsdlProject> 
     @Override
     public void perform(WsdlProject modelItem, Object o) {
         Platform.runLater(() -> {
-            ImportFromHubDialog importFromHubDialog = new ImportFromHubDialog(modelItem);
+            ImportFromSwaggerHubDialog importFromHubDialog = new ImportFromSwaggerHubDialog(modelItem);
             importFromHubDialog.showAndWait();
         });
     }

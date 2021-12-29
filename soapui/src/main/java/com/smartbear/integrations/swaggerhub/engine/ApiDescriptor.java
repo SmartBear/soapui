@@ -1,4 +1,4 @@
-package com.smartbear.integrations.swaggerhub;
+package com.smartbear.integrations.swaggerhub.engine;
 
 public class ApiDescriptor {
     @Override

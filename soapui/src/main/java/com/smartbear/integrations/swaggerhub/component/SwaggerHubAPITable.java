@@ -1,5 +1,6 @@
-package com.smartbear.integrations.swaggerhub;
+package com.smartbear.integrations.swaggerhub.component;
 
+import com.smartbear.integrations.swaggerhub.engine.ApiDescriptor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;

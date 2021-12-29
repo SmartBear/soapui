@@ -1,4 +1,4 @@
-package com.smartbear.integrations.swaggerhub;
+package com.smartbear.integrations.swaggerhub.engine;
 
 import groovy.json.JsonSlurper;
 
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class ApisJsonImporter {
+public class ApisJsonImporter {
     static final Pattern OWNER_PATTERN = Pattern.compile("api\\.swaggerhub\\.com\\/apis\\/(.*?)\\/");
 
     public List<ApiDescriptor> importApis(String json) {
