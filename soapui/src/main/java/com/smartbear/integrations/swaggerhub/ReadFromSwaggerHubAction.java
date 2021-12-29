@@ -5,9 +5,9 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import javafx.application.Platform;
 
-public class ReadFromHubAction extends AbstractSoapUIAction<WsdlProject> {
+public class ReadFromSwaggerHubAction extends AbstractSoapUIAction<WsdlProject> {
 
-    public ReadFromHubAction() {
+    public ReadFromSwaggerHubAction() {
         super("Import From SwaggerHub", "Reads an API from SwaggerHub");
     }
 

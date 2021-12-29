@@ -34,15 +34,15 @@ import java.util.Map;
 import static com.smartbear.analytics.AnalyticsManager.Category.CUSTOM_PLUGIN_ACTION;
 import static com.smartbear.integrations.swaggerhub.ImportFromHubDialog.*;
 
-public class PublishToHubAction extends AbstractSoapUIAction<RestService> {
-    private static final Logger LOG = LoggerFactory.getLogger(PublishToHubAction.class);
+public class PublishToSwaggerHubAction extends AbstractSoapUIAction<RestService> {
+    private static final Logger LOG = LoggerFactory.getLogger(PublishToSwaggerHubAction.class);
     public static final String SWAGGER_HUB_API_KEY = "SwaggerHubApiKey";
     public final static String SWAGGERHUB_URL = "https://swaggerhub.com";
     public final static String SWAGGERHUB_API = "https://api.swaggerhub.com/apis";
 
     private XFormDialog dialog;
 
-    public PublishToHubAction() {
+    public PublishToSwaggerHubAction() {
         super("Publish to SwaggerHub", "Publishes this API to SwaggerHub");
     }
 

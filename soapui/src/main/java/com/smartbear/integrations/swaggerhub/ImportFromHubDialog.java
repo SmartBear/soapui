@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.smartbear.integrations.swaggerhub.PublishToHubAction.SWAGGERHUB_API;
-import static com.smartbear.integrations.swaggerhub.PublishToHubAction.SWAGGER_HUB_API_KEY;
+import static com.smartbear.integrations.swaggerhub.PublishToSwaggerHubAction.SWAGGERHUB_API;
+import static com.smartbear.integrations.swaggerhub.PublishToSwaggerHubAction.SWAGGER_HUB_API_KEY;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
