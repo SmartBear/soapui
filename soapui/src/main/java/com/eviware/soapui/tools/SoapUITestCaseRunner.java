@@ -346,8 +346,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
 
         String projectFile = getProjectFile();
 
-        WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(projectFile,
-                getProjectPassword());
+        WsdlProject project = (WsdlProject) ProjectFactoryRegistry
+                                            .getProjectFactory("wsdl")
+                                            .createNew(projectFile,getProjectPassword());
 
         if (project.isDisabled()) {
             throw new Exception("Failed to load SoapUI project file [" + projectFile + "]");
@@ -564,7 +565,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
      * Runs the specified TestCase
      *
      * @param testCase the testcase to run
-     * @param context
      */
 
     protected void runTestCase(WsdlTestCase testCase) {
