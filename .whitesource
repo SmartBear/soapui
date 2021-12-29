@@ -1,4 +1,6 @@
 {
+  "settingsInheritedFrom": "SmartBear/whitesource-config@main",
+
   "issueSettings": {
     "minSeverityLevel": "NONE",
     "displayLicenseViolations": "false"
