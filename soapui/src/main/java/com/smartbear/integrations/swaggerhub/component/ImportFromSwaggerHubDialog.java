@@ -5,6 +5,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.google.common.io.ByteStreams;
 import com.smartbear.integrations.swaggerhub.engine.ApiDescriptor;
@@ -25,7 +26,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
@@ -43,6 +43,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 public class ImportFromSwaggerHubDialog extends Dialog {
+    private static final String UNSUPPORTED_OAS_VERSION_MESSAGE = "SoapUI OS can work only with OAS version 2.0";
     public static final Logger log = LoggerFactory.getLogger(ImportFromSwaggerHubDialog.class);
     private static final String GETTING_LIST_OF_DEFINITIONS_ERROR = "Cannot get list of definitions from SwaggerHub";
     private static final int CONTENT_PANE_WIDTH = 710;
@@ -145,7 +146,7 @@ public class ImportFromSwaggerHubDialog extends Dialog {
                 workspace.getSettings().setString(SWAGGER_HUB_API_KEY, apiKeyField.getText());
             }
 
-            if (StringUtils.isNotEmpty(apiKey)) {
+            if (StringUtils.hasContent(apiKey)) {
                 if (searchInMyHub.isSelected()) {
                     uri = SWAGGERHUB_API + "?filter=user";
                 } else {
@@ -156,7 +157,7 @@ public class ImportFromSwaggerHubDialog extends Dialog {
                 uri = SWAGGERHUB_API + "?limit=" + SEARCH_LIMIT;
             }
 
-            if (StringUtils.isNotEmpty(searchQuery)) {
+            if (StringUtils.hasContent(searchQuery)) {
                 try {
                     uri += "&query=" + URLEncoder.encode(searchQuery.trim(), "UTF-8");
                 } catch (UnsupportedEncodingException e) {
@@ -201,6 +202,13 @@ public class ImportFromSwaggerHubDialog extends Dialog {
             SwaggerImporter importer = new Swagger2Importer(project, "application/json");
 
             int selectedVersion = model.getVersionCombo().getSelectionModel().getSelectedIndex();
+
+            String oasVersion = descriptor.oasVersion;
+            if (StringUtils.hasContent(oasVersion) && !oasVersion.startsWith("2.0")) {
+                log.error(UNSUPPORTED_OAS_VERSION_MESSAGE);
+                UISupport.showErrorMessage(UNSUPPORTED_OAS_VERSION_MESSAGE);
+                return result;
+            }
 
             String version = descriptor.versions[selectedVersion];
             if (version.startsWith("*-")) {
