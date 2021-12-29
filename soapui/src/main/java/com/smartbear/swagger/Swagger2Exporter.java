@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-class Swagger2Exporter implements SwaggerExporter {
+public class Swagger2Exporter implements SwaggerExporter {
 
     private final WsdlProject project;
 
