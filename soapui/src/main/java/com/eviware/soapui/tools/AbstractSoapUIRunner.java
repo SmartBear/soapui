@@ -44,6 +44,9 @@ import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +55,7 @@ import java.util.Map;
 public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     public static final int NORMAL_TERMINATION = 0;
     public static final int ABNORMAL_TERMINATION = -1;
+    public static final int PROJECT_NOT_FOUND_EXIT_CODE = 1;
 
     private boolean groovyLogInitialized;
     private String projectFile;
@@ -59,6 +63,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     private String settingsFile;
     private String soapUISettingsPassword;
     private String projectPassword;
+    private int exitCode = NORMAL_TERMINATION;
 
     private boolean enableUI;
     private String outputFolder;
@@ -107,11 +112,15 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
      * @see java.lang.System
      */
     public int runFromCommandLine(String[] args) {
-        int results = ABNORMAL_TERMINATION;
         if (validateCommandLineArgument(args)) {
-            results = run(args);
+            exitCode = run(args);
         }
-        return results;
+
+        if (exitCode != PROJECT_NOT_FOUND_EXIT_CODE) { // none of other errors are specially handled thus for backward compatibility we have to keep ABNORMAL_TERMINATION for all errors except "file not found"
+            exitCode = ABNORMAL_TERMINATION;
+        }
+
+        return exitCode;
     }
 
     public boolean validateCommandLineArgument(String[] args) {
@@ -164,7 +173,21 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
                 return false;
             }
 
-            setProjectFile(args[0]);
+            String projectFile = args[0];
+            boolean projectFileExists = false;
+            try {
+                // Works for local and network files like "\\Server\Projects\Project.xml"
+                projectFileExists = Files.exists(Paths.get(projectFile));
+            } catch (InvalidPathException e) {
+                //no action required
+            }
+            if (projectFileExists == false) {
+                System.err.println(String.format("The specified project file '%s' doesn't exist.",
+                        projectFile));
+                exitCode = PROJECT_NOT_FOUND_EXIT_CODE;
+                return false;
+            }
+            setProjectFile(projectFile);
         }
 
         return processCommandLine(cmd);
