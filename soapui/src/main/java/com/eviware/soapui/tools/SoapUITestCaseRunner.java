@@ -564,7 +564,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
      * Runs the specified TestCase
      *
      * @param testCase the testcase to run
-     * @param context
      */
 
     protected void runTestCase(WsdlTestCase testCase) {
