@@ -4,7 +4,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.google.common.io.ByteStreams;
@@ -38,7 +37,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.smartbear.integrations.swaggerhub.PublishToSwaggerHubAction.SWAGGERHUB_API;
-import static com.smartbear.integrations.swaggerhub.PublishToSwaggerHubAction.SWAGGER_HUB_API_KEY;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
@@ -49,23 +47,16 @@ public class ImportFromSwaggerHubDialog extends Dialog {
     private static final int CONTENT_PANE_WIDTH = 710;
     private static final int CONTENT_PANE_HEIGHT = 525;
     private static final String SEARCH_LIMIT = "50";
-    private final PasswordField apiKeyField = new PasswordField();
     private final TextField searchField = new TextField();
-    private final CheckBox searchInMyHub = new CheckBox();
-    private final CheckBox rememberCombo = new CheckBox();
     private final SwaggerHubAPITable table = new SwaggerHubAPITable();
     private final Button searchButton = new Button("Search");
     private final StackPane stackPane = new StackPane();
     private final WsdlProject project;
-    private GridPane loginForm;
-    private String apiKey;
-
 
     public ImportFromSwaggerHubDialog(WsdlProject project) {
         this.project = project;
         buildDialog();
     }
-
 
     protected void buildDialog() {
         initModality(Modality.APPLICATION_MODAL);
@@ -99,7 +90,7 @@ public class ImportFromSwaggerHubDialog extends Dialog {
 
         tableScroll.setMaxHeight(CONTENT_PANE_HEIGHT);
         stackPane.getChildren().add(tableScroll);
-        vBox.getChildren().addAll(buildLoginForm(), new Separator(), buildSearchForm(), stackPane);
+        vBox.getChildren().addAll(new Separator(), buildSearchForm(), stackPane);
         root.setCenter(vBox);
         getDialogPane().setContent(root);
     }
@@ -136,26 +127,9 @@ public class ImportFromSwaggerHubDialog extends Dialog {
                 table.clearTable();
             });
             boolean importPrivate = false;
-            String apiKey = apiKeyField.getText();
             String searchQuery = searchField.getText();
 
-            String uri;
-
-            if (rememberCombo.isSelected()) {
-                Workspace workspace = SoapUI.getWorkspace();
-                workspace.getSettings().setString(SWAGGER_HUB_API_KEY, apiKeyField.getText());
-            }
-
-            if (StringUtils.hasContent(apiKey)) {
-                if (searchInMyHub.isSelected()) {
-                    uri = SWAGGERHUB_API + "?filter=user";
-                } else {
-                    uri = SWAGGERHUB_API + "?limit=" + SEARCH_LIMIT;
-                }
-                importPrivate = true;
-            } else {
-                uri = SWAGGERHUB_API + "?limit=" + SEARCH_LIMIT;
-            }
+            String uri = SWAGGERHUB_API + "?limit=" + SEARCH_LIMIT;
 
             if (StringUtils.hasContent(searchQuery)) {
                 try {
@@ -167,9 +141,6 @@ public class ImportFromSwaggerHubDialog extends Dialog {
 
             try {
                 HttpGet get = new HttpGet(uri);
-                if (importPrivate) {
-                    get.setHeader("Authorization", apiKey);
-                }
                 HttpResponse response = HttpClientSupport.getHttpClient().execute(get);
 
                 List<ApiDescriptor> descriptors = new ApisJsonImporter().importApis(
@@ -218,11 +189,7 @@ public class ImportFromSwaggerHubDialog extends Dialog {
             }
 
             String selectedVersionUrl = defaultVersionUrl.substring(0, defaultVersionUrl.lastIndexOf('/')) + "/" + version;
-            if (descriptor.isPrivate) {
-                Collections.addAll(result, importer.importSwagger(selectedVersionUrl, apiKey));
-            } else {
-                Collections.addAll(result, importer.importSwagger(selectedVersionUrl));
-            }
+            Collections.addAll(result, importer.importSwagger(selectedVersionUrl));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -239,37 +206,6 @@ public class ImportFromSwaggerHubDialog extends Dialog {
         });
     }
 
-    private GridPane buildLoginForm() {
-        loginForm = new GridPane();
-        loginForm.setVgap(8);
-        loginForm.setHgap(8);
-        loginForm.setPadding(new Insets(8, 0, 8, 0));
-
-        Label apiKeyLabel = createLabel("API Key");
-        loginForm.add(apiKeyLabel, 0, 0);
-        loginForm.add(apiKeyField, 1, 0);
-
-        Label rememberLabel = createLabel("Remember me");
-
-        loginForm.add(rememberLabel, 0, 1);
-        loginForm.add(rememberCombo, 1, 1);
-
-        rememberCombo.setSelected(true);
-        searchInMyHub.setOnAction(event -> {
-            if (searchInMyHub.isSelected()) {
-                populateList();
-            }
-        });
-
-        setTooltip("Specify your SwaggerHub API Key", apiKeyField);
-        setTooltip("Check to save your login and password in workspace", rememberCombo);
-
-        Workspace workspace = SoapUI.getWorkspace();
-        apiKeyField.setText(workspace.getSettings().getString(SWAGGER_HUB_API_KEY, ""));
-
-        return loginForm;
-    }
-
     private GridPane buildSearchForm() {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(8);
@@ -283,7 +219,6 @@ public class ImportFromSwaggerHubDialog extends Dialog {
 
         Label searchInMyHubLabel = createLabel("My APIs only  ");
         gridPane.add(searchInMyHubLabel, 0, 1);
-        gridPane.add(searchInMyHub, 1, 1);
 
         searchField.setPrefColumnCount(25);
         searchField.setOnKeyPressed(event -> {
@@ -294,8 +229,6 @@ public class ImportFromSwaggerHubDialog extends Dialog {
         });
 
         setTooltip("Searches on owner, name, swagger.info.title and swagger.info.description of all APIs", searchField);
-        setTooltip("Show only those APIs that the authenticated user has access to either as owner or collaborator", searchInMyHub);
-
         return gridPane;
     }
 
