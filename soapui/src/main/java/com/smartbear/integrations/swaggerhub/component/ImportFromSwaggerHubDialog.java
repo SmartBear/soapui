@@ -217,9 +217,6 @@ public class ImportFromSwaggerHubDialog extends Dialog {
         gridPane.add(searchField, 1, 0);
         gridPane.add(searchButton, 2, 0);
 
-        Label searchInMyHubLabel = createLabel("My APIs only  ");
-        gridPane.add(searchInMyHubLabel, 0, 1);
-
         searchField.setPrefColumnCount(25);
         searchField.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
