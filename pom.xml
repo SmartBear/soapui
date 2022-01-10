@@ -80,7 +80,7 @@
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
         <xerces-xercesImpl-version>2.12.0</xerces-xercesImpl-version>
         <commons-beanutils-version>1.9.4</commons-beanutils-version>
-        <log4j2.version>2.17.0</log4j2.version>
+        <log4j2.version>2.17.1</log4j2.version>
         <mockito-all.version>1.9.5</mockito-all.version>
         <extra-enforcer-rules.version>1.3</extra-enforcer-rules.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
