@@ -116,7 +116,9 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
             exitCode = run(args);
         }
 
-        if (exitCode != PROJECT_NOT_FOUND_EXIT_CODE) { // none of other errors are specially handled thus for backward compatibility we have to keep ABNORMAL_TERMINATION for all errors except "file not found"
+        if (exitCode == NORMAL_TERMINATION) {
+            return exitCode;
+        } else if (exitCode != PROJECT_NOT_FOUND_EXIT_CODE) { // none of other errors are specially handled thus for backward compatibility we have to keep ABNORMAL_TERMINATION for all errors except "file not found"
             exitCode = ABNORMAL_TERMINATION;
         }
 
