@@ -222,4 +222,6 @@ public interface HelpUrls {
 
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
     public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage-new.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
+
+    public static final String GRAPHQL_REQUEST_HELP_URL = "/docs/graphql-testing";
 }
