@@ -138,7 +138,7 @@ public class GraphQLRequestTestStepDesktopPanel extends
 
     @Override
     protected String getHelpUrl() {
-        return HelpUrls.HTTP_REQUEST_HELP_URL;
+        return HelpUrls.GRAPHQL_REQUEST_HELP_URL;
     }
 
     protected JComponent buildLogPanel() {
