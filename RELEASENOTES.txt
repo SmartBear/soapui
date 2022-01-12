@@ -1,4 +1,44 @@
-﻿# SoapUI Open Source 5.6.1
+﻿# SoapUI Open Source 5.7.0
+
+#### Released on RELEASE_ME_ON ####
+
+The new release includes support for GraphQL APIs and offers other improvements that make API testing more convenient and powerful.
+
+### GraphQL Support ###
+
+Now you can test GraphQL services. To do this, use the new GraphQL Request test step.
+
+### Docker support ###
+
+SmartBear introduces a pre-configured Docker image, so now you can run SoapUI functional tests in isolated Docker containers.
+
+### Built-in OpenAPI (Swagger) support ###
+
+Now, to work with OpenAPI/Swagger definitions, you do not need to use plugins. SoapUI supports it out-of-the-box. Additionally, we've improved integrations with SwaggerHub to make it even more convenient.
+
+### Overall improvements ###
+
+* Support for OpenJDK 16.
+* Now, SoapUI opens a response editor that matches the response content type. For example, it opens the JSON editor if a response has JSON content.
+* We've updated a number of third-party libraries, including the following:
+  * Apache Log4j library to 2.17.1.
+  * Jayway jsonpath to 2.4.0.
+* Now, SoapUI stores log files in the <User Directory>/.soapuios/logs directory. Previously, they were stored in the SoapUI installation directory, which could cause issues on Windows computers.
+* A new feature by modax: Now, you can run the SoapUI build from the Travis-CI.
+
+### Overall improvements ###
+
+* When a proxy is set to None, usage of the ProxySelector class leads to the NullPointerException.
+* The value of the Start Step property of the SOAP Mock Response could be reset to the default value in some cases.
+* A bug fix by stevendjames: When you used the Query/Match filter in the SOAP Mock Response test step, the ClassCastException could occur.
+* A bug fix by MagnoCorrea: Names of the exported WSDL definitions with schema references could be too long. Now, such names are shorter and easier to work with.
+* A bug fix by stevann7: REST mock services did not show details of the message when you double-clicked it in the Message Log panel.
+* A bug fix by modax: In some cases, when you assigned a new endpoint to requests with the specific endpoint in the Service Endpoints panel, SoapUI did not apply it.
+* A bug fix by clynton: The NullPointerException could occur if you did not add the runBeforeSteps event listener to the project.
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.6.1
 
 #### Released on 2021-12-20 ####
 
