@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>5.7.1-SNAPSHOT</version>
+        <version>5.7.0</version>
     </parent>
 
     <artifactId>soapui</artifactId>
