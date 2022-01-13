@@ -12,7 +12,7 @@ currently being supported with security updates.
 | Version  | Supported          | Notes                  |
 | -------- | ------------------ | ---------------------- |
 | 5.7.0    | :white_check_mark: |                        |
-| <5.6.1   | :x:                |                        |
+| <=5.6.1   | :x:                |                        |
 
 ## Reporting a vulnerability
 
