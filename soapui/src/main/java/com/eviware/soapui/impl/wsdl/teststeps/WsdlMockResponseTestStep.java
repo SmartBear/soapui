@@ -411,17 +411,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
             result.startTimer();
 
             if (!mockRunListener.hasResult()) {
-                if (testMockResponse == null) {
-                    initTestMockResponse(context);
-                }
-
-                if (mockRunner == null) {
-                    mockRunner = mockService.start(context);
-                }
-
-                if (!mockRunner.isRunning()) {
-                    mockRunner.start();
-                }
+                startListening(context);
 
                 long timeout = getTimeout();
                 synchronized (mockRunListener) {
@@ -1166,7 +1156,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         }
     }
 
-    private void startListening(TestCaseRunContext runContext) throws Exception {
+    private synchronized void startListening(TestCaseRunContext runContext) throws Exception {
         if (mockRunner == null) {
             mockRunner = mockService.start((WsdlTestRunContext) runContext);
         }
@@ -1192,10 +1182,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                 if (startTestStep instanceof WsdlMockResponseTestStep) {
                     // do nothing - this is done in the StartStepMockRunListener instead
                 } else {
-                    try {
-                        startListening(runContext);
-                    } catch (Exception e) {
-                        SoapUI.logError(e);
+                    if (!isDisabled()) {
+                        try {
+                            startListening(runContext);
+                        } catch (Exception e) {
+                            SoapUI.logError(e);
+                        }
                     }
                 }
             }
@@ -1219,10 +1211,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            try {
-                startListening(runContext);
-            } catch (Exception e) {
-                SoapUI.logError(e);
+            if (!isDisabled()) {
+                try {
+                    startListening(runContext);
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
             }
         }
     }
