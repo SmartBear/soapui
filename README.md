@@ -36,7 +36,7 @@ By downloading our software, you agree to our [license](https://www.soapui.org/d
 
 ### Prerequisites
 
-* [JDK 12](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [OpenJDK 16](https://openjdk.java.net/projects/jdk/16/)
 * [Maven (version 3.0.5 or later)](http://maven.apache.org/)
 * [Git (version 1.8 or later)](http://git-scm.com)
 
@@ -121,3 +121,4 @@ SoapUI Open Source offers basic functionality for API testing. For additional fe
 * [Extending SoapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
 * [Custom factories](http://www.soapui.org/Developers-Corner/custom-factories.html)
 * [Integrating with SoapUI](http://www.soapui.org/Developers-Corner/integrating-with-soapui.html)
+* [Mastering SoapUI](https://www.packtpub.com/web-development/mastering-soapui) - Master the art of testing and automating your SOA using SoapUI

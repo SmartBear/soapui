@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -69,6 +69,12 @@ public class MockRequestXmlDocument extends AbstractXmlDocument {
         } else {
             fireContentChanged();
         }
+    }
+
+    @Override
+    public String getContentType() {
+        MockResult mockResult = mockResponse.getMockResult();
+        return String.valueOf(mockResult == null ? null : mockResult.getMockRequest().getRequestHeaders().get("Content-Type"));
     }
 
     @Nonnull

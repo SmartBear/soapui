@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -27,7 +27,8 @@ import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -50,7 +51,7 @@ import java.awt.event.WindowEvent;
  *
  */
 public class AssertionConfigurationDialog {
-    private final static Logger log = Logger.getLogger(AssertionConfigurationDialog.class);
+    private final static Logger log = LogManager.getLogger(AssertionConfigurationDialog.class);
 
     protected JDialog configurationDialog;
     private JCheckBox allowWildcardsCheckBox;
@@ -184,31 +185,31 @@ public class AssertionConfigurationDialog {
 
         allowWildcardsCheckBox = new JCheckBox("Allow Wildcards");
         Dimension dim = new Dimension(120, 20);
-        allowWildcardsCheckBox.setSize(dim);
+        allowWildcardsCheckBox.setMinimumSize(dim);
         allowWildcardsCheckBox.setPreferredSize(dim);
         allowWildcardsCheckBox.setOpaque(false);
 
         Dimension largerDim = new Dimension(170, 20);
         ignoreNamespaceDifferencesCheckBox = new JCheckBox("Ignore namespace prefixes");
-        ignoreNamespaceDifferencesCheckBox.setSize(largerDim);
+        ignoreNamespaceDifferencesCheckBox.setMinimumSize(largerDim);
         ignoreNamespaceDifferencesCheckBox.setPreferredSize(largerDim);
         ignoreNamespaceDifferencesCheckBox.setOpaque(false);
 
         ignoreCommentsCheckBox = new JCheckBox("Ignore XML Comments");
-        ignoreCommentsCheckBox.setSize(largerDim);
+        ignoreCommentsCheckBox.setMinimumSize(largerDim);
         ignoreCommentsCheckBox.setPreferredSize(largerDim);
         ignoreCommentsCheckBox.setOpaque(false);
 
         if (assertion.canAssertXmlContent()) {
 
             toolbar.addRelatedGap();
-            toolbar.addFixed(allowWildcardsCheckBox);
+            toolbar.addWithOnlyMinimumHeight(allowWildcardsCheckBox);
 
             toolbar.addRelatedGap();
-            toolbar.addFixed(ignoreNamespaceDifferencesCheckBox);
+            toolbar.addWithOnlyMinimumHeight(ignoreNamespaceDifferencesCheckBox);
 
             toolbar.addRelatedGap();
-            toolbar.addFixed(ignoreCommentsCheckBox);
+            toolbar.addWithOnlyMinimumHeight(ignoreCommentsCheckBox);
         }
     }
 

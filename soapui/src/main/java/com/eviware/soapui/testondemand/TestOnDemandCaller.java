@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -47,7 +47,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -111,7 +112,7 @@ public class TestOnDemandCaller {
 
     private final XPath xpath = XPathFactory.newInstance().newXPath();
 
-    private static final Logger log = Logger.getLogger(TestOnDemandCaller.class);
+    private static final Logger log = LogManager.getLogger(TestOnDemandCaller.class);
 
     @Nonnull
     public List<Location> getLocations() throws Exception {

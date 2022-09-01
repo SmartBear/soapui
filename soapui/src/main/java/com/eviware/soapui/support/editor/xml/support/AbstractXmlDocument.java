@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -57,5 +57,10 @@ public abstract class AbstractXmlDocument implements XmlDocument {
 
     public SchemaTypeSystem getTypeSystem() {
         return XmlBeans.getBuiltinTypeSystem();
+    }
+
+    @Override
+    public String getContentType() {
+        return null;
     }
 }

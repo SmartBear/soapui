@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -52,6 +52,11 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
             fireContentChanged();
             updating = false;
         }
+    }
+
+    @Override
+    public String getContentType() {
+        return "application/soap+xml";
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

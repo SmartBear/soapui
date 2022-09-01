@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -53,7 +53,8 @@ import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.assertion.ValidHttpStatusCodesAssertion;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 import com.eviware.soapui.support.types.StringToStringMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
     private static TestAssertionRegistry instance;
     private Map<String, TestAssertionFactory> availableAssertions = new HashMap<String, TestAssertionFactory>();
     private StringToStringMap assertionLabels = new StringToStringMap();
-    private final static Logger log = Logger.getLogger(TestAssertionRegistry.class);
+    private final static Logger log = LogManager.getLogger(TestAssertionRegistry.class);
 
     private TestAssertionRegistry() {
         addAssertion(new SoapResponseAssertion.Factory());

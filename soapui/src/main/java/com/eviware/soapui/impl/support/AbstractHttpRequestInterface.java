@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -31,7 +31,6 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import org.apache.log4j.Logger;
 
 import javax.swing.ImageIcon;
 import java.util.List;
@@ -39,7 +38,6 @@ import java.util.List;
 public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> extends Request,
         PropertyExpansionContainer, MutableAttachmentContainer {
 
-    public final static Logger log = Logger.getLogger(AbstractHttpRequest.class);
     public static final String RESPONSE_PROPERTY = WsdlRequest.class.getName() + "@response";
     public static final String REMOVE_EMPTY_CONTENT = WsdlRequest.class.getName() + "@remove_empty_content";
     public static final String STRIP_WHITESPACES = WsdlRequest.class.getName() + "@strip-whitespaces";

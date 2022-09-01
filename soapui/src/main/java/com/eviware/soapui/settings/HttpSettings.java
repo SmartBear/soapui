@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -31,6 +31,11 @@ public interface HttpSettings {
     public static final String HTTP_VERSION_0_9 = "0.9";
     public static final String HTTP_VERSION_1_0 = "1.0";
     public static final String HTTP_VERSION_1_1 = "1.1";
+
+    /*OT*/
+    String MAX_TOTAL_CONNECTIONS_INVALID_VALUE_ERROR_MESSAGE = "The value of Max total connections must be greater than 0.";
+    /*OT*/
+    String MAX_CONNECTIONS_PER_HOST_INVALID_VALUE_ERROR_MESSAGE = "The value of Max connections per host must be greater than 0.";
 
     @Setting(name = "HTTP Version", description = "Select HTTP Version to use", type = SettingType.ENUMERATION, values = {
             HTTP_VERSION_1_0, HTTP_VERSION_1_1})

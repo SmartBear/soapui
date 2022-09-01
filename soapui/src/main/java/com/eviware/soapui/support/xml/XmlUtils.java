@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -24,7 +24,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 import net.sf.saxon.expr.Token;
 import net.sf.saxon.expr.Tokenizer;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xerces.util.SecurityManager;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
@@ -83,7 +84,7 @@ import java.util.StringTokenizer;
 @SuppressWarnings("deprecation")
 public final class XmlUtils {
     private static DocumentBuilder documentBuilder;
-    private final static Logger log = Logger.getLogger(XmlUtils.class);
+    private final static Logger log = LogManager.getLogger(XmlUtils.class);
 
     static synchronized public Document parse(InputStream in) {
         try {

@@ -16,4 +16,8 @@ public class PropertiesModelItem extends EmptyModelItem {
     public void updateName() {
         setName("Properties (" + holder.getPropertyNames().length + ")");
     }
+
+    public TestPropertyHolder getHolder() {
+        return holder;
+    }
 }

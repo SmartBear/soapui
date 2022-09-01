@@ -1,4 +1,4 @@
-SoapUI, copyright (C) 2004-2019 smartbear.com
+SoapUI, copyright (C) 2004-2022 smartbear.com
 
 Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
 

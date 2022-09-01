@@ -8,14 +8,26 @@ is invoked more than one time.</con:description>
     <con:runType>SEQUENTIAL</con:runType>
     <con:testCase id="1b15fda6-8f9e-4f13-8aac-c339935bbbfd" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Groovy log should have at most one ConsoleAppender" searchProperties="true">
       <con:settings/>
-      <con:testStep type="groovy" name="Count ConsoleAppender should be zero or one" id="56e8fd8f-1730-4ddb-aa9c-e1af4c64da75">
+      <con:testStep type="groovy" name="Count ConsoleAppender must be one" id="56e8fd8f-1730-4ddb-aa9c-e1af4c64da75">
         <con:settings/>
         <con:config>
-          <script>import org.apache.log4j.Logger
-import org.apache.log4j.ConsoleAppender
+          <script>import org.apache.logging.log4j.LogManager;
+            import org.apache.logging.log4j.Logger;
+            import org.apache.logging.log4j.core.Appender;
+            import org.apache.logging.log4j.core.appender.ConsoleAppender;
 
-Logger groovyLog = Logger.getLogger('groovy.log')
-assert groovyLog.getAllAppenders().findAll { it instanceof ConsoleAppender }.size() &lt;= 1</script>
+            Logger groovyLog = LogManager.getLogger('groovy.log')
+
+            Map&lt;String, Appender&gt; appenderMap = ((org.apache.logging.log4j.core.Logger) groovyLog).getAppenders();
+            int amount = 0;
+            for (Map.Entry&lt;String, Appender&gt; item : appenderMap) {
+            Appender appender = item.getValue();
+            if (appender instanceof ConsoleAppender) {
+            amount++;
+            }
+            }
+            assert amount == 1
+          </script>
         </con:config>
       </con:testStep>
       <con:properties/>

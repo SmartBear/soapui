@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -32,7 +32,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wsI.testing.x2003.x03.analyzerConfig.AssertionResults;
 import org.wsI.testing.x2003.x03.analyzerConfig.Configuration;
 import org.wsI.testing.x2003.x03.analyzerConfig.ConfigurationDocument;
@@ -66,7 +67,7 @@ import java.util.List;
  */
 
 public class WSIValidateRequestAction extends AbstractToolsAction<WsdlRequest> {
-    public final static Logger log = Logger.getLogger(WSIValidateRequestAction.class);
+    public final static Logger log = LogManager.getLogger(WSIValidateRequestAction.class);
     private String configFile;
     private File logFile;
     private String wsiDir;

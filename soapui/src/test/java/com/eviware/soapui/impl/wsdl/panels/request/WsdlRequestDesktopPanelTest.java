@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -27,7 +27,7 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.utils.ContainerWalker;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

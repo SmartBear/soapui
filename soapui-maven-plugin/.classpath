@@ -11,7 +11,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/commons-io/jars/commons-io-1.3.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/com.narupley/jars/not-going-to-be-commons-ssl-0.3.20.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-cli/jars/commons-cli-1.0.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.9.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-httpclient/jars/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/json/jars/json-lib-2.2.2-jdk15.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/ezmorph/jars/ezmorph-1.0.5.jar"/>
@@ -38,10 +38,10 @@
 	<classpathentry kind="var" path="MAVEN_REPO/xmlunit/jars/xmlunit-1.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xml-security/jars/xmlsec-1.4.3.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/opensaml/jars/opensaml-1.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/xalan/jars/xalan-2.7.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xalan/jars/xalan-2.7.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.12.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/wss4j/jars/wss4j-1.5.8.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/bouncycastle/jars/bcprov-jdk15-144.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/org/bouncycastle/jars/bcprov-jdk15on-1.64.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jtidy/jars/jtidy-r872-jdk15.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/javax.jms/jars/jms-1.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/hermesjms/jars/hermes-1.14.jar"/>
@@ -50,7 +50,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/amf/jars/flex-messaging-opt-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/amf/jars/flex-messaging-proxy-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/amf/jars/flex-messaging-remoting-1.0.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/thoughtworks/jars/xstream-1.3.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/thoughtworks/jars/xstream-1.4.13.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/net.sourceforge.htmlunit/jars/htmlunit-2.7.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/org.w3c.css/jars/sac-1.3.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/net.sourceforge.htmlunit/jars/htmlunit-core-js-2.7.jar"/>

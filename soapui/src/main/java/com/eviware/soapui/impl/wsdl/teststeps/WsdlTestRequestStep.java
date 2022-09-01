@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -66,7 +66,8 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlString;
 
@@ -88,7 +89,7 @@ import java.util.Map;
 
 public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements OperationTestStep,
         PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep, Securable {
-    private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
+    private final static Logger log = LogManager.getLogger(WsdlTestRequestStep.class);
     private RequestStepConfig requestStepConfig;
     private WsdlTestRequest testRequest;
     private WsdlOperation wsdlOperation;

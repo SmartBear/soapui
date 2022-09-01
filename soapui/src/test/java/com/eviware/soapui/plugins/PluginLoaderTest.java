@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -130,7 +130,7 @@ public class PluginLoaderTest {
     }
 
     @PluginConfiguration(groupId = "com.smartbear.ready", name = "Time warp plugin", version = "0.1",
-            minimumReadyApiVersion = "99.0.0", autoDetect = false)
+            minimumSoapUIVersion = "99.0.0", autoDetect = false)
     public static class ScienceFictionPlugin extends PluginAdapter {
 
     }

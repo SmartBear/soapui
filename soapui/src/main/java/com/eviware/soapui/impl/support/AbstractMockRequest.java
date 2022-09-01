@@ -1,17 +1,17 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.support;
@@ -201,40 +201,47 @@ public abstract class AbstractMockRequest implements MockRequest {
     }
 
 
+    @Override
     public String getProtocol() {
         return protocol;
     }
 
-
+    @Override
     public Attachment[] getRequestAttachments() {
         return multipartMessageSupport == null ? new Attachment[0] : multipartMessageSupport.getAttachments();
     }
 
+    @Override
     public String getRequestContent() {
         return multipartMessageSupport == null ? requestContent : multipartMessageSupport.getContentAsString();
     }
 
+    @Override
     public StringToStringsMap getRequestHeaders() {
         return requestHeaders;
     }
 
-
+    @Override
     public HttpServletResponse getHttpResponse() {
         return response;
     }
 
+    @Override
     public HttpServletRequest getHttpRequest() {
         return request;
     }
 
+    @Override
     public RestRequestInterface.HttpMethod getMethod() {
         return RestRequestInterface.HttpMethod.valueOf(request.getMethod());
     }
 
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public WsdlMockRunContext getContext() {
         return context;
     }
@@ -245,10 +252,12 @@ public abstract class AbstractMockRequest implements MockRequest {
         }
     }
 
+    @Override
     public WsdlMockRunContext getRequestContext() {
         return requestContext;
     }
 
+    @Override
     public byte[] getRawRequestData() {
         return mockRequestDataSource == null ? actualRequestContent == null ? requestContent.getBytes()
                 : actualRequestContent.getBytes() : mockRequestDataSource.getData();
@@ -270,6 +279,7 @@ public abstract class AbstractMockRequest implements MockRequest {
         return multipartMessageSupport;
     }
 
+    @Override
     public void setRequestContent(String requestContent) {
         this.requestContent = requestContent;
     }
@@ -282,18 +292,20 @@ public abstract class AbstractMockRequest implements MockRequest {
         this.responseMessage = responseMessage;
     }
 
-    public boolean isResponseMessage() {
-        return responseMessage;
-    }
-
     public void setRequestXmlObject(XmlObject requestXmlObject) {
         this.requestXmlObject = requestXmlObject;
     }
 
+    @Override
+    public void refreshRequestXmlObject() throws XmlException {
+        if (StringUtils.hasContent(getRequestContent())) {
+            this.requestXmlObject = XmlUtils.createXmlObject(getRequestContent(), XmlUtils.createDefaultXmlOptions());
+        }
+    }
+
+    @Override
     public XmlObject getRequestXmlObject() throws XmlException {
-        if (requestXmlObject == null && StringUtils.hasContent(getRequestContent()))
-        // requestXmlObject = XmlObject.Factory.parse( getRequestContent() );
-        {
+        if (requestXmlObject == null && StringUtils.hasContent(getRequestContent())) {
             requestXmlObject = XmlUtils.createXmlObject(getRequestContent(), XmlUtils.createDefaultXmlOptions());
         }
 

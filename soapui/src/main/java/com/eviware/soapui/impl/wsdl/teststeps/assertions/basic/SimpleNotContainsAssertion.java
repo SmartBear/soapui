@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -51,6 +51,8 @@ import org.apache.xmlbeans.XmlObject;
 import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Assertion that checks for the non-existence of a specified text token in the
@@ -122,7 +124,10 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
             int ix = -1;
 
             if (useRegEx) {
-                if (content.matches(replToken)) {
+                String tokenToUse = ignoreCase ? "(?i)" + replToken : replToken;
+                Pattern p = Pattern.compile(tokenToUse, Pattern.DOTALL);
+                Matcher m = p.matcher(content);
+                if (m.find()) {
                     ix = 0;
                 }
             } else {
@@ -182,7 +187,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
         mainForm.addTextField(CONTENT, "Content to check for", XForm.FieldType.TEXTAREA).setWidth(40);
 
         mainFormLayout.setRowSpec(mainFormLayout.getRowCount(), new RowSpec("top:default:grow(1.0)"));
-        mainFormPanel.add(mainFormPanel.getComponent(mainFormPanel.getComponents().length-1),cc.xy(4,mainFormLayout.getRowCount(),"fill,fill"));
+        mainFormPanel.add(mainFormPanel.getComponent(mainFormPanel.getComponents().length - 1), cc.xy(4, mainFormLayout.getRowCount(), "fill,fill"));
 
         mainForm.addCheckBox(IGNORE_CASE, "Ignore case in comparison");
         mainForm.addCheckBox(USE_REGEX, "Use token as Regular Expression");

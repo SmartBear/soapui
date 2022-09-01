@@ -1,105 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<Configuration packages="com.eviware.soapui.support.log">
+    <Appenders>
 
-<!-- ===================================================================== -->
-<!--                                                                       -->
-<!--  This is an example of a Log4j XML configuration file.                -->
-<!--                                                                       -->
-<!-- ===================================================================== -->
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+        </Console>
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">  
-   
-   <!-- =================== -->
-   <!-- Appenders           -->
-   <!-- =================== -->
-   
-   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-      <param name="Target" value="System.out"/>
-      <param name="Threshold" value="DEBUG"/>
-      <layout class="org.apache.log4j.PatternLayout">
-         <!-- The default pattern: Date Priority [Category] Message\n -->
-         <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
-      </layout>
-   </appender>
+        <Console name="WARN-CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+        </Console>
 
-   <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
-     <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-     <param name="File" value="${soapui.logroot}soapui.log"/>
-     <param name="Threshold" value="INFO"/>
-     <param name="Append" value="false"/>
-    <param name="MaxFileSize" value="5000KB"/>
-     <param name="MaxBackupIndex" value="50"/>
-     <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
-     </layout>	    
-   </appender>
-   
-   <appender name="ERRORFILE" class="org.apache.log4j.RollingFileAppender">
-     <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-     <param name="File" value="${soapui.logroot}soapui-errors.log"/>
-     <param name="Threshold" value="INFO"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="5000KB"/>
-     <param name="MaxBackupIndex" value="50"/>
-     <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
-     </layout>	    
-   </appender>
-      
-   <appender name="SOAPUI" class="com.eviware.soapui.support.log.SoapUIAppender">
-      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-   </appender>
-   
-	<appender name="GLOBAL_GROOVY_LOG" class="org.apache.log4j.FileAppender">
-      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-     <param name="File" value="${soapui.logroot}global-groovy.log"/>
-     <param name="Threshold" value="DEBUG"/>
-     <param name="Append" value="true"/>
- <!-- <param name="MaxFileSize" value="5000KB"/>
-     <param name="MaxBackupIndex" value="50"/> -->
-     <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
-     </layout>      
-   </appender>
+        <RollingFile name="FILE"
+                     fileName="${sys:user.home}/.soapuios/logs/soapui.log"
+                     filePattern="${sys:user.home}/.soapuios/logs/soapui.log.%i"
+                     append="false">
+            <PatternLayout pattern="%d %-5p [%c{1}] %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+        </RollingFile>
 
-   <logger name="groovy.log">
-     <level value="INFO" />
-    <appender-ref ref="GLOBAL_GROOVY_LOG" />
-   </logger>   
-   <!-- =============== -->
-   <!-- Loggers         -->
-   <!-- =============== -->
-   
-   <logger name="com.eviware.soapui">
-     <level value="DEBUG" />
-     <appender-ref ref="SOAPUI"/>
-	 <appender-ref ref="CONSOLE"/>
-   </logger>
-   
-   <logger name="soapui.errorlog">
-     <level value="DEBUG" />
- 	 <appender-ref ref="ERRORFILE"/> 
-   </logger>
-   
-   <logger name="org.apache.commons.httpclient">
-   	  <level value="ERROR"/>
-   	  <appender-ref ref="CONSOLE"/>
-   </logger>
-   
-   <logger name="com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager">
-   		<level value="ERROR"/>
-   	  <appender-ref ref="ERRORFILE"/>  
-   </logger>
-   
-   <logger name="com.eviware.soapui.impl.wsdl.WsdlSubmit">
-     <level value="ERROR" />
-	 <appender-ref ref="ERRORFILE"/>
-   </logger>
-   
-   <root>
-  	  <priority value="INFO" />
-  	  <appender-ref ref="FILE"/> 
-   </root>
-   
-</log4j:configuration>
+        <RollingFile name="ERRORFILE"
+                     fileName="${sys:user.home}/.soapuios/logs/soapui-errors.log"
+                     filePattern="${sys:user.home}/.soapuios/logs/soapui-errors.log.%i"
+                     append="true">
+            <PatternLayout pattern="%d %-5p [%c{1}] %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+        </RollingFile>
+
+        <SOAPUI name="SOAPUI"/>
+
+        <File name="GLOBAL_GROOVY_LOG" fileName="${sys:user.home}/.soapuios/logs/global-groovy.log" append="true">
+            <PatternLayout pattern="%d %-5p [%c{1}] %m%n"/>
+        </File>
+
+    </Appenders>
+    <Loggers>
+        <logger name="groovy.log" level="INFO" additivity="false">
+            <AppenderRef ref="GLOBAL_GROOVY_LOG" level="DEBUG"/>
+        </logger>
+
+        <logger name="com.eviware.soapui" level="DEBUG">
+            <AppenderRef ref="SOAPUI"/>
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="soapui.errorlog" level="DEBUG">
+            <AppenderRef ref="ERRORFILE"/>
+        </logger>
+
+        <logger name="org.apache.commons.httpclient" level="ERROR">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="com.eviware.soapui.impl.wsdl.support.http.SoapUIMultiThreadedHttpConnectionManager" level="ERROR">
+            <AppenderRef ref="ERRORFILE"/>
+        </logger>
+
+        <logger name="com.eviware.soapui.impl.wsdl.WsdlSubmit" level="ERROR">
+            <AppenderRef ref="ERRORFILE"/>
+        </logger>
+
+        <root level="INFO">
+            <AppenderRef ref="FILE" level="INFO"/>
+        </root>
+
+    </Loggers>
+
+</Configuration>

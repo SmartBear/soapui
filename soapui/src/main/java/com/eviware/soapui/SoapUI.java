@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -109,6 +109,7 @@ import com.eviware.soapui.support.swing.MenuBuilderHelper;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.tools.CmdLineRunner;
+import com.eviware.soapui.tools.SecureTools;
 import com.eviware.soapui.ui.JDesktopPanelsList;
 import com.eviware.soapui.ui.navigator.Navigator;
 import com.eviware.soapui.ui.navigator.NavigatorListener;
@@ -129,8 +130,9 @@ import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -213,7 +215,7 @@ public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
     public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
-    public final static Logger log = Logger.getLogger(SoapUI.class);
+    public final static Logger log = LogManager.getLogger(SoapUI.class);
     public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
     public final static String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
@@ -255,7 +257,7 @@ public class SoapUI {
     private static SoapUIDesktop desktop;
     private static Workspace workspace;
     private static Log4JMonitor logMonitor;
-    private static Logger errorLog = Logger.getLogger("soapui.errorlog");
+    private static Logger errorLog = LogManager.getLogger("soapui.errorlog");
     private static boolean isStandalone;
     private static boolean isCommandLine;
     private static TestMonitor testMonitor;
@@ -392,7 +394,7 @@ public class SoapUI {
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
                 "Opens the SoapUI Forum in a browser", "/forum.png"));
         mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
+        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for ReadyAPI Trial License",
                 "/Trial_20-20.png"));
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
@@ -586,8 +588,8 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/Trial_16-16.png"));
+        helpMenu.add(new ShowOnlineHelpAction("ReadyAPI Trial", HelpUrls.TRIAL_URL,
+                "Apply for ReadyAPI Trial License", "/Trial_16-16.png"));
         helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
@@ -923,6 +925,7 @@ public class SoapUI {
         setBackgroundsToWhite();
         mainArgs = args;
 
+        SecureTools.setTrustSSL();
         SoapUIRunner soapuiRunner = new SoapUIRunner();
         SwingUtilities.invokeLater(soapuiRunner);
     }
@@ -1218,7 +1221,7 @@ public class SoapUI {
     public static Logger ensureGroovyLog() {
         synchronized (threadPool) {
             if (!checkedGroovyLogMonitor || launchedTestRunner) {
-                groovyLogger = Logger.getLogger("groovy.log");
+                groovyLogger = LogManager.getLogger("groovy.log");
 
                 Log4JMonitor logMonitor = getLogMonitor();
                 if (logMonitor != null && !logMonitor.hasLogArea("groovy.log")) {

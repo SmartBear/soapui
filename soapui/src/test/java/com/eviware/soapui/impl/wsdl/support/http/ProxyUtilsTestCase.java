@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -25,6 +25,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.protocol.BasicHttpContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -208,7 +209,7 @@ public class ProxyUtilsTestCase {
         HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
         HttpRoute httpRoute = null;
         try {
-            httpRoute = routePlanner.determineRoute(new HttpHost("soapui.org"), httpMethod, null);
+            httpRoute = routePlanner.determineRoute(new HttpHost("soapui.org"), httpMethod, new BasicHttpContext());
         } catch (HttpException e) {
             e.printStackTrace();
             fail(e.getMessage());

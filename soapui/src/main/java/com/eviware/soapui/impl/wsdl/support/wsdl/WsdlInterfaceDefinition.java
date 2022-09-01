@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -19,7 +19,8 @@ package com.eviware.soapui.impl.wsdl.support.wsdl;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -31,7 +32,7 @@ public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<W
 
     private static WSDLFactory factory;
     private static WSDLReader wsdlReader;
-    private Logger log = Logger.getLogger(WsdlInterfaceDefinition.class);
+    private Logger log = LogManager.getLogger(WsdlInterfaceDefinition.class);
 
     public WsdlInterfaceDefinition(WsdlInterface iface) {
         super(iface);

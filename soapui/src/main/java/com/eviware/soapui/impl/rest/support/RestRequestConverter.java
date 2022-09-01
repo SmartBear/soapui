@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -44,7 +44,8 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
@@ -66,7 +67,7 @@ import java.util.Map;
 public class RestRequestConverter {
 
     private static Map<Project, Boolean> autoConvert = new HashMap<Project, Boolean>();
-    private final static Logger log = Logger.getLogger(RestRequestConverter.class);
+    private final static Logger log = LogManager.getLogger(RestRequestConverter.class);
 
     public static void convert(RestResource resource, OldRestRequestConfig oldConfig) {
         convert(resource, oldConfig, getMethod(resource, oldConfig.getMethod(), oldConfig.getName()));

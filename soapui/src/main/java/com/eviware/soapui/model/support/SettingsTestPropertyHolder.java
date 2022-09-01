@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -27,7 +27,8 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Map<String, TestProperty> {
-    public final static Logger log = Logger.getLogger(SettingsTestPropertyHolder.class);
+    public final static Logger log = LogManager.getLogger(SettingsTestPropertyHolder.class);
     private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
     private PropertiesTypeConfig config;
     private final ModelItem modelItem;

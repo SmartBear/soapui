@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -37,7 +37,6 @@ import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -142,7 +141,6 @@ public class SignatureEntryTest {
     }
 
     @Test
-    @Ignore("Failing every time")
     public void testProcessSignedBinarySecurityToken() throws Exception {
         signatureEntry.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
         setRequiredFields();

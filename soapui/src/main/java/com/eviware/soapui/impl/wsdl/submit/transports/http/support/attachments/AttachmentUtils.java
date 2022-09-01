@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -40,7 +40,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBase64Binary;
 import org.apache.xmlbeans.XmlCursor;
@@ -75,7 +76,7 @@ import java.util.Properties;
  */
 
 public class AttachmentUtils {
-    private final static Logger log = Logger.getLogger(AttachmentUtils.class);
+    private final static Logger log = LogManager.getLogger(AttachmentUtils.class);
     private static final QName XMLMIME_CONTENTTYPE_200505 = new QName("http://www.w3.org/2005/05/xmlmime",
             "contentType");
     private static final QName XMLMIME_CONTENTTYPE_200411 = new QName("http://www.w3.org/2004/11/xmlmime",

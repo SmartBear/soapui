@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -22,7 +22,8 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.settings.WsdlSettings;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
@@ -39,7 +40,7 @@ import java.util.List;
  */
 
 public class TibcoSoapJMSBindingImporter extends AbstractSoapBindingImporter {
-    private final static Logger log = Logger.getLogger(TibcoSoapJMSBindingImporter.class);
+    private final static Logger log = LogManager.getLogger(TibcoSoapJMSBindingImporter.class);
 
     public boolean canImport(Binding binding) {
         List<?> list = binding.getExtensibilityElements();

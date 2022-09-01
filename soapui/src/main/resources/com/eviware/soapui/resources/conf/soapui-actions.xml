@@ -57,6 +57,8 @@
     <tns:action id="CloseProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.CloseProjectAction"/>
     <tns:action id="AddWsdlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddWsdlAction"/>
     <tns:action id="AddWadlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddWadlAction"/>
+    <tns:action id="AddSwaggerAction" actionClass="com.smartbear.swagger.AddSwaggerAction"/>
+    <tns:action id="ReadFromHubAction" actionClass="com.smartbear.integrations.swaggerhub.ReadFromSwaggerHubAction"/>
     <tns:action id="NewRestServiceAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction"/>
     <tns:action id="WSToolsJava2WsdlAction"
@@ -115,6 +117,8 @@
                 actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestMockServiceAction"/>
     <tns:action id="Wadl2JavaAction" actionClass="com.eviware.soapui.impl.rest.actions.service.Wadl2JavaAction"/>
     <tns:action id="ExportWadlAction" actionClass="com.eviware.soapui.impl.rest.actions.service.ExportWadlAction"/>
+    <tns:action id="ExportSwaggerAction" actionClass="com.smartbear.swagger.ExportSwaggerAction"/>
+    <tns:action id="PublishToHubAction" actionClass="com.smartbear.integrations.swaggerhub.PublishToSwaggerHubAction"/>
     <tns:action id="DeleteRestServiceAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.service.DeleteRestServiceAction"/>
 
@@ -413,6 +417,9 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddWsdlAction" keyStroke="menu U"/>
         <tns:actionMapping actionId="AddWadlAction" keyStroke="menu F"/>
+        <tns:actionMapping actionId="AddSwaggerAction"/>
+        <tns:actionMapping actionId="ExportSwaggerAction"/>
+        <tns:actionMapping actionId="ReadFromHubAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="NewRestServiceAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -507,6 +514,7 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="Wadl2JavaAction"/>
         <tns:actionMapping actionId="ExportWadlAction" keyStroke="menu P" iconPath="/export.png"/>
+        <tns:actionMapping actionId="PublishToHubAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="NewRestResourceAction"/>
         <tns:actionMapping actionId="DeleteRestServiceAction" keyStroke="DELETE"/>
@@ -694,6 +702,10 @@
                      class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
+    </tns:actionGroup>
+
+    <tns:actionGroup name="GraphQL RequestStep Actions" id="GraphQLRequestTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
     </tns:actionGroup>
 
     <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"

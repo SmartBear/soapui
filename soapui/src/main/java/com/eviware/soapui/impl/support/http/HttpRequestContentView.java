@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.support.http;
 
+import com.eviware.soapui.impl.rest.panels.request.views.json.actions.FormatJsonAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -40,6 +41,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
@@ -161,8 +163,12 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
         contentPanel.add(new JScrollPane(contentEditor));
 
         PropertyExpansionPopupListener.enable(contentEditor, httpRequest);
+        buildPopup(contentEditor.getPopupMenu(), contentEditor);
 
         return contentPanel;
+    }
+
+    protected void buildPopup(JPopupMenu inputPopup, RSyntaxTextArea editArea) {
     }
 
     private void enableBodyComponents() {
@@ -276,6 +282,11 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
         contentEditor.setEditable(enabled && httpRequest.hasRequestBody());
         mediaTypeCombo.setEnabled(enabled && !httpRequest.isPostQueryString());
         postQueryCheckBox.setEnabled(enabled);
+    }
+
+    @Override
+    public int getSupportScoreForContentType(String contentType ) {
+        return 0;
     }
 
     public RestParamsTable getParamsTable() {

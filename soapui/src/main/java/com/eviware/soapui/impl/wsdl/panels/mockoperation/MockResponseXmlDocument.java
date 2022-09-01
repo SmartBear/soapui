@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -66,6 +66,11 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
     @Override
     public void setDocumentContent(DocumentContent documentContent) {
         mockResponse.setResponseContent(documentContent.getContentAsString());
+    }
+
+    @Override
+    public String getContentType() {
+        return mockResponse.getContentType();
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {

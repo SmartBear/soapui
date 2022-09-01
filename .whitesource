@@ -1,0 +1,12 @@
+{
+  "settingsInheritedFrom": "SmartBear/whitesource-config@main",
+
+  "issueSettings": {
+    "minSeverityLevel": "NONE",
+    "displayLicenseViolations": "false"
+  },
+
+  "remediateSettings": {
+    "enableRenovate": true,
+  }
+}

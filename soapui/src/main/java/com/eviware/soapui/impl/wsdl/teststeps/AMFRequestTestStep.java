@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -55,7 +55,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.ImageIcon;
 import java.beans.PropertyChangeEvent;
@@ -74,7 +75,7 @@ import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 public class AMFRequestTestStep extends WsdlTestStepWithProperties implements Assertable, MutableTestPropertyHolder,
         PropertyChangeListener, SamplerTestStep {
     @SuppressWarnings("unused")
-    private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
+    private final static Logger log = LogManager.getLogger(WsdlTestRequestStep.class);
     protected AMFRequestTestStepConfig amfRequestTestStepConfig;
     public final static String amfREQUEST = AMFRequestTestStep.class.getName() + "@amfrequest";
     public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";

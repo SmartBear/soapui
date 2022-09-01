@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -107,6 +107,27 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
         if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             inputTabsChangeListener.refreshVisibleInspectors();
+        }
+    }
+
+    /**
+     * Selects the view best suited for the document's content type
+     */
+    protected void selectDefaultView() {
+        String contentType = document.getContentType();
+        if( contentType != null ) {
+            int maxScore = getCurrentView().getSupportScoreForContentType(contentType);
+            EditorView defaultView = null;
+            for (EditorView view : views) {
+                int score = view.getSupportScoreForContentType(contentType);
+                if (score > maxScore) {
+                    maxScore = score;
+                    defaultView = view;
+                }
+            }
+            if (defaultView != null) {
+                selectView(defaultView.getViewId());
+            }
         }
     }
 

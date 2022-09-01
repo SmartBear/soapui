@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -32,7 +32,8 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.model.iface.Interface;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Hashtable;
 
@@ -45,7 +46,7 @@ import java.util.Hashtable;
 @SuppressWarnings("unchecked")
 public class ToolActionFactory {
 
-    protected static final Logger log = Logger.getLogger(ToolActionFactory.class);
+    protected static final Logger log = LogManager.getLogger(ToolActionFactory.class);
     private static Hashtable<String, Class> toolActionTypeMap;
 
     static {

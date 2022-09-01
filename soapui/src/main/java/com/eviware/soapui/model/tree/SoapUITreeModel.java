@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -21,7 +21,8 @@ import com.eviware.soapui.model.tree.nodes.PropertiesTreeNode;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode;
 import com.eviware.soapui.model.tree.nodes.WorkspaceTreeNode;
 import com.eviware.soapui.model.workspace.Workspace;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -44,7 +45,7 @@ import java.util.Set;
 public class SoapUITreeModel implements TreeModel {
     private Set<TreeModelListener> listeners = new HashSet<TreeModelListener>();
     private SoapUITreeNode workspaceNode;
-    private final static Logger logger = Logger.getLogger(SoapUITreeModel.class);
+    private final static Logger logger = LogManager.getLogger(SoapUITreeModel.class);
     private Map<ModelItem, SoapUITreeNode> modelItemMap = new HashMap<ModelItem, SoapUITreeNode>();
     private boolean showProperties = false;
 
@@ -67,11 +68,13 @@ public class SoapUITreeModel implements TreeModel {
         return treeNode.getChildCount();
     }
 
+    @Override
     public boolean isLeaf(Object node) {
         SoapUITreeNode treeNode = (SoapUITreeNode) node;
         return treeNode.isLeaf();
     }
 
+    @Override
     public void valueForPathChanged(TreePath path, Object newValue) {
         SoapUITreeNode treeNode = (SoapUITreeNode) path.getLastPathComponent();
         if (treeNode.valueChanged(newValue)) {
@@ -79,15 +82,18 @@ public class SoapUITreeModel implements TreeModel {
         }
     }
 
+    @Override
     public int getIndexOfChild(Object parent, Object child) {
         SoapUITreeNode treeNode = (SoapUITreeNode) parent;
         return treeNode.getIndexOfChild(child);
     }
 
+    @Override
     public void addTreeModelListener(TreeModelListener l) {
         listeners.add(l);
     }
 
+    @Override
     public void removeTreeModelListener(TreeModelListener l) {
         listeners.remove(l);
     }

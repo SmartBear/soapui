@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -150,6 +150,11 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
     }
 
     public void setEditable(boolean enabled) {
+    }
+
+    @Override
+    public int getSupportScoreForContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("html")? 2: 0;
     }
 
     public HttpRequestInterface<?> getHttpRequest() {

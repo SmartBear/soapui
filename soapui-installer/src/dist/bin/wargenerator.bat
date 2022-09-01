@@ -24,6 +24,12 @@ set CLASSPATH=%CLASSPATH%;%JFXRTPATH%
 rem JVM parameters, modify as appropriate
 set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1  "-Dsoapui.home=%SOAPUI_HOME%\"
 
+rem CVE-2021-44228
+set JAVA_OPTS=%JAVA_OPTS% -Dlog4j2.formatMsgNoLookups=true
+
+rem JAVA 16
+set JAVA_OPTS=%JAVA_OPTS% --illegal-access=permit
+
 if "%SOAPUI_HOME%\" == "" goto START
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.listeners="%SOAPUI_HOME%listeners"

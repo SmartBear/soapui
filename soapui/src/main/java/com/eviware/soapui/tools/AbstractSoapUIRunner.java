@@ -1,17 +1,17 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.tools;
@@ -31,19 +31,23 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.smartbear.soapui.core.Logging;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.appender.ConsoleAppender;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.File;
-import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,13 +55,15 @@ import java.util.Map;
 public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     public static final int NORMAL_TERMINATION = 0;
     public static final int ABNORMAL_TERMINATION = -1;
+    public static final int PROJECT_NOT_FOUND_EXIT_CODE = 1;
 
     private boolean groovyLogInitialized;
     private String projectFile;
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LogManager.getLogger(getClass());
     private String settingsFile;
     private String soapUISettingsPassword;
     private String projectPassword;
+    private int exitCode = NORMAL_TERMINATION;
 
     private boolean enableUI;
     private String outputFolder;
@@ -74,7 +80,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
 
     protected void initGroovyLog() {
         if (!groovyLogInitialized) {
-            ensureConsoleAppenderIsDefined(Logger.getLogger("groovy.log"));
+            ensureConsoleAppenderIsDefined(LogManager.getLogger("groovy.log"));
             groovyLogInitialized = true;
         }
     }
@@ -86,16 +92,15 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
      */
     protected void ensureConsoleAppenderIsDefined(Logger logger) {
         if (logger != null) {
-            // ensure there is a ConsoleAppender defined, adding one if necessary
-            for (Object appender : Collections.list(logger.getAllAppenders())) {
-                if (appender instanceof ConsoleAppender) {
+            Map<String, Appender> appenderMap = ((org.apache.logging.log4j.core.Logger) logger).getAppenders();
+            for (Map.Entry<String, Appender> appenderEntry : appenderMap.entrySet()) {
+                if (appenderEntry.getValue() instanceof ConsoleAppender) {
                     return;
                 }
             }
-            ConsoleAppender consoleAppender = new ConsoleAppender();
-            consoleAppender.setWriter(new OutputStreamWriter(System.out));
-            consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-            logger.addAppender(consoleAppender);
+            PatternLayout patternLayout = PatternLayout.newBuilder().withPattern("%d{ABSOLUTE} %-5p [%c{1}] %m%n").build();
+            ConsoleAppender consoleAppender = ConsoleAppender.newBuilder().setName("ConsoleAppender").setLayout(patternLayout).build();
+            Logging.addAppender(logger.getName(), consoleAppender);
         }
     }
 
@@ -107,11 +112,17 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
      * @see java.lang.System
      */
     public int runFromCommandLine(String[] args) {
-        int results = ABNORMAL_TERMINATION;
         if (validateCommandLineArgument(args)) {
-            results = run(args);
+            exitCode = run(args);
         }
-        return results;
+
+        if (exitCode == NORMAL_TERMINATION) {
+            return exitCode;
+        } else if (exitCode != PROJECT_NOT_FOUND_EXIT_CODE) { // none of other errors are specially handled thus for backward compatibility we have to keep ABNORMAL_TERMINATION for all errors except "file not found"
+            exitCode = ABNORMAL_TERMINATION;
+        }
+
+        return exitCode;
     }
 
     public boolean validateCommandLineArgument(String[] args) {
@@ -164,7 +175,21 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
                 return false;
             }
 
-            setProjectFile(args[0]);
+            String projectFile = args[0];
+            boolean projectFileExists = false;
+            try {
+                // Works for local and network files like "\\Server\Projects\Project.xml"
+                projectFileExists = Files.exists(Paths.get(projectFile));
+            } catch (InvalidPathException e) {
+                //no action required
+            }
+            if (projectFileExists == false) {
+                System.err.println(String.format("The specified project file '%s' doesn't exist.",
+                        projectFile));
+                exitCode = PROJECT_NOT_FOUND_EXIT_CODE;
+                return false;
+            }
+            setProjectFile(projectFile);
         }
 
         return processCommandLine(cmd);
@@ -172,6 +197,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
 
     /**
      * Checks if the command line arguments require a project file
+     *
      * @param cmd The command line
      * @return true as default
      */
@@ -361,18 +387,15 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
         }
     }
 
-    public void setCustomHeaders( String[] optionValues )
-    {
-        for( String option : optionValues )
-        {
-            int ix = option.indexOf( '=' );
-            if( ix != -1 )
-            {
+    public void setCustomHeaders(String[] optionValues) {
+        for (String option : optionValues) {
+            int ix = option.indexOf('=');
+            if (ix != -1) {
                 // not optimal - it would be nicer if the filter could access command-line options via some
                 // generic mechanism.
                 String name = option.substring(0, ix);
                 String value = option.substring(ix + 1);
-                log.info( "Adding global HTTP Header [" + name + "] = [" + value + "]");
+                log.info("Adding global HTTP Header [" + name + "] = [" + value + "]");
 
                 GlobalHttpHeadersRequestFilter.addGlobalHeader(name, value);
             }

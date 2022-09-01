@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -23,7 +23,8 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -41,7 +42,7 @@ import java.util.Set;
  */
 public class PluginLoader extends LoaderBase {
 
-    public static Logger log = Logger.getLogger(PluginLoader.class);
+    public static Logger log = LogManager.getLogger(PluginLoader.class);
 
     public PluginLoader(SoapUIFactoryRegistry factoryRegistry,
                         SoapUIActionRegistry actionRegistry, ListenerRegistry listenerRegistry) {
@@ -85,11 +86,11 @@ public class PluginLoader extends LoaderBase {
     Plugin loadPlugin(Class<?> pluginClass, Reflections jarFileScanner) {
         try {
             PluginConfiguration configurationAnnotation = pluginClass.getAnnotation(PluginConfiguration.class);
-            Version minimumReadyApiVersion = Version.fromString(configurationAnnotation.minimumReadyApiVersion());
-            Version installedReadyApiVersion = Version.fromString(SoapUI.SOAPUI_VERSION);
-            if (minimumReadyApiVersion.compareTo(installedReadyApiVersion) > 0) {
+            Version minimumSoapUIOSVersion = Version.fromString(configurationAnnotation.minimumSoapUIVersion());
+            Version installedSoapUIOSVersion = Version.fromString(SoapUI.SOAPUI_VERSION);
+            if (minimumSoapUIOSVersion.compareTo(installedSoapUIOSVersion) > 0) {
                 throw new InvalidPluginException("Plugin " + configurationAnnotation.name() + " requires version " +
-                        minimumReadyApiVersion + " of ReadyAPI. Current application version: " + installedReadyApiVersion);
+                        minimumSoapUIOSVersion + " of SoapUI OS. Current application version: " + installedSoapUIOSVersion);
             }
             Plugin plugin;
             if (Plugin.class.isAssignableFrom(pluginClass)) {

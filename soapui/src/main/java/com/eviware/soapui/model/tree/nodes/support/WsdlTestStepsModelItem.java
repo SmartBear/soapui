@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -34,7 +34,7 @@ public class WsdlTestStepsModelItem extends BaseTestsModelItem {
     private TestSuiteListener listener = new InternalTestSuiteListener();
 
     public WsdlTestStepsModelItem(TestCase testCase) {
-        super(testCase, createLabel(testCase), UISupport.createImageIcon("/teststeps.gif"));
+        super(testCase, createLabel(testCase), UISupport.createImageIcon("/teststeps.png"));
 
         testCase.getTestSuite().addTestSuiteListener(listener);
     }

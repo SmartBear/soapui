@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -38,7 +38,8 @@ import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.Action;
 import java.io.File;
@@ -67,7 +68,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
     private XForm mainForm;
 
-    private final static Logger log = Logger.getLogger(SecurityTestRunnerAction.class);
+    private final static Logger log = LogManager.getLogger(SecurityTestRunnerAction.class);
 
     public static final String SOAPUI_ACTION_ID = "SecurityTestRunnerAction";
 

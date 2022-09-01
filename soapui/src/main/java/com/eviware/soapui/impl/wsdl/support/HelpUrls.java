@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -222,4 +222,6 @@ public interface HelpUrls {
 
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
     public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage-new.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
+
+    public static final String GRAPHQL_REQUEST_HELP_URL = "/docs/graphql-testing";
 }

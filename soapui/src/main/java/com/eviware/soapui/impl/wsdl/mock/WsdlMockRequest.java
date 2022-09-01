@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -81,6 +81,7 @@ public class WsdlMockRequest extends AbstractMockRequest {
     }
 
 
+    @Override
     public XmlObject getContentElement() throws XmlException {
         return SoapUtils.getContentElement(getRequestXmlObject(), soapVersion);
     }
@@ -116,10 +117,11 @@ public class WsdlMockRequest extends AbstractMockRequest {
                         XmlUtils.serialize(dom, writer);
                         setActualRequestContent(requestContent);
                         super.setRequestContent(writer.toString());
+                        super.refreshRequestXmlObject();
                     }
                 } catch (Exception e) {
                     if (wssResult == null) {
-                        wssResult = new Vector<Object>();
+                        wssResult = new Vector<>();
                     }
                     wssResult.add(e);
                 }

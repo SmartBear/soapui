@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.teststeps.GraphQLTestRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
@@ -30,6 +31,9 @@ public class HttpHtmlResponseViewFactory implements ResponseEditorViewFactory {
 
     @SuppressWarnings("unchecked")
     public EditorView<?> createResponseEditorView(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof GraphQLTestRequest) {
+            return null;
+        }
         if (editor instanceof HttpResponseMessageEditor && modelItem instanceof HttpRequestInterface<?>) {
             return new HttpHtmlResponseView((HttpResponseMessageEditor) editor, (HttpRequestInterface<?>) modelItem);
         }

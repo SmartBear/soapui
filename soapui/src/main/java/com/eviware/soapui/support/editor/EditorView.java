@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -58,4 +58,12 @@ public interface EditorView<T extends EditorDocument> extends PropertyChangeNoti
     public String getViewId();
 
     public void requestFocus();
+
+    /**
+     * Returns the score of how well a given content type is supported by this editor view
+     * @param contentType http payload's content type
+     * @return a non-negative integer: greater values mean better support,
+     * 0 means the given content type is not supported by this view
+     */
+    int getSupportScoreForContentType(String contentType);
 }

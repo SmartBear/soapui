@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.support.log;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
@@ -48,8 +48,8 @@ public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor {
     }
 
     public void logEvent(Object msg) {
-        if (msg instanceof LoggingEvent) {
-            LoggingEvent event = (LoggingEvent) msg;
+        if (msg instanceof LogEvent) {
+            LogEvent event = (LogEvent) msg;
             String loggerName = event.getLoggerName();
 
             for (int c = 0; c < getTabCount(); c++) {

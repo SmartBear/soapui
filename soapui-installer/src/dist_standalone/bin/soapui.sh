@@ -61,6 +61,12 @@ export SOAPUI_CLASSPATH
 
 JAVA_OPTS="-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin -splash:SoapUI-Spashscreen.png"
 
+#CVE-2021-44228
+JAVA_OPTS="$JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true"
+
+#JAVA 16
+JAVA_OPTS="$JAVA_OPTS --illegal-access=permit"
+
 if $darwin
 then
     JAVA_OPTS="$JAVA_OPTS -Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel -Dapple.eawt.quitStrategy=CLOSE_ALL_WINDOWS"

@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.rest.panels.request.views.content;
 
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.panels.request.views.json.actions.FormatJsonAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestUtils;
@@ -30,10 +31,12 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.TupleList;
 import org.apache.xmlbeans.SchemaType;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -44,6 +47,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 public class RestRequestContentView extends HttpRequestContentView {
     private RestRequestInterface restRequest;
     private JButton recreateButton;
+    private FormatJsonAction formatJsonAction;
 
     @SuppressWarnings("unchecked")
     public RestRequestContentView(HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest) {
@@ -89,9 +93,20 @@ public class RestRequestContentView extends HttpRequestContentView {
         return toolbar;
     }
 
+    @Override
+    protected void buildPopup(JPopupMenu inputPopup, RSyntaxTextArea editArea) {
+        super.buildPopup(inputPopup, editArea);
+        formatJsonAction = new FormatJsonAction(editArea);
+        inputPopup.addSeparator();
+        inputPopup.add(formatJsonAction);
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(Request.MEDIA_TYPE) && recreateButton != null) {
-            recreateButton.setEnabled(canRecreate());
+        if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
+            formatJsonAction.setEnabled(isFormatJsonEnable());
+            if (recreateButton != null) {
+                recreateButton.setEnabled(canRecreate());
+            }
         } else if (evt.getPropertyName().equals("restMethod")) {
             paramsTable.setParams(restRequest.getParams());
         }
@@ -119,6 +134,10 @@ public class RestRequestContentView extends HttpRequestContentView {
             }
         }
         return false;
+    }
+
+    private boolean isFormatJsonEnable() {
+        return getRestRequest().getMediaType().contains("json");
     }
 
     private class UpdateRestParamsAction extends AbstractAction {

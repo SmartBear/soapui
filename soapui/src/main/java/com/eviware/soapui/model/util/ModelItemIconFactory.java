@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -67,7 +67,7 @@ public class ModelItemIconFactory {
         modelItemIcons.put(SecurityTest.class, SecurityTest.ICON_NAME);
 
         // the following use different icon files for the overview and in the tree
-        modelItemIcons.put(TestStep.class, "/teststeps.gif");
+        modelItemIcons.put(TestStep.class, "/teststeps.png");
         modelItemIcons.put(TestAssertion.class, "/assertions.png");
         modelItemIcons.put(Request.class, "/soap_request.png");
         modelItemIcons.put(Interface.class, "/interface.png");

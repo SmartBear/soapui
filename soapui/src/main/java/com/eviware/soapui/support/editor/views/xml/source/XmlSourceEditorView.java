@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -624,6 +624,11 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
     public void setEditable(boolean enabled) {
         getComponent();
         editArea.setEditable(enabled);
+    }
+
+    @Override
+    public int getSupportScoreForContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("xml")? 2 : 0;
     }
 
     protected ValidationError[] validateXml(String xml) {

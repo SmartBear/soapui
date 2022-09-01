@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>5.6.0</version>
+        <version>5.7.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>soapui</artifactId>
@@ -85,6 +85,7 @@
                         <!-- run tests with home set to folder test-classes inside target to isolate tests from whatever user is executing the build. -->
                         <user.home>target/test-classes</user.home>
                     </systemProperties>
+                    <argLine>--illegal-access=permit</argLine>
                 </configuration>
             </plugin>
 
@@ -106,18 +107,18 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit-version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.8.5</version>
+            <version>${mockito-all.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest-all.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -135,14 +136,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans-xmlpublic</artifactId>
-            <version>${xmlbeans-xmlpublic-version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jsr173_api</artifactId>
-            <version>1.0</version>
+            <version>${jsr173_api.version}</version>
         </dependency>
 
         <!-- Static analytics -->
@@ -150,13 +146,13 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
-            <version>2.0.0</version>
+            <version>${com.google.code.findbugs.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <version>2.0.0</version>
+            <version>${com.google.code.findbugs.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -165,36 +161,40 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>14.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
+            <version>${commons-collections.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
+            <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>${commons-io.version}</version>
         </dependency>
-
 
         <!-- Logging -->
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
 
         <!-- In-app analytics -->
@@ -215,22 +215,22 @@
         <dependency>
             <groupId>com.jgoodies</groupId>
             <artifactId>forms</artifactId>
-            <version>1.0.7</version>
+            <version>${jgoodies-forms.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
             <artifactId>looks</artifactId>
-            <version>2.2.0</version>
+            <version>${jgoodies-looks.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
             <artifactId>binding</artifactId>
-            <version>2.0.1</version>
+            <version>${jgoodies-binding.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
-            <version>2.5.0</version>
+            <version>${rsyntaxtextarea.version}</version>
         </dependency>
 
         <!--JavaFX-->
@@ -354,17 +354,17 @@
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>jetty</artifactId>
-            <version>6.1.26</version>
+            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>6.1.26</version>
+            <version>${jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5-20081211</version>
+            <version>${jetty-servlet-api.version}</version>
         </dependency>
 
 
@@ -373,7 +373,7 @@
         <dependency>
             <groupId>org.apache.ws.security</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.6.16</version>
+            <version>${wss4j.version}</version>
         </dependency>
 
         <!-- HtmlUnit dependencies -->
@@ -381,17 +381,23 @@
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.7</version>
+            <version>${htmlunit.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xercesImpl</artifactId>
+                    <groupId>xerces</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.w3c.css</groupId>
             <artifactId>sac</artifactId>
-            <version>1.3</version>
+            <version>${sac.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit-core-js</artifactId>
-            <version>2.7</version>
+            <version>${htmlunit.version}</version>
         </dependency>
 
         <!-- HTTP Components -->
@@ -399,31 +405,31 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.5</version>
+            <version>${httpcomponents.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.5.5</version>
+            <version>${httpcomponents.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-cache</artifactId>
-            <version>4.5.5</version>
+            <version>${httpcomponents.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.4.9</version>
+            <version>${httpcore.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore-nio</artifactId>
-            <version>4.4.9</version>
+            <version>${httpcore.version}</version>
             <type>jar</type>
         </dependency>
 
@@ -431,70 +437,93 @@
         <dependency>
             <groupId>org.apache.oltu.oauth2</groupId>
             <artifactId>org.apache.oltu.oauth2.client</artifactId>
-            <version>0.31</version>
+            <version>${org.apache.oltu.oauth2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.oltu.oauth2</groupId>
             <artifactId>org.apache.oltu.oauth2.httpclient4</artifactId>
-            <version>0.31</version>
+            <version>${org.apache.oltu.oauth2.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client</artifactId>
-            <version>1.21.0</version>
+            <version>${google-oauth-client.version}</version>
         </dependency>
-
-        <!--              -->
 
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>2.0</version>
+            <version>${maven-plugin-api.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1</version>
+            <version>${javax.activation.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
+            <version>${javax.mail.version}</version>
         </dependency>
         <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
-            <version>1.6.2-fixed</version>
+            <version>${wsdl4j.version}</version>
         </dependency>
         <dependency>
             <groupId>com.narupley</groupId>
             <artifactId>not-going-to-be-commons-ssl</artifactId>
             <version>${not-going-to-be-commons-ssl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-ext-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
-            <version>1.2</version>
+            <version>${commons-cli.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.7.0</version>
+            <version>${commons-beanutils-version}</version>
         </dependency>
         <dependency>
             <groupId>json</groupId>
             <artifactId>json-lib</artifactId>
-            <version>2.2.2-jdk15</version>
+            <version>${json-lib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>ezmorph</groupId>
             <artifactId>ezmorph</artifactId>
-            <version>1.0.5</version>
+            <version>${ezmorph.version}</version>
         </dependency>
         <dependency>
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
-            <version>1.1</version>
+            <version>${xom.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>xercesImpl</artifactId>
@@ -510,42 +539,48 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version> <!--HttpClient with version 4.5.5 and higher needs minimum 1.10 version-->
+            <version>${commons-codec.version}</version> <!--HttpClient with version 4.5.5 and higher needs minimum 1.10 version-->
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy-all.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-dateutil</artifactId>
+            <version>${groovy-all.version}</version>
         </dependency>
         <dependency>
             <groupId>rhino</groupId>
             <artifactId>js</artifactId>
-            <version>1.7R2</version>
+            <version>${rhino-js.version}</version>
         </dependency>
         <dependency>
             <groupId>saxon</groupId>
             <artifactId>saxon</artifactId>
-            <version>9.1.0.8j</version>
+            <version>${saxon.version}</version>
         </dependency>
         <dependency>
             <groupId>saxon</groupId>
             <artifactId>saxon-dom</artifactId>
-            <version>9.1.0.8j</version>
+            <version>${saxon.version}</version>
         </dependency>
         <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
-            <version>1.2</version>
+            <version>${xmlunit.version}</version>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.1</version>
+            <version>${xalan-xalan-version}</version>
         </dependency>
         <dependency>
-            <groupId>bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>144</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${org-bouncycastle-bcprov-jdk15on-version}</version>
         </dependency>
         <dependency>
             <groupId>jtidy</groupId>
@@ -555,52 +590,67 @@
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
-            <version>1.1</version>
+            <version>${javax.jms.version}</version>
         </dependency>
         <dependency>
             <groupId>hermesjms</groupId>
             <artifactId>hermes</artifactId>
-            <version>1.14</version>
+            <version>${hermes.version}</version>
         </dependency>
         <dependency>
             <groupId>amf</groupId>
             <artifactId>flex-messaging-common</artifactId>
-            <version>1.0</version>
+            <version>${amf.version}</version>
         </dependency>
         <dependency>
             <groupId>amf</groupId>
             <artifactId>flex-messaging-core</artifactId>
-            <version>1.0</version>
+            <version>${amf.version}</version>
         </dependency>
         <dependency>
             <groupId>amf</groupId>
             <artifactId>flex-messaging-opt</artifactId>
-            <version>1.0</version>
+            <version>${amf.version}</version>
         </dependency>
         <dependency>
             <groupId>amf</groupId>
             <artifactId>flex-messaging-proxy</artifactId>
-            <version>1.0</version>
+            <version>${amf.version}</version>
         </dependency>
         <dependency>
             <groupId>amf</groupId>
             <artifactId>flex-messaging-remoting</artifactId>
-            <version>1.0</version>
+            <version>${amf.version}</version>
         </dependency>
         <dependency>
             <groupId>thoughtworks</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.3.1</version>
+            <version>${thoughtworks-xstream-version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.cssparser</groupId>
             <artifactId>cssparser</artifactId>
-            <version>0.9.5</version>
+            <version>${cssparser.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>
             <artifactId>nekohtml</artifactId>
-            <version>1.9.14</version>
+            <version>${nekohtml.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xercesImpl</artifactId>
+                    <groupId>xerces</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <!-- basically direct link is not required
+            this module is dependency for nekohtml, htmlunit, xom.
+            unfortunately default version contains vulnerabilities -->
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xerces-xercesImpl-version}</version>
         </dependency>
 
         <!--- Added -->
@@ -608,50 +658,56 @@
         <dependency>
             <groupId>org.samba.jcifs</groupId>
             <artifactId>jcifs</artifactId>
-            <version>1.2.9</version>
+            <version>${jcifs.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>l2fprod</groupId>
             <artifactId>l2fprod-common-directorychooser
             </artifactId>
-            <version>7.3</version>
+            <version>${l2fprod.version}</version>
         </dependency>
         <dependency>
             <groupId>l2fprod</groupId>
             <artifactId>l2fprod-common-fontchooser</artifactId>
-            <version>7.3</version>
+            <version>${l2fprod.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
-            <version>1.4.5</version>
+            <version>${xmlsec.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xerces</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>2.9.1</version>
+            <version>${xml-apis.version}</version>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>serializer</artifactId>
-            <version>2.7.1</version>
+            <version>${xalan-serializer-version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.util</groupId>
             <artifactId>ws-commons-util</artifactId>
-            <version>1.0.2</version>
+            <version>${ws-commons-util.version}</version>
         </dependency>
         <dependency>
             <groupId>com.btr</groupId>
             <artifactId>proxy-vole</artifactId>
-            <version>20131209</version>
+            <version>${proxy-vole.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>0.9.1</version>
+            <version>${json-path.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--  old http client needed by some 3rd party components -->
@@ -659,29 +715,83 @@
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
+            <version>${commons-httpclient.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.install4j</groupId>
             <artifactId>i4jruntime</artifactId>
-            <version>5.1.14</version>
+            <version>${i4jruntime.version}</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>animal-sniffer-annotations</artifactId>
-            <version>1.11</version>
+            <version>${animal-sniffer-annotations.version}</version>
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java</artifactId>
+            <version>17.3</version>
+        </dependency>
         <!-- Plugin Framework-->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.9-RC1</version>
+            <version>${reflections.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>11.0</version>
+        </dependency>
+
+        <!--Swagger-->
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-inflector</artifactId>
+            <version>1.0.19</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>om.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-xml-provider</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>${io.swagger.swagger-core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>${io.swagger.swagger-parser.version}</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>

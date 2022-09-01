@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -20,7 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Dummy TestRunner used when executing TestSteps one by one

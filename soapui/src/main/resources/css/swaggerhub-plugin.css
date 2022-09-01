@@ -1,0 +1,40 @@
+.root {
+    -fx-font-family: 'Open Sans';
+}
+.text-12px {
+    -fx-font-family: 'Open Sans';
+    -fx-font-size: 12px;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: white;
+}
+.white-scroll > .viewport {
+    -fx-background-color: white;
+}
+.ok-button {
+    -fx-background-color: #1270AA;
+    -fx-border-style: solid inside;
+    -fx-border-color: #1270AA;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+    -fx-min-width: 100px;
+    -fx-min-height: 25px;
+}
+.cancel-button {
+    -fx-background-color: #686868;
+    -fx-border-style: solid inside;
+    -fx-border-color: #686868;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+    -fx-min-width: 100px;
+    -fx-min-height: 25px;
+    -fx-text-fill: white;
+}
+.white-scroll > .viewport {
+    -fx-background-color: rgb(244, 246, 247);
+}
+.white-scroll {
+    -fx-background-color: rgb(244, 246, 247);
+    -fx-border-width: 0;
+    -fx-padding: 0px;
+}

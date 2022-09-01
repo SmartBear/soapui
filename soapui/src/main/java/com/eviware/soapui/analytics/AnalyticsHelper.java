@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -21,7 +21,6 @@ import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
 import com.eviware.soapui.settings.UISettings;
 import com.smartbear.analytics.AnalyticsManager;
 import com.smartbear.analytics.api.AnalyticsProviderFactory;
-import com.smartbear.analytics.impl.GoogleAnalyticsProviderFactory;
 import com.smartbear.analytics.impl.SoapUIOSMixpanelProviderFactory;
 
 public class AnalyticsHelper {
@@ -41,7 +40,6 @@ public class AnalyticsHelper {
             return;
         }
         manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
-        manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory(productInfo));
         manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.USER_ALLOWED));
     }
 }

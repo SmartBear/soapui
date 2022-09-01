@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2019 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
  * versions of the EUPL (the "Licence"); 
@@ -25,7 +25,8 @@ import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.JComponent;
@@ -41,7 +42,7 @@ import javax.swing.text.Document;
  */
 
 public class VarianceLoadStrategy extends AbstractLoadStrategy {
-    private final static Logger log = Logger.getLogger(VarianceLoadStrategy.class);
+    private final static Logger log = LogManager.getLogger(VarianceLoadStrategy.class);
 
     public static final String STRATEGY_TYPE = "Variance";
     private static final String INTERVAL_ELEMENT = "interval";
