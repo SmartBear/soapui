@@ -258,7 +258,7 @@ public class Tools {
 
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             } else { // assume Unix or Linux
-                String[] browsers = {"firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape"};
+                String[] browsers = {"xdg-open", "firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape", "chromium-browser"};
                 String browser = null;
                 for (int count = 0; count < browsers.length && browser == null; count++) {
                     if (Runtime.getRuntime().exec(new String[]{"which", browsers[count]}).waitFor() == 0) {
