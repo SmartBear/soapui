@@ -88,7 +88,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
@@ -628,7 +630,15 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
     @Override
     public int getSupportScoreForContentType(String contentType ) {
-        return contentType.toLowerCase().contains("xml")? 2 : 0;
+        if(contentType.endsWith("xml")){
+            return 2;
+        }
+        Optional<String> any = Arrays.stream(contentType.split(";"))
+                .map(String::toLowerCase)
+                .filter(txt -> !txt.contains("charset"))
+                .filter(txt -> !txt.contains("boundary"))
+                .findAny();
+        return any.filter(s -> s.toLowerCase().endsWith("xml")).map(s -> 2).orElse(0);
     }
 
     protected ValidationError[] validateXml(String xml) {
