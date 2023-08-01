@@ -9,10 +9,10 @@ If you believe you've found an exploitable security issue in SoapUI,
 This is the list of versions of `SoapUI` which are
 currently being supported with security updates.
 
-| Version  | Supported          | Notes                  |
-| -------- | ------------------ | ---------------------- |
-| 5.7.0    | :white_check_mark: |                        |
-| <=5.6.1   | :x:                |                        |
+| Version | Supported          | Notes                  |
+|---------| ------------------ | ---------------------- |
+| 5.7.1   | :white_check_mark: |                        |
+| <=5.7.0 | :x:                |                        |
 
 ## Reporting a vulnerability
 
