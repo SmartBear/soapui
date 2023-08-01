@@ -1,8 +1,16 @@
-﻿# SoapUI Open Source 5.7.1
+﻿# SoapUI Open Source 5.7.2
 
 #### RELEASE_ME_ON ####
 
 ### Overall improvements ###
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.7.1
+
+#### Released on 2023-08-01 ####
+
+Fixed an issue where SoapUI version 5.6.0 and 5.7.0 would not install or open on certain machines including Mac OS Ventura. There were issues with an expired Apple Certificate and previous bundled JRE environment.  We have signed the new version with updated Apple Certificate and also updated the bundled JRE environment to Liberica version 16.0.2+7. These updates which resolves this issue for Mac users and the application now installs properly. Windows and Linux versions also received updates to the bundled JRE environment.
 
 -------------------------------------------------------------------------------
 

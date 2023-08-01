@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.9" transformSequenceNumber="8">
+<install4j version="10.0.5" transformSequenceNumber="10">
   <directoryPresets config="${compiler:DIST_STANDALONE}/bin/installationcomplete.sh" />
   <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" autoSave="true" convertDotsToUnderscores="false" macVolumeId="11e3ac6b2ec2ffac" javaMinVersion="1.8">
     <variables>
@@ -18,6 +18,7 @@
       <variable name="HERMES_INSTALLER" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsPkcs12File="${compiler:CERT_PATH}" />
+    <jreBundles jdkProviderId="Liberica" release="16/16.0.2+7" />
   </application>
   <files>
     <filesets>
@@ -58,7 +59,7 @@
       <mountPoint id="63" />
       <mountPoint id="5461" root="5280" location=".soapuios" />
       <mountPoint id="5462" root="5280" location=".soapuios/plugins" />
-      <mountPoint id="1845" root="1842" location="bin" mode="777" />
+      <mountPoint id="1845" root="1842" location="bin" overrideMode="true" mode="777" />
       <mountPoint id="1660" root="1659" location="bin" />
       <mountPoint id="1846" root="1844" location="bin" />
       <mountPoint id="1575" root="1574" location="bin" />
@@ -234,7 +235,6 @@
           <scanDirectory location="lib" failOnError="false" />
         </classPath>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
       <iconImageFiles>
         <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_16-16.png" />
@@ -269,11 +269,19 @@
             <group id="7389" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
               <serializedBean>
                 <property name="backgroundColor">
-                  <object class="java.awt.Color">
-                    <int>255</int>
-                    <int>255</int>
-                    <int>255</int>
-                    <int>255</int>
+                  <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                    <object class="java.awt.Color">
+                      <int>255</int>
+                      <int>255</int>
+                      <int>255</int>
+                      <int>255</int>
+                    </object>
+                    <object class="java.awt.Color">
+                      <int>49</int>
+                      <int>52</int>
+                      <int>53</int>
+                      <int>255</int>
+                    </object>
                   </object>
                 </property>
                 <property name="imageAnchor" type="enum" class="com.install4j.api.beans.Anchor" value="NORTHEAST" />
@@ -1324,11 +1332,19 @@ return "";</property>
                 <group id="7599" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
                   <serializedBean>
                     <property name="backgroundColor">
-                      <object class="java.awt.Color">
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>49</int>
+                          <int>52</int>
+                          <int>53</int>
+                          <int>255</int>
+                        </object>
                       </object>
                     </property>
                     <property name="borderSides">
@@ -1491,11 +1507,19 @@ return console.askYesNo(message, true);
                 <group id="7600" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
                   <serializedBean>
                     <property name="backgroundColor">
-                      <object class="java.awt.Color">
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>49</int>
+                          <int>52</int>
+                          <int>53</int>
+                          <int>255</int>
+                        </object>
                       </object>
                     </property>
                     <property name="borderSides">
@@ -2005,11 +2029,19 @@ if (context.isUnattended()) {
           <group id="7382" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
             <serializedBean>
               <property name="backgroundColor">
-                <object class="java.awt.Color">
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>49</int>
+                    <int>52</int>
+                    <int>53</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="borderSides">
@@ -2018,11 +2050,19 @@ if (context.isUnattended()) {
                 </object>
               </property>
               <property name="imageEdgeBackgroundColor">
-                <object class="java.awt.Color">
-                  <int>25</int>
-                  <int>143</int>
-                  <int>220</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>25</int>
+                    <int>143</int>
+                    <int>220</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>0</int>
+                    <int>74</int>
+                    <int>151</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="imageEdgeBorder" type="boolean" value="true" />
@@ -2076,11 +2116,19 @@ if (context.isUnattended()) {
               <group id="7389" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
                 <serializedBean>
                   <property name="backgroundColor">
-                    <object class="java.awt.Color">
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
+                    <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                      <object class="java.awt.Color">
+                        <int>49</int>
+                        <int>52</int>
+                        <int>53</int>
+                        <int>255</int>
+                      </object>
                     </object>
                   </property>
                   <property name="borderSides">
@@ -2183,7 +2231,7 @@ if (context.isUnattended()) {
     </styles>
   </installerGui>
   <mediaSets>
-    <macos name="Mac OS X Single Bundle" id="198" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" jreBitType="32" launcherId="64">
+    <macos name="Mac OS X Single Bundle" id="198" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" launcherId="64">
       <exclude>
         <entry filesetId="1658" />
         <entry filesetId="1843" />
@@ -2197,9 +2245,8 @@ if (context.isUnattended()) {
       <variables>
         <variable name="OS_EXT" value="MAC" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="macos-amd64-16.0.1" />
     </macos>
-    <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" runPostProcessor="true" postProcessor="&quot;C:\dev\eviware-cert\signtool.exe&quot; sign /s my /fd sha256 /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /v $EXECUTABLE" failOnPostProcessorError="true">
+    <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" runPostProcessor="true" postProcessor="&quot;C:\dev\eviware-cert\signtool.exe&quot; sign /s my /fd sha256 /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /v $EXECUTABLE" architecture="64">
       <exclude>
         <entry filesetId="1841" />
         <entry filesetId="1843" />
@@ -2213,7 +2260,6 @@ if (context.isUnattended()) {
       <variables>
         <variable name="OS_EXT" value="64bit" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="windows-amd64-16.0.1" />
     </windows>
     <unixInstaller name="Unix Installer x64" id="4755" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}">
       <excludedBeans>
@@ -2232,7 +2278,6 @@ if (context.isUnattended()) {
       <variables>
         <variable name="32-BIT-INSTALLER" value="false" />
       </variables>
-      <jreBundle jreBundleSource="preCreated" includedJre="linux-amd64-16.0.1" />
     </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
