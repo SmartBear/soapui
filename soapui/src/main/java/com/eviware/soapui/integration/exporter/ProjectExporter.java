@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.integration.exporter;
@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.UISupport;
 import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
 
@@ -28,8 +29,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -131,27 +135,34 @@ public class ProjectExporter {
         return result;
     }
 
-    public static void unpackageAll(String archive, String path) {
-        try {
-            BufferedOutputStream dest = null;
-            FileInputStream fis = new FileInputStream(archive);
-            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+    public static void unpackageAll(String archive, String path) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(Files.newInputStream(Paths.get(archive))))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
+                validateZipEntry(path, entry.getName());
                 int count;
                 byte data[] = new byte[BUFFER];
                 // write the files to the disk
                 FileOutputStream fos = new FileOutputStream(path + File.separator + entry.getName());
-                dest = new BufferedOutputStream(fos, BUFFER);
-                while ((count = zis.read(data, 0, BUFFER)) != -1) {
-                    dest.write(data, 0, count);
+                try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
+                    while ((count = zis.read(data, 0, BUFFER)) != -1) {
+                        dest.write(data, 0, count);
+                    }
+                    dest.flush();
                 }
-                dest.flush();
-                dest.close();
             }
-            zis.close();
-        } catch (Exception e) {
-            SoapUI.logError(e);
+        }
+    }
+
+    private static void validateZipEntry(String targetDirectoryPath, String fileSubPath) throws IOException {
+        if (!targetDirectoryPath.endsWith(File.separator)) {
+            targetDirectoryPath += File.separatorChar;
+        }
+        File resultFile = new File(targetDirectoryPath + fileSubPath);
+        String canonicalDestinationPath = resultFile.getCanonicalPath();
+
+        if (!canonicalDestinationPath.startsWith(targetDirectoryPath)) {
+            throw new RuntimeException("Entry [" + fileSubPath + "] is outside of the target dir: " + targetDirectoryPath);
         }
     }
 
