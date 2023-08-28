@@ -160,7 +160,7 @@ public class ProjectExporter {
         String canonicalDestinationPath = resultFile.getCanonicalPath();
 
         if (!canonicalDestinationPath.startsWith(targetDirectoryPath)) {
-            throw new RuntimeException("Entry [" + fileSubPath + "] is outside of the target dir: " + targetDirectoryPath);
+            throw new IOException("Entry [" + fileSubPath + "] is outside of the target dir: " + targetDirectoryPath);
         }
     }
 
