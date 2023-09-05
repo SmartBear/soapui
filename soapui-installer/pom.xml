@@ -61,7 +61,6 @@
 
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>${maven-assembly-plugin-version}</version>
             <configuration>
               <outputDirectory>${assembly.build.directory}</outputDirectory>
               <descriptors>
