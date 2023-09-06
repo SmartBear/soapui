@@ -23,7 +23,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
             <executions>
               <execution>
                 <phase>prepare-package</phase>
@@ -47,7 +46,6 @@
           <plugin>
             <groupId>com.github.danielflower.mavenplugins</groupId>
             <artifactId>maven-gitlog-plugin</artifactId>
-            <version>${maven-gitlog-plugin-version}</version>
             <configuration>
               <reportTitle>
                 SoapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
@@ -100,7 +98,6 @@
           <plugin>
             <groupId>org.sonatype.install4j</groupId>
             <artifactId>install4j-maven-plugin</artifactId>
-            <version>${install4j-maven-plugin.version}</version>
             <configuration>
               <installDir>${install4j.home}</installDir>
               <release>${project.version}</release>
@@ -159,7 +156,6 @@
           <plugin>
             <groupId>net.ju-n.maven.plugins</groupId>
             <artifactId>maven-checksum-plugin</artifactId>
-            <version>${maven-checksum-plugin.version}</version>
             <configuration>
               <!-- TODO parameterize this better-->
               <files>
