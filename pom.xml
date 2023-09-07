@@ -55,6 +55,7 @@
         <maven-plugin-plugin-version>3.6.0</maven-plugin-plugin-version>
         <maven-failsafe-plugin-version>3.0.0-M3</maven-failsafe-plugin-version>
         <maven-assembly-plugin-version>3.1.1</maven-assembly-plugin-version>
+        <maven-resources-plugin-version>3.1.0</maven-resources-plugin-version>
         <!-- org.apache.xmlbeans -->
         <xmlbeans-version>3.1.1-sb-fixed</xmlbeans-version>
         <xmlbeans-xpath-version>2.6.0</xmlbeans-xpath-version>
@@ -203,6 +204,10 @@
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${maven-assembly-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin-version}</version>
                 </plugin>
                 <!-- org.codehaus.mojo -->
                 <plugin>
