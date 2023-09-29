@@ -19,7 +19,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin-version}</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*.class</exclude>
@@ -29,7 +28,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin-version}</version>
                 <configuration>
                     <systemProperties>
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
@@ -44,7 +42,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin-version}</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>

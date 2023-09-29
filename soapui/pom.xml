@@ -35,7 +35,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin-version}</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>
@@ -56,7 +55,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>xmlbeans-maven-plugin</artifactId>
-                <version>${xmlbeans-maven-plugin-version}</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -76,7 +74,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin-version}</version>
                 <configuration>
                     <systemProperties>
                         <!-- Only log errors and only log to the console to decrease the log verbosity -->
@@ -92,7 +89,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>${exec-maven-plugin-version}</version>
                 <configuration>
                     <mainClass>com.eviware.soapui.SoapUI</mainClass>
                 </configuration>

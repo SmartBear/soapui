@@ -55,6 +55,7 @@
         <maven-plugin-plugin-version>3.6.0</maven-plugin-plugin-version>
         <maven-failsafe-plugin-version>3.0.0-M3</maven-failsafe-plugin-version>
         <maven-assembly-plugin-version>3.1.1</maven-assembly-plugin-version>
+        <maven-resources-plugin-version>3.1.0</maven-resources-plugin-version>
         <!-- org.apache.xmlbeans -->
         <xmlbeans-version>3.1.1-sb-fixed</xmlbeans-version>
         <xmlbeans-xpath-version>2.6.0</xmlbeans-xpath-version>
@@ -153,11 +154,100 @@
     </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- org.apache.maven.plugins -->
+                <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven-plugin-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin-version}</version>
+                </plugin>
+                <!-- org.codehaus.mojo -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec-maven-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>xmlbeans-maven-plugin</artifactId>
+                    <version>${xmlbeans-maven-plugin-version}</version>
+                </plugin>
+                <!-- other -->
+                <plugin>
+                    <groupId>com.github.danielflower.mavenplugins</groupId>
+                    <artifactId>maven-gitlog-plugin</artifactId>
+                    <version>${maven-gitlog-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>net.ju-n.maven.plugins</groupId>
+                    <artifactId>maven-checksum-plugin</artifactId>
+                    <version>${maven-checksum-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.install4j</groupId>
+                    <artifactId>install4j-maven-plugin</artifactId>
+                    <version>${install4j-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>${versions-maven-plugin-version}</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
@@ -165,7 +255,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>${maven-clean-plugin-version}</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -181,7 +270,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin-version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.9</target>
@@ -190,7 +278,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin-version}</version>
                 <configuration>
                     <maxmemory>1024m</maxmemory>
                 </configuration>
@@ -198,7 +285,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin-version}</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>
@@ -236,22 +322,9 @@
                     </dependency>
                 </dependencies>
             </plugin>
-<!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin-version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>${maven-install-plugin-version}</version>
-            </plugin>
--->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>${maven-site-plugin-version}</version>
             </plugin>
         </plugins>
     </build>
