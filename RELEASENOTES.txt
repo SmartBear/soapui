@@ -1,8 +1,16 @@
-﻿# SoapUI Open Source 5.7.2
+﻿# SoapUI Open Source 5.7.3
 
 #### RELEASE_ME_ON ####
 
 ### Overall improvements ###
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.7.2
+
+#### Released on 2023-11-07 ####
+
+Fixed Zip-Slip Vulnerability.
 
 -------------------------------------------------------------------------------
 
