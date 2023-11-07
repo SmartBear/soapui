@@ -7,7 +7,7 @@
   <parent>
     <artifactId>soapui-project</artifactId>
     <groupId>com.smartbear.soapui</groupId>
-    <version>5.7.2-SNAPSHOT</version>
+    <version>5.7.2</version>
   </parent>
 
   <artifactId>soapui-installer</artifactId>
