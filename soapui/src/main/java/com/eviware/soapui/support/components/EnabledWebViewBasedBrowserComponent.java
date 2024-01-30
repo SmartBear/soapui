@@ -67,10 +67,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.eviware.soapui.SoapUI.getThreadPool;
+import static com.eviware.soapui.SoapUI.log;
 
 class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponent {
     public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
-    public static final String DEFAULT_ERROR_PAGE = "<html><body><h1>The page could not be loaded</h1></body></html>";
+    private static final String DEFAULT_ERROR_PAGE = "<html><body><h1>The page could not be loaded</h1></body></html>";
     private Pattern charsetFinderPattern = Pattern.compile(CHARSET_PATTERN);
 
     private JPanel panel = new JPanel(new BorderLayout());
@@ -99,6 +100,10 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
         return panel;
     }
 
+    public String getDefaultErrorPage()
+    {
+        return DEFAULT_ERROR_PAGE;
+    }
     private void initializeWebView(boolean addNavigationBar) {
         if (addNavigationBar) {
             navigationBar = new WebViewNavigationBar();
@@ -269,7 +274,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
         pcs.firePropertyChange("content", null, contentAsString);
     }
 
-    private WebEngine getWebEngine() {
+    protected WebEngine getWebEngine() {
         return webView.getEngine();
     }
 
@@ -295,10 +300,10 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
     @Override
     public void navigate(final String url) {
-        navigate(url, DEFAULT_ERROR_PAGE);
+        navigate(url, getDefaultErrorPage());
     }
-
-    public void navigate(final String url, String backupUrl) {
+    @Override
+    public  void navigate(final String url, String backupUrl) {
         if (SoapUI.isBrowserDisabled()) {
             return;
         }
@@ -331,6 +336,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
             if (neededIndex != -1) {
                 urlString = urlString.substring(0, neededIndex);
             }
+
             URL url = new URL(urlString);
             final URLConnection urlConnection = url.openConnection();
             if (urlConnection instanceof HttpURLConnection) {
@@ -476,6 +482,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
                 public void changed(ObservableValue<? extends String> observableValue, String oldLocation,
                                     String newLocation) {
                     lastLocation = newLocation;
+                    log.info(newLocation);
                     for (BrowserListener listener : listeners) {
                         listener.locationChanged(newLocation);
                     }
@@ -502,7 +509,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
                             } else if (newState == Worker.State.FAILED && !showingErrorPage) {
                                 try {
                                     showingErrorPage = true;
-                                    setContent(errorPage == null ? DEFAULT_ERROR_PAGE : errorPage);
+                                    setContent(errorPage == null ? getDefaultErrorPage() : errorPage);
                                 } finally {
                                     showingErrorPage = false;
                                 }

@@ -21,6 +21,8 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.TimeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
@@ -46,8 +48,9 @@ public class OAuth2TokenExtractor {
     public static final String TITLE = "<TITLE>";
     public static final String TOKEN = "token";
     public static final String ACCESS_TOKEN = "access_token";
+    private final static Logger logger = LogManager.getLogger("soapui.httplog");
 
-    protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>();
+    protected List<BrowserListener> browserListeners = new ArrayList<>();
 
     public void extractAccessToken(final OAuth2Parameters parameters) throws OAuthSystemException, MalformedURLException, URISyntaxException, OAuthProblemException {
         OAuth2Profile.OAuth2Flow i = parameters.getOAuth2Flow();
@@ -70,12 +73,13 @@ public class OAuth2TokenExtractor {
 
     void extractAccessTokenForAuthorizationCodeGrantFlow(final OAuth2Parameters parameters) throws URISyntaxException,
             MalformedURLException, OAuthSystemException {
-        final UserBrowserFacade browserFacade = getBrowserFacade();
+        final UserBrowserFacade browserFacade = getAuthorizationCodeComaptibleBrowserFacade();
         addBrowserInteractionHandler(browserFacade, parameters);
         addExternalListeners(browserFacade);
         browserFacade.addBrowserListener(new BrowserListenerAdapter() {
             @Override
             public void locationChanged(String newLocation) {
+                logger.atInfo().log(newLocation);
                 getAccessTokenAndSaveToProfile(browserFacade, parameters, extractAuthorizationCodeFromForm(extractFormData(newLocation), CODE));
             }
 
@@ -207,11 +211,12 @@ public class OAuth2TokenExtractor {
     protected OAuthClient getOAuthClient() {
         return new OAuthClient(new HttpClient4(HttpClientSupport.getHttpClient()));
     }
-
     protected UserBrowserFacade getBrowserFacade() {
         return new WebViewUserBrowserFacade();
     }
-
+    protected UserBrowserFacade getAuthorizationCodeComaptibleBrowserFacade() {
+        return new AuthorizationCodeWebViewUserBrowserFacade();
+    }
 	/* Helper methods */
 
     private void setRetrievedCanceledStatus(OAuth2Parameters parameters) {
