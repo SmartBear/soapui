@@ -29,9 +29,10 @@ public class SoapUIWire {
         int ch;
         while ((ch = instream.read()) != -1) {
             if (ch == 13) {
-                //ignore carriage return
+                buffer.append("[\\r]");
             } else if (ch == 10) {
                 //log if line feed
+                buffer.append("[\\n]");
                 String line = buffer.toString();
                 log.debug(appendMarkerIfNeeded(request, line), line);
                 buffer.setLength(0);
