@@ -77,6 +77,7 @@ public class UsernameEntry extends WssEntryBase {
                 sha.reset();
                 sha.update(password.getBytes("UTF-8"));
                 password = Base64.encode(sha.digest());
+                token.setPasswordsAreEncoded(true);
             } catch (Exception e) {
                 SoapUI.logError(e);
             }
