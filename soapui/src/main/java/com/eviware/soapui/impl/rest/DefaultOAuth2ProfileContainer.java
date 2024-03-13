@@ -35,8 +35,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer {
     private final WsdlProject project;
     private final OAuth2ProfileContainerConfig configuration;
-    private List<OAuth2Profile> oAuth2ProfileList = new ArrayList<OAuth2Profile>();
-    private List<OAuth2ProfileListener> listeners = new CopyOnWriteArrayList<OAuth2ProfileListener>();
+    private List<OAuth2Profile> oAuth2ProfileList = new ArrayList<>();
+    private List<OAuth2ProfileListener> listeners = new CopyOnWriteArrayList<>();
 
     public DefaultOAuth2ProfileContainer(WsdlProject project, OAuth2ProfileContainerConfig configuration) {
         this.project = project;
@@ -57,7 +57,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer {
 
     @Override
     public ArrayList<String> getOAuth2ProfileNameList() {
-        ArrayList<String> profileNameList = new ArrayList<String>();
+        ArrayList<String> profileNameList = new ArrayList<>();
         for (OAuth2Profile profile : getOAuth2ProfileList()) {
             profileNameList.add(profile.getName());
         }

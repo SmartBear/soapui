@@ -59,7 +59,7 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
             throw new Exception("Failed to create directory [" + folderName + "]");
         }
 
-        Map<String, String> urlToFileMap = new HashMap<String, String>();
+        Map<String, String> urlToFileMap = new HashMap<>();
 
         setFilenameForPart(definition.getDefinitionCache().getRootPart(), urlToFileMap, null);
 
@@ -82,7 +82,7 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 
     public StringToStringMap createFilesForExport(String urlPrefix) throws Exception {
         StringToStringMap result = new StringToStringMap();
-        Map<String, String> urlToFileMap = new HashMap<String, String>();
+        Map<String, String> urlToFileMap = new HashMap<>();
 
         if (urlPrefix == null) {
             urlPrefix = "";

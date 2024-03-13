@@ -27,7 +27,7 @@ public class AttachmentHolder {
 
     public void addElement(MaliciousAttachmentConfig config) {
         if (list == null) {
-            list = new ArrayList<MaliciousAttachmentConfig>();
+            list = new ArrayList<>();
         }
 
         list.add(config);

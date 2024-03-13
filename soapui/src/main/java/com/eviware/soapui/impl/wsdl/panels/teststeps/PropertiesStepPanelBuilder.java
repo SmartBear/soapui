@@ -42,7 +42,7 @@ public class PropertiesStepPanelBuilder extends EmptyPanelBuilder<WsdlProperties
     }
 
     public JPanel buildOverviewPanel(WsdlPropertiesTestStep testStep) {
-        JPropertiesTable<WsdlPropertiesTestStep> table = new JPropertiesTable<WsdlPropertiesTestStep>(
+        JPropertiesTable<WsdlPropertiesTestStep> table = new JPropertiesTable<>(
                 "PropertiesStep Properties");
 
         table.addProperty("Name", "name", true);

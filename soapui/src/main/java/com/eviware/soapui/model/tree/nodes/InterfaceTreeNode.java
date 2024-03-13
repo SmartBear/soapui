@@ -38,7 +38,7 @@ import java.util.List;
 
 public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface> {
     private InternalInterfaceListener interfaceListener;
-    private List<SoapUITreeNode> operationNodes = new ArrayList<SoapUITreeNode>();
+    private List<SoapUITreeNode> operationNodes = new ArrayList<>();
 
     public InterfaceTreeNode(Interface iface, SoapUITreeModel treeModel) {
         super(iface, iface.getProject(), treeModel);

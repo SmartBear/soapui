@@ -66,7 +66,7 @@ import java.util.Map;
  */
 public class RestRequestConverter {
 
-    private static Map<Project, Boolean> autoConvert = new HashMap<Project, Boolean>();
+    private static Map<Project, Boolean> autoConvert = new HashMap<>();
     private final static Logger log = LogManager.getLogger(RestRequestConverter.class);
 
     public static void convert(RestResource resource, OldRestRequestConfig oldConfig) {
@@ -87,7 +87,7 @@ public class RestRequestConverter {
                                             "Update REST model for project: " + project.getName()));
         }
         RestMethod method = null;
-        List<String> options = new ArrayList<String>();
+        List<String> options = new ArrayList<>();
         for (int c = 0; c < resource.getRestMethodCount(); c++) {
             RestMethod restMethod = resource.getRestMethodAt(c);
             if (restMethod.getMethod().toString().equals(methodType)) {
@@ -133,7 +133,7 @@ public class RestRequestConverter {
     }
 
     public static RestResource resolveResource(RestTestRequestStep requestStep) {
-        Map<String, RestResource> options = new LinkedHashMap<String, RestResource>();
+        Map<String, RestResource> options = new LinkedHashMap<>();
 
         WsdlProject project = requestStep.getTestCase().getTestSuite().getProject();
         String serviceName = requestStep.getRequestStepConfig().getService();

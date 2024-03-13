@@ -141,7 +141,7 @@ public class SecurityScanUtil {
                 .getSensitiveInformation());
         String[] strngArray = reader.readStrings(ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST);
         if (strngArray != null) {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
 
             for (String str : strngArray) {
                 String[] tokens = str.split("###");
@@ -153,7 +153,7 @@ public class SecurityScanUtil {
             }
             return map;
         } else {
-            return new HashMap<String, String>();
+            return new HashMap<>();
         }
     }
 
@@ -230,7 +230,7 @@ public class SecurityScanUtil {
      */
     public static List<String> getAllSecurityScanNames(boolean excludeCustomScript) {
         if (excludeCustomScript) {
-            List<String> newList = new ArrayList<String>();
+            List<String> newList = new ArrayList<>();
             for (String name : SoapUI.getSoapUICore().getSecurityScanRegistry().getAvailableSecurityScansNames()) {
                 if (name.equals(GroovySecurityScan.NAME)) {
                     continue;

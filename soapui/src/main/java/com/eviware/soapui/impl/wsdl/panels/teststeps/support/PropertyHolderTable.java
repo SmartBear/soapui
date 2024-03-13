@@ -354,7 +354,7 @@ public class PropertyHolderTable extends JPanel {
                     String line = reader.readLine();
                     int count = 0;
 
-                    Set<String> names = new HashSet<String>(Arrays.asList(holder.getPropertyNames()));
+                    Set<String> names = new HashSet<>(Arrays.asList(holder.getPropertyNames()));
 
                     while (line != null) {
                         if (line.trim().length() > 0 && !(line.charAt(0) == '#')) {

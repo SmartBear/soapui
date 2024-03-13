@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectFactoryRegistry {
-    private static Map<String, ProjectFactory<?>> factories = new HashMap<String, ProjectFactory<?>>();
+    private static Map<String, ProjectFactory<?>> factories = new HashMap<>();
 
     static {
         factories.put(WsdlProjectFactory.WSDL_TYPE, new WsdlProjectFactory());

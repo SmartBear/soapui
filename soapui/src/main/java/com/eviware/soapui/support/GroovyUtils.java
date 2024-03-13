@@ -90,7 +90,7 @@ public class GroovyUtils {
         return XmlUtils.createXmlObject(node).xmlText();
     }
 
-    private static final ConcurrentHashMap<String, Boolean> registeredDrivers = new ConcurrentHashMap<String, Boolean>();
+    private static final ConcurrentHashMap<String, Boolean> registeredDrivers = new ConcurrentHashMap<>();
     private static final Object[] mutex = new Object[0];
 
     public static void registerJdbcDriver(String name) {

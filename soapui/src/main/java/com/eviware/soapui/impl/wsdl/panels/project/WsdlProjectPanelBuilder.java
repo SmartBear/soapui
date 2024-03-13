@@ -35,7 +35,7 @@ public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject> {
     }
 
     public JPanel buildOverviewPanel(WsdlProject project) {
-        JPropertiesTable<WsdlProject> table = new JPropertiesTable<WsdlProject>("Project Properties", project);
+        JPropertiesTable<WsdlProject> table = new JPropertiesTable<>("Project Properties", project);
 
         if (project.isOpen()) {
             table.addProperty("Name", "name", true);

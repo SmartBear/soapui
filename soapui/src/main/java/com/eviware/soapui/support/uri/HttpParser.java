@@ -33,7 +33,7 @@ public class HttpParser {
     }
 
     public static Header[] parseHeaders(InputStream is, String charset) throws IOException, HttpException {
-        ArrayList<Header> headers = new ArrayList<Header>();
+        ArrayList<Header> headers = new ArrayList<>();
         String name = null;
         StringBuffer value = null;
         for (; ; ) {

@@ -36,7 +36,7 @@ import java.util.Map;
 public class SoapUIScriptEngineRegistry {
     public static final String DEFAULT_SCRIPT_ENGINE_ID = GroovyScriptEngineFactory.ID;
 
-    private static Map<String, SoapUIScriptEngineFactory> factories = new HashMap<String, SoapUIScriptEngineFactory>();
+    private static Map<String, SoapUIScriptEngineFactory> factories = new HashMap<>();
 
     public static void registerScriptEngine(String id, SoapUIScriptEngineFactory factory) {
         factories.put(id, factory);

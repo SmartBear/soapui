@@ -71,7 +71,7 @@ public abstract class AbstractSecurityScanWithProperties extends AbstractSecurit
     }
 
     public XPathReference[] getXPathReferences() {
-        List<XPathReference> result = new ArrayList<XPathReference>();
+        List<XPathReference> result = new ArrayList<>();
 
         for (SecurityCheckedParameter param : getParameterHolder().getParameterList()) {
             TestStep t = getTestStep();

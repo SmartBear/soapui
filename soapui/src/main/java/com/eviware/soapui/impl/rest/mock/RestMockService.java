@@ -169,7 +169,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
     }
 
     public List<MockOperation> addNewMockOperationsFromResource(RestResource restResource) {
-        List<MockOperation> actions = new ArrayList<MockOperation>();
+        List<MockOperation> actions = new ArrayList<>();
         String path = RestUtils.getExpandedPath(restResource.getFullPath(), restResource.getParams(), restResource);
 
         if (restResource.getRestMethodCount() < 1) {

@@ -58,8 +58,8 @@ public class RequestTransportRegistry {
     public static final String HTTPS = "https";
     public static final String JMS = "jms";
 
-    private static Map<String, RequestTransport> transports = new HashMap<String, RequestTransport>();
-    private static Map<String, List<RequestFilter>> addedCustomRequestFilters = new HashMap<String, List<RequestFilter>>();
+    private static Map<String, RequestTransport> transports = new HashMap<>();
+    private static Map<String, List<RequestFilter>> addedCustomRequestFilters = new HashMap<>();
 
     private static WsdlPackagingRequestFilter wsdlPackagingRequestFilter;
 

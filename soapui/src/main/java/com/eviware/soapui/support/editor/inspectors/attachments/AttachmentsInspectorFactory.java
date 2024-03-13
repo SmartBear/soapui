@@ -114,7 +114,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
             MessagePart[] responseParts = request.getMessageExchange().getOperation().getDefaultRequestParts();
 
-            List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
+            List<HttpAttachmentPart> result = new ArrayList<>();
 
             for (MessagePart part : responseParts) {
                 if (part instanceof HttpAttachmentPart) {
@@ -179,7 +179,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
             MessagePart[] responseParts = response.getMessageExchange().getOperation().getDefaultResponseParts();
 
-            List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
+            List<HttpAttachmentPart> result = new ArrayList<>();
 
             for (MessagePart part : responseParts) {
                 if (part instanceof HttpAttachmentPart) {
@@ -237,7 +237,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
         public HttpAttachmentPart[] getDefinedAttachmentParts() {
             MessagePart[] responseParts = request.getResponseParts();
 
-            List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
+            List<HttpAttachmentPart> result = new ArrayList<>();
 
             for (MessagePart part : responseParts) {
                 if (part instanceof HttpAttachmentPart) {
@@ -298,7 +298,7 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
         public HttpAttachmentPart[] getDefinedAttachmentParts() {
             MessagePart[] responseParts = mockResponse.getRequestParts();
 
-            List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
+            List<HttpAttachmentPart> result = new ArrayList<>();
 
             for (MessagePart part : responseParts) {
                 if (part instanceof HttpAttachmentPart) {

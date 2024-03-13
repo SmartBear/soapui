@@ -28,7 +28,7 @@ import java.util.Map;
  */
 
 public class ComponentBag {
-    private Map<String, JComponent> components = new HashMap<String, JComponent>();
+    private Map<String, JComponent> components = new HashMap<>();
 
     public ComponentBag() {
     }

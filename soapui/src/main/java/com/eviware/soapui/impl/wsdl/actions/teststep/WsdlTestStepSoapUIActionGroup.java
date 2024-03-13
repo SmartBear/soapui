@@ -47,7 +47,7 @@ public class WsdlTestStepSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
 
             // add open-editor action
             if (modelItem.hasEditor()) {
-                DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
+                DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<>(
                         ShowDesktopPanelAction.SOAPUI_ACTION_ID, "ENTER", null, true, null);
 
                 actionMapping.setName("Open Editor");
@@ -57,7 +57,7 @@ public class WsdlTestStepSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
                 insertIndex++;
             }
 
-            toggleDisabledActionMapping = new DefaultActionMapping<WsdlTestStep>(
+            toggleDisabledActionMapping = new DefaultActionMapping<>(
                     ToggleDisableTestStepAction.SOAPUI_ACTION_ID, null, null, false, null);
 
             actions.add(insertIndex, toggleDisabledActionMapping);

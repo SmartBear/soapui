@@ -36,7 +36,7 @@ import java.util.List;
 
 public class WorkspaceTreeNode extends AbstractModelItemTreeNode<Workspace> {
     private InternalWorkspaceListener workspaceListener = new InternalWorkspaceListener();
-    private List<ProjectTreeNode> projectNodes = new ArrayList<ProjectTreeNode>();
+    private List<ProjectTreeNode> projectNodes = new ArrayList<>();
     private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 
     public WorkspaceTreeNode(Workspace workspace, SoapUITreeModel treeModel) {

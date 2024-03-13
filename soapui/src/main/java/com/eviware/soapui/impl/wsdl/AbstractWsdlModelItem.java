@@ -199,7 +199,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
     }
 
     public List<ExternalDependency> getExternalDependencies() {
-        List<ExternalDependency> result = new ArrayList<ExternalDependency>();
+        List<ExternalDependency> result = new ArrayList<>();
         addExternalDependencies(result);
         return result;
     }

@@ -101,7 +101,7 @@ public class PlainJavaJsonProvider extends AbstractJsonProvider {
 
     private Object convertToPlainJavaImplementation(JSON jsonRoot) {
         if (jsonRoot.isArray()) {
-            List<Object> returnedList = new ArrayList<Object>();
+            List<Object> returnedList = new ArrayList<>();
             JSONArray array = (JSONArray) jsonRoot;
             for (Object originalValue : array) {
                 if (originalValue instanceof JSON) {
@@ -112,7 +112,7 @@ public class PlainJavaJsonProvider extends AbstractJsonProvider {
             }
             return returnedList;
         } else if (jsonRoot instanceof JSONObject) {
-            Map<Object, Object> returnedMap = new HashMap<Object, Object>();
+            Map<Object, Object> returnedMap = new HashMap<>();
             JSONObject jsonObject = (JSONObject) jsonRoot;
             for (Object o : jsonObject.keySet()) {
                 Object value = jsonObject.get(o);

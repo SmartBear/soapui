@@ -105,7 +105,7 @@ public class CloneParametersAction extends AbstractAction {
 
     private String[] getSecurableTestStepsNames(TestCase testCase) {
         List<TestStep> testStepList = testCase.getTestStepList();
-        List<String> namesList = new ArrayList<String>();
+        List<String> namesList = new ArrayList<>();
         for (TestStep testStep : testStepList) {
             if (AbstractSecurityScan.isSecurable(testStep)) {
                 namesList.add(testStep.getName());
@@ -119,7 +119,7 @@ public class CloneParametersAction extends AbstractAction {
     }
 
     public List<ModelItem> performClone(boolean showErrorMessage) {
-        List<ModelItem> items = new ArrayList<ModelItem>();
+        List<ModelItem> items = new ArrayList<>();
         String targetTestSuiteName = dialog.getValue(CloneParameterDialog.TARGET_TESTSUITE);
         String targetTestCaseName = dialog.getValue(CloneParameterDialog.TARGET_TESTCASE);
         String targetSecurityTestName = dialog.getValue(CloneParameterDialog.TARGET_SECURITYTEST);

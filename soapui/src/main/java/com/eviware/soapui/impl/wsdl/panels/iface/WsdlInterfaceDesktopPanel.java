@@ -108,11 +108,11 @@ import java.util.Map;
 public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterface> {
     private final static Logger logger = LogManager.getLogger(WsdlInterfaceDesktopPanel.class);
     private JTabbedPane partTabs;
-    private List<RSyntaxTextArea> editors = new ArrayList<RSyntaxTextArea>();
+    private List<RSyntaxTextArea> editors = new ArrayList<>();
     private JTree tree;
-    private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<String, DefaultMutableTreeNode>();
-    private Map<String, TreePath> pathMap = new HashMap<String, TreePath>();
-    private List<TreePath> navigationHistory = new ArrayList<TreePath>();
+    private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<>();
+    private Map<String, TreePath> pathMap = new HashMap<>();
+    private List<TreePath> navigationHistory = new ArrayList<>();
     private StringList targetNamespaces = new StringList();
     private int historyIndex;
     private boolean navigating;
@@ -597,11 +597,11 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
     public List<DefaultMutableTreeNode> mapTreeItems(XmlObject xmlObject, DefaultMutableTreeNode treeRoot,
                                                      boolean createEmpty, int tabIndex, String groupName, String query, String nameQuery, boolean sort,
                                                      NodeSelector selector) {
-        List<DefaultMutableTreeNode> resultNodes = new ArrayList<DefaultMutableTreeNode>();
+        List<DefaultMutableTreeNode> resultNodes = new ArrayList<>();
 
         try {
             XmlObject[] items = xmlObject.selectPath(query);
-            List<DefaultMutableTreeNode> treeNodes = new ArrayList<DefaultMutableTreeNode>();
+            List<DefaultMutableTreeNode> treeNodes = new ArrayList<>();
 
             DefaultMutableTreeNode root = treeRoot;
             if (groupName != null) {

@@ -74,10 +74,10 @@ public class JLogList extends JPanel {
     private long maxRows = 1000;
     private JList logList;
     private final LogListModel model;
-    private List<Logger> loggers = new ArrayList<Logger>();
+    private List<Logger> loggers = new ArrayList<>();
     private InternalLogAppender internalLogAppender = new InternalLogAppender();
     private boolean tailing = true;
-    private BlockingQueue<Object> linesToAdd = new LinkedBlockingQueue<Object>();
+    private BlockingQueue<Object> linesToAdd = new LinkedBlockingQueue<>();
     private JCheckBoxMenuItem enableMenuItem;
     private final String title;
 
@@ -195,7 +195,7 @@ public class JLogList extends JPanel {
     }
 
     private static class LogAreaCellRenderer extends DefaultListCellRenderer {
-        private Map<Level, Color> levelColors = new HashMap<Level, Color>();
+        private Map<Level, Color> levelColors = new HashMap<>();
 
         private LogAreaCellRenderer() {
             levelColors.put(Level.ERROR, new Color(192, 0, 0));
@@ -477,7 +477,7 @@ public class JLogList extends JPanel {
                     Object line;
                     while ((line = getNextLine()) != null) {
                         try {
-                            List<Object> linesToAddNow = new ArrayList<Object>();
+                            List<Object> linesToAddNow = new ArrayList<>();
                             linesToAddNow.add(line);
                             while ((line = linesToAdd.poll()) != null) {
                                 linesToAddNow.add(line);

@@ -165,7 +165,7 @@ public class ProjectExporter {
     }
 
     public static List<String> getZipContents(String archive) {
-        List<String> contents = new ArrayList<String>();
+        List<String> contents = new ArrayList<>();
 
         try {
             ZipFile zipFile = new ZipFile(archive);

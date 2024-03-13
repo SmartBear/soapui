@@ -36,10 +36,10 @@ public class WsdlMessageAssertionSoapUIActionGroup extends DefaultSoapUIActionGr
     @Override
     public SoapUIActionMappingList<WsdlMessageAssertion> getActionMappings(WsdlMessageAssertion modelItem) {
         SoapUIActionMappingList<WsdlMessageAssertion> actions = super.getActionMappings(modelItem);
-        SoapUIActionMappingList<WsdlMessageAssertion> result = new SoapUIActionMappingList<WsdlMessageAssertion>(actions);
+        SoapUIActionMappingList<WsdlMessageAssertion> result = new SoapUIActionMappingList<>(actions);
 
         if (modelItem.isConfigurable()) {
-            DefaultActionMapping<WsdlMessageAssertion> actionMapping = new DefaultActionMapping<WsdlMessageAssertion>(
+            DefaultActionMapping<WsdlMessageAssertion> actionMapping = new DefaultActionMapping<>(
                     ConfigureAssertionAction.SOAPUI_ACTION_ID, "ENTER", null, true, null);
 
             actionMapping.setName("Configure");
@@ -49,7 +49,7 @@ public class WsdlMessageAssertionSoapUIActionGroup extends DefaultSoapUIActionGr
         }
 
         if (modelItem.isClonable()) {
-            DefaultActionMapping<WsdlMessageAssertion> actionMapping = new DefaultActionMapping<WsdlMessageAssertion>(
+            DefaultActionMapping<WsdlMessageAssertion> actionMapping = new DefaultActionMapping<>(
                     CloneAssertionAction.SOAPUI_ACTION_ID, "F9", null, true, null);
 
             result.add(1, actionMapping);

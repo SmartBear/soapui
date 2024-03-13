@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResolveContext<T extends AbstractWsdlModelItem<?>> {
-    private List<PathToResolve> pathsToResolve = new ArrayList<PathToResolve>();
+    private List<PathToResolve> pathsToResolve = new ArrayList<>();
     private final T modelItem;
 
     public ResolveContext(T modelItem) {
@@ -53,7 +53,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>> {
     public class PathToResolve {
         private final AbstractWsdlModelItem<?> owner;
         private final String description;
-        private List<Resolver> resolvers = new ArrayList<Resolver>();
+        private List<Resolver> resolvers = new ArrayList<>();
         private final String path;
         private Resolver resolver;
         private boolean resolved;

@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class SensitiveInformationPropertyHolder implements MutableTestPropertyHolder {
 
-    private Map<String, TestProperty> properties = new HashMap<String, TestProperty>();
+    private Map<String, TestProperty> properties = new HashMap<>();
 
     @Override
     public void addTestPropertyListener(TestPropertyListener listener) {
@@ -74,7 +74,7 @@ public class SensitiveInformationPropertyHolder implements MutableTestPropertyHo
 
     @Override
     public List<TestProperty> getPropertyList() {
-        return new ArrayList<TestProperty>(properties.values());
+        return new ArrayList<>(properties.values());
     }
 
     @Override

@@ -38,7 +38,7 @@ public class RestMockServicePanelBuilder extends EmptyPanelBuilder<RestMockServi
     }
 
     public Component buildOverviewPanel(RestMockService mockService) {
-        JPropertiesTable<RestMockService> table = new JPropertiesTable<RestMockService>("MockService Properties");
+        JPropertiesTable<RestMockService> table = new JPropertiesTable<>("MockService Properties");
         boolean editable = true;
         table.addProperty("Name", "name", editable);
         table.addProperty("Description", "description", editable);

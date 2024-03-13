@@ -78,9 +78,9 @@ public class JettyMockEngine implements MockEngine {
     public final static Logger log = LogManager.getLogger(JettyMockEngine.class);
 
     private Server server;
-    private Map<Integer, Map<String, List<MockRunner>>> runners = new HashMap<Integer, Map<String, List<MockRunner>>>();
-    private Map<Integer, SoapUIConnector> connectors = new HashMap<Integer, SoapUIConnector>();
-    private List<MockRunner> mockRunners = new CopyOnWriteArrayList<MockRunner>();
+    private Map<Integer, Map<String, List<MockRunner>>> runners = new HashMap<>();
+    private Map<Integer, SoapUIConnector> connectors = new HashMap<>();
+    private List<MockRunner> mockRunners = new CopyOnWriteArrayList<>();
 
     private SslSocketConnector sslConnector;
 
@@ -256,7 +256,7 @@ public class JettyMockEngine implements MockEngine {
     }
 
     private class SoapUIConnector extends SelectChannelConnector {
-        private Set<HttpConnection> connections = new HashSet<HttpConnection>();
+        private Set<HttpConnection> connections = new HashSet<>();
 
         @Override
         protected void connectionClosed(HttpConnection arg0) {

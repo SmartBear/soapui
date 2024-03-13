@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
 import java.util.ArrayList;
 
 public abstract class XFormDialogBuilder {
-    private ArrayList<XForm> forms = new ArrayList<XForm>();
+    private ArrayList<XForm> forms = new ArrayList<>();
 
     public XFormDialogBuilder() {
     }

@@ -98,7 +98,7 @@ import java.util.Map;
  */
 
 public class PanelBuilderRegistry {
-    private static Map<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>> builders = new HashMap<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>>();
+    private static Map<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>> builders = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public static <T extends ModelItem> PanelBuilder<T> getPanelBuilder(T modelItem) {

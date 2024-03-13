@@ -94,7 +94,7 @@ public class SchemeTypeExtractor {
      * actualy carry values.
      */
     TreeMap<String, NodeInfo> getElements(XmlTreeNode rootXmlTreeNode) {
-        TreeMap<String, NodeInfo> result = new TreeMap<String, NodeInfo>();
+        TreeMap<String, NodeInfo> result = new TreeMap<>();
         for (int cnt = 0; cnt < rootXmlTreeNode.getChildCount(); cnt++) {
             XmlTreeNode xmlTreeNodeChild = (XmlTreeNode) rootXmlTreeNode.getChild(cnt);
 

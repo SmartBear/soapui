@@ -89,7 +89,7 @@ public class ContentTypeHandler {
         contentTypeToSuffix.put("application/postscript", "ps");
         contentTypeToSuffix.put("application/octet-stream", "dat");
 
-        suffixToContentType = new HashMap<String, String>();
+        suffixToContentType = new HashMap<>();
         suffixToContentType.put("html", "text/html");
         suffixToContentType.put("htm", "text/html");
         suffixToContentType.put("txt", "text/plain");

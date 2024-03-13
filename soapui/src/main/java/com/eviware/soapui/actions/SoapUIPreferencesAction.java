@@ -70,8 +70,8 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
     public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
     public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
     private SwingConfigurationDialogImpl dialog;
-    private List<Prefs> prefs = new ArrayList<Prefs>();
-    private Map<PrefsFactory, Prefs> prefsFactories = new HashMap<PrefsFactory, Prefs>();
+    private List<Prefs> prefs = new ArrayList<>();
+    private Map<PrefsFactory, Prefs> prefsFactories = new HashMap<>();
 
     private static SoapUIPreferencesAction instance;
     private DefaultListModel<String> prefsListModel;
@@ -204,7 +204,7 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
                 "Set global SoapUI settings", UISupport.OPTIONS_ICON);
         dialog.setSize(new Dimension(1000, 700));
 
-        prefsListModel = new DefaultListModel<String>();
+        prefsListModel = new DefaultListModel<>();
         JList prefItems = new JList(prefsListModel);
         prefItems.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         prefsPanel = new JPanel(new CardLayout());

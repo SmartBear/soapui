@@ -85,7 +85,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
     }
 
     private void initRequestPartProperties(Map<String, TestProperty> properties) {
-        this.properties = new HashMap<String, TestProperty>();
+        this.properties = new HashMap<>();
         for (Map.Entry<String, TestProperty> entry : properties.entrySet()) {
             if (properties.get(entry.getKey()).isRequestPart()) {
                 this.properties.put(entry.getKey(), entry.getValue());
@@ -195,7 +195,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 
             }
         });
-        ArrayList<String> options = new ArrayList<String>();
+        ArrayList<String> options = new ArrayList<>();
         options.add(CHOOSE_TEST_PROPERTY);
         options.addAll(properties.keySet());
         nameField.setOptions(options.toArray(new String[0]));

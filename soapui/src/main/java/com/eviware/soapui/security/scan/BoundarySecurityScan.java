@@ -234,7 +234,7 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties {
     @SuppressWarnings("unchecked")
     protected boolean hasNext(TestStep testStep, SecurityTestRunContext context) {
         if (!context.hasProperty(REQUEST_MUTATIONS_STACK)) {
-            Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
+            Stack<PropertyMutation> requestMutationsList = new Stack<>();
             context.put(REQUEST_MUTATIONS_STACK, requestMutationsList);
             try {
                 extractMutations(testStep, context);

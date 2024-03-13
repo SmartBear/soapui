@@ -36,7 +36,7 @@ import java.util.Set;
 
 public abstract class AbstractInterface<T extends InterfaceConfig> extends AbstractWsdlModelItem<T> implements
         Interface {
-    private Set<InterfaceListener> interfaceListeners = new HashSet<InterfaceListener>();
+    private Set<InterfaceListener> interfaceListeners = new HashSet<>();
 
     protected AbstractInterface(T config, ModelItem parent, String icon) {
         super(config, parent, icon);

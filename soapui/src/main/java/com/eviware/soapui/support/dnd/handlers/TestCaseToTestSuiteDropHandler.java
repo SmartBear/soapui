@@ -62,7 +62,7 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
         } else if (testCase.getTestSuite().getProject() == target.getProject()) {
             return target.importTestCase(testCase, name, position, true, true, true);
         } else {
-            Set<Interface> requiredInterfaces = new HashSet<Interface>();
+            Set<Interface> requiredInterfaces = new HashSet<>();
 
             // get required interfaces
             for (int y = 0; y < testCase.getTestStepCount(); y++) {
@@ -113,7 +113,7 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
             }
         } else if (UISupport.confirm("Move TestCase [" + testCase.getName() + "] to TestSuite [" + target.getName() + "]",
                 "Move TestCase")) {
-            Set<Interface> requiredInterfaces = new HashSet<Interface>();
+            Set<Interface> requiredInterfaces = new HashSet<>();
 
             // get required interfaces
             for (int y = 0; y < testCase.getTestStepCount(); y++) {

@@ -68,7 +68,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     private boolean enableUI;
     private String outputFolder;
     private String[] projectProperties;
-    private Map<String, String> runnerGlobalProperties = new HashMap<String, String>();
+    private Map<String, String> runnerGlobalProperties = new HashMap<>();
 
     public AbstractSoapUIRunner(String title) {
         if (title != null) {
@@ -300,7 +300,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     }
 
     public String getModelItemOutputFolder(ModelItem modelItem) {
-        List<ModelItem> chain = new ArrayList<ModelItem>();
+        List<ModelItem> chain = new ArrayList<>();
         ModelItem p = modelItem;
 
         while (!(p instanceof Project)) {

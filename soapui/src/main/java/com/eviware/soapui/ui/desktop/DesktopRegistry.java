@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class DesktopRegistry {
     private static DesktopRegistry instance;
-    private Map<String, DesktopFactory> factories = new HashMap<String, DesktopFactory>();
+    private Map<String, DesktopFactory> factories = new HashMap<>();
 
     public static DesktopRegistry getInstance() {
         if (instance == null) {

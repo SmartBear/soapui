@@ -56,7 +56,7 @@ public class SetMockOperationAction extends AbstractSoapUIAction<WsdlMockRespons
         }
 
         project = mockResponseTestStep.getTestCase().getTestSuite().getProject();
-        List<Interface> interfaces = new ArrayList<Interface>();
+        List<Interface> interfaces = new ArrayList<>();
         for (int c = 0; c < project.getInterfaceCount(); c++) {
             if (project.getInterfaceAt(c).getOperationCount() > 0) {
                 interfaces.add(project.getInterfaceAt(c));

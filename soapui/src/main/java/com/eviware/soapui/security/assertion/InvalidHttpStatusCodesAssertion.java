@@ -113,7 +113,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 
     private List<String> extractCodes(SubmitContext context) {
         String expandedCodes = context.expand(codes);
-        List<String> codeList = new ArrayList<String>();
+        List<String> codeList = new ArrayList<>();
         for (String str : expandedCodes.split(",")) {
             codeList.add(str.trim());
         }

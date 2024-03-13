@@ -40,7 +40,7 @@ public class SchemaSystem {
      * Constructs a new SchemaSystem object.
      */
     public SchemaSystem() {
-        schemas = new LinkedHashMap<String, Schema>();
+        schemas = new LinkedHashMap<>();
     }
 
     /**
@@ -49,7 +49,7 @@ public class SchemaSystem {
      * @param xml The XmlObject to which data has previously been saved.
      */
     public SchemaSystem(SchemaSetConfig xml) {
-        schemas = new LinkedHashMap<String, Schema>();
+        schemas = new LinkedHashMap<>();
         for (SchemaConfig item : xml.getSchemaList()) {
             schemas.put(item.getNamespace(), new Schema(item, this));
         }

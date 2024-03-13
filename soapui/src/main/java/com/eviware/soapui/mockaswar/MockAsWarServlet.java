@@ -221,7 +221,7 @@ public class MockAsWarServlet extends HttpServlet {
 
     class MockServletSoapUICore extends DefaultSoapUICore implements MockEngine, MockAsWarCoreInterface {
         private final ServletContext servletContext;
-        private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
+        private List<MockRunner> mockRunners = new ArrayList<>();
 
         public MockServletSoapUICore(ServletContext servletContext, String soapUISettings) {
             super(servletContext.getRealPath("/"), servletContext.getRealPath(soapUISettings));

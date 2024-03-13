@@ -53,8 +53,8 @@ import java.util.Set;
 public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> implements AbstractHttpOperation,
         MutableTestPropertyHolder, RestResourceContainer, PropertyChangeListener {
     public static final String PATH_PROPERTY = "path";
-    private List<RestMethod> methods = new ArrayList<RestMethod>();
-    private List<RestResource> resources = new ArrayList<RestResource>();
+    private List<RestMethod> methods = new ArrayList<>();
+    private List<RestResource> resources = new ArrayList<>();
     private RestResource parentResource;
     private XmlBeansRestParamsTestPropertyHolder params;
     private PropertyChangeListener styleChangeListener = new StyleChangeListener();
@@ -110,7 +110,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
     @Override
     public List<? extends ModelItem> getChildren() {
-        List<ModelItem> result = new ArrayList<ModelItem>();
+        List<ModelItem> result = new ArrayList<>();
 
         result.addAll(getRestMethodList());
         result.addAll(getChildResourceList());
@@ -162,7 +162,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
     }
 
     public List<RestResource> getChildResourceList() {
-        return new ArrayList<RestResource>(resources);
+        return new ArrayList<>(resources);
     }
 
     public RestRequest getRequestAt(int index) {
@@ -207,7 +207,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
     }
 
     public List<RestMethod> getRestMethodList() {
-        return new ArrayList<RestMethod>(methods);
+        return new ArrayList<>(methods);
     }
 
     public RestMethod getRestMethodByName(String name) {
@@ -223,7 +223,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
     }
 
     public List<Request> getRequestList() {
-        List<Request> rs = new ArrayList<Request>();
+        List<Request> rs = new ArrayList<>();
         for (RestMethod m : methods) {
             rs.addAll(m.getRequestList());
         }
@@ -272,8 +272,8 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
     }
 
     public RestParamProperty[] getDefaultParams() {
-        List<RestParamProperty> result = new ArrayList<RestParamProperty>();
-        Set<String> names = new HashSet<String>();
+        List<RestParamProperty> result = new ArrayList<>();
+        Set<String> names = new HashSet<>();
 
         if (parentResource != null) {
             result.addAll(Arrays.asList(parentResource.getDefaultParams()));
@@ -487,7 +487,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
     }
 
     public RestResource[] getAllChildResources() {
-        List<RestResource> result = new ArrayList<RestResource>();
+        List<RestResource> result = new ArrayList<>();
         for (RestResource resource : resources) {
             addResourcesToResult(resource, result);
         }

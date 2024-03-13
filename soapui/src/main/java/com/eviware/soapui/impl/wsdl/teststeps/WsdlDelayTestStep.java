@@ -108,7 +108,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
         result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "delayString"));
         return result.toArray(new PropertyExpansion[result.size()]);
     }

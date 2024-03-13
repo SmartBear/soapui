@@ -46,7 +46,7 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
     private JList list;
     private JButton editButton;
     private Box buttonBox;
-    private List<JButton> buttons = new ArrayList<JButton>();
+    private List<JButton> buttons = new ArrayList<>();
 
     public StringListFormComponent(String tooltip) {
         this(tooltip, false, null);

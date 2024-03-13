@@ -79,7 +79,7 @@ public class ToolsPrefs implements Prefs {
     public String[][] getEclipseTools() {
         // Return all tools except .NET related and tools that are part of
         // Eclipse.
-        ArrayList<String[]> list = new ArrayList<String[]>();
+        ArrayList<String[]> list = new ArrayList<>();
         for (String[] s : TOOLS) {
             String tool = s[0];
 

@@ -68,7 +68,7 @@ public class WadlImporter {
     private RestService service;
     private Application application;
     private List<Resources> resourcesList;
-    private Map<String, ApplicationDocument> refCache = new HashMap<String, ApplicationDocument>();
+    private Map<String, ApplicationDocument> refCache = new HashMap<>();
     private boolean isWADL11 = true;
 
     public WadlImporter(RestService service) {
@@ -292,7 +292,7 @@ public class WadlImporter {
                     if ("fault".equals(n.getNodeName())) {
                         String content = XmlUtils.serialize(n, false);
                         try {
-                            Map<Object, Object> map = new HashMap<Object, Object>();
+                            Map<Object, Object> map = new HashMap<>();
                             XmlCursor cursor = response.newCursor();
                             cursor.getAllNamespaces(map);
                             cursor.dispose();
@@ -325,7 +325,7 @@ public class WadlImporter {
         } else {
             Node n = representation.getDomNode().getAttributes().getNamedItem("status");
             if (n != null) {
-                status = new ArrayList<Long>();
+                status = new ArrayList<>();
                 for (String s : n.getNodeValue().split(" ")) {
                     status.add(Long.parseLong(s));
                 }
@@ -541,7 +541,7 @@ public class WadlImporter {
     }
 
     public static Map<String, XmlObject> getDefinitionParts(String wadlUrl) {
-        Map<String, XmlObject> result = new HashMap<String, XmlObject>();
+        Map<String, XmlObject> result = new HashMap<>();
 
         try {
             return SchemaUtils.getSchemas(wadlUrl, new UrlSchemaLoader(wadlUrl));

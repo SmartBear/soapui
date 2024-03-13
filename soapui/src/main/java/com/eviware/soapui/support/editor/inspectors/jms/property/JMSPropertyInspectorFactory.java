@@ -88,7 +88,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 
         public void setJMSProperties(StringToStringMap stringToStringMap) {
             String[] keyList = stringToStringMap.getKeys();
-            List<JMSPropertyConfig> propertyList = new ArrayList<JMSPropertyConfig>();
+            List<JMSPropertyConfig> propertyList = new ArrayList<>();
             for (String key : keyList) {
                 JMSPropertyConfig jmsPropertyConfig = JMSPropertyConfig.Factory.newInstance();
                 jmsPropertyConfig.setName(key);

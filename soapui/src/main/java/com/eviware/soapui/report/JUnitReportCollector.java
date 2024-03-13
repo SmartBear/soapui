@@ -67,9 +67,9 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 
     public JUnitReportCollector(int maxErrors) {
         this.maxErrors = maxErrors;
-        reports = new HashMap<String, JUnitReport>();
-        errorCount = new HashMap<TestCase, Integer>();
-        failures = new HashMap<TestCase, String>();
+        reports = new HashMap<>();
+        errorCount = new HashMap<>();
+        failures = new HashMap<>();
     }
 
     public List<String> saveReports(String path) throws Exception {
@@ -79,7 +79,7 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
             file.mkdirs();
         }
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         Iterator<String> keyset = reports.keySet().iterator();
         while (keyset.hasNext()) {

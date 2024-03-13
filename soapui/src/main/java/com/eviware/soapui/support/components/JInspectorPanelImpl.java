@@ -50,8 +50,8 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
     private JPanel inspectorPanel;
     private int lastDividerLocation = 0;
     private JXToolBar inspectToolbar;
-    private List<Inspector> inspectors = new ArrayList<Inspector>();
-    private Map<Inspector, JToggleButton> inspectorButtons = new HashMap<Inspector, JToggleButton>();
+    private List<Inspector> inspectors = new ArrayList<>();
+    private Map<Inspector, JToggleButton> inspectorButtons = new HashMap<>();
     public Inspector currentInspector;
 
     private final int orientation;

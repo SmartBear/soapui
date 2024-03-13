@@ -220,7 +220,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getAssertable().getModelItem(), this, "token"));
 

@@ -60,7 +60,7 @@ public class TestCaseLogModel extends AbstractListModel {
         int size = items.size();
         items.add("Step " + stepCount + " [" + result.getTestStep().getName() + "] " + result.getStatus() + ": took "
                 + result.getTimeTaken() + " ms");
-        SoftReference<TestStepResult> ref = new SoftReference<TestStepResult>(result);
+        SoftReference<TestStepResult> ref = new SoftReference<>(result);
         results.add(ref);
         for (String msg : result.getMessages()) {
             items.add(" -> " + msg);

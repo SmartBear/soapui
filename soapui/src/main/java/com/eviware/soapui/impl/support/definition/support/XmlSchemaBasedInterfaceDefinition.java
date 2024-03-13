@@ -52,7 +52,7 @@ public abstract class XmlSchemaBasedInterfaceDefinition<T extends AbstractInterf
     }
 
     public Collection<String> getDefinedNamespaces() throws Exception {
-        Set<String> namespaces = new HashSet<String>();
+        Set<String> namespaces = new HashSet<>();
 
         SchemaTypeSystem schemaTypes = getSchemaTypeSystem();
         if (schemaTypes != null) {

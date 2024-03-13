@@ -79,12 +79,12 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
     public String url;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    private java.util.List<BrowserListener> listeners = new ArrayList<BrowserListener>();
+    private java.util.List<BrowserListener> listeners = new ArrayList<>();
 
     public WebView webView;
     private WebViewNavigationBar navigationBar;
     private String lastLocation;
-    private Set<BrowserWindow> browserWindows = new HashSet<BrowserWindow>();
+    private Set<BrowserWindow> browserWindows = new HashSet<>();
 
     private JFXPanel browserPanel;
     private PopupStrategy popupStrategy;

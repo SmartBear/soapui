@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class LoadTestAssertionRegistry {
     private static LoadTestAssertionRegistry instance;
-    private Map<String, Class<? extends AbstractLoadTestAssertion>> availableAssertions = new HashMap<String, Class<? extends AbstractLoadTestAssertion>>();
+    private Map<String, Class<? extends AbstractLoadTestAssertion>> availableAssertions = new HashMap<>();
     @SuppressWarnings("unused")
     private final static Logger logger = LogManager.getLogger(LoadTestAssertionRegistry.class);
 

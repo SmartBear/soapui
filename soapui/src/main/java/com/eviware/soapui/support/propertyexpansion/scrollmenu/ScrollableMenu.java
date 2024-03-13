@@ -74,7 +74,7 @@ public class ScrollableMenu extends JMenu implements ScrollableMenuContainer {
     /**
      * Container to hold submenus.
      */
-    private Vector<JMenuItem> subMenus = new Vector<JMenuItem>();
+    private Vector<JMenuItem> subMenus = new Vector<>();
     /**
      * Height of the screen.
      */

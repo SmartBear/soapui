@@ -136,7 +136,7 @@ public class TestSuiteToTestSuiteDropHandler extends
             }
         } else if (UISupport.confirm("Move TestSuite [" + testSuite.getName() + "] to Project [" + target.getName() + "]",
                 "Move TestSuite")) {
-            Set<Interface> requiredInterfaces = new HashSet<Interface>();
+            Set<Interface> requiredInterfaces = new HashSet<>();
 
             // get required interfaces
             for (TestCase testCase : testSuite.getTestCaseList()) {
@@ -169,7 +169,7 @@ public class TestSuiteToTestSuiteDropHandler extends
         if (testSuite.getProject() == target) {
             return target.importTestSuite(testSuite, name, position, true, null);
         } else {
-            Set<Interface> requiredInterfaces = new HashSet<Interface>();
+            Set<Interface> requiredInterfaces = new HashSet<>();
 
             // get required interfaces
             for (TestCase testCase : testSuite.getTestCaseList()) {

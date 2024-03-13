@@ -53,7 +53,7 @@ public class WadlValidator {
     }
 
     private AssertionError[] assertResponse(RestMessageExchange messageExchange, RestRepresentation.Type type) {
-        List<AssertionError> result = new ArrayList<AssertionError>();
+        List<AssertionError> result = new ArrayList<>();
         QName responseBodyElementName = getResponseBodyElementName(messageExchange);
         RestRequestInterface restRequest = messageExchange.getRestRequest();
         boolean asserted = false;

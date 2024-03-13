@@ -48,9 +48,9 @@ import java.util.Set;
 
 public class XmlBeansPropertiesTestPropertyHolder implements MutableTestPropertyHolder, Map<String, TestProperty> {
     private PropertiesTypeConfig config;
-    private List<PropertiesStepProperty> properties = new ArrayList<PropertiesStepProperty>();
-    private Map<String, PropertiesStepProperty> propertyMap = new LinkedHashMap<String, PropertiesStepProperty>();
-    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
+    private List<PropertiesStepProperty> properties = new ArrayList<>();
+    private Map<String, PropertiesStepProperty> propertyMap = new LinkedHashMap<>();
+    private Set<TestPropertyListener> listeners = new HashSet<>();
     private ModelItem modelItem;
     private Properties overrideProperties;
     private String propertiesLabel = "Test Properties";
@@ -92,8 +92,8 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
      * placed after properties
      */
     private void sortVirtualLast() {
-        List<PropertiesStepProperty> virtualProperties = new ArrayList<PropertiesStepProperty>();
-        List<PropertiesStepProperty> nonVirtualProperties = new ArrayList<PropertiesStepProperty>();
+        List<PropertiesStepProperty> virtualProperties = new ArrayList<>();
+        List<PropertiesStepProperty> nonVirtualProperties = new ArrayList<>();
 
         for (PropertiesStepProperty psp : properties) {
             if (psp.isVirtualProperty()) {
@@ -167,7 +167,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
     }
 
     public List<TestProperty> getPropertyList() {
-        List<TestProperty> result = new ArrayList<TestProperty>();
+        List<TestProperty> result = new ArrayList<>();
 
         for (TestProperty property : properties) {
             result.add(property);
@@ -391,7 +391,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
     }
 
     public Map<String, TestProperty> getProperties() {
-        Map<String, TestProperty> result = new LinkedHashMap<String, TestProperty>();
+        Map<String, TestProperty> result = new LinkedHashMap<>();
         for (TestProperty property : propertyMap.values()) {
             result.put(property.getName(), property);
         }
@@ -449,7 +449,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         return result.toArray(new PropertyExpansion[result.size()]);
     }
@@ -506,7 +506,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
     }
 
     public Set<java.util.Map.Entry<String, TestProperty>> entrySet() {
-        HashSet<java.util.Map.Entry<String, TestProperty>> result = new HashSet<Entry<String, TestProperty>>();
+        HashSet<java.util.Map.Entry<String, TestProperty>> result = new HashSet<>();
 
         for (TestProperty p : propertyMap.values()) {
             // This does not compile on JDK 1.5:
@@ -549,7 +549,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
     }
 
     public Set<String> keySet() {
-        return new HashSet<String>(Arrays.asList(getPropertyNames()));
+        return new HashSet<>(Arrays.asList(getPropertyNames()));
     }
 
     public TestProperty put(String key, TestProperty value) {
@@ -573,7 +573,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
     }
 
     public Collection<TestProperty> values() {
-        ArrayList<TestProperty> result = new ArrayList<TestProperty>();
+        ArrayList<TestProperty> result = new ArrayList<>();
         result.addAll(propertyMap.values());
         return result;
     }

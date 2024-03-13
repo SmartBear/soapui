@@ -111,7 +111,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
     }
 
     public MessagePart[] getRequestParts() {
-        List<MessagePart> result = new ArrayList<MessagePart>();
+        List<MessagePart> result = new ArrayList<>();
 
         for (int c = 0; c < getPropertyCount(); c++) {
             result.add(new ParameterMessagePart(getPropertyAt(c)));
@@ -187,7 +187,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
         }
 
         try {
-            WsdlSubmit<RestRequest> submitter = new WsdlSubmit<RestRequest>(this, getSubmitListeners(),
+            WsdlSubmit<RestRequest> submitter = new WsdlSubmit<>(this, getSubmitListeners(),
                     RequestTransportRegistry.getTransport(endpoint, submitContext));
             submitter.submitRequest(submitContext, async);
             addPropertyChangeListener(AbstractHttpRequest.RESPONSE_PROPERTY, new PropertyChangeListener() {

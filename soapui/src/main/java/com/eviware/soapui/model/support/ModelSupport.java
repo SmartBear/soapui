@@ -48,7 +48,7 @@ public class ModelSupport {
 
     @SuppressWarnings("unchecked")
     public static <T extends ModelItem> List<T> getChildren(ModelItem modelItem, Class<T> childType) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (ModelItem child : modelItem.getChildren()) {
             if (child.getClass().equals(childType)) {
                 result.add((T) child);

@@ -248,7 +248,7 @@ public class SoapUI {
     public static final String TEST_STEP_ACTIONS = "WsdlTestStepActions";
     // ------------------------------ FIELDS ------------------------------
 
-    private static List<Object> logCache = new ArrayList<Object>();
+    private static List<Object> logCache = new ArrayList<>();
     private static SoapUICore soapUICore;
     private static Timer soapUITimer = new Timer();
     private static JFrame frame;
@@ -1024,7 +1024,7 @@ public class SoapUI {
     }
 
     public static List<Image> getFrameIcons() {
-        List<Image> iconList = new ArrayList<Image>();
+        List<Image> iconList = new ArrayList<>();
         for (String iconPath : FRAME_ICON.split(";")) {
             iconList.add(UISupport.createImageIcon(iconPath).getImage());
         }

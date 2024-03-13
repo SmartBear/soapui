@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class SettingUtils {
     public static Collection<? extends QName> string2QNames(String string) {
-        List<QName> result = new ArrayList<QName>();
+        List<QName> result = new ArrayList<>();
         if (string != null && string.trim().length() > 0) {
             try {
                 StringList names = StringList.fromXml(string);
@@ -84,7 +84,7 @@ public class SettingUtils {
     }
 
     public static Map<QName, String[]> string2QNameValues(String string) {
-        LinkedHashMap<QName, String[]> result = new LinkedHashMap<QName, String[]>();
+        LinkedHashMap<QName, String[]> result = new LinkedHashMap<>();
         if (string != null && string.trim().length() > 0) {
             try {
                 StringList list = StringList.fromXml(string);

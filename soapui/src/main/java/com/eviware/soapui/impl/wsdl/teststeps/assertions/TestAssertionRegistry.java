@@ -72,7 +72,7 @@ import java.util.TreeSet;
 
 public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
     private static TestAssertionRegistry instance;
-    private Map<String, TestAssertionFactory> availableAssertions = new HashMap<String, TestAssertionFactory>();
+    private Map<String, TestAssertionFactory> availableAssertions = new HashMap<>();
     private StringToStringMap assertionLabels = new StringToStringMap();
     private final static Logger log = LogManager.getLogger(TestAssertionRegistry.class);
 
@@ -245,7 +245,7 @@ public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
     public LinkedHashMap<String, SortedSet<AssertionListEntry>> addCategoriesAssertionsMap(Assertable assertable,
                                                                                            LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap) {
         for (String category : AssertionCategoryMapping.getAssertionCategories()) {
-            SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
+            SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<>();
             categoryAssertionsMap.put(category, assertionCategorySet);
         }
 
@@ -277,7 +277,7 @@ public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
     public LinkedHashMap<String, SortedSet<AssertionListEntry>> addAllCategoriesMap(
             LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap) {
         for (String category : AssertionCategoryMapping.getAssertionCategories()) {
-            SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
+            SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<>();
             categoryAssertionsMap.put(category, assertionCategorySet);
         }
 
@@ -305,7 +305,7 @@ public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
     }
 
     public String[] getAvailableAssertionNames(Assertable assertable) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (TestAssertionFactory assertion : availableAssertions.values()) {
             if (assertion.canAssert(assertable)) {

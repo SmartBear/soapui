@@ -32,7 +32,7 @@ public class ActionComponentRegistry {
         return null;
     }
 
-    private static Map<String, ActionComponentFactory> factories = new HashMap<String, ActionComponentFactory>();
+    private static Map<String, ActionComponentFactory> factories = new HashMap<>();
 
     static {
     }

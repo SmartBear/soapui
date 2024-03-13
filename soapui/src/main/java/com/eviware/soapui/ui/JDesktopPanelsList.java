@@ -97,7 +97,7 @@ public class JDesktopPanelsList extends JPanel {
     }
 
     public List<DesktopPanel> getDesktopPanels() {
-        List<DesktopPanel> result = new ArrayList<DesktopPanel>();
+        List<DesktopPanel> result = new ArrayList<>();
 
         for (int c = 0; c < desktopPanels.getSize(); c++) {
             result.add((DesktopPanel) desktopPanels.get(c));

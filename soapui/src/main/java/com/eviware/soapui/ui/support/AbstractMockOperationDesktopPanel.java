@@ -81,7 +81,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 
         inspectorPanel = JInspectorPanelFactory.build(buildResponseList());
         inspectorPanel.setDefaultDividerLocation(0.5F);
-        dispatchInspector = new JComponentInspector<JComponent>(buildDispatchEditor(), "Dispatch ("
+        dispatchInspector = new JComponentInspector<>(buildDispatchEditor(), "Dispatch ("
                 + getModelItem().getDispatchStyle().toString() + ")", "Configures current dispatch style", true);
         inspectorPanel.addInspector(dispatchInspector);
         inspectorPanel.activate(dispatchInspector);
@@ -170,7 +170,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 
         defaultResponsePanel.add(new JLabel("Default Response: "), BorderLayout.WEST);
 
-        ModelItemNames<MockResponse> names = new ModelItemNames<MockResponse>(getModelItem().getMockResponses());
+        ModelItemNames<MockResponse> names = new ModelItemNames<>(getModelItem().getMockResponses());
         defaultResponseCombo = new JComboBox(new ExtendedComboBoxModel(names.getNames()));
         defaultResponseCombo.setPreferredSize(new Dimension(150, 20));
         defaultResponseCombo.addItemListener(new ItemListener() {
@@ -219,7 +219,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 
     public class ResponseListModel extends AbstractListModel implements ListModel, MockServiceListener,
             PropertyChangeListener {
-        private java.util.List<MockResponse> responses = new ArrayList<MockResponse>();
+        private java.util.List<MockResponse> responses = new ArrayList<>();
 
         public ResponseListModel() {
             for (int c = 0; c < getModelItem().getMockResponseCount(); c++) {

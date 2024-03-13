@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class SwingFileDialogs implements XFileDialogs {
     private static Component parent;
-    private static Map<Object, JFileChooser> choosers = new HashMap<Object, JFileChooser>();
+    private static Map<Object, JFileChooser> choosers = new HashMap<>();
 
     public SwingFileDialogs(Component parent) {
         SwingFileDialogs.parent = parent;

@@ -42,10 +42,10 @@ public class SecurityCheckedParameterHolder extends SecurityScanParameterListene
     private SecurityScan securityCheck;
     private CheckedParametersListConfig paramsConfig;
 
-    private List<SecurityCheckedParameter> params = new ArrayList<SecurityCheckedParameter>();
-    private Map<String, SecurityCheckedParameter> paramsMap = new HashMap<String, SecurityCheckedParameter>();
+    private List<SecurityCheckedParameter> params = new ArrayList<>();
+    private Map<String, SecurityCheckedParameter> paramsMap = new HashMap<>();
 
-    private Set<SecurityScanParameterHolderListener> listeners = new HashSet<SecurityScanParameterHolderListener>();
+    private Set<SecurityScanParameterHolderListener> listeners = new HashSet<>();
 
     public SecurityCheckedParameterHolder(SecurityScan securityCheck, CheckedParametersListConfig checkedPameters) {
         this.securityCheck = securityCheck;
@@ -182,7 +182,7 @@ public class SecurityCheckedParameterHolder extends SecurityScanParameterListene
      * @return parameter
      */
     public List<SecurityCheckedParameter> getParametarsByName(String paramName) {
-        List<SecurityCheckedParameter> paramsList = new ArrayList<SecurityCheckedParameter>();
+        List<SecurityCheckedParameter> paramsList = new ArrayList<>();
         for (SecurityCheckedParameter param : params) {
             if (param.getName().equals(paramName)) {
                 paramsList.add(param);
@@ -192,7 +192,7 @@ public class SecurityCheckedParameterHolder extends SecurityScanParameterListene
     }
 
     public void removeParameters(int[] selected) {
-        ArrayList<SecurityCheckedParameter> paramsToRemove = new ArrayList<SecurityCheckedParameter>();
+        ArrayList<SecurityCheckedParameter> paramsToRemove = new ArrayList<>();
         for (int index : selected) {
             paramsToRemove.add(params.get(index));
         }
@@ -216,7 +216,7 @@ public class SecurityCheckedParameterHolder extends SecurityScanParameterListene
 
     @Override
     public void propertyRemoved(String name) {
-        ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<SecurityCheckedParameter>();
+        ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<>();
         for (SecurityCheckedParameter param : params) {
             if (param.getName().equals(name)) {
                 parameterToRemove.add(param);
@@ -229,7 +229,7 @@ public class SecurityCheckedParameterHolder extends SecurityScanParameterListene
 
     @Override
     public void propertyRenamed(String oldName, String newName) {
-        ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<SecurityCheckedParameter>();
+        ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<>();
         for (SecurityCheckedParameter param : params) {
             if (param.getName().equals(oldName)) {
                 parameterToRemove.add(param);

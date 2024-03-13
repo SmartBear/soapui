@@ -45,7 +45,7 @@ public class WsdlMockServicePanelBuilder extends EmptyPanelBuilder<WsdlMockServi
     }
 
     public Component buildOverviewPanel(WsdlMockService mockService) {
-        JPropertiesTable<WsdlMockService> table = new JPropertiesTable<WsdlMockService>("MockService Properties");
+        JPropertiesTable<WsdlMockService> table = new JPropertiesTable<>("MockService Properties");
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);
         table.addProperty("Path", "path");

@@ -213,7 +213,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
         }
 
         try {
-            WsdlSubmit<WsdlRequest> submitter = new WsdlSubmit<WsdlRequest>(this, getSubmitListeners(),
+            WsdlSubmit<WsdlRequest> submitter = new WsdlSubmit<>(this, getSubmitListeners(),
                     RequestTransportRegistry.getTransport(endpoint, submitContext));
             submitter.submitRequest(submitContext, async);
             return submitter;
@@ -265,7 +265,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
                         false, isMtomEnabled());
             } catch (Exception e) {
                 log.warn(e.toString());
-                definedAttachmentParts = new ArrayList<HttpAttachmentPart>();
+                definedAttachmentParts = new ArrayList<>();
             } finally {
                 UISupport.resetCursor();
             }
@@ -359,7 +359,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
     public MessagePart[] getRequestParts() {
         try {
-            List<MessagePart> result = new ArrayList<MessagePart>();
+            List<MessagePart> result = new ArrayList<>();
             result.addAll(Arrays.asList(getOperation().getDefaultRequestParts()));
             result.addAll(Arrays.asList(getDefinedAttachmentParts()));
 
@@ -372,7 +372,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
     public MessagePart[] getResponseParts() {
         try {
-            List<MessagePart> result = new ArrayList<MessagePart>();
+            List<MessagePart> result = new ArrayList<>();
             result.addAll(Arrays.asList(getOperation().getDefaultResponseParts()));
 
             if (getResponse() != null) {

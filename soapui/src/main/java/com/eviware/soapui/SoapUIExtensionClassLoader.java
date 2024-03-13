@@ -47,7 +47,7 @@ public class SoapUIExtensionClassLoader extends URLClassLoader {
         addURL(file.toURI().toURL());
     }
 
-    private static Map<ClassLoader, SoapUIClassLoaderState> clStates = new HashMap<ClassLoader, SoapUIClassLoaderState>();
+    private static Map<ClassLoader, SoapUIClassLoaderState> clStates = new HashMap<>();
 
     public static SoapUIClassLoaderState ensure() {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
@@ -93,7 +93,7 @@ public class SoapUIExtensionClassLoader extends URLClassLoader {
         String extDir = System.getProperty("soapui.ext.libraries");
 
         File dir = extDir != null ? new File(extDir) : new File(new File(root), "ext");
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
 
         if (dir.exists() && dir.isDirectory()) {
             File[] files = dir.listFiles();

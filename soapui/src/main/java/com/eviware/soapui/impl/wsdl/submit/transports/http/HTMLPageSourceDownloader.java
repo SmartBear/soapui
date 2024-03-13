@@ -41,7 +41,7 @@ import java.util.List;
 
 public class HTMLPageSourceDownloader {
     WebClient client = new WebClient();
-    List<String> missingResourcesList = new ArrayList<String>();
+    List<String> missingResourcesList = new ArrayList<>();
     public static final String MISSING_RESOURCES_LIST = "MissingResourcesList";
 
     public static final HashMap<String, String> acceptTypes = new HashMap<String, String>() {
@@ -53,7 +53,7 @@ public class HTMLPageSourceDownloader {
         }
     };
 
-    List<Attachment> attachmentList = new ArrayList<Attachment>();
+    List<Attachment> attachmentList = new ArrayList<>();
 
     protected List<Attachment> downloadCssAndImages(String endpoint, HttpRequest request)
             throws MalformedURLException, IOException {
@@ -61,7 +61,7 @@ public class HTMLPageSourceDownloader {
         String xPathExpression = "//*[name() = 'img' or name() = 'link' and @type = 'text/css']";
         List<?> resultList = htmlPage.getByXPath(xPathExpression);
         byte[] bytes = null;
-        List<Attachment> attachmentList = new ArrayList<Attachment>();
+        List<Attachment> attachmentList = new ArrayList<>();
         Iterator<?> i = resultList.iterator();
         while (i.hasNext()) {
             try {

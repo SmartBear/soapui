@@ -47,14 +47,14 @@ public class ElementParticle implements Particle {
         this.schema = schema;
         this.name = name;
         type = Type.Factory.newType(schema);
-        attributes = new HashMap<String, String>();
+        attributes = new HashMap<>();
     }
 
     public ElementParticle(ElementParticleConfig xml, Schema schema) {
         this.schema = schema;
         name = xml.getName();
         type = Type.Factory.parse(xml.getType(), schema);
-        attributes = new HashMap<String, String>();
+        attributes = new HashMap<>();
         for (MapEntryConfig entry : xml.getAttributeList()) {
             attributes.put(entry.getKey(), entry.getValue());
         }

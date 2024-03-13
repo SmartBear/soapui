@@ -39,8 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MetricsPanel extends JPanel {
-    private Map<String, Metric> metrics = new HashMap<String, Metric>();
-    private Map<String, MetricsSection> sections = new HashMap<String, MetricsSection>();
+    private Map<String, Metric> metrics = new HashMap<>();
+    private Map<String, MetricsSection> sections = new HashMap<>();
 
     public MetricsPanel() {
         super(new VerticalLayout());

@@ -310,7 +310,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
         public Handler(SchemaTabs panel, XmlObject xml) {
             this.panel = panel;
             this.xml = xml;
-            paths = new ArrayList<String>();
+            paths = new ArrayList<>();
         }
 
         public synchronized void run() {

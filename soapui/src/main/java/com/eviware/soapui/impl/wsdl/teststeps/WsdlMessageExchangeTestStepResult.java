@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implements MessageExchangeTestStepResult {
-    private List<MessageExchange> exchanges = new ArrayList<MessageExchange>();
+    private List<MessageExchange> exchanges = new ArrayList<>();
 
     public WsdlMessageExchangeTestStepResult(WsdlTestStep testStep) {
         super(testStep);

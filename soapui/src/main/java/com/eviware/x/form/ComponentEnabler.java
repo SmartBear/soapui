@@ -22,7 +22,7 @@ public class ComponentEnabler implements XFormFieldListener {
     private final XFormField formField;
 
     // Cannot use HashMap, because the XFormField may be a Proxy.
-    private ArrayList<FieldValue> fields = new ArrayList<FieldValue>();
+    private ArrayList<FieldValue> fields = new ArrayList<>();
 
     private static class FieldValue {
         XFormField field;

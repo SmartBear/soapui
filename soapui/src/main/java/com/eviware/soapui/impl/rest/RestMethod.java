@@ -49,8 +49,8 @@ import java.util.Set;
 
 public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implements MutableTestPropertyHolder,
         PropertyChangeListener {
-    private List<RestRequest> requests = new ArrayList<RestRequest>();
-    private List<RestRepresentation> representations = new ArrayList<RestRepresentation>();
+    private List<RestRequest> requests = new ArrayList<>();
+    private List<RestRepresentation> representations = new ArrayList<>();
     private RestResource resource;
     private XmlBeansRestParamsTestPropertyHolder params;
     private RestParamsPropertyHolder overlayParams;
@@ -210,8 +210,8 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
     }
 
     public RestRepresentation[] getRepresentations(RestRepresentation.Type type, String mediaType) {
-        List<RestRepresentation> result = new ArrayList<RestRepresentation>();
-        Set<String> addedTypes = new HashSet<String>();
+        List<RestRepresentation> result = new ArrayList<>();
+        Set<String> addedTypes = new HashSet<>();
 
         for (RestRepresentation representation : representations) {
             if ((type == null || type == representation.getType())
@@ -293,7 +293,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
     }
 
     public List<RestRequest> getRequestList() {
-        return new ArrayList<RestRequest>(requests);
+        return new ArrayList<>(requests);
     }
 
     public RestRequest getRequestAt(int index) {
@@ -338,8 +338,8 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
     }
 
     public RestParamProperty[] getDefaultParams() {
-        List<RestParamProperty> result = new ArrayList<RestParamProperty>();
-        Set<String> names = new HashSet<String>();
+        List<RestParamProperty> result = new ArrayList<>();
+        Set<String> names = new HashSet<>();
 
         result.addAll(Arrays.asList(resource.getDefaultParams()));
 

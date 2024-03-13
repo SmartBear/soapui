@@ -76,7 +76,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
 
     protected StringToStringMap initValues(WsdlProject modelItem, Object param) {
         if (modelItem != null && mainForm != null) {
-            List<String> endpoints = new ArrayList<String>();
+            List<String> endpoints = new ArrayList<>();
 
             for (Interface iface : modelItem.getInterfaceList()) {
                 for (String endpoint : iface.getEndpoints()) {
@@ -99,7 +99,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
 
             mainForm.setOptions(TESTSUITE, ModelSupport.getNames(new String[]{ALL_VALUE}, testSuites));
 
-            List<String> testCases = new ArrayList<String>();
+            List<String> testCases = new ArrayList<>();
 
             for (TestSuite testSuite : testSuites) {
                 for (TestCase testCase : testSuite.getTestCaseList()) {
@@ -112,7 +112,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
             testCases.add(0, ALL_VALUE);
             mainForm.setOptions(TESTCASE, testCases.toArray());
 
-            List<String> securityTests = new ArrayList<String>();
+            List<String> securityTests = new ArrayList<>();
 
             for (TestSuite testSuite : testSuites) {
                 for (TestCase testCase : testSuite.getTestCaseList()) {
@@ -158,7 +158,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
                 new XFormFieldListener() {
 
                     public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                        List<String> testCases = new ArrayList<String>();
+                        List<String> testCases = new ArrayList<>();
                         String tc = mainForm.getComponentValue(TESTCASE);
 
                         if (newValue.equals(ALL_VALUE)) {
@@ -189,7 +189,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction {
                 new XFormFieldListener() {
 
                     public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                        List<String> securityTests = new ArrayList<String>();
+                        List<String> securityTests = new ArrayList<>();
                         String st = mainForm.getComponentValue(SECURITYTEST);
 
                         if (newValue.equals(ALL_VALUE)) {

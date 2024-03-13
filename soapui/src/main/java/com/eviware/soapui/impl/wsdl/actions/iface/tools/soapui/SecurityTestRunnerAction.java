@@ -90,7 +90,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject> {
                 new XFormFieldListener() {
 
                     public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                        List<String> testCases = new ArrayList<String>();
+                        List<String> testCases = new ArrayList<>();
                         String tc = mainForm.getComponentValue(TESTCASE);
 
                         if (newValue.equals(ALL_VALUE)) {
@@ -120,7 +120,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject> {
         mainForm.addComboBox(TESTCASE, new String[]{}, "TestCase").addFormFieldListener(new XFormFieldListener() {
 
             public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                List<String> securityTests = new ArrayList<String>();
+                List<String> securityTests = new ArrayList<>();
                 String st = mainForm.getComponentValue(SECURITY_TEST_NAME);
 
                 if (newValue.equals(ALL_VALUE)) {
@@ -178,7 +178,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
     protected StringToStringMap initValues(WsdlProject modelItem, Object param) {
         if (modelItem != null && mainForm != null) {
-            List<String> endpoints = new ArrayList<String>();
+            List<String> endpoints = new ArrayList<>();
 
             for (Interface iface : modelItem.getInterfaceList()) {
                 for (String endpoint : iface.getEndpoints()) {
@@ -200,7 +200,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
             mainForm.setOptions(TESTSUITE, ModelSupport.getNames(new String[]{ALL_VALUE}, testSuites));
 
-            List<String> testCases = new ArrayList<String>();
+            List<String> testCases = new ArrayList<>();
 
             for (TestSuite testSuite : testSuites) {
                 for (TestCase testCase : testSuite.getTestCaseList()) {

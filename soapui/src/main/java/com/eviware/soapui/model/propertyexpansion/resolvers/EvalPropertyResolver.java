@@ -48,7 +48,7 @@ import java.util.Map;
 
 public class EvalPropertyResolver implements PropertyResolver {
     private Logger log = LogManager.getLogger(EvalPropertyResolver.class);
-    private Map<String, ScriptEnginePool> scriptEnginePools = new HashMap<String, ScriptEnginePool>();
+    private Map<String, ScriptEnginePool> scriptEnginePools = new HashMap<>();
 
     public String resolveProperty(PropertyExpansionContext context, String name, boolean globalOverride) {
         if (name.length() == 0 || name.charAt(0) != '=') {

@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 public class DefaultActionList implements ActionList {
-    private List<Action> actions = new ArrayList<Action>();
+    private List<Action> actions = new ArrayList<>();
     private Action defaultAction;
     private final String label;
 

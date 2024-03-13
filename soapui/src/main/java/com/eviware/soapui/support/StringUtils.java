@@ -64,7 +64,7 @@ public class StringUtils {
 
     public static List<String> splitLines(String string) {
         try {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
 
             LineNumberReader reader = new LineNumberReader(new StringReader(string));
             String s;

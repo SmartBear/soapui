@@ -53,7 +53,7 @@ public abstract class AbstractSoapUIDesktop implements SoapUIDesktop {
     private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
     private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
     private final InternalMockServiceListener mockServiceListener = new InternalMockServiceListener();
-    private Set<DesktopListener> listeners = new HashSet<DesktopListener>();
+    private Set<DesktopListener> listeners = new HashSet<>();
     private InternalWorkspaceListener workspaceListener = new InternalWorkspaceListener();
 
     public AbstractSoapUIDesktop(Workspace workspace) {

@@ -262,7 +262,7 @@ public class SumbitUserInfoAction {
         }
 
         private boolean validateFormValues() {
-            List<String> fieldErrors = new ArrayList<String>();
+            List<String> fieldErrors = new ArrayList<>();
             if (StringUtils.isNullOrEmpty(getUserFirstName())) {
                 fieldErrors.add("your first name");
             }

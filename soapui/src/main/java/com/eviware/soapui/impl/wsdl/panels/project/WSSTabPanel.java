@@ -585,7 +585,7 @@ public class WSSTabPanel extends JPanel {
         private List<WssCrypto> cryptos;
 
         public CryptoTableModel(CryptoType cryptoType) {
-            cryptos = new ArrayList<WssCrypto>();
+            cryptos = new ArrayList<>();
             for (WssCrypto crypto : wssContainer.getCryptoList()) {
                 if (crypto.getType() == cryptoType) {
                     cryptos.add(crypto);

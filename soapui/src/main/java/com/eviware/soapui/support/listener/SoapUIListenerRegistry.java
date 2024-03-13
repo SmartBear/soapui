@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 public class SoapUIListenerRegistry implements ListenerRegistry {
-    private Map<Class<?>, List<Class<?>>> listeners = new HashMap<Class<?>, List<Class<?>>>();
-    private Map<Class<?>, List<Object>> singletonListeners = new HashMap<Class<?>, List<Object>>();
-    private Map<Class<?>, SoapUIListenerConfig> listenerConfigs = new HashMap<Class<?>, SoapUIListenerConfig>();
+    private Map<Class<?>, List<Class<?>>> listeners = new HashMap<>();
+    private Map<Class<?>, List<Object>> singletonListeners = new HashMap<>();
+    private Map<Class<?>, SoapUIListenerConfig> listenerConfigs = new HashMap<>();
     private final static Logger log = LogManager.getLogger(SoapUIListenerRegistry.class);
 
     public void addListener(Class<?> listenerInterface, Class<?> listenerClass, SoapUIListenerConfig config) {
@@ -44,7 +44,7 @@ public class SoapUIListenerRegistry implements ListenerRegistry {
             classes = listeners.get(listenerInterface);
         }
         if (classes == null) {
-            classes = new ArrayList<Class<?>>();
+            classes = new ArrayList<>();
         }
         classes.add(listenerClass);
         listeners.put(listenerInterface, classes);
@@ -144,7 +144,7 @@ public class SoapUIListenerRegistry implements ListenerRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends Object> List<T> getListeners(Class<T> listenerType) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if (listeners.containsKey(listenerType)) {
             List<Class<?>> list = listeners.get(listenerType);
             for (Class<?> listenerClass : list) {
@@ -170,7 +170,7 @@ public class SoapUIListenerRegistry implements ListenerRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends Object> List<T> joinListeners(Class<T> listenerType, Collection<T> existing) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if (listeners.containsKey(listenerType)) {
             List<Class<?>> list = listeners.get(listenerType);
             for (Class<?> listenerClass : list) {

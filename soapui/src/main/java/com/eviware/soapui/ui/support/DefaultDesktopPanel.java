@@ -38,7 +38,7 @@ public class DefaultDesktopPanel implements DesktopPanel {
     private PropertyChangeSupport propertyChangeSupport;
     private String title;
     private JComponent component;
-    private Set<ModelItem> depends = new HashSet<ModelItem>();
+    private Set<ModelItem> depends = new HashSet<>();
     private ImageIcon icon;
     private final String description;
 

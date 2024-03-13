@@ -119,7 +119,7 @@ public class WsdlUtils {
     }
 
     public static <T extends ExtensibilityElement> List<T> getExtensiblityElements(List list, Class<T> clazz) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
 
         for (Iterator<T> i = list.iterator(); i.hasNext(); ) {
             T elm = i.next();
@@ -136,7 +136,7 @@ public class WsdlUtils {
             return new Element[0];
         }
 
-        List<Element> result = new ArrayList<Element>();
+        List<Element> result = new ArrayList<>();
 
         List<?> list = item.getExtensibilityElements();
         for (Iterator<?> i = list.iterator(); i.hasNext(); ) {
@@ -184,7 +184,7 @@ public class WsdlUtils {
     }
 
     public static String[] getEndpointsForBinding(Definition definition, Binding binding) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         Map map = definition.getAllServices();
         for (Iterator i = map.values().iterator(); i.hasNext(); ) {
             Service service = (Service) i.next();
@@ -381,7 +381,7 @@ public class WsdlUtils {
      */
 
     public static Part[] getInputParts(BindingOperation operation) {
-        List<Part> result = new ArrayList<Part>();
+        List<Part> result = new ArrayList<>();
         Input input = operation.getOperation().getInput();
         if (input == null || operation.getBindingInput() == null) {
             return new Part[0];
@@ -458,7 +458,7 @@ public class WsdlUtils {
     }
 
     public static MIMEContent[] getContentParts(Part part, MIMEMultipartRelated multipart) {
-        List<MIMEContent> result = new ArrayList<MIMEContent>();
+        List<MIMEContent> result = new ArrayList<>();
 
         if (multipart != null) {
             List<MIMEPart> parts = multipart.getMIMEParts();
@@ -479,7 +479,7 @@ public class WsdlUtils {
     }
 
     public static Part[] getFaultParts(BindingOperation bindingOperation, String faultName) throws Exception {
-        List<Part> result = new ArrayList<Part>();
+        List<Part> result = new ArrayList<>();
 
         BindingFault bindingFault = bindingOperation.getBindingFault(faultName);
         SOAPFault soapFault = WsdlUtils.getExtensiblityElement(bindingFault.getExtensibilityElements(), SOAPFault.class);
@@ -567,7 +567,7 @@ public class WsdlUtils {
             return new Part[0];
         }
 
-        List<Part> result = new ArrayList<Part>();
+        List<Part> result = new ArrayList<>();
         Output output = operation.getOperation().getOutput();
         if (output == null) {
             return new Part[0];
@@ -842,7 +842,7 @@ public class WsdlUtils {
     }
 
     public static List<SoapHeader> getSoapHeaders(List list) {
-        List<SoapHeader> result = new ArrayList<SoapHeader>();
+        List<SoapHeader> result = new ArrayList<>();
 
         List<SOAPHeader> soapHeaders = WsdlUtils.getExtensiblityElements(list, SOAPHeader.class);
         if (soapHeaders != null && !soapHeaders.isEmpty()) {

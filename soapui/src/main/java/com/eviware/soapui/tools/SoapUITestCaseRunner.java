@@ -87,9 +87,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
 
     private String testSuite;
     private String testCase;
-    private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
-    private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-    private List<TestCase> failedTests = new ArrayList<TestCase>();
+    private List<TestAssertion> assertions = new ArrayList<>();
+    private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<>();
+    private List<TestCase> failedTests = new ArrayList<>();
 
     private int testSuiteCount;
     private int testCaseCount;
@@ -365,7 +365,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
 
         long startTime = System.nanoTime();
 
-        List<TestCase> testCasesToRun = new ArrayList<TestCase>();
+        List<TestCase> testCasesToRun = new ArrayList<>();
 
         // validate testSuite argument
         if (testSuite != null && project.getTestSuiteByName(testSuite) == null) {

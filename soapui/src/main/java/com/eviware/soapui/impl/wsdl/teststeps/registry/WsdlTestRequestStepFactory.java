@@ -150,8 +150,8 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory {
     public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
         // build list of available interfaces / operations
         Project project = testCase.getTestSuite().getProject();
-        List<String> options = new ArrayList<String>();
-        List<Operation> operations = new ArrayList<Operation>();
+        List<String> options = new ArrayList<>();
+        List<Operation> operations = new ArrayList<>();
 
         for (int c = 0; c < project.getInterfaceCount(); c++) {
             Interface iface = project.getInterfaceAt(c);

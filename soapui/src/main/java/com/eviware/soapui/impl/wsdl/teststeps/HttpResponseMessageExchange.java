@@ -151,7 +151,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
     }
 
     public Attachment[] getResponseAttachmentsForPart(String name) {
-        List<Attachment> result = new ArrayList<Attachment>();
+        List<Attachment> result = new ArrayList<>();
 
         if (getResponseAttachments() != null) {
             for (Attachment attachment : getResponseAttachments()) {
@@ -165,7 +165,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
     }
 
     public Attachment[] getRequestAttachmentsForPart(String name) {
-        List<Attachment> result = new ArrayList<Attachment>();
+        List<Attachment> result = new ArrayList<>();
 
         for (Attachment attachment : getRequestAttachments()) {
             if (attachment.getPart().equals(name)) {

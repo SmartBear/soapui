@@ -41,7 +41,7 @@ public abstract class AbstractSoapVersion implements SoapVersion {
 
     @SuppressWarnings("unchecked")
     public void validateSoapEnvelope(String soapMessage, List<XmlError> errors) {
-        List<XmlError> errorList = new ArrayList<XmlError>();
+        List<XmlError> errorList = new ArrayList<>();
 
         try {
             XmlOptions xmlOptions = new XmlOptions();

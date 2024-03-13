@@ -219,7 +219,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         splitPane.setDividerLocation(120);
 
         inspectorPanel = JInspectorPanelFactory.build(splitPane);
-        logInspector = new JComponentInspector<JComponent>(buildLog(), "Transfer Log (0)",
+        logInspector = new JComponentInspector<>(buildLog(), "Transfer Log (0)",
                 "A log of performed transfers while the editor was open", true);
         inspectorPanel.addInspector(logInspector);
         add(inspectorPanel.getComponent(), BorderLayout.CENTER);
@@ -782,7 +782,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
                 // remove read-only properties from target property
                 if (propertyCombo == targetPropertyCombo) {
-                    List<String> names = new ArrayList<String>();
+                    List<String> names = new ArrayList<>();
                     for (String name : propertyNames) {
                         TestProperty property = selectedItem.getProperty(name);
                         if (property != null && !property.isReadOnly()) {
@@ -1236,7 +1236,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
     }
 
     private class TransfersTableModel extends AbstractTableModel {
-        private List<PropertyTransfersTestStep.PropertyTransferResult> results = new ArrayList<PropertyTransfersTestStep.PropertyTransferResult>();
+        private List<PropertyTransfersTestStep.PropertyTransferResult> results = new ArrayList<>();
 
         public synchronized int getRowCount() {
             int sum = 0;

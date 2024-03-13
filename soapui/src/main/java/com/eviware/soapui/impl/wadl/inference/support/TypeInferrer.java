@@ -121,7 +121,7 @@ public class TypeInferrer {
     }
 
     private TypeInferrer() {
-        typeTable = new HashMap<XmlAnySimpleType, TypeTree>();
+        typeTable = new HashMap<>();
         TypeTree xmlbool = new TypeTree(XmlBoolean.Factory.newInstance());
         typeTable.put(xmlbool.type, xmlbool);
         TypeTree xmlbool2 = new TypeTree(XmlBoolean.Factory.newInstance());
@@ -202,7 +202,7 @@ public class TypeInferrer {
 
         public TypeTree(XmlAnySimpleType type) {
             this.type = type;
-            children = new ArrayList<TypeTree>();
+            children = new ArrayList<>();
         }
 
         public void addChild(TypeTree type) {

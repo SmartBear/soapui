@@ -35,7 +35,7 @@ public class WsdlTestStepInsertStepSoapUIActionGroup extends DefaultSoapUIAction
     }
 
     public SoapUIActionMappingList<WsdlTestStep> getActionMappings(WsdlTestStep modelItem) {
-        SoapUIActionMappingList<WsdlTestStep> actions = new SoapUIActionMappingList<WsdlTestStep>();
+        SoapUIActionMappingList<WsdlTestStep> actions = new SoapUIActionMappingList<>();
 
         WsdlTestStepRegistry registry = WsdlTestStepRegistry.getInstance();
         WsdlTestStepFactory[] factories = (WsdlTestStepFactory[]) registry.getFactories();
@@ -43,7 +43,7 @@ public class WsdlTestStepInsertStepSoapUIActionGroup extends DefaultSoapUIAction
         for (int c = 0; c < factories.length; c++) {
             WsdlTestStepFactory factory = factories[c];
             if (factory.canCreate()) {
-                DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
+                DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<>(
                         InsertWsdlTestStepAction.SOAPUI_ACTION_ID, null, factory.getTestStepIconPath(), false, factory);
 
                 actionMapping.setName(factory.getTestStepName());

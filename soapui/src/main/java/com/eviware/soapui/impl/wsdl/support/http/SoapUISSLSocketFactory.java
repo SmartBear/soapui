@@ -56,7 +56,7 @@ public class SoapUISSLSocketFactory extends SSLConnectionSocketFactory {
 
     private final static Logger log = LogManager.getLogger(SoapUISSLSocketFactory.class);
     // A cache of factories for custom certificates/Keystores at the project level - never cleared
-    private static final Map<String, SSLConnectionSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLConnectionSocketFactory>();
+    private static final Map<String, SSLConnectionSocketFactory> factoryMap = new ConcurrentHashMap<>();
 
     private final SSLContext sslContext;
 

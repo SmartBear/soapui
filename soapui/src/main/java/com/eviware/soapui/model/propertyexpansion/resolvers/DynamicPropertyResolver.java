@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DynamicPropertyResolver implements PropertyResolver, SoapUIFactoryRegistryListener {
-    private static Map<String, ValueProvider> providers = new HashMap<String, ValueProvider>();
+    private static Map<String, ValueProvider> providers = new HashMap<>();
 
     static {
         addProvider("projectDir", new ProjectDirProvider());

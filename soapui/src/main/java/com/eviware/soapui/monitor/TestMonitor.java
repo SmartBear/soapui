@@ -54,7 +54,7 @@ import java.util.Set;
  */
 
 public class TestMonitor {
-    private Set<TestMonitorListener> listeners = new HashSet<TestMonitorListener>();
+    private Set<TestMonitorListener> listeners = new HashSet<>();
     private InternalWorkspaceListener workspaceListener = new InternalWorkspaceListener();
     private InternalProjectListener projectListener = new InternalProjectListener();
     private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
@@ -62,10 +62,10 @@ public class TestMonitor {
     private InternalMockRunListener mockRunListener = new InternalMockRunListener();
     private InternalLoadTestRunListener loadTestRunListener = new InternalLoadTestRunListener();
     private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
-    private Set<TestCaseRunner> runningTestCases = new HashSet<TestCaseRunner>();
-    private Set<LoadTestRunner> runningLoadTests = new HashSet<LoadTestRunner>();
-    private Set<SecurityTestRunner> runningSecurityTests = new HashSet<SecurityTestRunner>();
-    private Set<MockRunner> runningMockServices = new HashSet<MockRunner>();
+    private Set<TestCaseRunner> runningTestCases = new HashSet<>();
+    private Set<LoadTestRunner> runningLoadTests = new HashSet<>();
+    private Set<SecurityTestRunner> runningSecurityTests = new HashSet<>();
+    private Set<MockRunner> runningMockServices = new HashSet<>();
     private Map<String, TestCaseRunner.Status> runStatusHistory = new HashMap<String, TestCaseRunner.Status>();
 
     public TestMonitor() {

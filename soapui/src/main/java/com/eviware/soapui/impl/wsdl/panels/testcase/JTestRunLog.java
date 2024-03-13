@@ -66,7 +66,7 @@ public class JTestRunLog extends JPanel implements TestRunLog {
     private JList testLogList;
     private boolean errorsOnly = false;
     private final Settings settings;
-    private Set<String> boldTexts = new HashSet<String>();
+    private Set<String> boldTexts = new HashSet<>();
     private boolean follow = true;
     protected int selectedIndex;
     private XFormDialog optionsDialog;

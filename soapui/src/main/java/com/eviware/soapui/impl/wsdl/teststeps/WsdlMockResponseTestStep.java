@@ -151,7 +151,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
                 iface.addInterfaceListener(interfaceListener);
             }
 
-            iconAnimator = new IconAnimator<WsdlMockResponseTestStep>(this, "/mockResponseStep.gif",
+            iconAnimator = new IconAnimator<>(this, "/mockResponseStep.gif",
                     "/exec_mockResponse.gif", 4);
 
             initIcons();
@@ -973,7 +973,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
     @Override
     public Collection<Interface> getRequiredInterfaces() {
-        ArrayList<Interface> result = new ArrayList<Interface>();
+        ArrayList<Interface> result = new ArrayList<>();
         result.add(getInterface());
         return result;
     }
@@ -1047,7 +1047,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
     }
 
     public List<TestAssertion> getAssertionList() {
-        return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+        return new ArrayList<>(assertionsSupport.getAssertionList());
     }
 
     @Override
@@ -1056,7 +1056,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, mockResponse, "responseContent"));
 
@@ -1077,7 +1077,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
     }
 
     public Map<String, TestAssertion> getAssertions() {
-        Map<String, TestAssertion> result = new HashMap<String, TestAssertion>();
+        Map<String, TestAssertion> result = new HashMap<>();
 
         for (TestAssertion assertion : getAssertionList()) {
             result.put(assertion.getName(), assertion);
@@ -1101,7 +1101,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
         public void addAssertedXPath(AssertedXPath assertedXPath) {
             if (assertedXPaths == null) {
-                assertedXPaths = new ArrayList<AssertedXPath>();
+                assertedXPaths = new ArrayList<>();
             }
 
             assertedXPaths.add(assertedXPath);

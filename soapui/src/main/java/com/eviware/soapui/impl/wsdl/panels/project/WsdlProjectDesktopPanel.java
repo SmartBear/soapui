@@ -93,7 +93,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
     private PropertyHolderTable propertiesTable;
     private JUndoableTextArea descriptionArea;
     private InternalTreeModelListener treeModelListener;
-    private Set<String> interfaceNameSet = new HashSet<String>();
+    private Set<String> interfaceNameSet = new HashSet<>();
     private WSSTabPanel wssTabPanel;
     protected MetricsPanel metrics;
     private GroovyEditorComponent loadScriptGroovyEditor;
@@ -179,7 +179,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
 
         metrics.setMetric("File Path", getModelItem().getPath());
 
-        Set<String> newNames = new HashSet<String>();
+        Set<String> newNames = new HashSet<>();
         boolean rebuilt = false;
         for (Interface iface : getModelItem().getInterfaceList()) {
             if (!metrics.hasMetric(iface.getName())) {

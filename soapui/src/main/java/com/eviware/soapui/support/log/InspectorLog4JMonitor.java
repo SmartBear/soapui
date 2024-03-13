@@ -45,7 +45,7 @@ public class InspectorLog4JMonitor implements JInspectorPanel, Log4JMonitor {
     public JLogList addLogArea(String title, String loggerName, boolean isDefault) {
         JLogList logArea = new JLogList(title);
         logArea.addLogger(loggerName, !isDefault);
-        JComponentInspector<JLogList> inspector = new JComponentInspector<JLogList>(logArea, title, null, true);
+        JComponentInspector<JLogList> inspector = new JComponentInspector<>(logArea, title, null, true);
         addInspector(inspector);
 
         if (isDefault) {

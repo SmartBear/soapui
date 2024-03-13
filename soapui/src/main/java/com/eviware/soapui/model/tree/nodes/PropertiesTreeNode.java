@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTreeNode<T> {
-    private List<PropertyTreeNode> propertyNodes = new ArrayList<PropertyTreeNode>();
-    private Map<String, PropertyTreeNode> propertyMap = new HashMap<String, PropertyTreeNode>();
+    private List<PropertyTreeNode> propertyNodes = new ArrayList<>();
+    private Map<String, PropertyTreeNode> propertyMap = new HashMap<>();
     private InternalTestPropertyListener testPropertyListener;
     private final TestPropertyHolder holder;
 

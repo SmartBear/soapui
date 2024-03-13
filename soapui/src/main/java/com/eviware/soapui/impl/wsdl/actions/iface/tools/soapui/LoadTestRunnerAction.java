@@ -194,7 +194,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
     protected StringToStringMap initValues(WsdlProject modelItem, Object param) {
         if (modelItem != null && mainForm != null) {
-            List<String> endpoints = new ArrayList<String>();
+            List<String> endpoints = new ArrayList<>();
 
             for (Interface iface : modelItem.getInterfaceList()) {
                 for (String endpoint : iface.getEndpoints()) {
@@ -346,8 +346,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject> {
 
         updating = true;
 
-        List<String> testCases = new ArrayList<String>();
-        List<String> loadTests = new ArrayList<String>();
+        List<String> testCases = new ArrayList<>();
+        List<String> loadTests = new ArrayList<>();
 
         TestSuite ts = getModelItem().getTestSuiteByName(mainForm.getComponentValue(TESTSUITE));
         String testCaseName = mainForm.getComponentValue(TESTCASE);
@@ -404,7 +404,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject> {
     }
 
     private void addPropertyArguments(ArgumentBuilder builder) {
-        List<String> propertyArguments = new ArrayList<String>();
+        List<String> propertyArguments = new ArrayList<>();
 
         addProperties(propertyArguments, GLOBALPROPERTIES, "-G");
         addProperties(propertyArguments, SYSTEMPROPERTIES, "-D");

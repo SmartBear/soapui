@@ -148,7 +148,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
         if (history.size() > 0) {
             for (Map.Entry<String, String> entry : history.entrySet()) {
                 String filePath = entry.getKey();
-                DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
+                DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<>(
                         SwitchWorkspaceAction.SOAPUI_ACTION_ID, null, null, false, filePath);
                 String wsName = entry.getValue();
 
@@ -180,7 +180,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
         if (history.size() > 0) {
             for (Map.Entry<String, String> entry : history.entrySet()) {
                 String filePath = entry.getKey();
-                DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
+                DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<>(
                         ImportWsdlProjectAction.SOAPUI_ACTION_ID, null, null, false, filePath);
                 String wsName = entry.getValue();
                 mapping.setName(wsName);
@@ -260,7 +260,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
         history.put(filePath, project.getName());
         SoapUI.getSettings().setString(RECENT_PROJECTS_SETTING, history.toXml());
 
-        DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
+        DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<>(
                 ImportWsdlProjectAction.SOAPUI_ACTION_ID, null, null, false, filePath);
         mapping.setName(project.getName());
         mapping.setDescription("Switches to the [" + project.getName() + "] project");
@@ -380,7 +380,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
         }
 
         String filePath = workspace.getPath();
-        DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
+        DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<>(
                 SwitchWorkspaceAction.SOAPUI_ACTION_ID, null, null, false, filePath);
         mapping.setName(workspace.getName());
         mapping.setDescription("Switches to the [" + workspace.getName() + "] workspace");
@@ -447,7 +447,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
             super(modelItem.getName());
 
             putValue(Action.SHORT_DESCRIPTION, "Reopen editor for [" + modelItem.getName() + "]");
-            ref = new WeakReference<ModelItem>(modelItem);
+            ref = new WeakReference<>(modelItem);
         }
 
         public ModelItem getModelItem() {

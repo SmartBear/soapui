@@ -50,24 +50,24 @@ public class SequenceContent implements Content {
     public SequenceContent(Schema schema, boolean completed) {
         this.schema = schema;
         this.completed = completed;
-        particles = new LinkedHashMap<QName, Particle>(); // LinkedHashMap
+        particles = new LinkedHashMap<>(); // LinkedHashMap
         // preserves order.
-        comesBefore = new HashMap<QName, List<QName>>();
+        comesBefore = new HashMap<>();
     }
 
     public SequenceContent(SequenceContentConfig xml, Schema schema) {
         this.schema = schema;
         completed = xml.getCompleted();
-        particles = new LinkedHashMap<QName, Particle>(); // LinkedHashMap
+        particles = new LinkedHashMap<>(); // LinkedHashMap
         // preserves order.
         for (ParticleConfig particleXml : xml.getParticleList()) {
             Particle p = Particle.Factory.parse(particleXml, schema);
             // TODO: Fix namespace!
             particles.put(p.getName(), p);
         }
-        comesBefore = new HashMap<QName, List<QName>>();
+        comesBefore = new HashMap<>();
         for (ComesBefore item : xml.getComesBeforeList()) {
-            List<QName> others = new ArrayList<QName>();
+            List<QName> others = new ArrayList<>();
             for (QName item2 : item.getOtherList()) {
                 others.add(item2);
             }
@@ -79,7 +79,7 @@ public class SequenceContent implements Content {
     public SequenceContentConfig save() {
         SequenceContentConfig xml = SequenceContentConfig.Factory.newInstance();
         xml.setCompleted(completed);
-        List<ParticleConfig> particleList = new ArrayList<ParticleConfig>();
+        List<ParticleConfig> particleList = new ArrayList<>();
         for (Particle item : particles.values()) {
             particleList.add(item.save());
         }
@@ -99,8 +99,8 @@ public class SequenceContent implements Content {
         XmlCursor cursor = context.getCursor();
 
         // Find element order
-        List<QName> orderSet = new ArrayList<QName>();
-        List<QName> orderList = new ArrayList<QName>();
+        List<QName> orderSet = new ArrayList<>();
+        List<QName> orderList = new ArrayList<>();
         if (!cursor.isEnd()) {
             cursor.push();
             do {
@@ -154,7 +154,7 @@ public class SequenceContent implements Content {
     }
 
     private void fixOrder() {
-        List<QName> order = new ArrayList<QName>();
+        List<QName> order = new ArrayList<>();
         for (QName item : particles.keySet()) {
             int i;
             for (i = order.size(); !canAppend(order.subList(0, i), item); i--) {
@@ -162,7 +162,7 @@ public class SequenceContent implements Content {
             }
             order.add(i, item);
         }
-        LinkedHashMap<QName, Particle> fixedParticles = new LinkedHashMap<QName, Particle>();
+        LinkedHashMap<QName, Particle> fixedParticles = new LinkedHashMap<>();
         for (QName item : order) {
             fixedParticles.put(item, particles.get(item));
         }
@@ -170,7 +170,7 @@ public class SequenceContent implements Content {
     }
 
     private boolean verifyOrder() {
-        List<QName> order = new ArrayList<QName>();
+        List<QName> order = new ArrayList<>();
         order.addAll(particles.keySet());
         for (int i = 1; i < particles.size(); i++) {
             if (!canAppend(order.subList(0, i), order.get(i))) {
@@ -191,7 +191,7 @@ public class SequenceContent implements Content {
     }
 
     private boolean validateOccurances(Context context, List<QName> sequence) throws XmlException {
-        Map<QName, Integer> seen = new HashMap<QName, Integer>();
+        Map<QName, Integer> seen = new HashMap<>();
         for (QName item : particles.keySet()) {
             seen.put(item, 0);
         }
@@ -226,7 +226,7 @@ public class SequenceContent implements Content {
 
     @SuppressWarnings("unchecked")
     private boolean validateOrder(Context context, List<QName> sequence) {
-        List<QName> seen = new ArrayList<QName>();
+        List<QName> seen = new ArrayList<>();
         HashMap<QName, List<QName>> comesBefore = (HashMap<QName, List<QName>>) this.comesBefore.clone();
         for (QName item : sequence) {
             if (!particles.containsKey(item)) {

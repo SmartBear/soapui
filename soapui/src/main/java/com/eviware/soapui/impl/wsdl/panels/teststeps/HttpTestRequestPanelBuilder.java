@@ -46,7 +46,7 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 
     public JPanel buildOverviewPanel(HttpTestRequestStep testStep) {
         HttpTestRequestInterface<?> request = testStep.getTestRequest();
-        JPropertiesTable<HttpTestRequestInterface<?>> table = new JPropertiesTable<HttpTestRequestInterface<?>>(
+        JPropertiesTable<HttpTestRequestInterface<?>> table = new JPropertiesTable<>(
                 "HTTP TestRequest Properties");
 
         // basic properties

@@ -68,7 +68,7 @@ public class WsdlValidator {
     }
 
     public AssertionError[] assertRequest(WsdlMessageExchange messageExchange, boolean envelopeOnly) {
-        List<XmlError> errors = new ArrayList<XmlError>();
+        List<XmlError> errors = new ArrayList<>();
         try {
             String requestContent = messageExchange.getRequestContent();
             wsdlContext.getSoapVersion().validateSoapEnvelope(requestContent, errors);
@@ -281,7 +281,7 @@ public class WsdlValidator {
             throw new Exception("Missing parts for operation [" + operationName + "]");
         }
 
-        List<XmlObject> result = new ArrayList<XmlObject>();
+        List<XmlObject> result = new ArrayList<>();
 
         if (WsdlUtils.isRpc(wsdlContext.getDefinition(), bindingOperation)) {
             // get root element
@@ -384,7 +384,7 @@ public class WsdlValidator {
 
     private AssertionError[] convertErrors(List<XmlError> errors) {
         if (errors.size() > 0) {
-            List<AssertionError> response = new ArrayList<AssertionError>();
+            List<AssertionError> response = new ArrayList<>();
             for (Iterator<XmlError> i = errors.iterator(); i.hasNext(); ) {
                 XmlError error = i.next();
 
@@ -498,7 +498,7 @@ public class WsdlValidator {
     }
 
     public AssertionError[] assertResponse(WsdlMessageExchange messageExchange, boolean envelopeOnly) {
-        List<XmlError> errors = new ArrayList<XmlError>();
+        List<XmlError> errors = new ArrayList<>();
         try {
             String response = messageExchange.getResponseContent();
 
@@ -610,7 +610,7 @@ public class WsdlValidator {
         xmlOptions.setLoadLineNumbers(XmlOptions.LOAD_LINE_NUMBERS_END_ELEMENT);
 
         XmlCursor cur = msg.newCursor();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         while (cur.hasNextToken()) {
             if (cur.toNextToken().isNamespace()) {
@@ -636,7 +636,7 @@ public class WsdlValidator {
         obj = obj.changeType(type);
 
         // create internal error list
-        ArrayList<Object> list = new ArrayList<Object>();
+        ArrayList<Object> list = new ArrayList<>();
 
         xmlOptions = new XmlOptions();
         xmlOptions.setErrorListener(list);

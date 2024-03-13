@@ -39,7 +39,7 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
     private boolean isActive;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     private T xmlDocument;
-    private Set<EditorLocationListener<T>> listeners = new HashSet<EditorLocationListener<T>>();
+    private Set<EditorLocationListener<T>> listeners = new HashSet<>();
     private Editor<T> editor;
     private JComponent component;
     private final String viewId;

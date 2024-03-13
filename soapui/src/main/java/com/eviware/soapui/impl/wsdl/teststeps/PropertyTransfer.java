@@ -420,7 +420,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 XmlCursor targetCursor = targetXml.newCursor();
 
                 try {
-                    List<String> result = new ArrayList<String>();
+                    List<String> result = new ArrayList<>();
 
                     targetCursor.selectPath(targetPath);
 
@@ -497,7 +497,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         XmlCursor lastSource = null;
 
         try {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
 
             String tp = PropertyExpander.expandProperties(context, getTargetPath());
             targetXml.selectPath(tp);

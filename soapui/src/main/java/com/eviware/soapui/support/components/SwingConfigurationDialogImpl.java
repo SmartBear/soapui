@@ -49,7 +49,7 @@ public class SwingConfigurationDialogImpl implements ConfigurationDialog {
     private SimpleForm form;
     private boolean result;
     private Map<String, String> values;
-    private Map<String, FieldType> fieldTypes = new HashMap<String, FieldType>();
+    private Map<String, FieldType> fieldTypes = new HashMap<>();
     private final String title;
     private Dimension size;
     private JComponent content;

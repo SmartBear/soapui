@@ -61,7 +61,7 @@ import java.util.Set;
 public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpansionContainer {
     private WsdlProject project;
     private DefaultEndpointStrategyConfig config;
-    private Map<String, EndpointDefaults> defaults = new HashMap<String, EndpointDefaults>();
+    private Map<String, EndpointDefaults> defaults = new HashMap<>();
     private PropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
     private ProjectListener projectListener = new InternalProjectListener();
     private DefaultEndpointStrategyConfigurationPanel configurationPanel;
@@ -108,7 +108,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
             return;
         }
 
-        Set<String> endpoints = new HashSet<String>();
+        Set<String> endpoints = new HashSet<>();
 
         for (Interface iface : project.getInterfaceList()) {
             endpoints.addAll(Arrays.asList(iface.getEndpoints()));

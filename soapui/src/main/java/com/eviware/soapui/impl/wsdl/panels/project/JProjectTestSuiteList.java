@@ -68,7 +68,7 @@ import java.util.Map;
  */
 
 public class JProjectTestSuiteList extends JPanel {
-    private Map<TestSuite, TestSuiteListPanel> panels = new HashMap<TestSuite, TestSuiteListPanel>();
+    private Map<TestSuite, TestSuiteListPanel> panels = new HashMap<>();
     private final WsdlProject project;
     private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
     private TestSuiteListPanel selectedTestSuite;

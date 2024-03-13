@@ -89,7 +89,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
     public void setRequestContent(String requestContent, boolean useSoftReference) {
         if (useSoftReference) {
-            this.softRequestContent = new SoftReference<String>(requestContent);
+            this.softRequestContent = new SoftReference<>(requestContent);
         } else {
             this.requestContent = requestContent;
         }
@@ -111,7 +111,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
     public void setResponse(WsdlResponse response, boolean useSoftReference) {
         if (useSoftReference) {
-            this.softResponse = new SoftReference<WsdlResponse>(response);
+            this.softResponse = new SoftReference<>(response);
         } else {
             this.response = response;
         }
@@ -277,7 +277,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
     public void addAssertedXPath(AssertedXPath assertedXPath) {
         if (assertedXPaths == null) {
-            assertedXPaths = new ArrayList<AssertedXPath>();
+            assertedXPaths = new ArrayList<>();
         }
 
         assertedXPaths.add(assertedXPath);

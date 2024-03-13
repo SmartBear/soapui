@@ -76,12 +76,12 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
     public static final String CR_ESCAPE_SEQUENCE = "\\\\_r";
     public static final Principal EMPTY_SSLSTATE = new UserPrincipal("");
 
-    private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
+    private Set<SubmitListener> submitListeners = new HashSet<>();
     private String requestContent;
     private RequestIconAnimator<?> iconAnimator;
     private HttpResponse response;
     private SettingPathPropertySupport dumpFile;
-    private List<FileAttachment<?>> attachments = new ArrayList<FileAttachment<?>>();
+    private List<FileAttachment<?>> attachments = new ArrayList<>();
     private IAfterRequestInjection afterRequestInjection;
 
     protected AbstractHttpRequest(T config, AbstractHttpOperation parent, String icon, boolean forLoadTest) {
@@ -191,7 +191,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
      * (java.lang.String)
      */
     public Attachment[] getAttachmentsForPart(String partName) {
-        List<Attachment> result = new ArrayList<Attachment>();
+        List<Attachment> result = new ArrayList<>();
 
         for (Attachment attachment : attachments) {
             if (partName.equals(attachment.getPart())) {
@@ -526,7 +526,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
     }
 
     public Set<String> getBasicAuthenticationProfiles() {
-        Set<String> authTypes = new HashSet<String>();
+        Set<String> authTypes = new HashSet<>();
         CredentialsConfig credentialsConfig = getConfig().getCredentials();
         if (credentialsConfig != null) {
             for (String type : credentialsConfig.getAddedBasicAuthenticationTypesList()) {

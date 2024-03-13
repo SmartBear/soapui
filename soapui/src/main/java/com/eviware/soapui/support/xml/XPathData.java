@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class XPathData {
     private StringToStringMap nsMap = new StringToStringMap();
-    private List<String> pathComponents = new ArrayList<String>();
+    private List<String> pathComponents = new ArrayList<>();
     private String function;
     private boolean absolute = false;
 
@@ -113,7 +113,7 @@ public class XPathData {
         }
 
         StringToStringMap nsMap2 = new StringToStringMap(nsMap);
-        ArrayList<String> pathComponents2 = new ArrayList<String>(pathComponents);
+        ArrayList<String> pathComponents2 = new ArrayList<>(pathComponents);
         pathComponents2.remove(0);
         return new XPathData(nsMap2, pathComponents2, absolute);
     }
@@ -230,7 +230,7 @@ public class XPathData {
      * Get a path with all namespaces replaced.
      */
     public String getCanonicalPath() {
-        HashMap<String, String> inverseNsMap = new HashMap<String, String>();
+        HashMap<String, String> inverseNsMap = new HashMap<>();
         for (String key : nsMap.keySet()) {
             String value = nsMap.get(key);
             inverseNsMap.put(value, key);

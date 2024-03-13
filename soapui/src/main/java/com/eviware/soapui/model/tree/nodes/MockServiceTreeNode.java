@@ -35,7 +35,7 @@ import java.util.List;
 
 public class MockServiceTreeNode extends AbstractModelItemTreeNode<MockService> {
     private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
-    private List<MockOperationTreeNode> mockOperationNodes = new ArrayList<MockOperationTreeNode>();
+    private List<MockOperationTreeNode> mockOperationNodes = new ArrayList<>();
     private InternalMockServiceListener mockServiceListener;
     private PropertiesTreeNode<?> propertiesTreeNode;
 

@@ -40,8 +40,8 @@ public class LoadTestLog extends AbstractListModel implements Runnable {
     private List<LoadTestLogEntry> entries = Collections.synchronizedList(new ArrayList<LoadTestLogEntry>());
     private final WsdlLoadTest loadTest;
     private int totalErrorCount;
-    private Map<String, Integer> errorCounts = new HashMap<String, Integer>();
-    private Queue<LoadTestLogEntry> entriesStack = new ConcurrentLinkedQueue<LoadTestLogEntry>();
+    private Map<String, Integer> errorCounts = new HashMap<>();
+    private Queue<LoadTestLogEntry> entriesStack = new ConcurrentLinkedQueue<>();
     private Thread modelThread;
     private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
 

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MockOperationDispatchRegistry {
-    private static Map<String, MockOperationDispatchFactory> factories = new HashMap<String, MockOperationDispatchFactory>();
+    private static Map<String, MockOperationDispatchFactory> factories = new HashMap<>();
 
     static {
         putFactory(MockOperationDispatchStyleConfig.SEQUENCE.toString(), new SequenceMockOperationDispatcher.Factory());

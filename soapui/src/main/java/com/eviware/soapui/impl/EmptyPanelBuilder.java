@@ -53,7 +53,7 @@ public class EmptyPanelBuilder<T extends ModelItem> implements PanelBuilder<T> {
     }
 
     protected JPropertiesTable<T> buildDefaultProperties(T modelItem, String caption) {
-        JPropertiesTable<T> table = new JPropertiesTable<T>(caption, modelItem);
+        JPropertiesTable<T> table = new JPropertiesTable<>(caption, modelItem);
 
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);

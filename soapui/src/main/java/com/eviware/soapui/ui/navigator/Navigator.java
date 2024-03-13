@@ -72,7 +72,7 @@ public class Navigator extends JPanel {
     private Workspace workspace;
     private JTree mainTree;
     private SoapUITreeModel treeModel;
-    private Set<NavigatorListener> listeners = new HashSet<NavigatorListener>();
+    private Set<NavigatorListener> listeners = new HashSet<>();
     private NavigatorNodesExpandStateEngine navigatorNodesExpandStateEngine;
 
 
@@ -204,7 +204,7 @@ public class Navigator extends JPanel {
                 }
             } else {
                 TreePath[] selectionPaths = mainTree.getSelectionPaths();
-                List<ModelItem> targets = new ArrayList<ModelItem>();
+                List<ModelItem> targets = new ArrayList<>();
                 for (TreePath treePath : selectionPaths) {
                     SoapUITreeNode node = (SoapUITreeNode) treePath.getLastPathComponent();
                     targets.add(node.getModelItem());
@@ -392,7 +392,7 @@ public class Navigator extends JPanel {
                 showToolTipLessPopupMenu(popupMenu, e.getX(), e.getY());
             } else {
                 TreePath[] selectionPaths = mainTree.getSelectionPaths();
-                List<ModelItem> targets = new ArrayList<ModelItem>();
+                List<ModelItem> targets = new ArrayList<>();
                 for (TreePath treePath : selectionPaths) {
                     SoapUITreeNode node = (SoapUITreeNode) treePath.getLastPathComponent();
                     targets.add(node.getModelItem());

@@ -42,7 +42,7 @@ public abstract class AbstractXFormField<T> implements XFormField {
 
     public void addFormFieldListener(XFormFieldListener listener) {
         if (listeners == null) {
-            listeners = new HashSet<XFormFieldListener>();
+            listeners = new HashSet<>();
         }
 
         listeners.add(listener);
@@ -50,7 +50,7 @@ public abstract class AbstractXFormField<T> implements XFormField {
 
     public void addFormFieldValidator(XFormFieldValidator validator) {
         if (validators == null) {
-            validators = new ArrayList<XFormFieldValidator>();
+            validators = new ArrayList<>();
         }
 
         validators.add(validator);
@@ -95,7 +95,7 @@ public abstract class AbstractXFormField<T> implements XFormField {
             return null;
         }
 
-        ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+        ArrayList<ValidationMessage> messages = new ArrayList<>();
 
         for (XFormFieldValidator validator : validators) {
             ValidationMessage[] validateField = validator.validateField(this);

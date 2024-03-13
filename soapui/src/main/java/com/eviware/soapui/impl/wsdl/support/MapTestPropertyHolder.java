@@ -41,9 +41,9 @@ import java.util.Properties;
 import java.util.Set;
 
 public class MapTestPropertyHolder implements MutableTestPropertyHolder {
-    private Map<String, TestProperty> propertyMap = new HashMap<String, TestProperty>();
-    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
-    private List<TestProperty> properties = new ArrayList<TestProperty>();
+    private Map<String, TestProperty> propertyMap = new HashMap<>();
+    private Set<TestPropertyListener> listeners = new HashSet<>();
+    private List<TestProperty> properties = new ArrayList<>();
     public ModelItem modelItem;
     private String propertiesLabel = "Test Properties";
 
@@ -245,7 +245,7 @@ public class MapTestPropertyHolder implements MutableTestPropertyHolder {
     }
 
     public Map<String, TestProperty> getProperties() {
-        Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+        Map<String, TestProperty> result = new HashMap<>();
         for (String name : propertyMap.keySet()) {
             result.put(name, propertyMap.get(name));
         }

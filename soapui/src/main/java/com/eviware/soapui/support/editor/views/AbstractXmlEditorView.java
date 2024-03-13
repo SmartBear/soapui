@@ -41,7 +41,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     private T xmlDocument;
     private boolean editorDocumentChanged;
-    private Set<EditorLocationListener<T>> listeners = new HashSet<EditorLocationListener<T>>();
+    private Set<EditorLocationListener<T>> listeners = new HashSet<>();
     private XmlEditor<T> editor;
     private final String viewId;
 

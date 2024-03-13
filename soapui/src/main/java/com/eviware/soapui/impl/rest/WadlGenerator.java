@@ -188,7 +188,7 @@ public class WadlGenerator {
         methodConfig.setId(restMethod.getName());
         Request requestConfig = methodConfig.addNewRequest();
 
-        Map<String, RestParamProperty> defaultParams = new HashMap<String, RestParamProperty>();
+        Map<String, RestParamProperty> defaultParams = new HashMap<>();
         for (RestParamProperty defaultParam : restMethod.getResource().getDefaultParams()) {
             defaultParams.put(defaultParam.getName(), defaultParam);
         }
@@ -207,14 +207,14 @@ public class WadlGenerator {
             }
         }
 
-        Map<String, Response> responses = new HashMap<String, Response>();
+        Map<String, Response> responses = new HashMap<>();
         if (!isWADL11) {
             responses.put(null, methodConfig.addNewResponse());
         }
         for (RestRepresentation representation : restMethod.getRepresentations()) {
             Response response;
             if (isWADL11) {
-                List<Comparable> status = new ArrayList<Comparable>((List<Comparable>) representation.getStatus());
+                List<Comparable> status = new ArrayList<>((List<Comparable>) representation.getStatus());
                 Collections.sort(status);
                 StringBuilder statusStrBuilder = new StringBuilder();
                 for (Object o : status) {

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaTypeHandlerRegistry {
-    private static List<MediaTypeHandler> mediaTypeHandlers = new ArrayList<MediaTypeHandler>();
+    private static List<MediaTypeHandler> mediaTypeHandlers = new ArrayList<>();
     private static MediaTypeHandler defaultMediaTypeHandler = new DefaultMediaTypeHandler();
 
     static {

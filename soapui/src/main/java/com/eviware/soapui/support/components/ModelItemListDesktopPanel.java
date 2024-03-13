@@ -55,7 +55,7 @@ public class ModelItemListDesktopPanel extends DefaultDesktopPanel {
     private JList list;
     private ItemsListModel listModel;
     private InternalTreeModelListener treeModelListener;
-    private Map<ModelItem, StringList> detailInfo = new HashMap<ModelItem, StringList>();
+    private Map<ModelItem, StringList> detailInfo = new HashMap<>();
     private JList detailList;
     private DetailsListModel detailListModel;
 

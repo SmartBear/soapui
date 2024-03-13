@@ -138,7 +138,7 @@ class SwaggerUtils {
             @Override
             public Object construct(XProgressMonitor xProgressMonitor) {
                 // create the importer and import!
-                List<RestService> result = new ArrayList<RestService>();
+                List<RestService> result = new ArrayList<>();
                 try {
                     result.addAll(Arrays.asList(importer.importSwagger(finalExpUrl)));
 

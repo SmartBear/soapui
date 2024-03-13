@@ -53,7 +53,7 @@ import java.util.List;
 public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implements XFormOptionsField {
     private JList list;
     private DefaultListModel listModel;
-    private List<Boolean> selected = new ArrayList<Boolean>();
+    private List<Boolean> selected = new ArrayList<>();
 
     PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private int[] defaultIndex;
@@ -129,7 +129,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
     }
 
     public Object[] getSelectedOptions() {
-        List<Object> result = new ArrayList<Object>();
+        List<Object> result = new ArrayList<>();
 
         for (int c = 0; c < selected.size(); c++) {
             if (selected.get(c)) {

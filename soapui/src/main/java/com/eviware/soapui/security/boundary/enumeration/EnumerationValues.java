@@ -25,7 +25,7 @@ import java.util.List;
 
 public class EnumerationValues {
     private String type;
-    private List<String> valuesList = new ArrayList<String>();
+    private List<String> valuesList = new ArrayList<>();
 
     public EnumerationValues(String type) {
         this.type = type;

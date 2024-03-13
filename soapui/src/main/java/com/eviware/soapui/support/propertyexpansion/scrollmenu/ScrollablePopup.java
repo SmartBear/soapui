@@ -70,7 +70,7 @@ public class ScrollablePopup extends JPopupMenu implements ScrollableMenuContain
     /**
      * Container to hold submenus.
      */
-    private Vector<JMenuItem> subMenus = new Vector<JMenuItem>();
+    private Vector<JMenuItem> subMenus = new Vector<>();
     /**
      * Height of the screen.
      */

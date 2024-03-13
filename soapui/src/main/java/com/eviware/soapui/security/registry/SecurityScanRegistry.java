@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class SecurityScanRegistry {
     protected static SecurityScanRegistry instance;
-    private Map<String, SecurityScanFactory> availableSecurityChecks = new HashMap<String, SecurityScanFactory>();
+    private Map<String, SecurityScanFactory> availableSecurityChecks = new HashMap<>();
     private StringToStringMap securityCheckNames = new StringToStringMap();
 
     public SecurityScanRegistry() {
@@ -146,7 +146,7 @@ public class SecurityScanRegistry {
      * @return A String Array containing the names of all the scans
      */
     public String[] getAvailableSecurityScansNames() {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (SecurityScanFactory securityCheck : availableSecurityChecks.values()) {
             result.add(securityCheck.getSecurityScanName());
@@ -160,7 +160,7 @@ public class SecurityScanRegistry {
 
     // TODO drso: test and implement properly
     public String[] getAvailableSecurityScansNames(TestStep testStep) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (SecurityScanFactory securityCheck : availableSecurityChecks.values()) {
             if (securityCheck.canCreate(testStep)) {

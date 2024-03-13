@@ -41,8 +41,8 @@ import java.util.Map;
 
 public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements XFormOptionsField {
     protected ButtonGroup buttonGroup;
-    protected Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
-    protected List<Object> items = new ArrayList<Object>();
+    protected Map<String, ButtonModel> models = new HashMap<>();
+    protected List<Object> items = new ArrayList<>();
 
     public XFormRadioGroup(String[] values) {
         super(new JPanel());

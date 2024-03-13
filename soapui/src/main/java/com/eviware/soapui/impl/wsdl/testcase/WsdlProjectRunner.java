@@ -39,8 +39,8 @@ import java.util.Set;
 
 public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProjectRunContext> implements ProjectRunner {
     private ProjectRunListener[] listeners;
-    private Set<TestSuiteRunner> finishedRunners = new HashSet<TestSuiteRunner>();
-    private Set<TestSuiteRunner> activeRunners = new HashSet<TestSuiteRunner>();
+    private Set<TestSuiteRunner> finishedRunners = new HashSet<>();
+    private Set<TestSuiteRunner> activeRunners = new HashSet<>();
     private int currentTestSuiteIndex;
     private WsdlTestSuite currentTestSuite;
     private TestSuiteRunListener internalTestRunListener = new InternalTestSuiteRunListener();

@@ -40,9 +40,9 @@ public abstract class AbstractAddToTestCaseAction<T extends ModelItem> extends A
     }
 
     public static WsdlTestCase getTargetTestCase(WsdlProject project) {
-        List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
-        List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
-        List<String> testCaseNames = new ArrayList<String>();
+        List<WsdlTestCase> testCases = new ArrayList<>();
+        List<WsdlTestSuite> testSuites = new ArrayList<>();
+        List<String> testCaseNames = new ArrayList<>();
         WsdlTestCase testCase;
 
         if (project.getTestSuiteCount() == 0) {
@@ -65,7 +65,7 @@ public abstract class AbstractAddToTestCaseAction<T extends ModelItem> extends A
         }
 
         if (testCases.size() == 0) {
-            List<String> testSuiteNames = new ArrayList<String>();
+            List<String> testSuiteNames = new ArrayList<>();
 
             for (int c = 0; c < project.getTestSuiteCount(); c++) {
                 TestSuite testSuite = project.getTestSuiteAt(c);

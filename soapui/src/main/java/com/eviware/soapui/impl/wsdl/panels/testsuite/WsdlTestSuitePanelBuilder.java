@@ -42,7 +42,7 @@ public class WsdlTestSuitePanelBuilder<T extends WsdlTestSuite> extends EmptyPan
     }
 
     public Component buildOverviewPanel(T modelItem) {
-        JPropertiesTable<WsdlTestSuite> table = new JPropertiesTable<WsdlTestSuite>("TestSuite Properties", modelItem);
+        JPropertiesTable<WsdlTestSuite> table = new JPropertiesTable<>("TestSuite Properties", modelItem);
 
         table.addProperty("Name", "name", true);
 

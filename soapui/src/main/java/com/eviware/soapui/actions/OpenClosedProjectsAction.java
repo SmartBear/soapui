@@ -40,7 +40,7 @@ public class OpenClosedProjectsAction extends AbstractSoapUIAction<WorkspaceImpl
     }
 
     public void perform(WorkspaceImpl workspace, Object param) {
-        List<Project> openProjects = new ArrayList<Project>();
+        List<Project> openProjects = new ArrayList<>();
         for (Project project : workspace.getProjectList()) {
             if (!project.isOpen() && !project.isDisabled()) {
                 openProjects.add(project);

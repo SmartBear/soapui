@@ -33,7 +33,7 @@ import java.util.List;
 public final class HttpAttachmentPart extends MessagePart.AttachmentPart {
     public static final String ANONYMOUS_NAME = "<anonymous>";
     private String name;
-    private List<String> contentTypes = new ArrayList<String>();
+    private List<String> contentTypes = new ArrayList<>();
     private Attachment.AttachmentType type;
     private boolean anonymous;
     private SchemaType schemaType;

@@ -129,7 +129,7 @@ public class CachedWsdlLoader extends WsdlLoader {
             throw new Exception("Failed to create directory [" + folderName + "]");
         }
 
-        Map<String, String> urlToFileMap = new HashMap<String, String>();
+        Map<String, String> urlToFileMap = new HashMap<>();
 
         setFilenameForUrl(config.getRootPart(), Constants.WSDL11_NS, urlToFileMap, null);
 
@@ -158,7 +158,7 @@ public class CachedWsdlLoader extends WsdlLoader {
 
     public StringToStringMap createFilesForExport(String urlPrefix) throws Exception {
         StringToStringMap result = new StringToStringMap();
-        Map<String, String> urlToFileMap = new HashMap<String, String>();
+        Map<String, String> urlToFileMap = new HashMap<>();
 
         if (urlPrefix == null) {
             urlPrefix = "";

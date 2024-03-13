@@ -43,7 +43,7 @@ public class CloneInterfaceAction extends AbstractSoapUIAction<WsdlInterface> {
         WorkspaceImpl workspace = iface.getProject().getWorkspace();
         String[] names = ModelSupport.getNames(workspace.getOpenProjectList(), new String[]{"<Create New>"});
 
-        List<String> asList = new ArrayList<String>(Arrays.asList(names));
+        List<String> asList = new ArrayList<>(Arrays.asList(names));
         asList.remove(iface.getProject().getName());
 
         String targetProjectName = UISupport.prompt("Select target Project for cloned Interface", "Clone Interface",

@@ -170,7 +170,7 @@ public class JLoadTestLogTable extends JPanel {
         toolbar.add(exportButton);
         toolbar.addGlue();
 
-        List<Object> steps = new ArrayList<Object>();
+        List<Object> steps = new ArrayList<>();
         steps.add("- All -");
         steps.add("Message");
         for (LoadTestAssertion assertion : loadTestLog.getLoadTest().getAssertionList()) {
@@ -203,7 +203,7 @@ public class JLoadTestLogTable extends JPanel {
         toolbar.add(typesFilterComboBox);
         toolbar.addSeparator();
 
-        List<Object> types = new ArrayList<Object>();
+        List<Object> types = new ArrayList<>();
         types.add("- All -");
         for (TestStep testStep : loadTestLog.getLoadTest().getTestCase().getTestStepList()) {
             types.add(testStep.getName());

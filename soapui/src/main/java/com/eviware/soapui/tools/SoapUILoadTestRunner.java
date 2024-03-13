@@ -66,7 +66,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
     private String testCase;
     private String loadTest;
     private boolean printReport;
-    private List<LoadTestRunner> failedTests = new ArrayList<LoadTestRunner>();
+    private List<LoadTestRunner> failedTests = new ArrayList<>();
     private int testCaseCount;
     private int loadTestCount;
     private int limit = -1;

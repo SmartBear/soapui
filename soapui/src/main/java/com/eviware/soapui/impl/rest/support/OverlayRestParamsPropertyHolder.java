@@ -35,7 +35,7 @@ import java.util.Set;
 public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder {
     private RestParamsPropertyHolder parent;
     private RestParamsPropertyHolder overlay;
-    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
+    private Set<TestPropertyListener> listeners = new HashSet<>();
 
     public OverlayRestParamsPropertyHolder(RestParamsPropertyHolder parent, RestParamsPropertyHolder overlay) {
         this.parent = parent;
@@ -82,7 +82,7 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
     }
 
     public Map<String, TestProperty> getProperties() {
-        HashMap<String, TestProperty> result = new HashMap<String, TestProperty>();
+        HashMap<String, TestProperty> result = new HashMap<>();
 
         for (TestProperty p : values()) {
             result.put(p.getName(), p);
@@ -139,7 +139,7 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
     }
 
     public Set<String> keySet() {
-        Set<String> names = new LinkedHashSet<String>();
+        Set<String> names = new LinkedHashSet<>();
         for (TestProperty prop : values()) {
             names.add(prop.getName());
         }
@@ -209,7 +209,7 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
     public Collection<TestProperty> values() {
         // List<TestProperty> values = new
         // ArrayList<TestProperty>(overlay.values());
-        List<TestProperty> values = new ArrayList<TestProperty>();
+        List<TestProperty> values = new ArrayList<>();
         for (TestProperty prop : parent.values()) {
             if (overlay.hasProperty(prop.getName())) {
                 values.add(overlay.getProperty(prop.getName()));

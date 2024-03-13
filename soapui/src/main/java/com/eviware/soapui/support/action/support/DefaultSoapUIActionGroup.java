@@ -27,7 +27,7 @@ import com.eviware.soapui.support.types.StringList;
  */
 
 public class DefaultSoapUIActionGroup<T extends ModelItem> extends AbstractSoapUIActionGroup<T> {
-    private SoapUIActionMappingList<T> mappings = new SoapUIActionMappingList<T>();
+    private SoapUIActionMappingList<T> mappings = new SoapUIActionMappingList<>();
     private StringList ids = new StringList();
 
     public DefaultSoapUIActionGroup(String id, String name) {

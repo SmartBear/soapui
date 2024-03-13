@@ -122,7 +122,7 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase> {
 
             WsdlProject project = testCase.getTestSuite().getProject();
             WsdlTestSuite targetTestSuite = null;
-            Set<Interface> requiredInterfaces = new HashSet<Interface>();
+            Set<Interface> requiredInterfaces = new HashSet<>();
 
             // to another project project?
             if (!targetProjectName.equals(project.getName())) {
@@ -151,7 +151,7 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase> {
                 }
 
                 if (requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0) {
-                    Map<String, Interface> bindings = new HashMap<String, Interface>();
+                    Map<String, Interface> bindings = new HashMap<>();
                     for (Interface iface : requiredInterfaces) {
                         bindings.put(iface.getTechnicalId(), iface);
                     }

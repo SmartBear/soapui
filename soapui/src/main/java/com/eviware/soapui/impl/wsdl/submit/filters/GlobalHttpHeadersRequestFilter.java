@@ -51,7 +51,7 @@ public class GlobalHttpHeadersRequestFilter extends AbstractRequestFilter {
     private static StringToStringsMap globalHeadersToAdd = new StringToStringsMap();
 
     private StringToStringsMap headersToAdd;
-    private Map<AbstractHttpRequest, StringToStringsMap> savedHeaders = new HashMap<AbstractHttpRequest, StringToStringsMap>();
+    private Map<AbstractHttpRequest, StringToStringsMap> savedHeaders = new HashMap<>();
 
     @Override
     public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> request) {

@@ -635,7 +635,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         try {
             XmlUtils.createXmlObject(xml, new XmlOptions().setLoadLineNumbers());
         } catch (XmlException e) {
-            List<ValidationError> result = new ArrayList<ValidationError>();
+            List<ValidationError> result = new ArrayList<>();
 
             if (e.getErrors() != null) {
                 for (Object error : e.getErrors()) {

@@ -68,9 +68,9 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
     public static final String ICON_NAME = "/test_suite.png";
 
     private final WsdlProject project;
-    private List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
-    private Set<TestSuiteListener> testSuiteListeners = new HashSet<TestSuiteListener>();
-    private Set<TestSuiteRunListener> testSuiteRunListeners = new HashSet<TestSuiteRunListener>();
+    private List<WsdlTestCase> testCases = new ArrayList<>();
+    private Set<TestSuiteListener> testSuiteListeners = new HashSet<>();
+    private Set<TestSuiteRunListener> testSuiteRunListeners = new HashSet<>();
     private SoapUIScriptEngine setupScriptEngine;
     private SoapUIScriptEngine tearDownScriptEngine;
 
@@ -342,7 +342,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
     }
 
     public List<TestCase> getTestCaseList() {
-        List<TestCase> result = new ArrayList<TestCase>();
+        List<TestCase> result = new ArrayList<>();
         for (WsdlTestCase testCase : testCases) {
             result.add(testCase);
         }
@@ -351,7 +351,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
     }
 
     public Map<String, TestCase> getTestCases() {
-        Map<String, TestCase> result = new HashMap<String, TestCase>();
+        Map<String, TestCase> result = new HashMap<>();
         for (TestCase testCase : testCases) {
             result.put(testCase.getName(), testCase);
         }
@@ -617,7 +617,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			 * Create tarnsition table ( old id , new id ) and use it to replace
 			 * all old ids in new imported test case.
 			 */
-            LinkedHashMap<String, String> oldNewIds = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> oldNewIds = new LinkedHashMap<>();
             for (int cnt = 0; cnt < importTestCaseConfig.getTestStepList().size(); cnt++) {
                 oldNewIds.put(importTestCaseConfig.getTestStepList().get(cnt).getId(), newTestCase.getTestStepList()
                         .get(cnt).getId());

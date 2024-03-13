@@ -44,7 +44,7 @@ public class OutgoingWss implements PropertyExpansionContainer {
     private static final int MOVE_UP = -1;
 
     private OutgoingWssConfig config;
-    private List<WssEntry> entries = new ArrayList<WssEntry>();
+    private List<WssEntry> entries = new ArrayList<>();
     private final DefaultWssContainer container;
 
     public OutgoingWss(OutgoingWssConfig config, DefaultWssContainer container) {

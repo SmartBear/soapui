@@ -41,8 +41,8 @@ import java.util.List;
 
 public class LoadTestSamples extends AbstractTableModel {
     private final LoadTest loadTest;
-    private List<List<LoadTestStepSample[]>> samples = new ArrayList<List<LoadTestStepSample[]>>();
-    private List<Long> timestamps = new ArrayList<Long>();
+    private List<List<LoadTestStepSample[]>> samples = new ArrayList<>();
+    private List<Long> timestamps = new ArrayList<>();
     private InternalLoadTestRunListener loadTestRunListener = new InternalLoadTestRunListener();
     private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
     private final static Logger log = LogManager.getLogger(LoadTestSamples.class);
@@ -123,12 +123,12 @@ public class LoadTestSamples extends AbstractTableModel {
         public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
                                   TestCaseRunContext runContext) {
             long timestamp = System.currentTimeMillis();
-            List<LoadTestStepSample[]> s = new ArrayList<LoadTestStepSample[]>();
+            List<LoadTestStepSample[]> s = new ArrayList<>();
             List<TestStepResult> testResults = testRunner.getResults();
 
             for (int c = 0; c < loadTest.getTestCase().getTestStepCount(); c++) {
                 TestStep testStep = loadTest.getTestCase().getTestStepAt(c);
-                List<LoadTestStepSample> results = new ArrayList<LoadTestStepSample>();
+                List<LoadTestStepSample> results = new ArrayList<>();
 
                 for (int i = 0; i < testResults.size(); i++) {
                     TestStepResult stepResult = testResults.get(i);

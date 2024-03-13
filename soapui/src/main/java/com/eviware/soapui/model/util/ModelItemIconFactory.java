@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModelItemIconFactory {
-    private static Map<Class<? extends ModelItem>, String> modelItemIcons = new HashMap<Class<? extends ModelItem>, String>();
+    private static Map<Class<? extends ModelItem>, String> modelItemIcons = new HashMap<>();
 
     static {
         // the "class" keys here are only used for lookup - but must be implementations of ModelItem

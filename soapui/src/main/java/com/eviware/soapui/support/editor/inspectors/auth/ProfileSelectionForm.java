@@ -86,7 +86,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
     private static final String OAUTH_1_FORM_LABEL = "OAuth 1 form";
     private static final ImageIcon AUTH_NOT_ENABLED_ICON = null;
 
-    private static final Map<String, ShowOnlineHelpAction> helpActions = new HashMap<String, ShowOnlineHelpAction>();
+    private static final Map<String, ShowOnlineHelpAction> helpActions = new HashMap<>();
     private final JPanel outerPanel = new JPanel(new BorderLayout());
     private final JPanel cardPanel = new JPanel(new CardLayout());
     private T request;
@@ -115,7 +115,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
     }
 
     protected static ArrayList<String> getBasicAuthenticationTypes() {
-        ArrayList<String> options = new ArrayList<String>();
+        ArrayList<String> options = new ArrayList<>();
         options.add(AbstractHttpRequest.BASIC_AUTH_PROFILE);
         options.add(NTLM.toString());
         options.add(SPNEGO_KERBEROS.toString());
@@ -159,7 +159,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         cardPanel.add(createEmptyPanel(), EMPTY_PANEL);
         innerPanel.add(cardPanel, BorderLayout.CENTER);
 
-        authenticationForm = new BasicAuthenticationForm<T>(request);
+        authenticationForm = new BasicAuthenticationForm<>(request);
         cardPanel.add(authenticationForm.getComponent(), BASIC_FORM_LABEL);
 
         if (isSoapRequest(request)) {
@@ -414,7 +414,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
     }
 
     private String[] createOptionsForAuthorizationCombo(String selectedAuthProfile) {
-        ArrayList<String> options = new ArrayList<String>();
+        ArrayList<String> options = new ArrayList<>();
         options.add(CredentialsConfig.AuthType.NO_AUTHORIZATION.toString());
         Set<String> basicAuthenticationProfiles = request.getBasicAuthenticationProfiles();
         options.addAll(basicAuthenticationProfiles);
@@ -455,7 +455,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
     }
 
     private ArrayList<String> getAddEditOptions() {
-        ArrayList<String> addEditOptions = new ArrayList<String>();
+        ArrayList<String> addEditOptions = new ArrayList<>();
         addEditOptions.add(AddEditOptions.ADD.getDescription());
         addEditOptions.add(AddEditOptions.RENAME.getDescription());
         addEditOptions.add(AddEditOptions.DELETE.getDescription());

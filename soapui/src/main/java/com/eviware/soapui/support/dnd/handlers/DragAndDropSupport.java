@@ -55,7 +55,7 @@ public class DragAndDropSupport {
 
     public static boolean importRequiredInterfaces(Project project, Set<Interface> requiredInterfaces, String title) {
         if (requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0) {
-            Map<String, Interface> bindings = new HashMap<String, Interface>();
+            Map<String, Interface> bindings = new HashMap<>();
             for (Interface iface : requiredInterfaces) {
                 bindings.put(iface.getTechnicalId(), iface);
             }

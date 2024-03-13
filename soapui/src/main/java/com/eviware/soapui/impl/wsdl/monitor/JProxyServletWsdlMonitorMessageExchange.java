@@ -200,7 +200,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
                 }
             } catch (Exception e) {
                 if (responseWssResult == null) {
-                    responseWssResult = new Vector<Object>();
+                    responseWssResult = new Vector<>();
                 }
                 responseWssResult.add(e);
             }
@@ -284,7 +284,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
         String soapAction = SoapUtils.getSoapAction(soapVersion, requestHeaders);
 
-        List<WsdlOperation> operations = new ArrayList<WsdlOperation>();
+        List<WsdlOperation> operations = new ArrayList<>();
         for (WsdlInterface iface : ModelSupport.getChildren(project, WsdlInterface.class)) {
             for (Operation operation : iface.getOperationList()) {
                 operations.add((WsdlOperation) operation);
@@ -311,7 +311,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
                 }
             } catch (Exception e) {
                 if (requestWssResult == null) {
-                    requestWssResult = new Vector<Object>();
+                    requestWssResult = new Vector<>();
                 }
                 requestWssResult.add(e);
             }
@@ -479,7 +479,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
     public void setHttpRequestParameters(HttpServletRequest httpRequest) {
         Enumeration<String> parameterNames = httpRequest.getParameterNames();
-        Map<String, String> parameterMap = new HashMap<String, String>();
+        Map<String, String> parameterMap = new HashMap<>();
         while (parameterNames.hasMoreElements()) {
             String name = parameterNames.nextElement();
             parameterMap.put(name, httpRequest.getParameter(name));

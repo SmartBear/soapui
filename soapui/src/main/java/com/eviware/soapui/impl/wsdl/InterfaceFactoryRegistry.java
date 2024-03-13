@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InterfaceFactoryRegistry {
-    private static Map<String, InterfaceFactory<?>> factories = new HashMap<String, InterfaceFactory<?>>();
+    private static Map<String, InterfaceFactory<?>> factories = new HashMap<>();
 
     static {
         factories.put(WsdlInterfaceFactory.WSDL_TYPE, new WsdlInterfaceFactory());

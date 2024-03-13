@@ -33,7 +33,7 @@ import java.util.List;
  */
 
 public class OperationTreeNode extends AbstractModelItemTreeNode<Operation> {
-    private List<RequestTreeNode> requestNodes = new ArrayList<RequestTreeNode>();
+    private List<RequestTreeNode> requestNodes = new ArrayList<>();
     private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 
     public OperationTreeNode(Operation operation, SoapUITreeModel treeModel) {

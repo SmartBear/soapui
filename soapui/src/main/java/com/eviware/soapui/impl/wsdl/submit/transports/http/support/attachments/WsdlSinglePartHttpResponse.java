@@ -52,7 +52,7 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
                 }
             } catch (Exception e) {
                 if (wssResult == null) {
-                    wssResult = new Vector<Object>();
+                    wssResult = new Vector<>();
                 }
                 wssResult.add(e);
             }

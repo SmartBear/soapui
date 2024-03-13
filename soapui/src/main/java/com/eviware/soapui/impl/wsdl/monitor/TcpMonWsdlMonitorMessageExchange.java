@@ -318,7 +318,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 
         String soapAction = SoapUtils.getSoapAction(soapVersion, requestHeaders);
 
-        List<WsdlOperation> operations = new ArrayList<WsdlOperation>();
+        List<WsdlOperation> operations = new ArrayList<>();
         for (WsdlInterface iface : ModelSupport.getChildren(project, WsdlInterface.class)) {
             for (Operation operation : iface.getOperationList()) {
                 operations.add((WsdlOperation) operation);

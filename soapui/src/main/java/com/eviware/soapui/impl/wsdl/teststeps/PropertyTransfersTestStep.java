@@ -52,7 +52,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
     public static final String TRANSFERS = PropertyTransfersTestStep.class.getName() + "@transfers";
     private PropertyTransfersStepConfig transferStepConfig;
     private boolean canceled;
-    private List<PropertyTransfer> transfers = new ArrayList<PropertyTransfer>();
+    private List<PropertyTransfer> transfers = new ArrayList<>();
     private ImageIcon failedIcon;
     private ImageIcon okIcon;
 
@@ -206,8 +206,8 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
     }
 
     public class PropertyTransferResult extends WsdlTestStepResult {
-        private List<PropertyTransferConfig> transfers = new ArrayList<PropertyTransferConfig>();
-        private List<String[]> values = new ArrayList<String[]>();
+        private List<PropertyTransferConfig> transfers = new ArrayList<>();
+        private List<String[]> values = new ArrayList<>();
         private boolean addedAction;
 
         public PropertyTransferResult() {
@@ -286,7 +286,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         for (PropertyTransfer transfer : transfers) {
             result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, transfer, "sourcePath"));
@@ -302,7 +302,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
     }
 
     public XPathReference[] getXPathReferences() {
-        List<XPathReference> result = new ArrayList<XPathReference>();
+        List<XPathReference> result = new ArrayList<>();
 
         for (PropertyTransfer transfer : transfers) {
             if (StringUtils.hasContent(transfer.getSourcePath())) {

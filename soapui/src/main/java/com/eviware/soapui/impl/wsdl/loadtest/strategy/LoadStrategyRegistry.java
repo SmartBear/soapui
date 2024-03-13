@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class LoadStrategyRegistry {
     private static LoadStrategyRegistry instance;
-    private Map<String, LoadStrategyFactory> factories = new HashMap<String, LoadStrategyFactory>();
+    private Map<String, LoadStrategyFactory> factories = new HashMap<>();
 
     public LoadStrategyRegistry() {
         addFactory(new SimpleLoadStrategy.Factory());

@@ -43,7 +43,7 @@ public class RestRequestPanelBuilder extends EmptyPanelBuilder<RestRequest> {
     }
 
     public Component buildOverviewPanel(RestRequest request) {
-        JPropertiesTable<RestRequest> table = new JPropertiesTable<RestRequest>("Request Properties");
+        JPropertiesTable<RestRequest> table = new JPropertiesTable<>("Request Properties");
         table.addProperty("Name", "name");
         table.addProperty("Description", "description", true);
         // table.addProperty( "Method", "method", new Object[]{RequestMethod.GET,

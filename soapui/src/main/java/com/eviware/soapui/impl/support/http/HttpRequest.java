@@ -202,7 +202,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
     }
 
     public MessagePart[] getRequestParts() {
-        List<MessagePart> result = new ArrayList<MessagePart>();
+        List<MessagePart> result = new ArrayList<>();
 
         for (int c = 0; c < getPropertyCount(); c++) {
             result.add(new ParameterMessagePart(getPropertyAt(c)));
@@ -242,7 +242,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
         }
 
         try {
-            WsdlSubmit<HttpRequest> submitter = new WsdlSubmit<HttpRequest>(this, getSubmitListeners(),
+            WsdlSubmit<HttpRequest> submitter = new WsdlSubmit<>(this, getSubmitListeners(),
                     RequestTransportRegistry.getTransport(endpoint, submitContext));
             submitter.submitRequest(submitContext, async);
             return submitter;

@@ -509,7 +509,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
     @Override
     public Collection<Interface> getRequiredInterfaces() {
-        ArrayList<Interface> result = new ArrayList<Interface>();
+        ArrayList<Interface> result = new ArrayList<>();
         result.add(findWsdlOperation().getInterface());
         return result;
     }

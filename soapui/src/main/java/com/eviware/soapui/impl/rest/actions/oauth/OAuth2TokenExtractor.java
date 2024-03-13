@@ -47,7 +47,7 @@ public class OAuth2TokenExtractor {
     public static final String TOKEN = "token";
     public static final String ACCESS_TOKEN = "access_token";
 
-    protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>();
+    protected List<BrowserListener> browserListeners = new ArrayList<>();
 
     public void extractAccessToken(final OAuth2Parameters parameters) throws OAuthSystemException, MalformedURLException, URISyntaxException, OAuthProblemException {
         OAuth2Profile.OAuth2Flow i = parameters.getOAuth2Flow();

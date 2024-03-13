@@ -62,7 +62,7 @@ import java.util.Set;
 
 public class WsdlLoadTestRunner implements LoadTestRunner {
     private final WsdlLoadTest loadTest;
-    private Set<InternalTestCaseRunner> runners = new HashSet<InternalTestCaseRunner>();
+    private Set<InternalTestCaseRunner> runners = new HashSet<>();
     private long startTime = 0;
     private InternalPropertyChangeListener internalPropertyChangeListener = new InternalPropertyChangeListener();
     private InternalTestRunListener testRunListener = new InternalTestRunListener();
@@ -382,7 +382,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner {
     }
 
     private final class TestCaseStarter extends Worker.WorkerAdapter {
-        private List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
+        private List<WsdlTestCase> testCases = new ArrayList<>();
         private boolean canceled;
 
         public Object construct(XProgressMonitor monitor) {
@@ -545,7 +545,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner {
 
         // get list of active runners
         Iterator<InternalTestCaseRunner> iterator = runners.iterator();
-        List<InternalTestCaseRunner> activeRunners = new ArrayList<InternalTestCaseRunner>();
+        List<InternalTestCaseRunner> activeRunners = new ArrayList<>();
         while (iterator.hasNext()) {
             InternalTestCaseRunner runner = iterator.next();
             if (!runner.isCanceled()) {

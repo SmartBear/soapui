@@ -38,11 +38,11 @@ import java.util.Set;
 
 public class DefaultWssContainer implements WssContainer {
     private final ModelItem modelItem;
-    private List<WssCrypto> cryptos = new ArrayList<WssCrypto>();
-    private List<IncomingWss> incomingWssConfigs = new ArrayList<IncomingWss>();
-    private List<OutgoingWss> outgoingWssConfigs = new ArrayList<OutgoingWss>();
+    private List<WssCrypto> cryptos = new ArrayList<>();
+    private List<IncomingWss> incomingWssConfigs = new ArrayList<>();
+    private List<OutgoingWss> outgoingWssConfigs = new ArrayList<>();
     private final WssContainerConfig config;
-    private Set<WssContainerListener> listeners = new HashSet<WssContainerListener>();
+    private Set<WssContainerListener> listeners = new HashSet<>();
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -80,7 +80,7 @@ public class DefaultWssContainer implements WssContainer {
     }
 
     public List<WssCrypto> getCryptoList() {
-        return new ArrayList<WssCrypto>(cryptos);
+        return new ArrayList<>(cryptos);
     }
 
     public WssCrypto addCrypto(String source, String password, CryptoType type) {
@@ -127,7 +127,7 @@ public class DefaultWssContainer implements WssContainer {
     }
 
     public List<IncomingWss> getIncomingWssList() {
-        return new ArrayList<IncomingWss>(incomingWssConfigs);
+        return new ArrayList<>(incomingWssConfigs);
     }
 
     public IncomingWss addIncomingWss(String label) {
@@ -167,7 +167,7 @@ public class DefaultWssContainer implements WssContainer {
     }
 
     public List<OutgoingWss> getOutgoingWssList() {
-        return new ArrayList<OutgoingWss>(outgoingWssConfigs);
+        return new ArrayList<>(outgoingWssConfigs);
     }
 
     public OutgoingWss addOutgoingWss(String label) {

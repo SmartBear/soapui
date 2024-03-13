@@ -44,8 +44,8 @@ import java.util.Map;
  */
 
 public class AssertionsSupport implements PropertyChangeListener {
-    private List<AssertionsListener> assertionsListeners = new ArrayList<AssertionsListener>();
-    private List<WsdlMessageAssertion> assertions = new ArrayList<WsdlMessageAssertion>();
+    private List<AssertionsListener> assertionsListeners = new ArrayList<>();
+    private List<WsdlMessageAssertion> assertions = new ArrayList<>();
     private final Assertable assertable;
     private AssertableConfig assertableConfig;
 
@@ -203,7 +203,7 @@ public class AssertionsSupport implements PropertyChangeListener {
     }
 
     public List<WsdlMessageAssertion> getAssertionsOfType(Class<? extends WsdlMessageAssertion> class1) {
-        List<WsdlMessageAssertion> result = new ArrayList<WsdlMessageAssertion>();
+        List<WsdlMessageAssertion> result = new ArrayList<>();
 
         for (WsdlMessageAssertion assertion : assertions) {
             if (assertion.getClass().equals(class1)) {
@@ -225,7 +225,7 @@ public class AssertionsSupport implements PropertyChangeListener {
     }
 
     public Map<String, TestAssertion> getAssertions() {
-        Map<String, TestAssertion> result = new HashMap<String, TestAssertion>();
+        Map<String, TestAssertion> result = new HashMap<>();
 
         for (TestAssertion assertion : assertions) {
             result.put(assertion.getName(), assertion);

@@ -134,7 +134,7 @@ public class PluginLoader extends LoaderBase {
 
     private Collection<SoapUIFactory> loadPluginFactories(Plugin plugin, boolean autoDetect, Reflections jarFileScanner)
             throws IllegalAccessException, InstantiationException {
-        Collection<SoapUIFactory> factories = new HashSet<SoapUIFactory>(plugin.getFactories());
+        Collection<SoapUIFactory> factories = new HashSet<>(plugin.getFactories());
         if (!factories.isEmpty())
             registerFactories(factories);
 
@@ -147,7 +147,7 @@ public class PluginLoader extends LoaderBase {
 
 
     private List<Class<? extends SoapUIListener>> loadPluginListeners(Plugin plugin, boolean autoDetect, Reflections jarFileScanner) throws IllegalAccessException, InstantiationException {
-        List<Class<? extends SoapUIListener>> listeners = new ArrayList<Class<? extends SoapUIListener>>(plugin.getListeners());
+        List<Class<? extends SoapUIListener>> listeners = new ArrayList<>(plugin.getListeners());
         if (!listeners.isEmpty())
             registerListeners(listeners);
 
@@ -160,7 +160,7 @@ public class PluginLoader extends LoaderBase {
 
     private List<SoapUIAction> loadPluginActions(Plugin plugin, boolean autoDetect, Reflections jarFileScanner)
             throws InstantiationException, IllegalAccessException {
-        List<SoapUIAction> actions = new ArrayList<SoapUIAction>(plugin.getActions());
+        List<SoapUIAction> actions = new ArrayList<>(plugin.getActions());
         if (!actions.isEmpty())
             registerActions(actions);
 

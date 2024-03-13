@@ -47,7 +47,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         EditorLocationListener<T> {
     public final static String OUTLINE_TABLE_PROPERTY = Editor.class.getSimpleName() + "@outlineTable";
     private JTabbedPane inputTabs;
-    private List<EditorView<T>> views = new ArrayList<EditorView<T>>();
+    private List<EditorView<T>> views = new ArrayList<>();
     private EditorView<T> currentView;
     private T document;
     private JInspectorPanel inspectorPanel;

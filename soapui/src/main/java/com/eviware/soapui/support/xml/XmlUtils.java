@@ -664,7 +664,7 @@ public final class XmlUtils {
     public static XPathData createXPathData(Node node, boolean anonymous, boolean selectText, boolean absolute,
                                             boolean normalize) {
         StringToStringMap nsMap = new StringToStringMap();
-        List<String> pathComponents = new ArrayList<String>();
+        List<String> pathComponents = new ArrayList<>();
 
         int nsCnt = 1;
 
@@ -827,7 +827,7 @@ public final class XmlUtils {
     }
 
     public static String declareXPathNamespaces(XmlObject xmlObject) {
-        Map<QName, String> map = new HashMap<QName, String>();
+        Map<QName, String> map = new HashMap<>();
         XmlCursor cursor = xmlObject.newCursor();
 
         while (cursor.hasNextToken()) {
@@ -841,8 +841,8 @@ public final class XmlUtils {
         int nsCnt = 0;
 
         StringBuilder buf = new StringBuilder();
-        Set<String> prefixes = new HashSet<String>();
-        Set<String> usedPrefixes = new HashSet<String>();
+        Set<String> prefixes = new HashSet<>();
+        Set<String> usedPrefixes = new HashSet<>();
 
         for (Map.Entry<QName, String> entry : map.entrySet()) {
             QName name = entry.getKey();
@@ -933,7 +933,7 @@ public final class XmlUtils {
     }
 
     public static NodeList getChildElements(Element elm) {
-        List<Element> list = new ArrayList<Element>();
+        List<Element> list = new ArrayList<>();
 
         NodeList nl = elm.getChildNodes();
         for (int c = 0; c < nl.getLength(); c++) {
@@ -947,7 +947,7 @@ public final class XmlUtils {
     }
 
     public static NodeList getChildElementsByTagName(Element elm, String name) {
-        List<Element> list = new ArrayList<Element>();
+        List<Element> list = new ArrayList<>();
 
         NodeList nl = elm.getChildNodes();
         for (int c = 0; c < nl.getLength(); c++) {
@@ -961,7 +961,7 @@ public final class XmlUtils {
     }
 
     public static NodeList getChildElementsOfType(Element elm, SchemaType schemaType) {
-        List<Element> list = new ArrayList<Element>();
+        List<Element> list = new ArrayList<>();
 
         NodeList nl = elm.getChildNodes();
         for (int c = 0; c < nl.getLength(); c++) {
@@ -982,7 +982,7 @@ public final class XmlUtils {
     }
 
     public static NodeList getChildElementsByTagNameNS(Element elm, String namespaceUri, String localName) {
-        List<Element> list = new ArrayList<Element>();
+        List<Element> list = new ArrayList<>();
 
         NodeList nl = elm.getChildNodes();
         for (int c = 0; c < nl.getLength(); c++) {
@@ -1198,7 +1198,7 @@ public final class XmlUtils {
     }
 
     public static Node[] selectDomNodes(XmlObject xmlObject, String xpath) {
-        List<Node> result = new ArrayList<Node>();
+        List<Node> result = new ArrayList<>();
 
         XmlCursor cursor = xmlObject.newCursor();
         try {

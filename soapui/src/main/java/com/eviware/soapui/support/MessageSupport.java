@@ -23,7 +23,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public final class MessageSupport {
-    private static final Map<String, ResourceBundle> bundles = new HashMap<String, ResourceBundle>();
+    private static final Map<String, ResourceBundle> bundles = new HashMap<>();
     private final Class<? extends Object> clazz;
 
     public MessageSupport(Class<? extends Object> clazz) {

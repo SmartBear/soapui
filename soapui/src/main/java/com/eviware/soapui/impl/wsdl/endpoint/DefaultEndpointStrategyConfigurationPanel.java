@@ -214,7 +214,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
             String selectedEndpoint = tableModel.getEndpointAt(selectedIndex);
             EndpointDefaults defaults = tableModel.getDefaultsAt(selectedIndex);
 
-            List<String> list = new ArrayList<String>(Arrays.asList(iface.getEndpoints()));
+            List<String> list = new ArrayList<>(Arrays.asList(iface.getEndpoints()));
             list.add(0, ALL_REQUESTS);
             list.add(1, ALL_TEST_REQUESTS);
             list.add(2, ALL_REQUESTS_AND_TEST_REQUESTS);

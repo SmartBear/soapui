@@ -66,7 +66,7 @@ public class LoaderBase {
 
     protected Collection<? extends SoapUIFactory> loadFactories(Reflections jarFileScanner)
             throws IllegalAccessException, InstantiationException {
-        Collection<SoapUIFactory> factories = new HashSet<SoapUIFactory>();
+        Collection<SoapUIFactory> factories = new HashSet<>();
 
         Set<Class<?>> factoryClasses = jarFileScanner.getTypesAnnotatedWith(FactoryConfiguration.class);
         for (Class<?> factoryClass : factoryClasses) {
@@ -122,7 +122,7 @@ public class LoaderBase {
     protected Collection<SoapUIFactory> findAutoFactoryObjects(Reflections jarFileScanner, Class<? extends Annotation> annotationType,
                                                                Class<? extends SoapUIFactory> factoryClass) {
 
-        Collection<SoapUIFactory> factories = new HashSet<SoapUIFactory>();
+        Collection<SoapUIFactory> factories = new HashSet<>();
         Set<Class<?>> objectClasses = jarFileScanner.getTypesAnnotatedWith(annotationType);
 
         for (Class<?> clazz : objectClasses) {
@@ -162,7 +162,7 @@ public class LoaderBase {
     }
 
     protected List<Class<? extends SoapUIListener>> loadListeners(Reflections jarFileScanner) throws IllegalAccessException, InstantiationException {
-        List<Class<? extends SoapUIListener>> listeners = new ArrayList<Class<? extends SoapUIListener>>();
+        List<Class<? extends SoapUIListener>> listeners = new ArrayList<>();
 
         Set<Class<?>> listenerClasses = jarFileScanner.getTypesAnnotatedWith(ListenerConfiguration.class);
         for (Class<?> listenerClass : listenerClasses) {
@@ -213,7 +213,7 @@ public class LoaderBase {
     }
 
     protected List<? extends SoapUIActionGroup> loadActionGroups(Reflections jarFileScanner) throws InstantiationException, IllegalAccessException {
-        List<SoapUIActionGroup> actionGroups = new ArrayList<SoapUIActionGroup>();
+        List<SoapUIActionGroup> actionGroups = new ArrayList<>();
         Set<Class<?>> actionGroupClasses = jarFileScanner.getTypesAnnotatedWith(ActionGroup.class);
         for (Class<?> actionGroupClass : actionGroupClasses) {
             if (!SoapUIActionGroup.class.isAssignableFrom(actionGroupClass)) {
@@ -280,7 +280,7 @@ public class LoaderBase {
     }
 
     protected List<? extends SoapUIAction> loadActions(Reflections jarFileScanner) throws InstantiationException, IllegalAccessException {
-        List<SoapUIAction> actions = new ArrayList<SoapUIAction>();
+        List<SoapUIAction> actions = new ArrayList<>();
         Set<Class<?>> actionClasses = jarFileScanner.getTypesAnnotatedWith(ActionConfiguration.class);
         for (Class<?> actionClass : actionClasses) {
             if (!SoapUIAction.class.isAssignableFrom(actionClass)) {

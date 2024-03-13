@@ -126,10 +126,10 @@ public class MockAsWar {
     }
 
     private ArrayList<File> getAllFilesFrom(File dir) {
-        ArrayList<File> result = new ArrayList<File>();
+        ArrayList<File> result = new ArrayList<>();
         if (dir.isDirectory()) {
             result.addAll(Arrays.asList(dir.listFiles()));
-            ArrayList<File> toAdd = new ArrayList<File>();
+            ArrayList<File> toAdd = new ArrayList<>();
             for (File f : result) {
                 if (f.isDirectory()) {
                     toAdd.addAll(getAllFilesFrom(f));

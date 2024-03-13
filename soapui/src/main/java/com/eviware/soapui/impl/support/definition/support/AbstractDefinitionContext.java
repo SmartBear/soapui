@@ -57,8 +57,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
     private T2 currentLoader;
     private T iface;
 
-    private static Map<String, InterfaceDefinition<?>> definitionCache = new HashMap<String, InterfaceDefinition<?>>();
-    private static Map<String, Integer> urlReferences = new HashMap<String, Integer>();
+    private static Map<String, InterfaceDefinition<?>> definitionCache = new HashMap<>();
+    private static Map<String, Integer> urlReferences = new HashMap<>();
 
     public AbstractDefinitionContext(String url, T iface) {
         this.url = PathUtils.ensureFilePathIsUrl(url);
@@ -316,7 +316,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
         if (this.iface == null && iface != null) {
             if (definition != null) {
                 if (definition.getDefinitionCache().validate()) {
-                    InterfaceConfigDefinitionCache<T> cache = new InterfaceConfigDefinitionCache<T>(iface);
+                    InterfaceConfigDefinitionCache<T> cache = new InterfaceConfigDefinitionCache<>(iface);
                     try {
                         cache.importCache(definition.getDefinitionCache());
                     } catch (Exception e) {

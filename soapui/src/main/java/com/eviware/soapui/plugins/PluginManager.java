@@ -46,9 +46,9 @@ public class PluginManager {
     PluginLoader pluginLoader;
 
     private static Logger log = LogManager.getLogger(PluginManager.class);
-    private Map<File, InstalledPluginRecord> installedPlugins = new HashMap<File, InstalledPluginRecord>();
+    private Map<File, InstalledPluginRecord> installedPlugins = new HashMap<>();
     private File pluginDirectory;
-    private List<PluginListener> listeners = new ArrayList<PluginListener>();
+    private List<PluginListener> listeners = new ArrayList<>();
     private final File pluginDeleteListFile;
     private PluginDependencyResolver resolver;
     private List<String> ignorePluginNameList;
@@ -138,7 +138,7 @@ public class PluginManager {
             return Collections.emptySet();
         }
         Collection<PluginInfo> allDependencies = resolver.findAllDependencies(pluginFile);
-        Set<JarClassLoader> classLoaders = new HashSet<JarClassLoader>();
+        Set<JarClassLoader> classLoaders = new HashSet<>();
         for (PluginInfo dependency : allDependencies) {
             for (InstalledPluginRecord installedPluginRecord : installedPlugins.values()) {
                 if (installedPluginRecord.plugin.getInfo().isCompatibleWith(dependency)) {
@@ -266,7 +266,7 @@ public class PluginManager {
     }
 
     public Collection<Plugin> getInstalledPlugins() {
-        Set<Plugin> plugins = new HashSet<Plugin>();
+        Set<Plugin> plugins = new HashSet<>();
         for (InstalledPluginRecord installedPluginRecord : installedPlugins.values()) {
             plugins.add(installedPluginRecord.plugin);
         }
@@ -308,7 +308,7 @@ public class PluginManager {
 
 
     private List<PluginInfo> findUnsatisfiedDependencies(PluginInfo pluginInfo) {
-        List<PluginInfo> unsatisfiedDependencies = new ArrayList<PluginInfo>();
+        List<PluginInfo> unsatisfiedDependencies = new ArrayList<>();
         for (PluginInfo dependency : pluginInfo.getDependencies()) {
             if (!dependencyInstalled(dependency)) {
                 unsatisfiedDependencies.add(dependency);
@@ -336,7 +336,7 @@ public class PluginManager {
     }
 
     public Collection<Plugin> getDependentPlugins(Plugin selectedPlugin) {
-        Set<Plugin> dependentPlugins = new HashSet<Plugin>();
+        Set<Plugin> dependentPlugins = new HashSet<>();
         for (InstalledPluginRecord installedPluginRecord : installedPlugins.values()) {
             Collection<PluginInfo> allDependencies = resolver.findAllDependencies(installedPluginRecord.plugin.getInfo());
             for (PluginInfo dependency : allDependencies) {
@@ -383,7 +383,7 @@ public class PluginManager {
         private List<File> files;
 
         private LoadPluginsTask(Collection<File> files) {
-            this.files = new ArrayList<File>(files);
+            this.files = new ArrayList<>(files);
         }
 
         @Override
@@ -397,7 +397,7 @@ public class PluginManager {
                 LoadPluginsTask rightTask = new LoadPluginsTask(files.subList(splitPoint, files.size()));
                 List<Plugin> rightTaskResult = rightTask.compute();
                 List<Plugin> leftTaskResult = leftTask.join();
-                List<Plugin> result = new ArrayList<Plugin>();
+                List<Plugin> result = new ArrayList<>();
                 result.addAll(leftTaskResult);
                 result.addAll(rightTaskResult);
                 return result;
@@ -428,7 +428,7 @@ public class PluginManager {
 
 
         private List<Plugin> computeSequentially() {
-            List<Plugin> result = new ArrayList<Plugin>();
+            List<Plugin> result = new ArrayList<>();
             for (File pluginFile : files) {
                 try {
                     log.info("Adding plugin from [" + pluginFile.getAbsolutePath() + "]");
