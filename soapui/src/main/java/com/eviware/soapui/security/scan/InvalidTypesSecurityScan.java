@@ -58,7 +58,7 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
     private TypeLabel typeLabel = new TypeLabel();
     private InvalidSecurityScanConfig invalidTypeConfig;
 
-    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
+    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<>();
 
     private boolean mutation;
 
@@ -347,7 +347,7 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
      */
     private class InvalidTypesForSOAP {
 
-        private HashMap<Integer, String> typeMap = new HashMap<Integer, String>();
+        private HashMap<Integer, String> typeMap = new HashMap<>();
 
         public InvalidTypesForSOAP() {
             generateInvalidTypes();

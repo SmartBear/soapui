@@ -86,7 +86,7 @@ public class TestOnDemandPanel extends JPanel {
     private Action sendTestCaseAction;
 
     @Nonnull
-    private static List<Location> locationsCache = new ArrayList<Location>();
+    private static List<Location> locationsCache = new ArrayList<>();
 
     @Nonnull
     JLabel serverIPAddressesLabel = new JLabel();

@@ -98,7 +98,7 @@ public class SensitiveInformationTableModel extends DefaultTableModel {
     }
 
     public void removeRows(int[] selectedRows) {
-        ArrayList<String> toRemove = new ArrayList<String>();
+        ArrayList<String> toRemove = new ArrayList<>();
 
         for (int index : selectedRows) {
             String name = (String) getValueAt(index, 0);

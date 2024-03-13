@@ -52,7 +52,7 @@ import java.util.Map;
  */
 
 public class WsdlImporter {
-    private static List<BindingImporter> bindingImporters = new ArrayList<BindingImporter>();
+    private static List<BindingImporter> bindingImporters = new ArrayList<>();
     @SuppressWarnings("unused")
     private static WsdlImporter instance;
 
@@ -89,14 +89,14 @@ public class WsdlImporter {
         }
 
         Definition definition = wsdlContext.getDefinition();
-        List<WsdlInterface> result = new ArrayList<WsdlInterface>();
+        List<WsdlInterface> result = new ArrayList<>();
         if (bindingName != null) {
             WsdlInterface iface = importBinding(project, wsdlContext,
                     (Binding) definition.getAllBindings().get(bindingName));
             return iface == null ? new WsdlInterface[0] : new WsdlInterface[]{iface};
         }
 
-        Map<Binding, WsdlInterface> importedBindings = new HashMap<Binding, WsdlInterface>();
+        Map<Binding, WsdlInterface> importedBindings = new HashMap<>();
 
         Map<?, ?> serviceMap = definition.getAllServices();
         if (serviceMap.isEmpty()) {

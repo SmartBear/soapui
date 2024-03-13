@@ -42,7 +42,7 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 
     public void setResponse(JdbcResponse response, boolean useSoftReference) {
         if (useSoftReference) {
-            this.softResponse = new SoftReference<JdbcResponse>(response);
+            this.softResponse = new SoftReference<>(response);
         } else {
             this.response = response;
         }

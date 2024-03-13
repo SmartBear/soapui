@@ -49,9 +49,9 @@ import java.util.Set;
 
 public class XmlObjectTreeModel implements TreeTableModel {
     private XmlObject xmlObject;
-    private Set<TreeModelListener> listeners = new HashSet<TreeModelListener>();
+    private Set<TreeModelListener> listeners = new HashSet<>();
     private XmlCursor cursor;
-    private Map<XmlObject, XmlTreeNode> treeNodeMap = new HashMap<XmlObject, XmlTreeNode>();
+    private Map<XmlObject, XmlTreeNode> treeNodeMap = new HashMap<>();
 
     public final static Class<?> hierarchicalColumnClass = TreeTableModel.class;
     private SchemaTypeSystem typeSystem;
@@ -486,7 +486,7 @@ public class XmlObjectTreeModel implements TreeTableModel {
         }
 
         public TreePath getTreePath() {
-            List<XmlTreeNode> nodes = new ArrayList<XmlTreeNode>();
+            List<XmlTreeNode> nodes = new ArrayList<>();
             nodes.add(this);
 
             XmlTreeNode node = this;
@@ -534,7 +534,7 @@ public class XmlObjectTreeModel implements TreeTableModel {
     }
 
     public class ElementXmlTreeNode extends AbstractXmlTreeNode {
-        private LinkedList<XmlTreeNode> elements = new LinkedList<XmlTreeNode>();
+        private LinkedList<XmlTreeNode> elements = new LinkedList<>();
         private TextXmlTreeNode textTreeNode;
         private int attrCount;
 
@@ -783,7 +783,7 @@ public class XmlObjectTreeModel implements TreeTableModel {
 
     public XmlTreeNode[] selectTreeNodes(String xpath) {
         XmlObject[] nodes = xmlObject.selectPath(xpath);
-        List<XmlTreeNode> result = new ArrayList<XmlTreeNode>();
+        List<XmlTreeNode> result = new ArrayList<>();
 
         for (XmlObject xmlObject : nodes) {
             XmlTreeNode tn = getXmlTreeNode(xmlObject);

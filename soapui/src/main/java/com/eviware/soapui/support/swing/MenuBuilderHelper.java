@@ -54,14 +54,14 @@ public class MenuBuilderHelper {
         ActionList actions = buildActionsForActionGroup(actionGroup);
         if (menu.getText().equals(SoapUI.STEP)) {
             SoapUIActionMapping<WsdlTestStep> toggleDisabledActionMapping = null;
-            DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
+            DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<>(
                     ShowDesktopPanelAction.SOAPUI_ACTION_ID, "ENTER", null, true, null);
             actionMapping.setName("Open Editor");
             actionMapping.setDescription("Opens the editor for this TestStep");
             SwingActionDelegate actionDelegate = new SwingActionDelegate(actionMapping, null);
             menu.add(actionDelegate);
 
-            toggleDisabledActionMapping = new DefaultActionMapping<WsdlTestStep>(
+            toggleDisabledActionMapping = new DefaultActionMapping<>(
                     ToggleDisableTestStepAction.SOAPUI_ACTION_ID, null, null, false, null);
 
             SwingActionDelegate actionDelegateToggle = new SwingActionDelegate(toggleDisabledActionMapping, null);

@@ -73,7 +73,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 
     public final static Logger log = LogManager.getLogger(WsdlOperation.class);
     public static final String ICON_NAME = "/operation.png";
-    private List<WsdlRequest> requests = new ArrayList<WsdlRequest>();
+    private List<WsdlRequest> requests = new ArrayList<>();
     private WsdlInterface iface;
     private ImageIcon oneWayIcon;
 
@@ -404,7 +404,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
             getConfig().setReceivesAttachments(multipartOutput != null);
             if (multipartOutput != null) {
                 List<MIMEPart> parts = multipartOutput.getMIMEParts();
-                Map<String, Part> partMap = new HashMap<String, Part>();
+                Map<String, Part> partMap = new HashMap<>();
 
                 for (int c = 0; c < parts.size(); c++) {
                     List<MIMEContent> contentParts = WsdlUtils.getExtensiblityElements(parts.get(c)
@@ -439,7 +439,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
             getConfig().setSendsAttachments(multipartInput != null);
             if (multipartInput != null) {
                 List<MIMEPart> parts = multipartInput.getMIMEParts();
-                Map<String, Part> partMap = new HashMap<String, Part>();
+                Map<String, Part> partMap = new HashMap<>();
 
                 for (int c = 0; c < parts.size(); c++) {
                     List<MIMEContent> contentParts = WsdlUtils.getExtensiblityElements(parts.get(c)
@@ -641,13 +641,13 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
     }
 
     public List<Request> getRequestList() {
-        return new ArrayList<Request>(requests);
+        return new ArrayList<>(requests);
     }
 
     public MessagePart[] getDefaultRequestParts() {
         try {
             // init
-            List<MessagePart> result = new ArrayList<MessagePart>();
+            List<MessagePart> result = new ArrayList<>();
             WsdlContext wsdlContext = getInterface().getWsdlContext();
             BindingOperation bindingOperation = findBindingOperation(wsdlContext.getDefinition());
 
@@ -710,7 +710,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
     public MessagePart[] getDefaultResponseParts() {
         try {
             // init
-            List<MessagePart> result = new ArrayList<MessagePart>();
+            List<MessagePart> result = new ArrayList<>();
             WsdlContext wsdlContext = getInterface().getWsdlContext();
             BindingOperation bindingOperation = findBindingOperation(wsdlContext.getDefinition());
 
@@ -774,7 +774,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
         BindingOperation bindingOperation = getBindingOperation();
         Map<?, ?> bindingFaults = bindingOperation.getBindingFaults();
 
-        List<FaultPart> result = new ArrayList<FaultPart>();
+        List<FaultPart> result = new ArrayList<>();
         for (Object key : bindingFaults.keySet()) {
             result.add(new WsdlFaultPart((String) key));
         }

@@ -106,7 +106,7 @@ public class SoapUIAMFConnection {
      */
     public void addAmfHeader(String name, boolean mustUnderstand, Object data) {
         if (amfHeaders == null) {
-            amfHeaders = new ArrayList<MessageHeader>();
+            amfHeaders = new ArrayList<>();
         }
 
         MessageHeader header = new MessageHeader(name, mustUnderstand, data);
@@ -161,7 +161,7 @@ public class SoapUIAMFConnection {
      */
     public void addHttpRequestHeader(String name, String value) {
         if (httpRequestHeaders == null) {
-            httpRequestHeaders = new HashMap<String, String>();
+            httpRequestHeaders = new HashMap<>();
         }
 
         httpRequestHeaders.put(name, value);

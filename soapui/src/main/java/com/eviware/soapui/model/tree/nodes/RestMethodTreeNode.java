@@ -35,7 +35,7 @@ import java.util.List;
  */
 
 public class RestMethodTreeNode extends AbstractModelItemTreeNode<RestMethod> {
-    private List<RequestTreeNode> requestNodes = new ArrayList<RequestTreeNode>();
+    private List<RequestTreeNode> requestNodes = new ArrayList<>();
     private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 
     public RestMethodTreeNode(RestMethod method, SoapUITreeModel treeModel) {

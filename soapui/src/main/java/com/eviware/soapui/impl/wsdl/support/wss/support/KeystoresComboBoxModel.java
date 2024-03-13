@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeystoresComboBoxModel extends AbstractListModel implements ComboBoxModel, WssContainerListener {
-    private List<WssCrypto> cryptos = new ArrayList<WssCrypto>();
+    private List<WssCrypto> cryptos = new ArrayList<>();
     private WssCrypto selectedCrypto;
     private final WssContainer container;
     private final boolean outgoingConfig;

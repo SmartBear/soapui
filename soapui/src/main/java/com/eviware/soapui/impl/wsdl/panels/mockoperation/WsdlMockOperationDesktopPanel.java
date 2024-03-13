@@ -82,7 +82,7 @@ public class WsdlMockOperationDesktopPanel extends AbstractMockOperationDesktopP
                 OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif")));
         toolbar.addUnrelatedGap();
 
-        ModelItemNames<WsdlInterface> names = new ModelItemNames<WsdlInterface>(ModelSupport.getChildren(getModelItem()
+        ModelItemNames<WsdlInterface> names = new ModelItemNames<>(ModelSupport.getChildren(getModelItem()
                 .getMockService().getProject(), WsdlInterface.class));
 
         interfaceCombo = new JComboBox(names.getNames());
@@ -160,7 +160,7 @@ public class WsdlMockOperationDesktopPanel extends AbstractMockOperationDesktopP
             } else {
                 currentInterface = (WsdlInterface) getModelItem().getMockService().getProject()
                         .getInterfaceByName(selectedItem.toString());
-                ModelItemNames<Operation> names = new ModelItemNames<Operation>(currentInterface.getOperationList());
+                ModelItemNames<Operation> names = new ModelItemNames<>(currentInterface.getOperationList());
                 operationCombo.setModel(new ExtendedComboBoxModel(names.getNames()));
 
                 currentInterface.addInterfaceListener(interfaceListener);

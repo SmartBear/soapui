@@ -44,7 +44,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
     private LoadTestsTreeNode loadTestsNode;
     private SecurityTestsTreeNode securityTestsNode;
     private PropertiesTreeNode<?> propertiesTreeNode;
-    private List<SoapUITreeNode> childNodes = new ArrayList<SoapUITreeNode>();
+    private List<SoapUITreeNode> childNodes = new ArrayList<>();
 
     public TestCaseTreeNode(TestCase testCase, SoapUITreeModel treeModel) {
         super(testCase, testCase.getTestSuite(), treeModel);
@@ -114,7 +114,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
     }
 
     public class TestStepsTreeNode extends AbstractTreeNode<WsdlTestStepsModelItem> {
-        private List<TestStepTreeNode> testStepNodes = new ArrayList<TestStepTreeNode>();
+        private List<TestStepTreeNode> testStepNodes = new ArrayList<>();
 
         protected TestStepsTreeNode() {
             super(new WsdlTestStepsModelItem(getTestCase()));
@@ -183,7 +183,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
     }
 
     public class LoadTestsTreeNode extends AbstractTreeNode<WsdlLoadTestsModelItem> {
-        private List<LoadTestTreeNode> loadTestNodes = new ArrayList<LoadTestTreeNode>();
+        private List<LoadTestTreeNode> loadTestNodes = new ArrayList<>();
 
         protected LoadTestsTreeNode() {
             super(new WsdlLoadTestsModelItem(getTestCase()));
@@ -241,7 +241,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
     }
 
     public class SecurityTestsTreeNode extends AbstractTreeNode<SecurityTestsModelItem> {
-        private List<SecurityTestTreeNode> securityTestNodes = new ArrayList<SecurityTestTreeNode>();
+        private List<SecurityTestTreeNode> securityTestNodes = new ArrayList<>();
 
         protected SecurityTestsTreeNode() {
             super(new SecurityTestsModelItem(getTestCase()));

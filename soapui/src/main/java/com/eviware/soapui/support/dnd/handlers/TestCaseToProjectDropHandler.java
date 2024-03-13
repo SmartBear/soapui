@@ -78,7 +78,7 @@ public class TestCaseToProjectDropHandler extends AbstractAfterModelItemDropHand
             testSuite = target.addNewTestSuite(name);
         }
 
-        Set<Interface> requiredInterfaces = new HashSet<Interface>();
+        Set<Interface> requiredInterfaces = new HashSet<>();
 
         for (int i = 0; i < testSuite.getTestCaseCount(); i++) {
             WsdlTestCase testCase = testSuite.getTestCaseAt(i);

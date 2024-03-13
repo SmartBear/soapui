@@ -34,7 +34,7 @@ public class TestStepPropertyComboBoxModel extends AbstractListModel implements 
     public TestStepPropertyComboBoxModel(WsdlTestStep testStep) {
         this.testStep = testStep;
 
-        names = new ArrayList<String>();
+        names = new ArrayList<>();
 
         if (testStep != null) {
             names.addAll(Arrays.asList(testStep.getPropertyNames()));

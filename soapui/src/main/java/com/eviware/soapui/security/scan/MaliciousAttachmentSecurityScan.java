@@ -244,7 +244,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
     }
 
     private void removeAttachments(TestStep testStep, String key, boolean equals) {
-        List<Attachment> toRemove = new ArrayList<Attachment>();
+        List<Attachment> toRemove = new ArrayList<>();
         AbstractHttpRequest<?> request = (AbstractHttpRequest<?>) getRequest(testStep);
 
         for (Attachment attachment : request.getAttachments()) {

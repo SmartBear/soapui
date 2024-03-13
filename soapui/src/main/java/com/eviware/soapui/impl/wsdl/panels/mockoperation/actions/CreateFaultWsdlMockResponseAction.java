@@ -57,7 +57,7 @@ public class CreateFaultWsdlMockResponseAction extends AbstractAction {
             MessagePart[] faultParts = operation.getFaultParts();
 
             if (faultParts != null && faultParts.length > 0) {
-                List<String> names = new ArrayList<String>();
+                List<String> names = new ArrayList<>();
                 for (int c = 0; c < faultParts.length; c++) {
                     names.add(faultParts[c].getName());
                 }

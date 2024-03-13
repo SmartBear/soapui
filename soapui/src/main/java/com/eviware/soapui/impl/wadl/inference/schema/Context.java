@@ -52,9 +52,9 @@ public class Context {
         this.system = system;
         this.handler = handler;
         this.cursor = cursor;
-        path = new ArrayList<String>();
-        stack = new ArrayList<List<String>>();
-        attributes = new HashMap<String, String>();
+        path = new ArrayList<>();
+        stack = new ArrayList<>();
+        attributes = new HashMap<>();
     }
 
     /**
@@ -139,7 +139,7 @@ public class Context {
      */
     public void pushPath() {
         stack.add(path);
-        path = new ArrayList<String>();
+        path = new ArrayList<>();
     }
 
     /**

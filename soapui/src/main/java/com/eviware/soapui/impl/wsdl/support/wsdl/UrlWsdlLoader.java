@@ -67,7 +67,7 @@ public class UrlWsdlLoader extends WsdlLoader {
     private HttpContext state;
     protected HttpGet getMethod;
     private boolean aborted;
-    protected Map<String, byte[]> urlCache = new HashMap<String, byte[]>();
+    protected Map<String, byte[]> urlCache = new HashMap<>();
     protected boolean finished;
     private boolean useWorker;
     private ModelItem contextModelItem;
@@ -247,7 +247,7 @@ public class UrlWsdlLoader extends WsdlLoader {
      * @author ole.matzura
      */
 
-    private static Map<AuthScope, Credentials> cache = new HashMap<AuthScope, Credentials>();
+    private static Map<AuthScope, Credentials> cache = new HashMap<>();
 
     public final class WsdlCredentialsProvider implements CredentialsProvider {
         private XFormDialog basicDialog;

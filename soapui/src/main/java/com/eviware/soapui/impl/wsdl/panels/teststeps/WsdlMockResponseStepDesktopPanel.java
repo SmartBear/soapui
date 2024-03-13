@@ -96,12 +96,12 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
 
         assertionsPanel = buildAssertionsPanel();
 
-        assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
+        assertionInspector = new JComponentInspector<>(assertionsPanel, "Assertions ("
                 + getModelItem().getAssertionCount() + ")", "Assertions for this Request", true);
 
         inspectorPanel.addInspector(assertionInspector);
 
-        logInspector = new JComponentInspector<JComponent>(buildLogPanel(), "Request Log (0)", "Log of requests", true);
+        logInspector = new JComponentInspector<>(buildLogPanel(), "Request Log (0)", "Log of requests", true);
         inspectorPanel.addInspector(logInspector);
 
         inspectorPanel.addInspector(new JComponentInspector<JComponent>(buildQueryMatchPanel(), "Query/Match",
@@ -200,7 +200,7 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
     private Component buildMatchEditor() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        matchEditorModel = new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>(getModelItem(), "match");
+        matchEditorModel = new ModelItemPropertyEditorModel<>(getModelItem(), "match");
         panel.add(UISupport.getEditorFactory().buildXmlEditor(matchEditorModel), BorderLayout.CENTER);
 
         UISupport.addTitledBorder(panel, "Matching Value");
@@ -211,7 +211,7 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
     private Component buildQueryEditor() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        queryEditorModel = new ModelItemPropertyEditorModel<WsdlMockResponseTestStep>(getModelItem(), "query");
+        queryEditorModel = new ModelItemPropertyEditorModel<>(getModelItem(), "query");
         panel.add(UISupport.getEditorFactory().buildXPathEditor(queryEditorModel), BorderLayout.CENTER);
 
         UISupport.addTitledBorder(panel, "XPath Query");

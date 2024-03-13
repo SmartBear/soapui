@@ -33,11 +33,11 @@ import java.util.Map;
 public class ArgumentBuilder {
     private static final String SHADOW = "XXXXXX";
     private final StringToStringMap values;
-    private List<String> args = new ArrayList<String>();
+    private List<String> args = new ArrayList<>();
     /**
      * List of arguments that needs to be shadowed.
      */
-    private List<String> argsToShadow = new ArrayList<String>();
+    private List<String> argsToShadow = new ArrayList<>();
     private boolean isUnix;
 
     public ArgumentBuilder(StringToStringMap values) {
@@ -56,13 +56,13 @@ public class ArgumentBuilder {
                 buf.append(escapeUnixArg(args.get(c)));
             }
 
-            ArrayList<String> result = new ArrayList<String>();
+            ArrayList<String> result = new ArrayList<>();
             result.add(args.get(0));
             result.add(args.get(1));
             result.add(buf.toString());
             return result;
         } else {
-            return new ArrayList<String>(args);
+            return new ArrayList<>(args);
         }
     }
 

@@ -67,7 +67,7 @@ public class BoundaryRestrictionUtill {
     }
 
     public static List<String> extractEnums(XmlTreeNode node) {
-        List<String> restrictionsList = new ArrayList<String>();
+        List<String> restrictionsList = new ArrayList<>();
         for (XmlAnySimpleType s : node.getSchemaType().getEnumerationValues()) {
             if (restrictionsList.isEmpty()) {
                 restrictionsList.add("For type enumeration values are: ");

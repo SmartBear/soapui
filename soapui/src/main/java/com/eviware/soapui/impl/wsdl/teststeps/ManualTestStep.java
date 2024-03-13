@@ -169,7 +169,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
         result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "description"));
         result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "expectedResult"));
         return result.toArray(new PropertyExpansion[result.size()]);

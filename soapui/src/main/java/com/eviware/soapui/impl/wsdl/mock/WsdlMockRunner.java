@@ -49,7 +49,7 @@ public class WsdlMockRunner implements MockRunner {
     private MockDispatcher dispatcher;
 
     public WsdlMockRunner(MockService mockService, WsdlTestRunContext context) throws Exception {
-        Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
+        Set<WsdlInterface> interfaces = new HashSet<>();
 
         // TODO: move this code elsewhere when the rest counterpoint is in place
         if (mockService instanceof WsdlMockService) {

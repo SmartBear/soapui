@@ -50,7 +50,7 @@ import java.util.Set;
 
 public class JdbcRequest extends AbstractModelItem implements Assertable, TestRequest, AnimatableItem {
     private final JdbcRequestTestStep testStep;
-    private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
+    private Set<SubmitListener> submitListeners = new HashSet<>();
     private JdbcResponse response;
     final static Logger logger = LogManager.getLogger(JdbcRequest.class);
     private ImageIcon validRequestIcon;

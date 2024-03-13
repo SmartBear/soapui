@@ -107,7 +107,7 @@ public class InvalidTypesTable extends JPanel {
 
         add(toolbar, BorderLayout.NORTH);
         table = JTableFactory.getInstance().makeJXTable(model);
-        TableRowSorter<InvalidTypeTableModel> sorter = new TableRowSorter<InvalidTypeTableModel>(model);
+        TableRowSorter<InvalidTypeTableModel> sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
         table.toggleSortOrder(0);
         add(new JScrollPane(table), BorderLayout.CENTER);

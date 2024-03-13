@@ -65,7 +65,7 @@ public abstract class BaseHttpResponse implements HttpResponse {
 
     public BaseHttpResponse(ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest,
                             PropertyExpansionContext context) {
-        this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>(httpRequest);
+        this.httpRequest = new WeakReference<>(httpRequest);
         this.timeTaken = httpMethod.getTimeTaken();
 
         SoapUIMetrics metrics = httpMethod.getMetrics();

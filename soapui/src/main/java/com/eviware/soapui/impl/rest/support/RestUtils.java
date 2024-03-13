@@ -331,7 +331,7 @@ public class RestUtils {
     }
 
     public static List<RestResource> extractAncestorsParentFirst(RestResource childResource) {
-        final List<RestResource> resources = new ArrayList<RestResource>();
+        final List<RestResource> resources = new ArrayList<>();
         for (RestResource r = childResource; r != null; r = r.getParentResource()) {
             resources.add(r);
         }

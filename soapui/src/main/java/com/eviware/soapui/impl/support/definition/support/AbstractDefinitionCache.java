@@ -127,7 +127,7 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
     }
 
     private void initParts() {
-        parts = new ArrayList<InterfaceDefinitionPart>();
+        parts = new ArrayList<>();
 
         List<DefintionPartConfig> partList = definitionCache.getPartList();
         for (DefintionPartConfig part : partList) {

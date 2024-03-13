@@ -36,9 +36,9 @@ import java.util.List;
 
 public class ProjectTreeNode extends AbstractModelItemTreeNode<Project> {
     private InternalProjectListener internalProjectListener;
-    private List<InterfaceTreeNode> interfaceNodes = new ArrayList<InterfaceTreeNode>();
-    private List<TestSuiteTreeNode> testSuiteNodes = new ArrayList<TestSuiteTreeNode>();
-    private List<MockServiceTreeNode> mockServiceNodes = new ArrayList<MockServiceTreeNode>();
+    private List<InterfaceTreeNode> interfaceNodes = new ArrayList<>();
+    private List<TestSuiteTreeNode> testSuiteNodes = new ArrayList<>();
+    private List<MockServiceTreeNode> mockServiceNodes = new ArrayList<>();
     private PropertiesTreeNode<?> propertiesTreeNode;
 
     public ProjectTreeNode(Project project, WorkspaceTreeNode workspaceNode) {

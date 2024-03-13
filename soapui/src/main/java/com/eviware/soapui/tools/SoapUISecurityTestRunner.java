@@ -80,7 +80,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
     private int securityScanCount;
     private int securityScanRequestCount;
     private int securityScanAlertCount;
-    private List<SecurityTestStepResult> failedResults = new ArrayList<SecurityTestStepResult>();
+    private List<SecurityTestStepResult> failedResults = new ArrayList<>();
     private JUnitSecurityReportCollector reportCollector = new JUnitSecurityReportCollector();
 
     /**
@@ -152,7 +152,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 
         long startTime = System.nanoTime();
 
-        List<TestCase> testCasesToRun = new ArrayList<TestCase>();
+        List<TestCase> testCasesToRun = new ArrayList<>();
 
         // start by listening to all testcases.. (since one testcase can call
         // another)

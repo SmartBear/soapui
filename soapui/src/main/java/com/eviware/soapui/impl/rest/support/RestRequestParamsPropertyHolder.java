@@ -47,8 +47,8 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
     private RestParamsPropertyHolder methodParams;
     private List<String> sortedPropertyNames;
     private RestRequest restRequest;
-    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
-    private Map<RestParamProperty, InternalRestParamProperty> wrappers = new HashMap<RestParamProperty, InternalRestParamProperty>();
+    private Set<TestPropertyListener> listeners = new HashSet<>();
+    private Map<RestParamProperty, InternalRestParamProperty> wrappers = new HashMap<>();
     private String parameterBeingMoved;
 
     public RestRequestParamsPropertyHolder(RestParamsPropertyHolder methodParams, RestRequest restRequest,
@@ -63,14 +63,14 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
     private void buildPropertyNameList() {
         RestRequestConfig requestConfig = restRequest.getConfig();
         List<String> propertyNames;
-        List<String> methodParamNames = new ArrayList<String>(Arrays.asList(methodParams.getPropertyNames()));
+        List<String> methodParamNames = new ArrayList<>(Arrays.asList(methodParams.getPropertyNames()));
         if (requestConfig.isSetParameterOrder()) {
-            propertyNames = new ArrayList<String>(requestConfig.getParameterOrder().getEntryList());
+            propertyNames = new ArrayList<>(requestConfig.getParameterOrder().getEntryList());
             propertyNames.retainAll(methodParamNames);
             methodParamNames.removeAll(propertyNames);
             propertyNames.addAll(methodParamNames);
         } else {
-            propertyNames = new ArrayList<String>(methodParamNames);
+            propertyNames = new ArrayList<>(methodParamNames);
         }
         sortedPropertyNames = propertyNames;
     }
@@ -117,7 +117,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
             String description = parameter.getDescription();
             boolean disableURLEncoding = parameter.isDisableUrlEncoding();
             RestParamProperty newParameter;
-            List<String> copyOfSortedPropertyNames = new ArrayList<String>(sortedPropertyNames);
+            List<String> copyOfSortedPropertyNames = new ArrayList<>(sortedPropertyNames);
             if (newLocation == NewRestResourceActionBase.ParamLocation.METHOD) {
                 restRequest.getResource().removeProperty(parameterBeingMoved);
                 newParameter = restRequest.getRestMethod().addProperty(parameterBeingMoved);
@@ -239,7 +239,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
     }
 
     public Set<String> keySet() {
-        return new LinkedHashSet<String>(sortedPropertyNames);
+        return new LinkedHashSet<>(sortedPropertyNames);
     }
 
     public void moveProperty(String propertyName, int targetIndex) {
@@ -351,7 +351,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
     }
 
     public Collection<TestProperty> values() {
-        List<TestProperty> ret = new ArrayList<TestProperty>();
+        List<TestProperty> ret = new ArrayList<>();
         for (TestProperty p : methodParams.values()) {
             ret.add(getWrapper((RestParamProperty) p));
         }
@@ -618,7 +618,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
     }
 
     public List<TestProperty> getPropertyList() {
-        List<TestProperty> propertyList = new ArrayList<TestProperty>();
+        List<TestProperty> propertyList = new ArrayList<>();
         for (InternalRestParamProperty internalRestParamProperty : wrappers.values()) {
             propertyList.add(internalRestParamProperty);
         }

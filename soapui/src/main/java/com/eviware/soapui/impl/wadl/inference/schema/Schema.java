@@ -56,9 +56,9 @@ public class Schema {
     public Schema(String namespace, SchemaSystem schemaSystem) {
         this.schemaSystem = schemaSystem;
         this.namespace = namespace;
-        prefixes = new HashMap<String, String>();
-        particles = new ArrayList<Particle>();
-        types = new HashMap<String, ComplexType>();
+        prefixes = new HashMap<>();
+        particles = new ArrayList<>();
+        types = new HashMap<>();
         putPrefixForNamespace("xs", Settings.xsdns);
     }
 
@@ -71,9 +71,9 @@ public class Schema {
     public Schema(SchemaConfig xml, SchemaSystem schemaSystem) {
         this.schemaSystem = schemaSystem;
         namespace = xml.getNamespace();
-        prefixes = new HashMap<String, String>();
-        particles = new ArrayList<Particle>();
-        types = new HashMap<String, ComplexType>();
+        prefixes = new HashMap<>();
+        particles = new ArrayList<>();
+        types = new HashMap<>();
         for (MapEntryConfig entry : xml.getPrefixList()) {
             prefixes.put(entry.getKey(), entry.getValue());
         }
@@ -97,7 +97,7 @@ public class Schema {
             mapEntry.setKey(entry.getKey());
             mapEntry.setValue(entry.getValue());
         }
-        List<ParticleConfig> particleList = new ArrayList<ParticleConfig>();
+        List<ParticleConfig> particleList = new ArrayList<>();
         for (Particle item : particles) {
             particleList.add(item.save());
         }

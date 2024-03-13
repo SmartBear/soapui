@@ -35,8 +35,8 @@ import java.util.Set;
  */
 
 public final class LogDisablingTestMonitorListener extends TestMonitorListenerAdapter {
-    private Set<LoadTestRunner> loadTestRunners = new HashSet<LoadTestRunner>();
-    private Set<SecurityTestRunner> securityTestRunners = new HashSet<SecurityTestRunner>();
+    private Set<LoadTestRunner> loadTestRunners = new HashSet<>();
+    private Set<SecurityTestRunner> securityTestRunners = new HashSet<>();
 
     public void loadTestStarted(LoadTestRunner runner) {
         if (loadTestRunners.isEmpty()) {

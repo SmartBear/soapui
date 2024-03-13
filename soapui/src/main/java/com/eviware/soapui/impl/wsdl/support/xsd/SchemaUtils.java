@@ -69,7 +69,7 @@ import java.util.Set;
 
 public class SchemaUtils {
     private final static Logger log = LogManager.getLogger(SchemaUtils.class);
-    private static Map<String, XmlObject> defaultSchemas = new HashMap<String, XmlObject>();
+    private static Map<String, XmlObject> defaultSchemas = new HashMap<>();
 
     static {
         initDefaultSchemas();
@@ -173,7 +173,7 @@ public class SchemaUtils {
 
         try {
             log.info("Loading schema types from [" + wsdlUrl + "]");
-            ArrayList<XmlObject> schemas = new ArrayList<XmlObject>(getSchemas(wsdlUrl, loader).values());
+            ArrayList<XmlObject> schemas = new ArrayList<>(getSchemas(wsdlUrl, loader).values());
 
             return buildSchemaTypes(schemas);
         } catch (Exception e) {
@@ -208,7 +208,7 @@ public class SchemaUtils {
 
         boolean strictSchemaTypes = SoapUI.getSettings().getBoolean(WsdlSettings.STRICT_SCHEMA_TYPES);
         if (!strictSchemaTypes) {
-            Set<String> mdefNamespaces = new HashSet<String>();
+            Set<String> mdefNamespaces = new HashSet<>();
 
             for (XmlObject xObj : schemas) {
                 mdefNamespaces.add(getTargetNamespace(xObj));
@@ -289,7 +289,7 @@ public class SchemaUtils {
     }
 
     public static Map<String, XmlObject> getSchemas(String wsdlUrl, SchemaLoader loader) throws SchemaException {
-        Map<String, XmlObject> result = new HashMap<String, XmlObject>();
+        Map<String, XmlObject> result = new HashMap<>();
         getSchemas(wsdlUrl, result, loader, null /* , false */);
         return result;
     }
@@ -313,7 +313,7 @@ public class SchemaUtils {
 
         ArrayList<?> errorList = new ArrayList<Object>();
 
-        Map<String, XmlObject> result = new HashMap<String, XmlObject>();
+        Map<String, XmlObject> result = new HashMap<>();
 
         boolean common = false;
 
@@ -472,7 +472,7 @@ public class SchemaUtils {
      */
 
     public static Map<String, XmlObject> getDefinitionParts(SchemaLoader loader) throws Exception {
-        Map<String, XmlObject> result = new LinkedHashMap<String, XmlObject>();
+        Map<String, XmlObject> result = new LinkedHashMap<>();
         getDefinitionParts(loader.getBaseURI(), result, loader);
         return result;
     }
@@ -525,7 +525,7 @@ public class SchemaUtils {
      */
 
     public static Collection<String> extractNamespaces(SchemaTypeSystem schemaTypes, boolean removeDefault) {
-        Set<String> namespaces = new HashSet<String>();
+        Set<String> namespaces = new HashSet<>();
         SchemaType[] globalTypes = schemaTypes.globalTypes();
         for (int c = 0; c < globalTypes.length; c++) {
             namespaces.add(globalTypes[c].getName().getNamespaceURI());

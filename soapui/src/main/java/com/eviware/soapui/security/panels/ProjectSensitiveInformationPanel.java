@@ -103,7 +103,7 @@ public class ProjectSensitiveInformationPanel {
     }
 
     private List<String> createListFromTable() {
-        List<String> temp = new ArrayList<String>();
+        List<String> temp = new ArrayList<>();
         for (TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList()) {
             String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
             temp.add(tokenPlusDescription);

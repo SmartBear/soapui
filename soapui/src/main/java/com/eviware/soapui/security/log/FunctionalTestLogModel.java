@@ -69,7 +69,7 @@ public class FunctionalTestLogModel extends AbstractListModel {
     public synchronized void addSecurityTestFunctionalStepResult(TestStepResult result) {
         stepCount++;
         int size = items.size();
-        SoftReference<TestStepResult> stepResultRef = new SoftReference<TestStepResult>(result);
+        SoftReference<TestStepResult> stepResultRef = new SoftReference<>(result);
 
         items.add("Step " + stepCount + " [" + result.getTestStep().getName() + "] " + result.getStatus() + ": took "
                 + result.getTimeTaken() + " ms");

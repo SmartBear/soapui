@@ -31,7 +31,7 @@ import java.util.List;
 
 public class WsdlTestStepRegistry implements SoapUIFactoryRegistryListener {
     private static WsdlTestStepRegistry instance;
-    private List<WsdlTestStepFactory> factories = new ArrayList<WsdlTestStepFactory>();
+    private List<WsdlTestStepFactory> factories = new ArrayList<>();
 
     public WsdlTestStepRegistry() {
         addFactory(new WsdlTestRequestStepFactory());

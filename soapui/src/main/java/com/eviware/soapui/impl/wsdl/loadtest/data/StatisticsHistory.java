@@ -42,10 +42,10 @@ import java.util.Map;
 
 public class StatisticsHistory {
     private final LoadTestStatistics statistics;
-    private List<long[][]> data = new ArrayList<long[][]>();
-    private List<Long> threadCounts = new ArrayList<Long>();
-    private Map<Integer, TestStepStatisticsHistory> testStepStatisticHistories = new HashMap<Integer, TestStepStatisticsHistory>();
-    private EnumMap<Statistic, StatisticsValueHistory> statisticsValueHistories = new EnumMap<Statistic, StatisticsValueHistory>(
+    private List<long[][]> data = new ArrayList<>();
+    private List<Long> threadCounts = new ArrayList<>();
+    private Map<Integer, TestStepStatisticsHistory> testStepStatisticHistories = new HashMap<>();
+    private EnumMap<Statistic, StatisticsValueHistory> statisticsValueHistories = new EnumMap<>(
             Statistic.class);
 
     @SuppressWarnings("unused")

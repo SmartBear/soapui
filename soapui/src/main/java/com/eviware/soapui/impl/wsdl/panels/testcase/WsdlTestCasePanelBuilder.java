@@ -42,7 +42,7 @@ public class WsdlTestCasePanelBuilder<T extends WsdlTestCase> extends EmptyPanel
     }
 
     public Component buildOverviewPanel(T modelItem) {
-        JPropertiesTable<WsdlTestCase> table = new JPropertiesTable<WsdlTestCase>("TestCase Properties", modelItem);
+        JPropertiesTable<WsdlTestCase> table = new JPropertiesTable<>("TestCase Properties", modelItem);
 
         table.addProperty("Name", "name", true);
 

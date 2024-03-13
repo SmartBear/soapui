@@ -110,7 +110,7 @@ public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestServ
     }
 
     protected static void initTransformers() throws Exception {
-        transformers = new HashMap<String, Transformer>();
+        transformers = new HashMap<>();
         TransformerFactory xformFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
 
         transformers.put(

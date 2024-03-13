@@ -57,9 +57,9 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
     public static final String PROPERTY_STYLE = "style";
     public static final String PARAM_LOCATION = "paramLocation";
     private RestParametersConfig config;
-    private List<RestParamProperty> properties = new ArrayList<RestParamProperty>();
-    private Map<String, RestParamProperty> propertyMap = new HashMap<String, RestParamProperty>();
-    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
+    private List<RestParamProperty> properties = new ArrayList<>();
+    private Map<String, RestParamProperty> propertyMap = new HashMap<>();
+    private Set<TestPropertyListener> listeners = new HashSet<>();
     private final ModelItem modelItem;
     private ParamLocation defaultParamLocation;
     private Properties overrideProperties;
@@ -566,7 +566,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
     }
 
     public List<TestProperty> getPropertyList() {
-        List<TestProperty> result = new ArrayList<TestProperty>();
+        List<TestProperty> result = new ArrayList<>();
 
         for (TestProperty property : properties) {
             result.add(property);
@@ -576,7 +576,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
     }
 
     public Map<String, TestProperty> getProperties() {
-        Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+        Map<String, TestProperty> result = new HashMap<>();
         for (RestParamProperty property : propertyMap.values()) {
             result.put(property.getName(), property);
         }
@@ -640,7 +640,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
      * getPropertyExpansions()
      */
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         for (RestParamProperty prop : properties) {
             result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getModelItem(), prop, "value"));
@@ -716,7 +716,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
     }
 
     public Set<java.util.Map.Entry<String, TestProperty>> entrySet() {
-        HashSet<java.util.Map.Entry<String, TestProperty>> result = new HashSet<Entry<String, TestProperty>>();
+        HashSet<java.util.Map.Entry<String, TestProperty>> result = new HashSet<>();
 
         for (TestProperty p : propertyMap.values()) {
             // This does not compile on JDK 1.5:
@@ -759,7 +759,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
     }
 
     public Set<String> keySet() {
-        return new LinkedHashSet<String>(Arrays.asList(getPropertyNames()));
+        return new LinkedHashSet<>(Arrays.asList(getPropertyNames()));
     }
 
     public TestProperty put(String key, TestProperty value) {
@@ -783,7 +783,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
     }
 
     public Collection<TestProperty> values() {
-        ArrayList<TestProperty> result = new ArrayList<TestProperty>();
+        ArrayList<TestProperty> result = new ArrayList<>();
         result.addAll(properties);
         return result;
     }

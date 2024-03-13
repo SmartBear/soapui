@@ -83,7 +83,7 @@ public class TcpMonAction extends AbstractToolsAction<WsdlInterface> {
 
     protected StringToStringMap initValues(WsdlInterface modelItem, Object param) {
         if (modelItem != null) {
-            List<String> endpoints = new ArrayList<String>(Arrays.asList(modelItem.getEndpoints()));
+            List<String> endpoints = new ArrayList<>(Arrays.asList(modelItem.getEndpoints()));
             endpoints.add(0, null);
             mainForm.setOptions(ENDPOINT, endpoints.toArray());
         } else if (mainForm != null) {

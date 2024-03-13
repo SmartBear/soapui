@@ -221,8 +221,8 @@ public class PropertyExpansionUtils {
         UISupport.setHourglassCursor();
 
         try {
-            List<MutablePropertyExpansion> result = new ArrayList<MutablePropertyExpansion>();
-            List<MutablePropertyExpansion> properties = new ArrayList<MutablePropertyExpansion>();
+            List<MutablePropertyExpansion> result = new ArrayList<>();
+            List<MutablePropertyExpansion> properties = new ArrayList<>();
 
             PropertyExpansion[] propertyExpansions = getPropertyExpansions(root, true, true);
             for (PropertyExpansion pe : propertyExpansions) {
@@ -251,7 +251,7 @@ public class PropertyExpansionUtils {
     }
 
     public static PropertyExpansion[] getPropertyExpansions(ModelItem modelItem, boolean mutableOnly, boolean deep) {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         if (modelItem instanceof PropertyExpansionContainer) {
             PropertyExpansion[] pes = ((PropertyExpansionContainer) modelItem).getPropertyExpansions();
@@ -280,8 +280,8 @@ public class PropertyExpansionUtils {
 
     public static Collection<? extends PropertyExpansion> extractPropertyExpansions(ModelItem modelItem, Object target,
                                                                                     String propertyName) {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
-        Set<String> expansions = new HashSet<String>();
+        List<PropertyExpansion> result = new ArrayList<>();
+        Set<String> expansions = new HashSet<>();
 
         try {
             Object property = PropertyUtils.getProperty(target, propertyName);

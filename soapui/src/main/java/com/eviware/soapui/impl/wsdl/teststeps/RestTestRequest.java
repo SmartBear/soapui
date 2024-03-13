@@ -345,7 +345,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
     }
 
     public List<TestAssertion> getAssertionList() {
-        return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+        return new ArrayList<>(assertionsSupport.getAssertionList());
     }
 
     public WsdlMessageAssertion getAssertionByName(String name) {

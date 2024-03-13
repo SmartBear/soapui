@@ -42,7 +42,7 @@ import java.util.List;
 public class MessageXmlObject {
     private XmlObject messageObj;
     private WsdlContext wsdlContext;
-    private List<MessageXmlPart> messageParts = new ArrayList<MessageXmlPart>();
+    private List<MessageXmlPart> messageParts = new ArrayList<>();
 
     private final static Logger log = LogManager.getLogger(MessageXmlObject.class);
     private final String messageContent;

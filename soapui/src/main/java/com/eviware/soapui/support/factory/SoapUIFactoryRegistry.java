@@ -34,10 +34,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class SoapUIFactoryRegistry {
-    private Map<Class<?>, List<Object>> factories = new HashMap<Class<?>, List<Object>>();
-    private Map<Class<?>, SoapUIFactoryConfig> factoryConfigs = new HashMap<Class<?>, SoapUIFactoryConfig>();
+    private Map<Class<?>, List<Object>> factories = new HashMap<>();
+    private Map<Class<?>, SoapUIFactoryConfig> factoryConfigs = new HashMap<>();
     private final static Logger log = LogManager.getLogger(SoapUIFactoryRegistry.class);
-    private Set<SoapUIFactoryRegistryListener> listeners = new HashSet<SoapUIFactoryRegistryListener>();
+    private Set<SoapUIFactoryRegistryListener> listeners = new HashSet<>();
 
     public SoapUIFactoryRegistry(InputStream config) {
         if (config != null) {
@@ -112,7 +112,7 @@ public class SoapUIFactoryRegistry {
 
     @SuppressWarnings("unchecked")
     public <T extends Object> List<T> getFactories(Class<T> factoryType) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
 
         if (factories.containsKey(factoryType)) {
             for( Object obj : factories.get(factoryType))

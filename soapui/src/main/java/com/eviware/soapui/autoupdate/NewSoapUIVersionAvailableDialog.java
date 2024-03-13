@@ -103,7 +103,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
     }
 
     protected JPanel buildToolbar(JDialog dialog) {
-        final JComboBox<String> choice = new JComboBox<String>();
+        final JComboBox<String> choice = new JComboBox<>();
         choice.addItem("1 day");
         choice.addItem("3 days");
         choice.addItem("7 days");

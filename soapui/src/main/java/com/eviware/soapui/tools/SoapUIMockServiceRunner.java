@@ -46,7 +46,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner {
     private String mockService;
     private String port;
     private String path;
-    private List<MockRunner> runners = new ArrayList<MockRunner>();
+    private List<MockRunner> runners = new ArrayList<>();
     private boolean block;
     private String projectPassword;
     private WsdlProject project;

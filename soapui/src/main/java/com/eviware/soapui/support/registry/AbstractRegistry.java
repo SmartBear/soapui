@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractRegistry<T1 extends RegistryEntry<T2, T3>, T2 extends RegistryEntryConfig, T3 extends Object> {
-    private Map<String, Class<? extends T1>> registry = new HashMap<String, Class<? extends T1>>();
+    private Map<String, Class<? extends T1>> registry = new HashMap<>();
 
     public void mapType(String type, Class<? extends T1> clazz) {
         registry.put(type, clazz);
@@ -67,7 +67,7 @@ public abstract class AbstractRegistry<T1 extends RegistryEntry<T2, T3>, T2 exte
     }
 
     public String[] getTypesWithInterface(Class<?> clazz) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (String type : registry.keySet()) {
             if (Arrays.asList(registry.get(type).getInterfaces()).contains(clazz)) {

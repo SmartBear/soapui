@@ -41,7 +41,7 @@ import java.util.Deque;
  */
 public class MostRecentlyUsedOrderDesktopManager implements DesktopManager {
     // Keep desktop panel list (JInternalFrame) of existing internal frames in a most-recently-used order (i.e. a stack).
-    Deque<JInternalFrame> mostRecentlyUsedFrames = new ArrayDeque<JInternalFrame>();
+    Deque<JInternalFrame> mostRecentlyUsedFrames = new ArrayDeque<>();
 
     private DesktopManager delegate;
     // this is used to prevent AquaInternalFrameManager from activating another pane when we are closing one on Mac

@@ -175,7 +175,7 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 
     // Used to save values from table GUI components
     protected List<StringToStringMap> readTableValues(XmlObjectConfigurationReader reader, String parameterName) {
-        List<StringToStringMap> result = new ArrayList<StringToStringMap>();
+        List<StringToStringMap> result = new ArrayList<>();
         String[] tableValues = reader.readStrings(parameterName);
         if (tableValues != null && tableValues.length > 0) {
             for (String tableValue : tableValues) {
@@ -195,7 +195,7 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
     }
 
     protected Vector<WSEncryptionPart> createWSParts(List<StringToStringMap> parts) {
-        Vector<WSEncryptionPart> result = new Vector<WSEncryptionPart>();
+        Vector<WSEncryptionPart> result = new Vector<>();
 
         for (StringToStringMap map : parts) {
             if (map.hasValue("id")) {

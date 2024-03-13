@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class SamplesModel extends AbstractTableModel {
     private final LoadTest loadTest;
-    private List<TestSample[]> samples = new ArrayList<TestSample[]>();
+    private List<TestSample[]> samples = new ArrayList<>();
     private InternalTestRunListener testRunListener;
     private InternalTestSuiteListener testSuiteListener;
     private InternalPropertyChangeListener propertyChangeListener;
@@ -115,7 +115,7 @@ public class SamplesModel extends AbstractTableModel {
     private class InternalTestRunListener extends LoadTestRunListenerAdapter {
         public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
                                   TestCaseRunContext runContext) {
-            Map<TestStep, TestSample> samplesMap = new HashMap<TestStep, TestSample>();
+            Map<TestStep, TestSample> samplesMap = new HashMap<>();
             List<TestStepResult> results = testRunner.getResults();
 
             for (int c = 0; c < results.size(); c++) {
@@ -179,7 +179,7 @@ public class SamplesModel extends AbstractTableModel {
             }
 
             if (results == null) {
-                results = new ArrayList<TestStepResult>();
+                results = new ArrayList<>();
             }
 
             results.add(result);

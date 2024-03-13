@@ -74,10 +74,10 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
     private final static Logger log = LogManager.getLogger(WorkspaceImpl.class);
     public static final MessageSupport messages = MessageSupport.getMessages(WorkspaceImpl.class);
 
-    private List<Project> projectList = new ArrayList<Project>();
+    private List<Project> projectList = new ArrayList<>();
     private SoapuiWorkspaceDocumentConfig workspaceConfig;
     private String path = null;
-    private Set<WorkspaceListener> listeners = new HashSet<WorkspaceListener>();
+    private Set<WorkspaceListener> listeners = new HashSet<>();
     private ImageIcon workspaceIcon;
     private XmlBeansSettingsImpl settings;
     private StringToStringMap projectOptions;
@@ -223,7 +223,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
     }
 
     public Map<String, Project> getProjects() {
-        Map<String, Project> result = new HashMap<String, Project>();
+        Map<String, Project> result = new HashMap<>();
 
         for (Project project : projectList) {
             result.put(project.getName(), project);
@@ -290,7 +290,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
                 path = file.getAbsolutePath();
             }
 
-            List<WorkspaceProjectConfig> projects = new ArrayList<WorkspaceProjectConfig>();
+            List<WorkspaceProjectConfig> projects = new ArrayList<>();
 
             // save projects first
             for (int c = 0; c < getProjectCount(); c++) {
@@ -630,7 +630,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
     }
 
     public List<Project> getOpenProjectList() {
-        List<Project> availableProjects = new ArrayList<Project>();
+        List<Project> availableProjects = new ArrayList<>();
 
         for (Project project : projectList) {
             if (project.isOpen()) {

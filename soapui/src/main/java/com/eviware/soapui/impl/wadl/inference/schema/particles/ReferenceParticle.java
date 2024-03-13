@@ -45,13 +45,13 @@ public class ReferenceParticle implements Particle {
         this.schema = schema;
         this.reference = reference;
         referenceQName = reference.getName();
-        attributes = new HashMap<String, String>();
+        attributes = new HashMap<>();
     }
 
     public ReferenceParticle(ReferenceParticleConfig xml, Schema schema) {
         this.schema = schema;
         referenceQName = xml.getReference();
-        attributes = new HashMap<String, String>();
+        attributes = new HashMap<>();
         for (MapEntryConfig entry : xml.getAttributeList()) {
             attributes.put(entry.getKey(), entry.getValue());
         }

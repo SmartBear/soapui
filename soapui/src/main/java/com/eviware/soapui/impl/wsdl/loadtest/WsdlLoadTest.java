@@ -102,10 +102,10 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
     private LoadTestLog loadTestLog;
 
     private LoadStrategyConfigurationChangeListener loadStrategyListener = new LoadStrategyConfigurationChangeListener();
-    private List<LoadTestAssertion> assertions = new ArrayList<LoadTestAssertion>();
+    private List<LoadTestAssertion> assertions = new ArrayList<>();
     private ConfigurationChangePropertyListener configurationChangeListener = new ConfigurationChangePropertyListener();
-    private Set<LoadTestListener> loadTestListeners = new HashSet<LoadTestListener>();
-    private Set<LoadTestRunListener> loadTestRunListeners = new HashSet<LoadTestRunListener>();
+    private Set<LoadTestListener> loadTestListeners = new HashSet<>();
+    private Set<LoadTestRunListener> loadTestRunListeners = new HashSet<>();
     private List<LoadTestLogErrorEntry> assertionErrors = new TreeList();
     private WsdlLoadTestRunner runner;
     private StatisticsLogger statisticsLogger = new StatisticsLogger();
@@ -663,7 +663,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 
     public class StatisticsLogger implements Runnable {
         private boolean stopped;
-        private List<PrintWriter> writers = new ArrayList<PrintWriter>();
+        private List<PrintWriter> writers = new ArrayList<>();
         private long startTime;
 
         public void run() {

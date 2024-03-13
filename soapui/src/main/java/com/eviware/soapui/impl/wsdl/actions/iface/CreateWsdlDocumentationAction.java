@@ -104,7 +104,7 @@ public class CreateWsdlDocumentationAction extends AbstractSoapUIAction<WsdlInte
     }
 
     protected static void initTransformers() throws Exception {
-        transformers = new HashMap<String, Transformer>();
+        transformers = new HashMap<>();
         TransformerFactory xformFactory = TransformerFactory.newInstance();
 
         Transformer transformer = xformFactory.newTransformer(new StreamSource(SoapUI.class

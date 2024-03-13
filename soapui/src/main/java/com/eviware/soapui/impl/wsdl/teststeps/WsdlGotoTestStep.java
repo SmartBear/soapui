@@ -60,7 +60,7 @@ import java.util.List;
 public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer,
         PropertyExpansionContainer {
     private GotoStepConfig gotoStepConfig;
-    private List<GotoCondition> conditions = new ArrayList<GotoCondition>();
+    private List<GotoCondition> conditions = new ArrayList<>();
     private boolean canceled;
 
     private final static Logger log = LogManager.getLogger(WsdlGotoTestStep.class);
@@ -310,7 +310,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         for (GotoCondition condition : conditions) {
             result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, condition, "expression"));
@@ -320,7 +320,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
     }
 
     public XPathReference[] getXPathReferences() {
-        List<XPathReference> result = new ArrayList<XPathReference>();
+        List<XPathReference> result = new ArrayList<>();
 
         for (GotoCondition condition : conditions) {
             if (StringUtils.hasContent(condition.getExpression())) {

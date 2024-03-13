@@ -76,7 +76,7 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties {
     private CrossSiteScriptingScanConfig cssConfig;
     StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
-    List<String> defaultParameterExposureStrings = new ArrayList<String>();
+    List<String> defaultParameterExposureStrings = new ArrayList<>();
     private JFormDialog dialog;
 
     public CrossSiteScriptingScan(TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon) {
@@ -179,7 +179,7 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties {
     @Override
     protected boolean hasNext(TestStep testStep, SecurityTestRunContext context) {
         if (!context.hasProperty(PropertyMutation.REQUEST_MUTATIONS_STACK)) {
-            Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
+            Stack<PropertyMutation> requestMutationsList = new Stack<>();
             context.put(PropertyMutation.REQUEST_MUTATIONS_STACK, requestMutationsList);
             context.put(PARAMETER_EXPOSURE_SCAN_CONFIG, cssConfig);
             try {

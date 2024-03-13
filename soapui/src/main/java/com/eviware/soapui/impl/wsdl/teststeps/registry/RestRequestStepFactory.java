@@ -89,8 +89,8 @@ public class RestRequestStepFactory extends WsdlTestStepFactory {
     public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
         // build list of available interfaces / restResources
         Project project = testCase.getTestSuite().getProject();
-        List<String> options = new ArrayList<String>();
-        TupleList<RestMethod, RestRequest> restMethods = new TupleList<RestMethod, RestRequest>();
+        List<String> options = new ArrayList<>();
+        TupleList<RestMethod, RestRequest> restMethods = new TupleList<>();
 
         for (int c = 0; c < project.getInterfaceCount(); c++) {
             Interface iface = project.getInterfaceAt(c);

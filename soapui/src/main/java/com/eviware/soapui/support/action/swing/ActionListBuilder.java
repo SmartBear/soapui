@@ -112,7 +112,7 @@ public class ActionListBuilder {
                 actionListAction.setEnabled(mapping.isEnabled());
                 prevWasSeparator = false;
             } else if (action != null) {
-                SwingActionDelegate<T> actionDelegate = new SwingActionDelegate<T>(actionMapping, modelItem);
+                SwingActionDelegate<T> actionDelegate = new SwingActionDelegate<>(actionMapping, modelItem);
                 actions.addAction(actionDelegate);
                 if (mapping.isDefault()) {
                     actions.setDefaultAction(actionDelegate);
@@ -166,7 +166,7 @@ public class ActionListBuilder {
                 actionListAction.setEnabled(mapping.isEnabled());
                 prevWasSeparator = false;
             } else if (action instanceof SoapUIMultiAction) {
-                List<ModelItem> targets = new ArrayList<ModelItem>();
+                List<ModelItem> targets = new ArrayList<>();
                 for (ModelItem target : modelItems) {
                     if (action.applies(target)) {
                         targets.add(target);

@@ -60,7 +60,7 @@ import java.util.Set;
 public class JFunctionalTestRunLog extends JPanel {
     private FunctionalTestLogModel logListModel;
     private JList testLogList;
-    private Set<String> boldTexts = new HashSet<String>();
+    private Set<String> boldTexts = new HashSet<>();
     protected int selectedIndex;
     private Logger log = LogManager.getLogger(JSecurityTestRunLog.class);
     // TODO see how to get this from security log options to apply here

@@ -113,7 +113,7 @@ public class IncomingWss {
             List<WSSecurityEngineResult> incomingResult = wssecurityEngine.processSecurityHeader(soapDocument,
                     (String) null, new WSSCallbackHandler(dec), sig, dec);
 
-            Vector<Object> wssResult = new Vector<Object>();
+            Vector<Object> wssResult = new Vector<>();
             wssResult.setSize(incomingResult.size());
             Collections.copy(wssResult, incomingResult);
             return wssResult;

@@ -419,7 +419,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
     }
 
     public List<TestAssertion> getAssertionList() {
-        return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+        return new ArrayList<>(assertionsSupport.getAssertionList());
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {

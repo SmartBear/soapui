@@ -44,7 +44,7 @@ public class SwingXFormImpl implements XForm {
     private FormLayout layout;
     private RowSpec rowSpec;
     private int rowSpacing = 5;
-    private Map<String, XFormField> components = new HashMap<String, XFormField>();
+    private Map<String, XFormField> components = new HashMap<>();
     private String rowAlignment = "top";
     private String name;
 

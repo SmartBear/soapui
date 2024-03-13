@@ -47,7 +47,7 @@ public class GlobalPropertyResolver implements PropertyResolver {
 
         public Map<String, TestProperty> getProperties() {
             Map<String, String> properties = System.getenv();
-            Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+            Map<String, TestProperty> result = new HashMap<>();
 
             for (Object key : properties.keySet()) {
                 result.put(key.toString(), new SystemEnviromentTestProperty(key));
@@ -57,7 +57,7 @@ public class GlobalPropertyResolver implements PropertyResolver {
         }
 
         public List<TestProperty> getPropertyList() {
-            List<TestProperty> result = new ArrayList<TestProperty>();
+            List<TestProperty> result = new ArrayList<>();
 
             for (TestProperty property : getProperties().values()) {
                 result.add(property);
@@ -168,7 +168,7 @@ public class GlobalPropertyResolver implements PropertyResolver {
 
         public Map<String, TestProperty> getProperties() {
             Properties properties = System.getProperties();
-            Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+            Map<String, TestProperty> result = new HashMap<>();
 
             for (Object key : properties.keySet()) {
                 result.put(key.toString(), new SystemTestProperty(key));
@@ -195,7 +195,7 @@ public class GlobalPropertyResolver implements PropertyResolver {
         }
 
         public List<TestProperty> getPropertyList() {
-            List<TestProperty> result = new ArrayList<TestProperty>();
+            List<TestProperty> result = new ArrayList<>();
 
             for (TestProperty property : getProperties().values()) {
                 result.add(property);

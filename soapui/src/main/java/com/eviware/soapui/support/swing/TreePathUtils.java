@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class TreePathUtils {
     public static TreePath getPath(TreeNode treeNode) {
-        List<Object> nodes = new ArrayList<Object>();
+        List<Object> nodes = new ArrayList<>();
         if (treeNode != null) {
             nodes.add(treeNode);
             treeNode = treeNode.getParent();

@@ -67,7 +67,7 @@ public abstract class AbstractTreeNode<T extends ModelItem> implements SoapUITre
     }
 
     public Enumeration children() {
-        Vector<TreeNode> children = new Vector<TreeNode>();
+        Vector<TreeNode> children = new Vector<>();
         for (int c = 0; c < getChildCount(); c++) {
             children.add(getChildAt(c));
         }

@@ -63,9 +63,9 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
     public final static String START_SCRIPT_PROPERTY = AbstractMockService.class.getName() + "@startScript";
     public final static String STOP_SCRIPT_PROPERTY = AbstractMockService.class.getName() + "@stopScript";
 
-    protected List<MockOperation> mockOperations = new ArrayList<MockOperation>();
-    private Set<MockRunListener> mockRunListeners = new HashSet<MockRunListener>();
-    private Set<MockServiceListener> mockServiceListeners = new HashSet<MockServiceListener>();
+    protected List<MockOperation> mockOperations = new ArrayList<>();
+    private Set<MockRunListener> mockRunListeners = new HashSet<>();
+    private Set<MockServiceListener> mockServiceListeners = new HashSet<>();
     private MockServiceIconAnimator iconAnimator;
     private WsdlMockRunner mockRunner;
 

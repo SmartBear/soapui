@@ -49,15 +49,15 @@ import java.util.List;
 
 public class JWizardDialog extends SwingXFormDialog {
     private String name;
-    private ArrayList<String> pageNames = new ArrayList<String>();
+    private ArrayList<String> pageNames = new ArrayList<>();
 
     private JFrame dialog;
     private DescriptionPanel descriptionPanel;
-    private List<SwingXFormImpl> forms = new ArrayList<SwingXFormImpl>();
+    private List<SwingXFormImpl> forms = new ArrayList<>();
     private JPanel pages;
     private CardLayout cardLayout;
 
-    private HashMap<String, WizardPage> controllers = new HashMap<String, WizardPage>();
+    private HashMap<String, WizardPage> controllers = new HashMap<>();
     private int currentPage = 0;
 
     private DefaultActionList actions;
@@ -98,7 +98,7 @@ public class JWizardDialog extends SwingXFormDialog {
     }
 
     public XForm[] getForms() {
-        List<XForm> result = new ArrayList<XForm>();
+        List<XForm> result = new ArrayList<>();
         for (XForm form : forms) {
             result.add(form);
         }

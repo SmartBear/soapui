@@ -75,8 +75,8 @@ import java.util.Map;
 
 public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private JDesktopPane desktop;
-    private Map<ModelItem, JInternalFrame> modelItemToInternalFrameMap = new HashMap<ModelItem, JInternalFrame>();
-    private Map<JInternalFrame, DesktopPanel> internalFrameToDesktopPanelMap = new HashMap<JInternalFrame, DesktopPanel>();
+    private Map<ModelItem, JInternalFrame> modelItemToInternalFrameMap = new HashMap<>();
+    private Map<JInternalFrame, DesktopPanel> internalFrameToDesktopPanelMap = new HashMap<>();
     private DesktopPanelPropertyChangeListener desktopPanelPropertyChangeListener = new DesktopPanelPropertyChangeListener();
     private InternalDesktopFrameListener internalFrameListener = new InternalDesktopFrameListener();
     private ActionList actions;
@@ -90,7 +90,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private static final int xOffset = 30, yOffset = 30;
     private boolean transferring;
 
-    private List<DesktopPanel> deferredDesktopPanels = new LinkedList<DesktopPanel>();
+    private List<DesktopPanel> deferredDesktopPanels = new LinkedList<>();
     private JInspectorPanel inspector;
     private JPanel inspectorPanel;
 
@@ -467,7 +467,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     public void transferTo(SoapUIDesktop newDesktop) {
         transferring = true;
 
-        List<DesktopPanel> values = new ArrayList<DesktopPanel>(internalFrameToDesktopPanelMap.values());
+        List<DesktopPanel> values = new ArrayList<>(internalFrameToDesktopPanelMap.values());
         for (DesktopPanel desktopPanel : values) {
             closeDesktopPanel(desktopPanel);
             newDesktop.showDesktopPanel(desktopPanel);

@@ -208,7 +208,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
         // set parameters
         RestParametersConfig parametersConfig = testRequestConfig.addNewParameters();
         Map<String, String> parametersMap = me.getHttpRequestParameters();
-        List<RestParameterConfig> parameterConfigList = new ArrayList<RestParameterConfig>();
+        List<RestParameterConfig> parameterConfigList = new ArrayList<>();
         for (String name : parametersMap.keySet()) {
             RestParameterConfig parameterConf = RestParameterConfig.Factory.newInstance();
             parameterConf.setName(name);

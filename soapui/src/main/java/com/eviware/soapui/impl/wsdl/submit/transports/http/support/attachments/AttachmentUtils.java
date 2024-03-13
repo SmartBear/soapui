@@ -410,7 +410,7 @@ public class AttachmentUtils {
 
     public static List<HttpAttachmentPart> extractAttachmentParts(WsdlOperation operation, String messageContent,
                                                                   boolean addAnonymous, boolean isResponse, boolean forceMtom) {
-        List<HttpAttachmentPart> result = new ArrayList<HttpAttachmentPart>();
+        List<HttpAttachmentPart> result = new ArrayList<>();
 
         PartsConfig messageParts = isResponse ? operation.getConfig().getResponseParts() : operation.getConfig()
                 .getRequestParts();
@@ -502,7 +502,7 @@ public class AttachmentUtils {
             }
         } else {
             // first identify if any part has more than one attachments
-            Map<String, List<Attachment>> attachmentsMap = new HashMap<String, List<Attachment>>();
+            Map<String, List<Attachment>> attachmentsMap = new HashMap<>();
             for (int c = 0; c < attachments.size(); c++) {
                 Attachment att = attachments.get(c);
                 if (att.getAttachmentType() == Attachment.AttachmentType.CONTENT) {

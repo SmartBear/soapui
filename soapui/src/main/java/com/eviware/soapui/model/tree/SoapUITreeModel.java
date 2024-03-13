@@ -43,10 +43,10 @@ import java.util.Set;
  */
 
 public class SoapUITreeModel implements TreeModel {
-    private Set<TreeModelListener> listeners = new HashSet<TreeModelListener>();
+    private Set<TreeModelListener> listeners = new HashSet<>();
     private SoapUITreeNode workspaceNode;
     private final static Logger logger = LogManager.getLogger(SoapUITreeModel.class);
-    private Map<ModelItem, SoapUITreeNode> modelItemMap = new HashMap<ModelItem, SoapUITreeNode>();
+    private Map<ModelItem, SoapUITreeNode> modelItemMap = new HashMap<>();
     private boolean showProperties = false;
 
     public SoapUITreeModel(Workspace workspace) {
@@ -145,7 +145,7 @@ public class SoapUITreeModel implements TreeModel {
         // throw new RuntimeException( "Missing mapping for modelItem " +
         // modelItem.getName() );
 
-        List<Object> nodes = new ArrayList<Object>();
+        List<Object> nodes = new ArrayList<>();
         if (treeNode != null) {
             nodes.add(treeNode);
 

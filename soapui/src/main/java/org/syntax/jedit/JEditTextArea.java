@@ -169,7 +169,7 @@ public class JEditTextArea extends JComponent implements Scrollable {
         popup = defaults.popup;
 
         // We don't seem to get the initial focus event?
-        focusedComponentRef = new WeakReference<JEditTextArea>(this);
+        focusedComponentRef = new WeakReference<>(this);
 
         addMouseWheelListener(new MouseWheelListener() {
 
@@ -1886,7 +1886,7 @@ public class JEditTextArea extends JComponent implements Scrollable {
             if (isEditable()) {
                 setCaretVisible(true);
             }
-            focusedComponentRef = new WeakReference<JEditTextArea>(JEditTextArea.this);
+            focusedComponentRef = new WeakReference<>(JEditTextArea.this);
         }
 
         public void focusLost(FocusEvent evt) {
@@ -1922,7 +1922,7 @@ public class JEditTextArea extends JComponent implements Scrollable {
                 setCaretVisible(true);
             }
 
-            focusedComponentRef = new WeakReference<JEditTextArea>(JEditTextArea.this);
+            focusedComponentRef = new WeakReference<>(JEditTextArea.this);
 
             if (popup != null && evt.isPopupTrigger()) {
                 doPopup(evt);

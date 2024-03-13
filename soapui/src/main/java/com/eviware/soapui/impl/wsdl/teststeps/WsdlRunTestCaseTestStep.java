@@ -70,7 +70,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep {
     private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
     private InternalTestRunListener testRunListener = new InternalTestRunListener();
     private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
-    private Set<TestRunListener> testRunListeners = new HashSet<TestRunListener>();
+    private Set<TestRunListener> testRunListeners = new HashSet<>();
     private WsdlTestCase runningTestCase;
 
     public WsdlRunTestCaseTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

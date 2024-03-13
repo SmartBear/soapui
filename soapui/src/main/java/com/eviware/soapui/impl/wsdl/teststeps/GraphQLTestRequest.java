@@ -687,7 +687,7 @@ public class GraphQLTestRequest extends AbstractHttpRequest<GraphQLTestRequestCo
 
     @Override
     public List<TestAssertion> getAssertionList() {
-        return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+        return new ArrayList<>(assertionsSupport.getAssertionList());
     }
 
     @Override

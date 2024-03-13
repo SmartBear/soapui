@@ -201,7 +201,7 @@ public class GSoapAction extends AbstractToolsAction<Interface> {
             return;
         }
 
-        List<ProcessBuilder> builders = new ArrayList<ProcessBuilder>();
+        List<ProcessBuilder> builders = new ArrayList<>();
 
         if (values.getBoolean(WSDL2H)) {
             ProcessBuilder wsdl2hBuilder = new ProcessBuilder();

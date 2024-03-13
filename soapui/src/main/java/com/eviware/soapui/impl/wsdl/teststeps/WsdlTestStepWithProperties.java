@@ -41,9 +41,9 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep {
     public static String RAW_RESPONSE = "RawResponse";
 
     private Map<String, TestProperty> properties;
-    private List<TestProperty> propertyList = new ArrayList<TestProperty>();
-    private Map<String, Set<String>> normalizedPropertyNames = new HashMap<String, Set<String>>();
-    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
+    private List<TestProperty> propertyList = new ArrayList<>();
+    private Map<String, Set<String>> normalizedPropertyNames = new HashMap<>();
+    private Set<TestPropertyListener> listeners = new HashSet<>();
 
     protected WsdlTestStepWithProperties(WsdlTestCase testCase, TestStepConfig config, boolean hasEditor,
                                          boolean forLoadTest) {
@@ -98,7 +98,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep {
 
     protected void addProperty(TestProperty property, boolean notify) {
         if (properties == null) {
-            properties = new HashMap<String, TestProperty>();
+            properties = new HashMap<>();
         }
 
         String name = property.getName();
@@ -230,7 +230,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep {
 
     @Override
     public Map<String, TestProperty> getProperties() {
-        Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+        Map<String, TestProperty> result = new HashMap<>();
 
         if (properties != null) {
             for (String name : properties.keySet()) {

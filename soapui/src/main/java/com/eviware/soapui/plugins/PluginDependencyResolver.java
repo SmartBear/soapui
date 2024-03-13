@@ -32,16 +32,16 @@ public class PluginDependencyResolver {
     private final Map<PluginInfo,File> infoToFileMap;
 
     public PluginDependencyResolver(PluginLoader pluginLoader, Iterable<File> pluginFiles) throws IOException {
-        infoToFileMap = new HashMap<PluginInfo,File>();
+        infoToFileMap = new HashMap<>();
         for (File pluginFile : pluginFiles) {
             infoToFileMap.put(pluginLoader.loadPluginInfoFrom(pluginFile, Collections.<JarClassLoader>emptySet()), pluginFile);
         }
     }
 
     public List<File> determineLoadOrder() throws IOException {
-        List<PluginInfo> infoList = new ArrayList<PluginInfo>(infoToFileMap.keySet());
+        List<PluginInfo> infoList = new ArrayList<>(infoToFileMap.keySet());
         Collections.sort(infoList, new PluginDependencyComparator());
-        List<File> resultList = new ArrayList<File>();
+        List<File> resultList = new ArrayList<>();
         for (PluginInfo pluginInfo : infoList) {
             resultList.add(infoToFileMap.get(pluginInfo));
         }
@@ -49,7 +49,7 @@ public class PluginDependencyResolver {
     }
 
     public Collection<PluginInfo> findAllDependencies(PluginInfo plugin) {
-        Set<PluginInfo> allDependencies = new HashSet<PluginInfo>();
+        Set<PluginInfo> allDependencies = new HashSet<>();
         for (PluginInfo dependency : plugin.getDependencies()) {
             PluginInfo realDependency = findDependency(dependency.getId());
             if (realDependency != null) {
@@ -87,7 +87,7 @@ public class PluginDependencyResolver {
     }
 
     public List<PluginInfo> getPluginInfoListFromFiles(List<File> files) {
-        List<PluginInfo> result = new ArrayList<PluginInfo>();
+        List<PluginInfo> result = new ArrayList<>();
         for (File file : files) {
             for (Map.Entry<PluginInfo, File> entry : infoToFileMap.entrySet()) {
                 if (entry.getValue().equals(file)) {

@@ -37,7 +37,7 @@ public class ShowSystemPropertiesAction extends AbstractAction {
         StringBuffer buffer = new StringBuffer();
         Properties properties = System.getProperties();
 
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         for (Object key : properties.keySet()) {
             keys.add(key.toString());
         }

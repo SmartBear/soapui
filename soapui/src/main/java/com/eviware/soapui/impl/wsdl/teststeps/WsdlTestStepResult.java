@@ -40,7 +40,7 @@ import java.util.List;
 public class WsdlTestStepResult implements TestStepResult {
     private static final String[] EMPTY_MESSAGES = new String[0];
     private final WsdlTestStep testStep;
-    private List<String> messages = new ArrayList<String>();
+    private List<String> messages = new ArrayList<>();
     private Throwable error;
     private TestStepStatus status = TestStepStatus.UNKNOWN;
     private long timeTaken;

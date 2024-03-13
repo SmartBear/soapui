@@ -54,7 +54,7 @@ public class JDebugPropertiesTable<T> {
 
     public JDebugPropertiesTable(T propertyObject) {
 
-        tableModel = new PropertiesTableModel<T>(propertyObject);
+        tableModel = new PropertiesTableModel<>(propertyObject);
         table = new PTable(tableModel);
 
         table.getColumnModel().getColumn(0).setHeaderValue("Property");
@@ -96,7 +96,7 @@ public class JDebugPropertiesTable<T> {
     }
 
     public static final class PropertiesTableModel<T> extends AbstractTableModel implements PropertyChangeListener {
-        private List<PropertyDescriptor> properties = new ArrayList<PropertyDescriptor>();
+        private List<PropertyDescriptor> properties = new ArrayList<>();
         private T propertyObject;
         private boolean attached;
 

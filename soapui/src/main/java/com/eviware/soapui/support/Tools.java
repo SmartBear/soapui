@@ -65,7 +65,7 @@ public class Tools {
         }
 
         List<String> l = Arrays.asList(args.split(" "));
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (int c = 0; c < l.size(); c++) {
             String s = l.get(c);

@@ -147,18 +147,18 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     private static final String XML_FILE_TYPE = "XML Files (*.xml)";
     private static final String XML_EXTENSION = ".xml";
     protected String path;
-    protected List<AbstractInterface<?>> interfaces = new ArrayList<AbstractInterface<?>>();
-    protected List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
-    protected List<WsdlMockService> mockServices = new ArrayList<WsdlMockService>();
-    protected List<RestMockService> restMockServices = new ArrayList<RestMockService>();
-    protected Set<ProjectListener> projectListeners = new HashSet<ProjectListener>();
+    protected List<AbstractInterface<?>> interfaces = new ArrayList<>();
+    protected List<WsdlTestSuite> testSuites = new ArrayList<>();
+    protected List<WsdlMockService> mockServices = new ArrayList<>();
+    protected List<RestMockService> restMockServices = new ArrayList<>();
+    protected Set<ProjectListener> projectListeners = new HashSet<>();
     protected SoapuiProjectDocumentConfig projectDocument;
     protected EndpointStrategy endpointStrategy = new DefaultEndpointStrategy();
     protected long lastModified;
     protected DefaultWssContainer wssContainer;
     protected OAuth2ProfileContainer oAuth2ProfileContainer;
     protected OAuth1ProfileContainer oAuth1ProfileContainer;
-    protected Set<EnvironmentListener> environmentListeners = new HashSet<EnvironmentListener>();
+    protected Set<EnvironmentListener> environmentListeners = new HashSet<>();
     protected ProjectEncryptionStatus encryptionStatus = ProjectEncryptionStatus.NOT_ENCRYPTED;
     protected EndpointSupport endpointSupport;
     private WorkspaceImpl workspace;
@@ -178,7 +178,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     private ImageIcon closedEncyptedIcon;
     private SoapUIScriptEngine afterRunScriptEngine;
     private SoapUIScriptEngine beforeRunScriptEngine;
-    private Set<ProjectRunListener> runListeners = new HashSet<ProjectRunListener>();
+    private Set<ProjectRunListener> runListeners = new HashSet<>();
     private Environment environment;
 
     public WsdlProject() throws XmlException, IOException, SoapUIException {
@@ -1301,11 +1301,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public List<TestSuite> getTestSuiteList() {
-        return new ArrayList<TestSuite>(testSuites);
+        return new ArrayList<>(testSuites);
     }
 
     public List<WsdlMockService> getMockServiceList() {
-        return new ArrayList<WsdlMockService>(mockServices);
+        return new ArrayList<>(mockServices);
     }
 
     public List<RestMockService> getRestMockServiceList() {
@@ -1313,11 +1313,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public List<Interface> getInterfaceList() {
-        return new ArrayList<Interface>(interfaces);
+        return new ArrayList<>(interfaces);
     }
 
     public Map<String, Interface> getInterfaces() {
-        Map<String, Interface> result = new HashMap<String, Interface>();
+        Map<String, Interface> result = new HashMap<>();
         for (Interface iface : interfaces) {
             result.put(iface.getName(), iface);
         }
@@ -1326,7 +1326,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public Map<String, TestSuite> getTestSuites() {
-        Map<String, TestSuite> result = new HashMap<String, TestSuite>();
+        Map<String, TestSuite> result = new HashMap<>();
         for (TestSuite iface : testSuites) {
             result.put(iface.getName(), iface);
         }
@@ -1335,7 +1335,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public Map<String, MockService> getMockServices() {
-        Map<String, MockService> result = new HashMap<String, MockService>();
+        Map<String, MockService> result = new HashMap<>();
         for (MockService mockService : mockServices) {
             result.put(mockService.getName(), mockService);
         }
@@ -1458,7 +1458,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public List<? extends ModelItem> getChildren() {
-        ArrayList<ModelItem> list = new ArrayList<ModelItem>();
+        ArrayList<ModelItem> list = new ArrayList<>();
         list.addAll(getInterfaceList());
         list.addAll(getTestSuiteList());
         list.addAll(getMockServiceList());
@@ -1572,7 +1572,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         result.addAll(Arrays.asList(wssContainer.getPropertyExpansions()));
         result.addAll(Arrays.asList(oAuth2ProfileContainer.getPropertyExpansions()));
@@ -1679,7 +1679,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public List<AbstractInterface<?>> getInterfaces(String type) {
-        ArrayList<AbstractInterface<?>> result = new ArrayList<AbstractInterface<?>>();
+        ArrayList<AbstractInterface<?>> result = new ArrayList<>();
 
         for (AbstractInterface<?> iface : interfaces) {
             if (iface.getType().equals(type)) {
@@ -1727,7 +1727,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             for (int cnt2 = 0; cnt2 < config.getTestCaseList().size(); cnt2++) {
                 TestCaseConfig newTestCase = config.getTestCaseList().get(cnt2);
                 TestCaseConfig importTestCaseConfig = newTestSuiteConfig.getTestSuite().getTestCaseList().get(cnt2);
-                LinkedHashMap<String, String> oldNewIds = new LinkedHashMap<String, String>();
+                LinkedHashMap<String, String> oldNewIds = new LinkedHashMap<>();
                 for (int cnt = 0; cnt < importTestCaseConfig.getTestStepList().size(); cnt++) {
                     oldNewIds.put(importTestCaseConfig.getTestStepList().get(cnt).getId(), newTestCase.getTestStepList()
                             .get(cnt).getId());

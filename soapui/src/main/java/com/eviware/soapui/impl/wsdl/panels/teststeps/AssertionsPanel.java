@@ -299,7 +299,7 @@ public class AssertionsPanel extends JPanel {
     }
 
     protected class AssertionListModel extends AbstractListModel implements PropertyChangeListener, AssertionsListener {
-        protected List<Object> items = new ArrayList<Object>();
+        protected List<Object> items = new ArrayList<>();
 
         public AssertionListModel() {
             init();
@@ -474,7 +474,7 @@ public class AssertionsPanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
 
-            List<TestAssertion> removeAssertionList = new ArrayList<TestAssertion>();
+            List<TestAssertion> removeAssertionList = new ArrayList<>();
             int indices[] = assertionList.getSelectedIndices();
 
             if (indices.length == 0) {
@@ -522,7 +522,7 @@ public class AssertionsPanel extends JPanel {
         private void removeMultipleAssertions(List<TestAssertion> removeAssertionList) {
             if (UISupport.confirm("Remove all selected assertions?", "Remove Multiple Assertions")) {
                 // remove duplicates
-                Set<TestAssertion> assertions = new HashSet<TestAssertion>();
+                Set<TestAssertion> assertions = new HashSet<>();
 
                 for (ModelItem target : removeAssertionList) {
                     assertions.add((TestAssertion) target);

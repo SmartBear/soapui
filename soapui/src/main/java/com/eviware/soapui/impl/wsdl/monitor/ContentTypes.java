@@ -34,7 +34,7 @@ public class ContentTypes {
     }
 
     public static ContentTypes of(String contentTypes) {
-        List<ContentType> contentTypeList = new ArrayList<ContentType>();
+        List<ContentType> contentTypeList = new ArrayList<>();
         for (String ct : contentTypes.split(",")) {
             try {
                 contentTypeList.add(new ContentType(ct.trim()));

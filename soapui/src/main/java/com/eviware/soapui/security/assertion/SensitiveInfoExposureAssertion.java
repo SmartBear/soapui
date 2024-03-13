@@ -116,9 +116,9 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
     protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
             throws AssertionException {
         Map<String, String> checkMap = createCheckMap(context);
-        List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+        List<AssertionError> assertionErrorList = new ArrayList<>();
         String response = messageExchange.getResponseContent();
-        Set<String> messages = new HashSet<String>();
+        Set<String> messages = new HashSet<>();
 
         try {
             for (Map.Entry<String, String> tokenEntry : checkMap.entrySet()) {
@@ -154,9 +154,9 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
                                             MessageExchange messageExchange, SubmitContext context) throws AssertionException {
 
         Map<String, String> checkMap = createCheckMap(context);
-        List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+        List<AssertionError> assertionErrorList = new ArrayList<>();
         String propertyValue = source.getPropertyValue(propertyName);
-        Set<String> messages = new HashSet<String>();
+        Set<String> messages = new HashSet<>();
 
         try {
             for (Map.Entry<String, String> tokenEntry : checkMap.entrySet()) {
@@ -189,7 +189,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
     }
 
     private Map<String, String> createCheckMap(SubmitContext context) {
-        Map<String, String> checkMap = new HashMap<String, String>();
+        Map<String, String> checkMap = new HashMap<>();
         checkMap.putAll(createMapFromTable());
         if (includeProjectSpecific) {
             checkMap.putAll(SecurityScanUtil.projectEntriesList(this));
@@ -203,7 +203,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
     }
 
     private Map<String, String> propertyExpansionSupport(Map<String, String> checkMap, SubmitContext context) {
-        Map<String, String> expanded = new HashMap<String, String>();
+        Map<String, String> expanded = new HashMap<>();
         for (Map.Entry<String, String> entry : checkMap.entrySet()) {
             expanded.put(context.expand(entry.getKey()), context.expand(entry.getValue()));
         }
@@ -268,7 +268,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
     }
 
     private List<String> createListFromTable() {
-        List<String> temp = new ArrayList<String>();
+        List<String> temp = new ArrayList<>();
         for (TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList()) {
             String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
             temp.add(tokenPlusDescription);
@@ -277,7 +277,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
     }
 
     private Map<String, String> createMapFromTable() {
-        Map<String, String> temp = new HashMap<String, String>();
+        Map<String, String> temp = new HashMap<>();
         for (TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList()) {
             temp.put(tp.getName(), tp.getValue());
         }

@@ -49,7 +49,7 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 
     public static final String TYPE = "MalformedXmlSecurityScan";
     public static final String NAME = "Malformed XML";
-    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
+    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<>();
     private boolean mutation;
     private MalformedXmlConfig malformedXmlConfig;
     private MalformedXmlAttributeConfig malformedAttributeConfig;
@@ -289,7 +289,7 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 
     protected Collection<? extends String> mutateNode(XmlTreeNode node, String xml) throws IOException {
 
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         String nodeXml = getXmlForNode(node);
         // insert new element
         if (malformedXmlConfig.getInsertNewElement()) {

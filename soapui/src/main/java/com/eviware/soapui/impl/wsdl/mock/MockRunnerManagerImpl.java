@@ -29,11 +29,11 @@ import java.util.Vector;
 public class MockRunnerManagerImpl implements MockRunnerManager {
     private final static Logger log = LogManager.getLogger(MockRunnerManagerImpl.class);
 
-    private static Map<String, MockRunnerManager> managers = new HashMap<String, MockRunnerManager>();
+    private static Map<String, MockRunnerManager> managers = new HashMap<>();
 
-    private Map<String, WsdlMockService> mockServices = new HashMap<String, WsdlMockService>();
+    private Map<String, WsdlMockService> mockServices = new HashMap<>();
 
-    private Vector<WsdlMockRunner> mockRunners = new Vector<WsdlMockRunner>();
+    private Vector<WsdlMockRunner> mockRunners = new Vector<>();
 
     private Project project;
 

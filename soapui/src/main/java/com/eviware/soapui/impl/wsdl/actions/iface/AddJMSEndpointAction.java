@@ -100,7 +100,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
 
     private String[] getSessionOptions(AbstractInterface<?> iface, String hermesConfigPath) {
 
-        List<Hermes> hermesList = new ArrayList<Hermes>();
+        List<Hermes> hermesList = new ArrayList<>();
         try {
             Context ctx = getHermesContext(iface, hermesConfigPath);
             if (ctx != null) {
@@ -116,7 +116,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
             SoapUI.logError(e);
             SoapUI.log.warn("no HermesJMS context!");
         }
-        List<String> hermesSessionList = new ArrayList<String>();
+        List<String> hermesSessionList = new ArrayList<>();
         for (Hermes h : hermesList) {
             if (!h.getSessionConfig().getId().equals("<new>")) {
                 hermesSessionList.add(h.getSessionConfig().getId());
@@ -154,7 +154,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
     }
 
     private void updateDestinations(Hermes hermes) {
-        destinationNameList = new ArrayList<Destination>();
+        destinationNameList = new ArrayList<>();
         destinationNameList.add(new Destination(JMSEndpoint.JMS_EMPTY_DESTIONATION, Domain.UNKNOWN));
         extractDestinations(hermes, destinationNameList);
         mainForm.setOptions(SEND, destinationNameList.toArray());

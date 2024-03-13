@@ -349,7 +349,7 @@ public class AutomaticSAMLEntry extends WssEntryBase {
 
     // Since we only use one column for the attribute values
     private List<String> extractValueColumnValues(List<StringToStringMap> table, PropertyExpansionContext context) {
-        List<String> firstColumnValues = new ArrayList<String>();
+        List<String> firstColumnValues = new ArrayList<>();
         for (StringToStringMap row : table) {
             String columnValue = row.get(ATTRIBUTE_VALUES_VALUE_COLUMN);
             // TODO Add property expansion to each value

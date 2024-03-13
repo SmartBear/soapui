@@ -52,7 +52,7 @@ public class InferredSchemaImpl implements InferredSchema {
     }
 
     public SchemaTypeSystem getSchemaTypeSystem(SchemaTypeSystem sts) {
-        List<XmlObject> schemas = new ArrayList<XmlObject>();
+        List<XmlObject> schemas = new ArrayList<>();
         try {
             for (String namespace : getNamespaces()) {
                 // schemas.add( XmlObject.Factory.parse( getXsdForNamespace(

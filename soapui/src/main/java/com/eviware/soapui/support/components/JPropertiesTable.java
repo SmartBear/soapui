@@ -83,7 +83,7 @@ public class JPropertiesTable<T> extends JPanel {
         super(new BorderLayout());
         this.title = title;
         setBackground(Color.WHITE);
-        tableModel = new PropertiesTableModel<T>(propertyObject);
+        tableModel = new PropertiesTableModel<>(propertyObject);
         table = new PTable(tableModel);
         table.setBackground(Color.WHITE);
         table.getColumnModel().getColumn(0).setHeaderValue("Property");
@@ -171,7 +171,7 @@ public class JPropertiesTable<T> extends JPanel {
     }
 
     public static final class PropertiesTableModel<T> extends AbstractTableModel implements PropertyChangeListener {
-        private List<PropertyDescriptor> properties = new ArrayList<PropertyDescriptor>();
+        private List<PropertyDescriptor> properties = new ArrayList<>();
         private T propertyObject;
         private boolean attached;
 

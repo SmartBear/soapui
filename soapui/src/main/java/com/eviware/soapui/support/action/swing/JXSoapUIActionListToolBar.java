@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JXSoapUIActionListToolBar extends JXToolBar {
-    private Map<String, Action> actionMap = new HashMap<String, Action>();
+    private Map<String, Action> actionMap = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public JXSoapUIActionListToolBar(ActionList actions, ModelItem modelItem) {

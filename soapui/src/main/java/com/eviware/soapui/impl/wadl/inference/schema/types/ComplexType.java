@@ -59,7 +59,7 @@ public class ComplexType implements Type {
         this.name = name;
         this.completed = completed;
         content = new EmptyContent(schema, completed);
-        attributes = new HashMap<QName, Particle>();
+        attributes = new HashMap<>();
         schema.addType(this);
     }
 
@@ -69,7 +69,7 @@ public class ComplexType implements Type {
         completed = xml.getCompleted();
         mixed = xml.getMixed();
         content = Content.Factory.parse(xml.getContent(), schema);
-        attributes = new HashMap<QName, Particle>();
+        attributes = new HashMap<>();
         for (ParticleConfig item : xml.getAttributeList()) {
             Particle p = Particle.Factory.parse(item, schema);
             attributes.put(new QName("", p.getName().getLocalPart()), p);
@@ -81,7 +81,7 @@ public class ComplexType implements Type {
         xml.setName(name);
         xml.setCompleted(completed);
         xml.setMixed(mixed);
-        List<ParticleConfig> particleList = new ArrayList<ParticleConfig>();
+        List<ParticleConfig> particleList = new ArrayList<>();
         for (Particle item : attributes.values()) {
             particleList.add(item.save());
         }
@@ -101,7 +101,7 @@ public class ComplexType implements Type {
 
     public Type validate(Context context) throws XmlException {
         XmlCursor cursor = context.getCursor();
-        List<QName> seen = new ArrayList<QName>();
+        List<QName> seen = new ArrayList<>();
         cursor.push();
         if (!mixed && isMixed(context)) {
             // TODO: Check with ConflictHandler

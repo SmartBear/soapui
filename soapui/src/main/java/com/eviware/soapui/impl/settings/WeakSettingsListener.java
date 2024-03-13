@@ -30,7 +30,7 @@ public final class WeakSettingsListener implements SettingsListener {
     private final WeakReference<SettingsListener> listenerReference;
 
     public WeakSettingsListener(SettingsListener listener) {
-        listenerReference = new WeakReference<SettingsListener>(listener);
+        listenerReference = new WeakReference<>(listener);
     }
 
     public void settingChanged(String name, String newValue, String oldValue) {

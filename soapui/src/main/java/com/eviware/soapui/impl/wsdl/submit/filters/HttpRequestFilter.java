@@ -291,7 +291,7 @@ public class HttpRequestFilter extends AbstractRequestFilter {
             } else {
                 String requestContent = PropertyExpander.expandProperties(context, request.getRequestContent(),
                         request.isEntitizeProperties());
-                List<Attachment> attachments = new ArrayList<Attachment>();
+                List<Attachment> attachments = new ArrayList<>();
 
                 for (Attachment attachment : request.getAttachments()) {
                     if (attachment.getContentType().equals(request.getMediaType())) {

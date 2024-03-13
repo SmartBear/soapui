@@ -30,7 +30,7 @@ import java.util.Set;
  * @author Prakash
  */
 public class SoapMonitorListenerCallBack {
-    private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>(
+    private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<>(
             MonitorListener.class);
 
     public void fireAddMessageExchange(WsdlMonitorMessageExchange messageExchange) {
@@ -87,7 +87,7 @@ public class SoapMonitorListenerCallBack {
     }
 
     public static class SoapUIListenerSupport<T> {
-        private Set<T> listeners = new HashSet<T>();
+        private Set<T> listeners = new HashSet<>();
         @SuppressWarnings("unused")
         private final Class<T> listenerClass;
 

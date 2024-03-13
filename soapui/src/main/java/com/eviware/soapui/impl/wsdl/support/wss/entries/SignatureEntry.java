@@ -71,7 +71,7 @@ public class SignatureEntry extends WssEntryBase {
     private String digestAlgorithm;
     private String customTokenValueType;
     private String customTokenId;
-    private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
+    private List<StringToStringMap> parts = new ArrayList<>();
     private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
     private com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry.InternalWssContainerListener wssContainerListener;
 
