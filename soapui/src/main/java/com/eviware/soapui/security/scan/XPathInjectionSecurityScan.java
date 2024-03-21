@@ -115,7 +115,7 @@ public class XPathInjectionSecurityScan extends AbstractSecurityScanWithProperti
         }
     }
 
-    private StringToStringMap update(TestStep testStep, SecurityTestRunContext context) throws XmlException, Exception {
+    private StringToStringMap update(TestStep testStep, SecurityTestRunContext context) throws Exception {
         StringToStringMap params = new StringToStringMap();
 
         if (parameterMutations.size() == 0) {
@@ -212,7 +212,7 @@ public class XPathInjectionSecurityScan extends AbstractSecurityScanWithProperti
         return params;
     }
 
-    private void mutateParameters(TestStep testStep, SecurityTestRunContext context) throws XmlException, Exception {
+    private void mutateParameters(TestStep testStep, SecurityTestRunContext context) throws Exception {
         mutation = true;
         // for each parameter
         for (SecurityCheckedParameter parameter : getParameterHolder().getParameterList()) {

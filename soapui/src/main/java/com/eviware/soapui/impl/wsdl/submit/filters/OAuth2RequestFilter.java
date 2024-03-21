@@ -117,7 +117,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
         return !(issuedTime <= 0 || expirationTime <= 0) && expirationTime < (currentTime + 10) - issuedTime;
     }
 
-    private long convertExpirationTimeToSeconds(String expirationTimeString, TimeUnitConfig.Enum timeUnit) throws IllegalArgumentException {
+    private long convertExpirationTimeToSeconds(String expirationTimeString, TimeUnitConfig.Enum timeUnit) {
         long expirationTime;
         try {
             expirationTime = Long.valueOf(expirationTimeString.trim());

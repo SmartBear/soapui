@@ -58,7 +58,7 @@ public class ProcessDialog extends JDialog implements RunnerContext {
     private final static Logger log = LogManager.getLogger("toolLogger");
 
     public ProcessDialog(String title, String description, boolean showLog, boolean allowCancel)
-            throws HeadlessException {
+    {
         super(UISupport.getMainFrame());
         setTitle(title);
         setModal(true);

@@ -105,8 +105,8 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
         }
     }
 
-    protected StringToStringMap update(TestStep testStep, SecurityTestRunContext context) throws XmlException,
-            Exception {
+    protected StringToStringMap update(TestStep testStep, SecurityTestRunContext context) throws 
+           Exception {
         StringToStringMap params = new StringToStringMap();
 
         if (parameterMutations.size() == 0) {

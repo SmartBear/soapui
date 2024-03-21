@@ -539,8 +539,8 @@ public class HttpClientSupport {
             return httpClient;
         }
 
-        public HttpResponse execute(ExtendedHttpMethod method, HttpContext httpContext) throws ClientProtocolException,
-                IOException {
+        public HttpResponse execute(ExtendedHttpMethod method, HttpContext httpContext) throws 
+               IOException {
             method.afterWriteRequest();
             if (method.getMetrics() != null) {
                 method.getMetrics().getConnectTimer().start();
@@ -551,7 +551,7 @@ public class HttpClientSupport {
             return httpResponse;
         }
 
-        public HttpResponse execute(ExtendedHttpMethod method) throws ClientProtocolException, IOException {
+        public HttpResponse execute(ExtendedHttpMethod method) throws IOException {
             method.afterWriteRequest();
             if (method.getMetrics() != null) {
                 method.getMetrics().getConnectTimer().start();
@@ -610,11 +610,11 @@ public class HttpClientSupport {
     }
 
     public static HttpResponse execute(ExtendedHttpMethod method, HttpContext httpContext)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         return helper.execute(method, httpContext);
     }
 
-    public static HttpResponse execute(ExtendedHttpMethod method) throws ClientProtocolException, IOException {
+    public static HttpResponse execute(ExtendedHttpMethod method) throws IOException {
         return helper.execute(method);
     }
 

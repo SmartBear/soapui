@@ -99,7 +99,7 @@ public class MimeMessageMockResponseEntity extends AbstractHttpEntity {
     }
 
     @Override
-    public InputStream getContent() throws IOException, IllegalStateException {
+    public InputStream getContent() throws IOException {
         try {
             return message.getInputStream();
         } catch (MessagingException e) {

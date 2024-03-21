@@ -155,7 +155,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @since 3.0
      */
     public URI(String s, boolean escaped, String charset)
-            throws URIException, NullPointerException {
+            throws URIException {
         protocolCharset = charset;
         parseUriReference(s, escaped);
     }
@@ -173,7 +173,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @since 3.0
      */
     public URI(String s, boolean escaped)
-            throws URIException, NullPointerException {
+            throws URIException {
         parseUriReference(s, escaped);
     }
 
@@ -189,7 +189,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @deprecated Use #URI(String, boolean, String)
      */
     public URI(char[] escaped, String charset)
-            throws URIException, NullPointerException {
+            throws URIException {
         protocolCharset = charset;
         parseUriReference(new String(escaped), true);
     }
@@ -207,7 +207,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @deprecated Use #URI(String, boolean)
      */
     public URI(char[] escaped)
-            throws URIException, NullPointerException {
+            throws URIException {
         parseUriReference(new String(escaped), true);
     }
 
@@ -2580,7 +2580,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @throws DefaultCharsetChanged default charset changed
      */
     public static void setDefaultProtocolCharset(String charset)
-            throws DefaultCharsetChanged {
+    {
 
         defaultProtocolCharset = charset;
         throw new DefaultCharsetChanged(DefaultCharsetChanged.PROTOCOL_CHARSET,
@@ -2660,7 +2660,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @throws DefaultCharsetChanged default charset changed
      */
     public static void setDefaultDocumentCharset(String charset)
-            throws DefaultCharsetChanged {
+    {
 
         defaultDocumentCharset = charset;
         throw new DefaultCharsetChanged(DefaultCharsetChanged.DOCUMENT_CHARSET,
@@ -2734,7 +2734,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      * @throws NullPointerException null authority
      */
     public void setRawAuthority(char[] escapedAuthority)
-            throws URIException, NullPointerException {
+            throws URIException {
 
         parseAuthority(new String(escapedAuthority), true);
         setURI();
@@ -3726,7 +3726,7 @@ public class URI implements Cloneable, Comparable, Serializable {
      *         -1, if failed, first being compared with in the authority component
      * @throws ClassCastException not URI argument
      */
-    public int compareTo(Object obj) throws ClassCastException {
+    public int compareTo(Object obj) {
 
         URI another = (URI) obj;
         if (!equals(_authority, another.getRawAuthority())) {

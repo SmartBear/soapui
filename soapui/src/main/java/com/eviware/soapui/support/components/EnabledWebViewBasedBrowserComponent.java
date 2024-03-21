@@ -363,7 +363,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
         private final EnabledWebViewBasedBrowserComponent browser;
 
-        private BrowserWindow(PopupFeatures popupFeatures) throws HeadlessException {
+        private BrowserWindow(PopupFeatures popupFeatures) {
             super("Browser");
             setIconImages(SoapUI.getFrameIcons());
             browser = new EnabledWebViewBasedBrowserComponent(popupFeatures.hasToolbar(), popupStrategy);

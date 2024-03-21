@@ -359,7 +359,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher {
         out.print("</ul></p></body></html>");
     }
 
-    public void returnFile(HttpServletResponse response, File file) throws FileNotFoundException, IOException {
+    public void returnFile(HttpServletResponse response, File file) throws IOException {
         FileInputStream in = new FileInputStream(file);
         response.setStatus(HttpServletResponse.SC_OK);
         long length = file.length();

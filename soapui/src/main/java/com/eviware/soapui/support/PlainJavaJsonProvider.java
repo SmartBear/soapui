@@ -40,16 +40,16 @@ public class PlainJavaJsonProvider extends AbstractJsonProvider {
     private JsonSlurper jsonSlurper = new JsonSlurper();
 
     @Override
-    public Object parse(String json) throws InvalidJsonException {
+    public Object parse(String json) {
         return parse(new StringReader(json));
     }
 
     @Override
-    public Object parse(InputStream inputStream, String s) throws InvalidJsonException {
+    public Object parse(InputStream inputStream, String s) {
         return parse(new InputStreamReader(inputStream, Charset.forName(s)));
     }
 
-    private Object parse(Reader jsonReader) throws InvalidJsonException {
+    private Object parse(Reader jsonReader) {
         try {
             JSON jsonRoot = jsonSlurper.parse(jsonReader);
             Object converted = convertToPlainJavaImplementation(jsonRoot);

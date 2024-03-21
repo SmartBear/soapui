@@ -209,8 +209,8 @@ public class SoapUISSLSocketFactory extends SSLConnectionSocketFactory {
      * @since 4.1
      */
     @Override
-    public Socket connectSocket(int connectTimeout, Socket socket, HttpHost host, InetSocketAddress remoteAddress, InetSocketAddress localAddress, HttpContext context) throws IOException,
-            UnknownHostException, ConnectTimeoutException {
+    public Socket connectSocket(int connectTimeout, Socket socket, HttpHost host, InetSocketAddress remoteAddress, InetSocketAddress localAddress, HttpContext context) throws IOException
+    {
         if (remoteAddress == null) {
             throw new IllegalArgumentException("Remote address may not be null");
         }

@@ -64,7 +64,7 @@ public abstract class ShowConfigFileAction extends AbstractAction {
     public class ContentDialog extends JDialog {
         private JTextArea contentArea;
 
-        public ContentDialog(String title, String description) throws HeadlessException {
+        public ContentDialog(String title, String description) {
             super(UISupport.getMainFrame());
             setTitle(title);
             setModal(true);

@@ -32,7 +32,7 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest> {
     private final String rawSql;
 
     public JdbcResponse(JdbcRequest request, Statement statement, String rawSql) throws SQLException,
-            ParserConfigurationException, TransformerConfigurationException, TransformerException {
+            ParserConfigurationException, TransformerException {
         super(request);
         this.rawSql = rawSql;
 

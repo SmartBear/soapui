@@ -90,7 +90,7 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties {
         return requestMutationsStack.empty() ? null : requestMutationsStack.pop();
     }
 
-    private void extractMutations(TestStep testStep, SecurityTestRunContext context) throws XmlException, Exception {
+    private void extractMutations(TestStep testStep, SecurityTestRunContext context) throws Exception {
         strategy = getExecutionStrategy().getStrategy();
 
         XmlObjectTreeModel model = null;// getXmlObjectTreeModel( testStep );
@@ -168,7 +168,7 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties {
 
     public String extractRestrictions(XmlObjectTreeModel model2, SecurityTestRunContext context,
                                       XmlTreeNode nodeToUpdate, XmlObjectTreeModel model, SecurityCheckedParameter scp, StringToStringMap stsmap)
-            throws XmlException, Exception {
+            throws Exception {
         getNextChild(model2.getRootNode(), context, nodeToUpdate, model, scp, stsmap);
 
         return nodeToUpdate.getXmlObject().toString();

@@ -39,13 +39,13 @@ public class WebstartUtil {
         return dir;
     }
 
-    private static void extract(JarFile jar, String dir) throws IOException, FileNotFoundException {
+    private static void extract(JarFile jar, String dir) throws IOException {
         makeDirectories(jar, dir);
         extractFiles(jar, dir);
     }
 
     @SuppressWarnings("unchecked")
-    private static void extractFiles(JarFile jar, String eviwareDir) throws IOException, FileNotFoundException {
+    private static void extractFiles(JarFile jar, String eviwareDir) throws IOException {
         Enumeration entries = jar.entries();
         while (entries.hasMoreElements()) {
             JarEntry file = (JarEntry) entries.nextElement();
@@ -80,7 +80,7 @@ public class WebstartUtil {
         }
     }
 
-    private static JarFile getJar(String jarUrl) throws MalformedURLException, IOException {
+    private static JarFile getJar(String jarUrl) throws IOException {
         // String reportsJarUrl = System.getProperty("reports.jar.url");
         URL url = new URL("jar:" + jarUrl + "!/");
         JarURLConnection jarConnection = (JarURLConnection) url.openConnection();

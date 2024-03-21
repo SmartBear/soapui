@@ -93,7 +93,7 @@ public class JMSEndpoint {
         }
     }
 
-    private boolean checkParameterIndex(int parameterIndex, String[] parameters) throws IllegalArgumentException {
+    private boolean checkParameterIndex(int parameterIndex, String[] parameters) {
         if (parameterIndex < 0 || parameterIndex > 2) {
             throw new IllegalArgumentException(
                     "\n" +

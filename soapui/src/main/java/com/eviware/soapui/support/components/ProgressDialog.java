@@ -47,7 +47,7 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
     private Worker worker;
 
     public ProgressDialog(String title, String label, int length, String initialValue, boolean allowCancel)
-            throws HeadlessException {
+    {
         super(UISupport.getMainFrame(), title, true);
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);

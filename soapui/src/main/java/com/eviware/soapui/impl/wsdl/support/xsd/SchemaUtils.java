@@ -121,7 +121,7 @@ public class SchemaUtils {
         }
     }
 
-    private static void loadSchemaDirectory(String schemaDirectory) throws IOException, MalformedURLException {
+    private static void loadSchemaDirectory(String schemaDirectory) throws IOException {
         File dir = new File(schemaDirectory);
         if (dir.exists() && dir.isDirectory()) {
             String[] xsdFiles = dir.list();

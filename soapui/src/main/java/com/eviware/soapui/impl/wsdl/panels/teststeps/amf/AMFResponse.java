@@ -53,7 +53,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest> {
     private byte[] rawResponseBody;
 
     public AMFResponse(AMFRequest request, SubmitContext submitContext, Object responseContent) throws SQLException,
-            ParserConfigurationException, TransformerConfigurationException, TransformerException {
+            ParserConfigurationException, TransformerException {
         super(request);
 
         this.request = request;

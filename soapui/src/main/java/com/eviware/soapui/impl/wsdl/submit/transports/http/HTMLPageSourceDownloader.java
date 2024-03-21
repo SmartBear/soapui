@@ -56,7 +56,7 @@ public class HTMLPageSourceDownloader {
     List<Attachment> attachmentList = new ArrayList<>();
 
     protected List<Attachment> downloadCssAndImages(String endpoint, HttpRequest request)
-            throws MalformedURLException, IOException {
+            throws IOException {
         HtmlPage htmlPage = client.getPage(endpoint);
         String xPathExpression = "//*[name() = 'img' or name() = 'link' and @type = 'text/css']";
         List<?> resultList = htmlPage.getByXPath(xPathExpression);

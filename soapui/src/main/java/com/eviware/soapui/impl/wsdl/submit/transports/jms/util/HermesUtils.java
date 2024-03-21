@@ -77,15 +77,15 @@ public class HermesUtils {
         return hermesClassLoader;
     }
 
-    public static Context hermesContext(WsdlProject project) throws NamingException, MalformedURLException,
-            IOException {
+    public static Context hermesContext(WsdlProject project) throws NamingException, 
+           IOException {
         String expandedHermesConfigPath = PropertyExpander.expandProperties(project, project.getHermesConfig());
         String key = project.getName() + expandedHermesConfigPath;
         return getHermes(key, expandedHermesConfigPath);
     }
 
     public static Context hermesContext(WsdlProject project, String hermesConfigPath) throws NamingException,
-            MalformedURLException, IOException {
+    IOException {
         String expandedHermesConfigPath = PropertyExpander.expandProperties(project, hermesConfigPath);
         String key = project.getName() + expandedHermesConfigPath;
         return getHermes(key, expandedHermesConfigPath);
@@ -93,8 +93,8 @@ public class HermesUtils {
 
     // private static URLClassLoader hermesClassLoader;
 
-    private static Context getHermes(String key, String hermesConfigPath) throws IOException, MalformedURLException,
-            NamingException {
+    private static Context getHermes(String key, String hermesConfigPath) throws IOException, 
+           NamingException {
         SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
         if (hermesClassLoader == null) {
             addHermesJarsToClasspath();
@@ -120,7 +120,7 @@ public class HermesUtils {
         }
     }
 
-    private static void addHermesJarsToClasspath() throws IOException, MalformedURLException {
+    private static void addHermesJarsToClasspath() throws IOException {
         String hermesHome = SoapUI.getSettings().getString(ToolsSettings.HERMES_JMS, defaultHermesJMSPath());
 
         if (hermesHome == null || "".equals(hermesHome)) {

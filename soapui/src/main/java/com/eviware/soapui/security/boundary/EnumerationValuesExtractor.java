@@ -55,7 +55,7 @@ public class EnumerationValuesExtractor {
         // extractEnumerationParameters( model.getRootNode() );
     }
 
-    public String extract() throws XmlException, Exception {
+    public String extract() throws Exception {
 
         getNextChild(model.getRootNode());
 

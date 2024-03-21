@@ -128,7 +128,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
         return modelItem;
     }
 
-    public void cacheFileLocally(File file) throws FileNotFoundException, IOException {
+    public void cacheFileLocally(File file) throws IOException {
         // write attachment-data to tempfile
         ByteArrayOutputStream data = new ByteArrayOutputStream();
         ZipOutputStream out = new ZipOutputStream(data);

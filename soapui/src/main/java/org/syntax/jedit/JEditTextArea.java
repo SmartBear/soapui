@@ -2055,13 +2055,13 @@ public class JEditTextArea extends JComponent implements Scrollable {
             return "caret move";
         }
 
-        public void undo() throws CannotUndoException {
+        public void undo() {
             super.undo();
 
             select(start, end);
         }
 
-        public void redo() throws CannotRedoException {
+        public void redo() {
             super.redo();
 
             select(start, end);

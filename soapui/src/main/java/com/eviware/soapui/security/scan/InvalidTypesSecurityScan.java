@@ -150,7 +150,7 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
      * Set new value for request
      */
     private StringToStringMap updateRequestContent(TestStep testStep, SecurityTestRunContext context)
-            throws XmlException, Exception {
+            throws Exception {
 
         StringToStringMap params = new StringToStringMap();
 
@@ -257,7 +257,7 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
      * @throws XmlException
      * @throws XmlException
      */
-    private void mutateParameters(TestStep testStep, SecurityTestRunContext context) throws XmlException, Exception {
+    private void mutateParameters(TestStep testStep, SecurityTestRunContext context) throws Exception {
 
         mutation = true;
         // for each parameter

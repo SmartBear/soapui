@@ -204,7 +204,7 @@ public class KeyMaterialWssCrypto implements WssCrypto {
     @Deprecated
     private KeyStore fallbackLoad() throws IOException, CertificateException, KeyStoreException,
             NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, ProbablyBadPasswordException,
-            UnrecoverableKeyException, FileNotFoundException {
+            UnrecoverableKeyException {
         KeyStore fallbackKeystore = null;
         if (StringUtils.hasContent(getDefaultAlias()) && StringUtils.hasContent(getAliasPassword())) {
             fallbackKeystore = KeyStoreBuilder.build(

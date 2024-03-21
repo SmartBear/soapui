@@ -88,7 +88,7 @@ public class AttachmentUtils {
     public static final long MAX_SIZE_IN_MEMORY_ATTACHMENT = 500 * 1024;
 
     public static boolean prepareMessagePart(WsdlAttachmentContainer container, MimeMultipart mp,
-                                             MessageXmlPart messagePart, StringToStringMap contentIds) throws Exception, MessagingException {
+                                             MessageXmlPart messagePart, StringToStringMap contentIds) throws Exception {
         boolean isXop = false;
 
         XmlObjectTreeModel treeModel = null;

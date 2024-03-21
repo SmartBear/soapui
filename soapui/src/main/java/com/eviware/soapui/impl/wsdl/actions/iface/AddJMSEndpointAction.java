@@ -162,7 +162,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
     }
 
     private Context getHermesContext(AbstractInterface<?> iface, String hermesConfigPath)
-            throws MalformedURLException, NamingException, IOException {
+            throws NamingException, IOException {
         WsdlProject project = iface.getProject();
         HermesUtils.flushHermesCache();
         Context ctx = HermesUtils.hermesContext(project, hermesConfigPath);

@@ -57,7 +57,7 @@ public class SchemeTypeExtractor {
         return nodes;
     }
 
-    public TreeMap<String, NodeInfo> extract() throws XmlException, Exception {
+    public TreeMap<String, NodeInfo> extract() throws Exception {
         // XmlObjectTreeModel model = new XmlObjectTreeModel(
         // request.getOperation().getInterface().getDefinitionContext()
         // .getSchemaTypeSystem(), XmlObject.Factory.parse(

@@ -269,7 +269,7 @@ public class AttachmentsPanel extends javax.swing.JPanel {
     }
 
     private void exportAttachment(File file, Attachment attachment, boolean showOpenQuery)
-            throws FileNotFoundException, IOException, Exception, MalformedURLException {
+            throws Exception {
         FileOutputStream out = new FileOutputStream(file);
 
         long total = Tools.writeAll(out, attachment.getInputStream());
