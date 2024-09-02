@@ -18,13 +18,16 @@ package com.eviware.soapui.actions;
 
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.UniqueUserIdentifier;
+import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFriendlyTextField;
 import com.smartbear.analytics.OSUserDescription;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -32,6 +35,7 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,9 +52,15 @@ public class SumbitUserInfoAction {
     private static final String EMAIL_HINT = "Enter e-mail";
     private static final String DIALOG_CAPTION = "Stay Tuned!";
     private static final String DIALOG_MAIN_TEXT = "Want to stay in the loop?";
-    private static final String DIALOG_DESCRIPTION = "We will use this information to help you get started, and provide you with best practices we’ve learned from over 7.5 Million development, quality and operations experts just like you.";
+    private static final String DIALOG_DESCRIPTION = "Your privacy matters. This information will be used to provide you " +
+            "with best practices gained from our community of tens of millions of software experts, just like you. " +
+            "By submitting this form, you agree to our";
+    private static final String TERMS_OF_USE = "Terms of Use";
+    private static final String PRIVACY_POLICY = "Privacy Policy";
     private static final String OK_BTN_CAPTION = "Yes, I want to know";
     private static final String SKIP_BTN_CAPTION = "Skip";
+    private static final String TERMS_OF_USE_URL = "https://smartbear.com/terms-of-use/";
+    private static final String PRIVACY_POLICY_URL = "https://smartbear.com/privacy/";
 
     public SumbitUserInfoAction() {
     }
@@ -62,7 +72,7 @@ public class SumbitUserInfoAction {
 
     private class CollectUserInfoDialog extends JDialog {
         private JLabel title;
-        private JLabel description;
+        private JEditorPane description;
         private JFriendlyTextField textFieldFirstName;
         private JFriendlyTextField textFieldLastName;
         private JFriendlyTextField textFieldEmail;
@@ -70,12 +80,7 @@ public class SumbitUserInfoAction {
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         private Pattern validEmailRegex;
 
-        private void setBackgroundColor(JPanel curPanel) {
-            curPanel.setOpaque(true);
-            curPanel.setBackground(Color.WHITE);
-        }
-
-        private void setBackgroundColor(JLabel curLabel) {
+        private void setBackgroundColor(JComponent curLabel) {
             curLabel.setOpaque(true);
             curLabel.setBackground(Color.WHITE);
         }
@@ -102,7 +107,10 @@ public class SumbitUserInfoAction {
             jCaption.setPreferredSize(new Dimension(1000, 25));
             jCaption.setBackground(new Color(166, 192, 229));
 
-            jBaseUserPanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, DIALOG_DESCRIPTION), BorderLayout.NORTH);
+            String dialogDescription = DIALOG_DESCRIPTION +
+                    " <a href=\"" + TERMS_OF_USE_URL + "\" target=\"_top\">" + TERMS_OF_USE + "</a> and " +
+                    "<a href=\"" + PRIVACY_POLICY_URL + "\">" + PRIVACY_POLICY + "</a>.";
+            jBaseUserPanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, dialogDescription), BorderLayout.NORTH);
             jBaseUserPanel.add(buildControlsPanel());
 
             jBasePanel.add(jCaption, BorderLayout.NORTH);
@@ -115,15 +123,19 @@ public class SumbitUserInfoAction {
             JPanel jRoot = new JPanel(new BorderLayout());
             jRoot.setBorder(new EmptyBorder(10, 30, 0, 25));
             setBackgroundColor(jRoot);
+
             title = new JLabel();
             setBackgroundColor(title);
             title.setText("<html><div style=\"font-size: 11px\"><b>" + titleStr + "</b></div></html>");
-            title.setOpaque(true);
-            title.setBackground(Color.WHITE);
-            description = new JLabel();
+
+            Font font = UISupport.getEditorFont();
+            String fontFamily = font.getFamily();
+            description = new JEditorPane("text/html", "<html>" +
+                    "<div style=\"font-size: 9px\" face=\"" + fontFamily + "\">" + descriptionStr + "</div></html>");
             setBackgroundColor(description);
-            description.setText("<html><div style=\"font-size: 9px\">" + descriptionStr + "</div></html>");
             description.setBorder(new EmptyBorder(5, 0, 0, 0));
+            description.setEditable(false);
+            description.addHyperlinkListener(new DefaultHyperlinkListener(description));
 
             jRoot.add(title, BorderLayout.NORTH);
             jRoot.add(description);
