@@ -34,9 +34,16 @@
 
         <SOAPUI name="SOAPUI"/>
 
-        <File name="GLOBAL_GROOVY_LOG" fileName="${sys:user.home}/.soapuios/logs/global-groovy.log" append="true">
+        <RollingFile name="GLOBAL_GROOVY_LOG"
+                     fileName="${sys:user.home}/.soapuios/logs/global-groovy.log"
+                     filePattern="${sys:user.home}/.soapuios/logs/global-groovy.log.%i"
+                     append="true">
             <PatternLayout pattern="%d %-5p [%c{1}] %m%n"/>
-        </File>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+        </RollingFile>
 
     </Appenders>
     <Loggers>
