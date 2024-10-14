@@ -66,7 +66,8 @@
                 <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
                 <descriptor>src/main/assembly/windows-bin.xml</descriptor>
                 <descriptor>src/main/assembly/linux-bin.xml</descriptor>
-                <descriptor>src/main/assembly/mac-bin.xml</descriptor>
+                <descriptor>src/main/assembly/mac-x64-bin.xml</descriptor>
+                <descriptor>src/main/assembly/mac-arm64-bin.xml</descriptor>
               </descriptors>
               <finalName>${project.name.full}</finalName>
             </configuration>
@@ -141,6 +142,10 @@
                   <name>HERMES_INSTALLER</name>
                   <value>${maven.hermes.installer}</value>
                 </property>
+                <property>
+                  <name>JAVAFX_VERSION</name>
+                  <value>${javafx.version}</value>
+                </property>
               </variables>
             </configuration>
             <executions>
@@ -167,7 +172,10 @@
                   ${assembly.build.directory}/${project.name.visible}-${project.version}-linux-bin.tar.gz
                 </file>
                 <file>
-                  ${assembly.build.directory}/${project.name.visible}-${project.version}-mac-bin.zip
+                  ${assembly.build.directory}/${project.name.visible}-${project.version}-mac-x64-bin.zip
+                </file>
+                <file>
+                  ${assembly.build.directory}/${project.name.visible}-${project.version}-mac-arm64-bin.zip
                 </file>
                 <!-- Installers -->
                 <file>
@@ -177,7 +185,10 @@
                   ${installer.build.directory}/${project.name.visible}-x64-${project.version}.sh
                 </file>
                 <file>
-                  ${installer.build.directory}/${project.name.visible}-${project.version}.dmg
+                  ${installer.build.directory}/${project.name.visible}-x64-${project.version}.dmg
+                </file>
+                <file>
+                  ${installer.build.directory}/${project.name.visible}-arm64-${project.version}.dmg
                 </file>
               </files>
             </configuration>

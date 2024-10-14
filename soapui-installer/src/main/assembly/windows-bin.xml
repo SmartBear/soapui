@@ -15,6 +15,7 @@
                 <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
                 <exclude>org.openjfx:*:jar:linux:*</exclude>
                 <exclude>org.openjfx:*:jar:mac:*</exclude>
+                <exclude>org.openjfx:*:jar:mac-aarch64:*</exclude>
             </excludes>
         </dependencySet>
         <dependencySet>

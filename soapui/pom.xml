@@ -82,7 +82,7 @@
                         <!-- run tests with home set to folder test-classes inside target to isolate tests from whatever user is executing the build. -->
                         <user.home>target/test-classes</user.home>
                     </systemProperties>
-                    <argLine>--illegal-access=permit</argLine>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.desktop/java.awt=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
 
@@ -107,8 +107,8 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito-all.version}</version>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -21,7 +21,6 @@ import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
 import com.eviware.x.impl.swing.FileFormField;
 import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
@@ -38,8 +37,6 @@ import java.util.jar.JarFile;
 import static com.eviware.soapui.utils.ResourceUtils.getFilePathFromResource;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,7 +60,6 @@ public class MockAsWarActionTest {
     private void setUpFormDialog() throws IOException, URISyntaxException {
         mockedDialog = mock(XFormDialog.class);
         when(mockedDialog.show()).thenReturn(true);
-        when(mockedDialog.getFormField(anyString())).thenReturn(any(XFormField.class));
 
         createFileformfield(getFilePathFromResource("/config/soapui-test-settings.xml"), MockAsWarAction.MockAsWarDialog.SETTINGS_FILE);
         createFileformfield(warFileName, MockAsWarAction.MockAsWarDialog.WAR_FILE);
