@@ -60,8 +60,8 @@
         <xmlbeans-version>3.1.1-sb-fixed</xmlbeans-version>
         <xmlbeans-xpath-version>2.6.0</xmlbeans-xpath-version>
         <!-- org.codehaus.mojo -->
-        <versions-maven-plugin-version>2.7</versions-maven-plugin-version>
-        <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
+        <versions-maven-plugin-version>2.16.2</versions-maven-plugin-version>
+        <exec-maven-plugin-version>3.0.0</exec-maven-plugin-version>
         <xmlbeans-maven-plugin-version>2.3.5-sb-fixed</xmlbeans-maven-plugin-version>
         <!-- org.openjfx-->
         <javafx.version>17.0.12</javafx.version>
@@ -133,9 +133,9 @@
         <animal-sniffer-annotations.version>1.11</animal-sniffer-annotations.version>
         <reflections.version>0.9.9-RC1</reflections.version>
         <install4j-maven-plugin.version>1.1.1</install4j-maven-plugin.version>
-        <info.cukes.version>1.1.5</info.cukes.version>
+        <io.cucumber.version>7.20.1</io.cucumber.version>
         <picocontainer.version>2.14.3</picocontainer.version>
-        <fest-swing.version>1.2.1</fest-swing.version>
+        <assertj-swing-version>3.17.1</assertj-swing-version>
         <maven-checksum-plugin.version>1.0</maven-checksum-plugin.version>
         <jackson-version>2.13.0</jackson-version>
 
@@ -271,8 +271,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>1.8</source>
+                    <target>1.9</target>
                 </configuration>
             </plugin>
             <plugin>

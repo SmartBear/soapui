@@ -16,13 +16,13 @@
 package com.smartbear.soapui.utils.fest;
 
 import com.eviware.soapui.SoapUI;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.DialogFixture;
-import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JTreeNodeFixture;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.DialogFixture;
+import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JTreeNodeFixture;
 
 import static com.smartbear.soapui.utils.fest.FestMatchers.frameWithTitle;
-import static org.fest.swing.launcher.ApplicationLauncher.application;
+import static org.assertj.swing.launcher.ApplicationLauncher.application;
 
 /**
  * Utility class used for generic operations on application level

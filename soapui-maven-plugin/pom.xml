@@ -64,10 +64,10 @@
 					<execution>
 						<phase>install</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<copy file="pom.xml"
 									tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>

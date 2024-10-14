@@ -16,10 +16,10 @@
 package com.smartbear.soapui.cucumber;
 
 import com.smartbear.soapui.utils.IntegrationTest;
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-import org.fest.swing.security.ExitCallHook;
-import org.fest.swing.security.NoExitSecurityManagerInstaller;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.assertj.swing.security.ExitCallHook;
+import org.assertj.swing.security.NoExitSecurityManagerInstaller;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
         glue = "com.smartbear.soapui.stepdefs.fest",
         features = "src/test/resources/features/",
         tags = "@AutomatedWithFest",
-        format = "json:target/cucumber-fest-results.json")
+        plugin = {"html:target/cucumber-html-report", "json:target/cucumber-java-results.json"})
 public class CucumberFestRunner {
     public static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
     private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;

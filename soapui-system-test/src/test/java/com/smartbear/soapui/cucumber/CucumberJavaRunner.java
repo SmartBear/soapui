@@ -1,8 +1,8 @@
 package com.smartbear.soapui.cucumber;
 
 import com.smartbear.soapui.utils.IntegrationTest;
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
@@ -12,6 +12,6 @@ import org.junit.runner.RunWith;
         glue = "com.smartbear.soapui.stepdefs.java",
         features = "src/test/resources/features/",
         tags = "@AutomatedWithJava",
-        format = "json:target/cucumber-java-results.json")
+        plugin = {"html:target/cucumber-html-report", "json:target/cucumber-java-results.json"})
 public class CucumberJavaRunner {
 }
