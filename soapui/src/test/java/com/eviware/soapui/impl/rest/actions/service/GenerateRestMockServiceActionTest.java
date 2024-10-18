@@ -32,12 +32,12 @@ import com.eviware.x.form.XFormDialog;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.NotNull;
-import org.mockito.internal.matchers.Null;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -83,7 +83,7 @@ public class GenerateRestMockServiceActionTest {
         action.perform(restService, null);
 
         RestMockService restMockService = getResultingRestMockService();
-        assertThat(restMockService, is(NotNull.NOT_NULL));
+        assertNotNull(restMockService);
         assertThat(restMockService.getName(), is(restMockServiceName));
     }
 
@@ -94,7 +94,7 @@ public class GenerateRestMockServiceActionTest {
         action.perform(restService, null);
 
         RestMockService restMockService = getResultingRestMockService();
-        assertThat(restMockService.getMockRunner(), is(Null.NULL));
+        assertNull(restMockService.getMockRunner());
     }
 
     public RestMockService getResultingRestMockService() {

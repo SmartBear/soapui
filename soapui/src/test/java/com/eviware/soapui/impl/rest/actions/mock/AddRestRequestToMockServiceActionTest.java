@@ -44,14 +44,14 @@ import java.util.List;
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
 import static java.lang.Boolean.FALSE;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.internal.matchers.NotNull.NOT_NULL;
-import static org.mockito.internal.matchers.Null.NULL;
 
 public class AddRestRequestToMockServiceActionTest {
     private static final String ONE_HEADER = "oneHeader";
@@ -123,7 +123,7 @@ public class AddRestRequestToMockServiceActionTest {
         action.perform(restRequest, notUsed);
 
         RestMockService service = project.getRestMockServiceByName(mockServiceName);
-        assertThat(service.getMockOperationByName(requestPath), is(NOT_NULL));
+        assertNotNull(service.getMockOperationByName(requestPath));
     }
 
     @Test
@@ -198,7 +198,7 @@ public class AddRestRequestToMockServiceActionTest {
         StringToStringsMap responseHeaders = getActualResponseHeaders();
 
         for (String header : headersNotToSave) {
-            assertThat(responseHeaders.get(header), is(NULL));
+            assertNull(responseHeaders.get(header));
         }
     }
 

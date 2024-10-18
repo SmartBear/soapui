@@ -18,10 +18,10 @@ package com.smartbear.soapui.stepdefs.fest.project;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.SoapProjectUtils;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.When;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.FrameFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.SoapProjectUtils.openRequestEditor;

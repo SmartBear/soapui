@@ -15,15 +15,15 @@
 */
 package com.smartbear.soapui.utils.fest;
 
-import org.fest.swing.core.GenericTypeMatcher;
-import org.fest.swing.finder.DialogFinder;
-import org.fest.swing.finder.FrameFinder;
+import org.assertj.swing.core.GenericTypeMatcher;
+import org.assertj.swing.finder.DialogFinder;
+import org.assertj.swing.finder.FrameFinder;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static org.fest.swing.finder.WindowFinder.findDialog;
-import static org.fest.swing.finder.WindowFinder.findFrame;
+import static org.assertj.swing.finder.WindowFinder.findDialog;
+import static org.assertj.swing.finder.WindowFinder.findFrame;
 
 /**
  * @author Prakash

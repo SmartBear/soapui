@@ -18,7 +18,7 @@
       <variable name="HERMES_INSTALLER" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsPkcs12File="${compiler:CERT_PATH}" />
-    <jreBundles jdkProviderId="Liberica" release="16/16.0.2+7" />
+    <jreBundles jdkProviderId="Liberica" release="17/17.0.12+10" />
   </application>
   <files>
     <filesets>
@@ -35,6 +35,7 @@
       <fileset name="javafx-windows" id="7717" />
       <fileset name="javafx-linux" id="7965" />
       <fileset name="javafx-mac" id="7967" />
+      <fileset name="javafx-mac-arm64" id="7971" />
     </filesets>
     <roots>
       <root id="5280" location="${installer:sys.userHome}" />
@@ -51,6 +52,7 @@
       <root id="7718" fileset="7717" />
       <root id="7966" fileset="7965" />
       <root id="7968" fileset="7967" />
+      <root id="7972" fileset="7971" />
     </roots>
     <mountPoints>
       <mountPoint id="321" location="bin" />
@@ -72,29 +74,36 @@
       <mountPoint id="7719" root="7718" location="lib" />
       <mountPoint id="7969" root="7966" location="lib" />
       <mountPoint id="7970" root="7968" location="lib" />
+      <mountPoint id="7973" root="7972" location="lib" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" excludeSuffixes="*.bat,*.sh" overrideDirMode="true" />
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" overrideDirMode="true">
         <exclude>
-          <entry location="javafx-base-16-win.jar" />
-          <entry location="javafx-controls-16-win.jar" />
-          <entry location="javafx-graphics-16-win.jar" />
-          <entry location="javafx-media-16-win.jar" />
-          <entry location="javafx-swing-16-win.jar" />
-          <entry location="javafx-web-16-win.jar" />
-          <entry location="javafx-base-16-linux.jar" />
-          <entry location="javafx-controls-16-linux.jar" />
-          <entry location="javafx-graphics-16-linux.jar" />
-          <entry location="javafx-media-16-linux.jar" />
-          <entry location="javafx-swing-16-linux.jar" />
-          <entry location="javafx-web-16-linux.jar" />
-          <entry location="javafx-base-16-mac.jar" />
-          <entry location="javafx-controls-16-mac.jar" />
-          <entry location="javafx-graphics-16-mac.jar" />
-          <entry location="javafx-media-16-mac.jar" />
-          <entry location="javafx-swing-16-mac.jar" />
-          <entry location="javafx-web-16-mac.jar" />
+          <entry location="javafx-base-${compiler:JAVAFX_VERSION}-win.jar" />
+          <entry location="javafx-controls-${compiler:JAVAFX_VERSION}-win.jar" />
+          <entry location="javafx-graphics-${compiler:JAVAFX_VERSION}-win.jar" />
+          <entry location="javafx-media-${compiler:JAVAFX_VERSION}-win.jar" />
+          <entry location="javafx-swing-${compiler:JAVAFX_VERSION}-win.jar" />
+          <entry location="javafx-web-${compiler:JAVAFX_VERSION}-win.jar" />
+          <entry location="javafx-base-${compiler:JAVAFX_VERSION}-linux.jar" />
+          <entry location="javafx-controls-${compiler:JAVAFX_VERSION}-linux.jar" />
+          <entry location="javafx-graphics-${compiler:JAVAFX_VERSION}-linux.jar" />
+          <entry location="javafx-media-${compiler:JAVAFX_VERSION}-linux.jar" />
+          <entry location="javafx-swing-${compiler:JAVAFX_VERSION}-linux.jar" />
+          <entry location="javafx-web-${compiler:JAVAFX_VERSION}-linux.jar" />
+          <entry location="javafx-base-${compiler:JAVAFX_VERSION}-mac.jar" />
+          <entry location="javafx-controls-${compiler:JAVAFX_VERSION}-mac.jar" />
+          <entry location="javafx-graphics-${compiler:JAVAFX_VERSION}-mac.jar" />
+          <entry location="javafx-media-${compiler:JAVAFX_VERSION}-mac.jar" />
+          <entry location="javafx-swing-${compiler:JAVAFX_VERSION}-mac.jar" />
+          <entry location="javafx-web-${compiler:JAVAFX_VERSION}-mac.jar" />
+          <entry location="javafx-base-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+          <entry location="javafx-controls-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+          <entry location="javafx-graphics-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+          <entry location="javafx-media-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+          <entry location="javafx-swing-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+          <entry location="javafx-web-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" overrideDirMode="true" />
@@ -166,24 +175,30 @@
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" overrideDirMode="true" />
       <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui.log" fileMode="666" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui-errors.log" fileMode="666" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-base-16-win.jar" />
-      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-controls-16-win.jar" />
-      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-graphics-16-win.jar" />
-      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-media-16-win.jar" />
-      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-swing-16-win.jar" />
-      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-web-16-win.jar" />
-      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-base-16-linux.jar" />
-      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-controls-16-linux.jar" />
-      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-graphics-16-linux.jar" />
-      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-media-16-linux.jar" />
-      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-swing-16-linux.jar" />
-      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-web-16-linux.jar" />
-      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-base-16-mac.jar" />
-      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-controls-16-mac.jar" />
-      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-graphics-16-mac.jar" />
-      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-media-16-mac.jar" />
-      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-swing-16-mac.jar" />
-      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-web-16-mac.jar" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-base-${compiler:JAVAFX_VERSION}-win.jar" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-controls-${compiler:JAVAFX_VERSION}-win.jar" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-graphics-${compiler:JAVAFX_VERSION}-win.jar" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-media-${compiler:JAVAFX_VERSION}-win.jar" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-swing-${compiler:JAVAFX_VERSION}-win.jar" />
+      <fileEntry mountPoint="7719" file="${compiler:DIST_ROOT}/lib/javafx-web-${compiler:JAVAFX_VERSION}-win.jar" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-base-${compiler:JAVAFX_VERSION}-linux.jar" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-controls-${compiler:JAVAFX_VERSION}-linux.jar" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-graphics-${compiler:JAVAFX_VERSION}-linux.jar" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-media-${compiler:JAVAFX_VERSION}-linux.jar" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-swing-${compiler:JAVAFX_VERSION}-linux.jar" />
+      <fileEntry mountPoint="7969" file="${compiler:DIST_ROOT}/lib/javafx-web-${compiler:JAVAFX_VERSION}-linux.jar" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-base-${compiler:JAVAFX_VERSION}-mac.jar" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-controls-${compiler:JAVAFX_VERSION}-mac.jar" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-graphics-${compiler:JAVAFX_VERSION}-mac.jar" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-media-${compiler:JAVAFX_VERSION}-mac.jar" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-swing-${compiler:JAVAFX_VERSION}-mac.jar" />
+      <fileEntry mountPoint="7970" file="${compiler:DIST_ROOT}/lib/javafx-web-${compiler:JAVAFX_VERSION}-mac.jar" />
+      <fileEntry mountPoint="7973" file="${compiler:DIST_ROOT}/lib/javafx-base-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+      <fileEntry mountPoint="7973" file="${compiler:DIST_ROOT}/lib/javafx-controls-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+      <fileEntry mountPoint="7973" file="${compiler:DIST_ROOT}/lib/javafx-graphics-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+      <fileEntry mountPoint="7973" file="${compiler:DIST_ROOT}/lib/javafx-media-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+      <fileEntry mountPoint="7973" file="${compiler:DIST_ROOT}/lib/javafx-swing-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
+      <fileEntry mountPoint="7973" file="${compiler:DIST_ROOT}/lib/javafx-web-${compiler:JAVAFX_VERSION}-mac-aarch64.jar" />
     </entries>
     <components>
       <component name="SoapUI" id="132" changeable="false">
@@ -796,7 +811,7 @@ if (Util.isMacOS()) {
               <action id="1073" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="launcherId" type="string">64</property>
-                  <property name="vmOptions" type="array" elementType="string" length="15">
+                  <property name="vmOptions" type="array" elementType="string" length="48">
                     <element index="0">-XX:MinHeapFreeRatio=20</element>
                     <element index="1">-XX:MaxHeapFreeRatio=40</element>
                     <element index="2">-Xms128m</element>
@@ -810,8 +825,41 @@ if (Util.isMacOS()) {
                     <element index="10">-Djava.library.path=${installer:rootInstallDir}/bin</element>
                     <element index="11">-Djava.util.Arrays.useLegacyMergeSort=true</element>
                     <element index="12">-splash:SoapUI-Spashscreen.png</element>
-                    <element index="13">--illegal-access=permit</element>
-                    <element index="14">-Dlog4j2.formatMsgNoLookups=true</element>
+                    <element index="13">-Dlog4j2.formatMsgNoLookups=true</element>
+                    <element index="14">--add-opens</element>
+                    <element index="15">java.base/java.lang=ALL-UNNAMED</element>
+                    <element index="16">--add-opens</element>
+                    <element index="17">java.base/java.lang.invoke=ALL-UNNAMED</element>
+                    <element index="18">--add-opens</element>
+                    <element index="19">java.desktop/java.beans=ALL-UNNAMED</element>
+                    <element index="20">--add-opens</element>
+                    <element index="21">java.desktop/javax.swing.plaf=ALL-UNNAMED</element>
+                    <element index="22">--add-opens</element>
+                    <element index="23">java.desktop/javax.swing.plaf.basic=ALL-UNNAMED</element>
+                    <element index="24">--add-opens</element>
+                    <element index="25">java.base/java.util=ALL-UNNAMED</element>
+                    <element index="26">--add-opens</element>
+                    <element index="27">java.base/java.lang.reflect=ALL-UNNAMED</element>
+                    <element index="28">--add-opens</element>
+                    <element index="29">java.base/java.util.concurrent.atomic=ALL-UNNAMED</element>
+                    <element index="30">--add-opens</element>
+                    <element index="31">java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED</element>
+                    <element index="32">--add-opens</element>
+                    <element index="33">java.base/java.net=ALL-UNNAMED</element>
+                    <element index="34">--add-opens</element>
+                    <element index="35">java.desktop/java.awt=ALL-UNNAMED</element>
+                    <element index="36">--add-opens</element>
+                    <element index="37">java.desktop/javax.swing=ALL-UNNAMED</element>
+                    <element index="38">--add-opens</element>
+                    <element index="39">java.base/sun.net.www=ALL-UNNAMED</element>
+                    <element index="40">--add-opens</element>
+                    <element index="41">java.base/sun.net.www.protocol.https=ALL-UNNAMED</element>
+                    <element index="42">--add-opens</element>
+                    <element index="43">java.base/sun.net.www.protocol.http=ALL-UNNAMED</element>
+                    <element index="44">--add-opens</element>
+                    <element index="45">jdk.jdi/com.sun.jdi=ALL-UNNAMED</element>
+                    <element index="46">--add-opens</element>
+                    <element index="47">java.prefs/java.util.prefs=ALL-UNNAMED</element>
                   </property>
                 </serializedBean>
               </action>
@@ -2231,20 +2279,24 @@ if (context.isUnattended()) {
     </styles>
   </installerGui>
   <mediaSets>
-    <macos name="Mac OS X Single Bundle" id="198" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" launcherId="64">
+    <macos name="Mac OS X x64" id="198" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" launcherId="64">
       <exclude>
         <entry filesetId="1658" />
         <entry filesetId="1843" />
         <entry filesetId="1573" />
         <entry filesetId="1859" />
-        <entry filesetId="2230" />
-        <entry filesetId="2234" />
         <entry filesetId="7717" />
         <entry filesetId="7965" />
+        <entry filesetId="7971" />
       </exclude>
       <variables>
         <variable name="OS_EXT" value="MAC" />
       </variables>
+      <jreBundle>
+        <modules>
+          <module name="jdk.jdi" />
+        </modules>
+      </jreBundle>
     </macos>
     <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" runPostProcessor="true" postProcessor="&quot;C:\dev\eviware-cert\signtool.exe&quot; sign /s my /fd sha256 /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /v $EXECUTABLE" architecture="64">
       <exclude>
@@ -2252,33 +2304,47 @@ if (context.isUnattended()) {
         <entry filesetId="1843" />
         <entry filesetId="1573" />
         <entry filesetId="1861" />
-        <entry filesetId="2232" />
-        <entry filesetId="2234" />
         <entry filesetId="7965" />
         <entry filesetId="7967" />
+        <entry filesetId="7971" />
       </exclude>
       <variables>
         <variable name="OS_EXT" value="64bit" />
       </variables>
     </windows>
     <unixInstaller name="Unix Installer x64" id="4755" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}">
-      <excludedBeans>
-        <bean refId="493" />
-      </excludedBeans>
       <exclude>
         <entry filesetId="1658" />
         <entry filesetId="1843" />
         <entry filesetId="1573" />
         <entry filesetId="1861" />
-        <entry filesetId="2230" />
-        <entry filesetId="2232" />
         <entry filesetId="7717" />
         <entry filesetId="7967" />
+        <entry filesetId="7971" />
       </exclude>
       <variables>
         <variable name="32-BIT-INSTALLER" value="false" />
       </variables>
     </unixInstaller>
+    <macos name="Mac OS X ARM" id="7975" mediaFileName="SoapUI-arm64-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" architecture="aarch64" launcherId="64">
+      <exclude>
+        <entry filesetId="1658" />
+        <entry filesetId="1843" />
+        <entry filesetId="1573" />
+        <entry filesetId="1859" />
+        <entry filesetId="7717" />
+        <entry filesetId="7965" />
+        <entry filesetId="7967" />
+      </exclude>
+      <variables>
+        <variable name="OS_EXT" value="MAC" />
+      </variables>
+      <jreBundle>
+        <modules>
+          <module name="jdk.jdi" />
+        </modules>
+      </jreBundle>
+    </macos>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="196" />

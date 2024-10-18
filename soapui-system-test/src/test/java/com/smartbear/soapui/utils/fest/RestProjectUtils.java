@@ -23,10 +23,10 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyDownAct
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyUpAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.RemovePropertyAction;
-import org.fest.swing.core.KeyPressInfo;
-import org.fest.swing.core.Robot;
-import org.fest.swing.driver.JTableComboBoxEditorCellWriter;
-import org.fest.swing.fixture.*;
+import org.assertj.swing.core.KeyPressInfo;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.driver.JTableComboBoxEditorCellWriter;
+import org.assertj.swing.fixture.*;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -34,7 +34,7 @@ import java.awt.event.KeyEvent;
 import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_PARAMS_TABLE;
 import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REVERT_PARAMETER_VALUES;
 import static com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction.ADD_PARAM_ACTION_NAME;
-import static org.fest.swing.data.TableCell.row;
+import static org.assertj.swing.data.TableCell.row;
 
 /**
  * Utility class used for generic operations on a REST project
@@ -84,7 +84,7 @@ public final class RestProjectUtils {
             return;
         }
 
-        JInternalFrame fixture = (JInternalFrame) panel.target.getParent().getParent().getParent();
+        JInternalFrame fixture = (JInternalFrame) panel.target().getParent().getParent().getParent();
         fixture.doDefaultCloseAction();
     }
 
@@ -122,7 +122,7 @@ public final class RestProjectUtils {
         JTableFixture restParamsTable = parentPanel.table(REST_PARAMS_TABLE);
 
         robot.waitForIdle();
-        int rowNumToEdit = restParamsTable.target.getRowCount() - 1;
+        int rowNumToEdit = restParamsTable.target().getRowCount() - 1;
         editTableCell(paramName, restParamsTable, robot, rowNumToEdit, 0);
         editTableCell(paramValue, restParamsTable, robot, rowNumToEdit, 1);
     }
@@ -183,7 +183,7 @@ public final class RestProjectUtils {
 //				JTableCellFixture cell = restParamsTable.cell( row( rowCounter ).column( 3 ) );
 //				cell.enterValue( newLevel );
                 JTableComboBoxEditorCellWriter cellWriter = new JTableComboBoxEditorCellWriter(robot);
-                cellWriter.enterValue(restParamsTable.target, rowCounter, 3, newLevel);
+                cellWriter.enterValue(restParamsTable.target(), rowCounter, 3, newLevel);
                 return;
             }
         }
@@ -196,7 +196,7 @@ public final class RestProjectUtils {
             String paramNameAtIndex = restParamsTable.cell(row(rowCounter).column(0)).value();
             if (paramNameAtIndex.equals(parameterName)) {
                 JTableComboBoxEditorCellWriter cellWriter = new JTableComboBoxEditorCellWriter(robot);
-                cellWriter.enterValue(restParamsTable.target, rowCounter, 2, newStyle);
+                cellWriter.enterValue(restParamsTable.target(), rowCounter, 2, newStyle);
                 return;
             }
         }
@@ -280,7 +280,7 @@ public final class RestProjectUtils {
         JTabbedPaneFixture propertiesPaneFixture = new JTabbedPaneFixture(robot, SoapUI.PROPERTIES_TAB_PANEL_NAME);
         propertiesPaneFixture.selectTab("Custom Properties");
 
-        JPanel tablePanel = (JPanel) propertiesPaneFixture.target.getComponent(1);
+        JPanel tablePanel = (JPanel) propertiesPaneFixture.target().getComponent(1);
 
         JPanelFixture panelFixture = new JPanelFixture(robot, tablePanel);
         panelFixture.button(ADD_PARAM_ACTION_NAME).click();
@@ -288,7 +288,7 @@ public final class RestProjectUtils {
         JTableFixture table = panelFixture.table(PropertyHolderTable.PROPERTIES_HOLDER_TABLE_NAME);
 
         robot.waitForIdle();
-        int rowNumToEdit = table.target.getRowCount() - 1;
+        int rowNumToEdit = table.target().getRowCount() - 1;
         editTableCell(propertyName, table, robot, rowNumToEdit, 0);
         editTableCell(propertyValue, table, robot, rowNumToEdit, 1);
 

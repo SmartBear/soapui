@@ -16,11 +16,11 @@
 package com.smartbear.soapui.stepdefs.fest.mock;
 
 import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JTreeNodeFixture;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JTreeNodeFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.doesLabelExist;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;

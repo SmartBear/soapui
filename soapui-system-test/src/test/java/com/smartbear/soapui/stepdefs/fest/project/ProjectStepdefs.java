@@ -15,7 +15,7 @@
 */
 package com.smartbear.soapui.stepdefs.fest.project;
 
-import cucumber.api.java.en.And;
+import io.cucumber.java.en.And;
 
 public class ProjectStepdefs {
 

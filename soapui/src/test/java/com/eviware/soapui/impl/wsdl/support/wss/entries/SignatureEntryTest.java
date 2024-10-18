@@ -57,8 +57,8 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 /**
@@ -114,8 +114,8 @@ public class SignatureEntryTest {
         createCrypto();
 
         when(outgoingWssMock.getWssContainer()).thenReturn(wssContainerMock);
-        when(wssContainerMock.getCryptoByName(anyString(), anyBoolean())).thenReturn(wssCryptoMock);
-        when(wssContainerMock.getCryptoByName(anyString())).thenReturn(wssCryptoMock);
+        when(wssContainerMock.getCryptoByName(any(), anyBoolean())).thenReturn(wssCryptoMock);
+        when(wssContainerMock.getCryptoByName(any())).thenReturn(wssCryptoMock);
         when(wssCryptoMock.getCrypto()).thenReturn(crypto);
         when(outgoingWssMock.getUsername()).thenReturn(ALIAS);
         when(outgoingWssMock.getPassword()).thenReturn(KEY_PASSWORD);

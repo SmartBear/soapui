@@ -16,10 +16,10 @@
 
 package com.smartbear.soapui.utils.fest;
 
-import org.fest.swing.core.Robot;
-import org.fest.swing.exception.ComponentLookupException;
-import org.fest.swing.fixture.DialogFixture;
-import org.fest.swing.fixture.FrameFixture;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.exception.ComponentLookupException;
+import org.assertj.swing.fixture.DialogFixture;
+import org.assertj.swing.fixture.FrameFixture;
 
 import static org.junit.Assert.fail;
 

@@ -33,7 +33,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -81,7 +81,7 @@ public class RestParamsTableModelUnitTest {
         restParamsTableModel.setParams(params);
         restParamsTableModel.release();
         verify(params, times(1)).addTestPropertyListener(any(TestPropertyListener.class));
-        verify(params, times(1)).removeTestPropertyListener(any(TestPropertyListener.class));
+        verify(params, times(1)).removeTestPropertyListener(any());
 
     }
 

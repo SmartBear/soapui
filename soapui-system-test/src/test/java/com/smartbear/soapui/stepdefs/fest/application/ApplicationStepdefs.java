@@ -19,10 +19,10 @@ import com.eviware.soapui.support.ConsoleDialogs;
 import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.ApplicationUtils;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.FrameFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.closeApplicationWithoutSaving;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;

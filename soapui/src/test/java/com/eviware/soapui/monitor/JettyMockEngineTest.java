@@ -53,6 +53,7 @@ public class JettyMockEngineTest {
         SoapUI.getSettings().setString(SSLSettings.MOCK_KEYSTORE_PASSWORD, "abc");
         SoapUI.getSettings().setBoolean(HttpSettings.LEAVE_MOCKENGINE, false);
         SoapUI.getSettings().setBoolean(SSLSettings.ENABLE_MOCK_SSL, true);
+        SoapUI.getSettings().setLong(SSLSettings.MOCK_PORT, 8443);
 
         sut = new JettyMockEngine();
         when(mockRunner.getMockContext()).thenReturn(mockRunContext);

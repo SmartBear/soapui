@@ -17,10 +17,10 @@ package com.smartbear.soapui.utils.fest;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.project.Project;
-import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JPanelFixture;
-import org.fest.swing.fixture.JPopupMenuFixture;
-import org.fest.swing.fixture.JTreeFixture;
+import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JPanelFixture;
+import org.assertj.swing.fixture.JPopupMenuFixture;
+import org.assertj.swing.fixture.JTreeFixture;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public final class WorkspaceUtils {
 
     public static JTreeFixture getNavigationTree(FrameFixture rootWindow) {
         JTreeFixture navigationTree = getNavigatorPanel(rootWindow).tree();
-        navigationTree.separator("##");
+        navigationTree.replaceSeparator("##");
         return navigationTree;
     }
 

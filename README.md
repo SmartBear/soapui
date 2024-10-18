@@ -36,8 +36,8 @@ By downloading our software, you agree to our [license](https://www.soapui.org/d
 
 ### Prerequisites
 
-* [OpenJDK 16](https://openjdk.java.net/projects/jdk/16/)
-* [Maven (version 3.0.5 or later)](http://maven.apache.org/)
+* [OpenJDK 17](https://openjdk.java.net/projects/jdk/17/)
+* [Maven (version 3.6.3 or later)](http://maven.apache.org/)
 * [Git (version 1.8 or later)](http://git-scm.com)
 
 ### Get the source code for the first time

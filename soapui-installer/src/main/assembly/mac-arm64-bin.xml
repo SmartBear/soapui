@@ -6,9 +6,9 @@ bundled or none -->
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
-    <id>linux-bin</id>
+    <id>mac-arm64-bin</id>
     <formats>
-        <format>tar.gz</format>
+        <format>zip</format>
     </formats>
     <dependencySets>
         <dependencySet>
@@ -17,9 +17,9 @@ bundled or none -->
             <scope>runtime</scope>
             <excludes>
                 <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
+                <exclude>org.openjfx:*:jar:linux:*</exclude>
                 <exclude>org.openjfx:*:jar:win:*</exclude>
                 <exclude>org.openjfx:*:jar:mac:*</exclude>
-                <exclude>org.openjfx:*:jar:mac-aarch64:*</exclude>
             </excludes>
         </dependencySet>
         <dependencySet>
@@ -52,18 +52,18 @@ bundled or none -->
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/..</directory>
-            <outputDirectory>.</outputDirectory>
-            <includes>
-                <include>RELEASENOTES.txt</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>${basedir}/target/classes</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>SoapUI-Spashscreen.png</include>
                 <include>SoapUI-Spashscreen@2x.png</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/..</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>RELEASENOTES.txt</include>
             </includes>
         </fileSet>
         <fileSet>

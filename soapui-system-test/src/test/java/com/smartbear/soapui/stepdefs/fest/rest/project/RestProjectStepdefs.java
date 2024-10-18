@@ -23,15 +23,15 @@ import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JPanelFixture;
-import org.fest.swing.fixture.JTableFixture;
-import org.fest.swing.fixture.JTreeNodeFixture;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JPanelFixture;
+import org.assertj.swing.fixture.JTableFixture;
+import org.assertj.swing.fixture.JTreeNodeFixture;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.doesLabelExist;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.RestProjectUtils.*;
-import static org.fest.swing.data.TableCell.row;
+import static org.assertj.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -206,7 +206,7 @@ public class RestProjectStepdefs {
 
     private void verifyEmptyTable(JPanelFixture parentPanel) {
         JTableFixture restParamsTable = parentPanel.table(REST_PARAMS_TABLE);
-        assertThat(restParamsTable.target.getRowCount(), is(0));
+        assertThat(restParamsTable.target().getRowCount(), is(0));
     }
 
     private void verifyParamValues(JPanelFixture parentPanel, int rowNum, String paramName, String paramValue) {
