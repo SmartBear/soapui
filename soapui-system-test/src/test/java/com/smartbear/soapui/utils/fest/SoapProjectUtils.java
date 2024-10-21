@@ -16,8 +16,8 @@
 package com.smartbear.soapui.utils.fest;
 
 import com.eviware.soapui.SoapUI;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.*;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.*;
 
 /**
  * Utility class used for generic operations on a SOAP project

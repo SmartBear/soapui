@@ -20,11 +20,11 @@ import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.smartbear.soapui.utils.IntegrationTest;
-import org.fest.swing.core.BasicRobot;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.JTableFixture;
-import org.fest.swing.security.ExitCallHook;
-import org.fest.swing.security.NoExitSecurityManagerInstaller;
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.JTableFixture;
+import org.assertj.swing.security.ExitCallHook;
+import org.assertj.swing.security.NoExitSecurityManagerInstaller;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 

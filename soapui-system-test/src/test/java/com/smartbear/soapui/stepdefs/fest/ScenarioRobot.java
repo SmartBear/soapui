@@ -15,8 +15,8 @@
 */
 package com.smartbear.soapui.stepdefs.fest;
 
-import org.fest.swing.core.BasicRobot;
-import org.fest.swing.core.Robot;
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
 
 /**
  * A wapper for an AWT robot that's instantiated once per scenario and passed to  stepDefs using constructor injection
