@@ -38,7 +38,7 @@ No other rights are granted by implication, estoppel or otherwise.
 
 -->
 <xs:schema targetNamespace="http://schemas.xmlsoap.org/ws/2005/02/rm" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm" elementFormDefault="qualified" attributeFormDefault="unqualified">
-  <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing" schemaLocation="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+  <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing" schemaLocation="ws-addr-1.0.xsd"/>
   <!-- Protocol Elements -->
   <xs:complexType name="SequenceType">
     <xs:sequence>
