@@ -458,7 +458,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
 
     public class OperationListModel extends AbstractListModel implements ListModel, MockServiceListener,
             PropertyChangeListener {
-        private List<MockOperation> operations = new ArrayList<MockOperation>();
+        private List<MockOperation> operations = new ArrayList<>();
 
         public OperationListModel() {
             for (int c = 0; c < getModelItem().getMockOperationCount(); c++) {

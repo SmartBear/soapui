@@ -32,7 +32,7 @@ import java.util.List;
 public class StringToStringsMapTableModel extends AbstractTableModel implements TableModel {
     private final String keyCaption;
     private final String valueCaption;
-    private List<NameValuePair> keyList = new ArrayList<NameValuePair>();
+    private List<NameValuePair> keyList = new ArrayList<>();
     private final boolean editable;
     private StringToStringsMap data;
 

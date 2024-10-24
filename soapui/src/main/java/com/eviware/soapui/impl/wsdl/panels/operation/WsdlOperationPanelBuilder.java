@@ -35,7 +35,7 @@ public class WsdlOperationPanelBuilder extends EmptyPanelBuilder<WsdlOperation> 
     }
 
     public JPanel buildOverviewPanel(WsdlOperation operation) {
-        JPropertiesTable<WsdlOperation> table = new JPropertiesTable<WsdlOperation>("Operation Properties");
+        JPropertiesTable<WsdlOperation> table = new JPropertiesTable<>("Operation Properties");
         table.addProperty("Description", "description", true);
         table.addProperty("SOAPAction", "action");
         table.addProperty("Operation", "bindingOperationName");

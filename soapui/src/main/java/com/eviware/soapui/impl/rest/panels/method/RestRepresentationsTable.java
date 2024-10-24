@@ -84,7 +84,7 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
     }
 
     public class RepresentationsTableModel extends AbstractTableModel implements PropertyChangeListener {
-        private List<RestRepresentation> data = new ArrayList<RestRepresentation>();
+        private List<RestRepresentation> data = new ArrayList<>();
 
         public RepresentationsTableModel() {
             initData();
@@ -153,7 +153,7 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
                     }
 
                     String[] items = value.toString().split(" ");
-                    List<Integer> status = new ArrayList<Integer>();
+                    List<Integer> status = new ArrayList<>();
 
                     for (String item : items) {
                         try {

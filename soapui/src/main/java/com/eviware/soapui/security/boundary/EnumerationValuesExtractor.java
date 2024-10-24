@@ -35,7 +35,7 @@ import java.util.List;
 public class EnumerationValuesExtractor {
     private WsdlRequest request;
     // private List<String> enumerationParameters = new ArrayList<String>();
-    private List<String> selectedEnumerationParameters = new ArrayList<String>();
+    private List<String> selectedEnumerationParameters = new ArrayList<>();
 
     private XmlObjectTreeModel model;
 
@@ -132,7 +132,7 @@ public class EnumerationValuesExtractor {
 
     class EnumerationValues {
         private String type;
-        private List<String> valuesList = new ArrayList<String>();
+        private List<String> valuesList = new ArrayList<>();
 
         public EnumerationValues(String type) {
             this.type = type;

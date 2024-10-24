@@ -34,6 +34,6 @@ public class MockProjectRunner extends AbstractMockTestRunner<WsdlProject> imple
     }
 
     public List<TestSuiteRunner> getResults() {
-        return new ArrayList<TestSuiteRunner>();
+        return new ArrayList<>();
     }
 }

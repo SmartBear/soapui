@@ -131,7 +131,7 @@ public class ShowMessageExchangeAction extends AbstractAction {
     }
 
     private List<AssertedXPath> getAssertedXPaths() {
-        List<AssertedXPath> assertedXPaths = new ArrayList<AssertedXPath>();
+        List<AssertedXPath> assertedXPaths = new ArrayList<>();
 
         if (messageExchange instanceof RequestAssertedMessageExchange) {
             AssertedXPath[] xpaths = ((RequestAssertedMessageExchange) messageExchange).getAssertedXPathsForRequest();

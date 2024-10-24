@@ -217,13 +217,13 @@ public class ResolveDialog {
     @SuppressWarnings("serial")
     private class ResolveContextTableModel extends AbstractTableModel {
         private ResolveContext<?> context;
-        private ArrayList<JComboBox> jbcList = new ArrayList<JComboBox>();
+        private ArrayList<JComboBox> jbcList = new ArrayList<>();
 
         @SuppressWarnings("unchecked")
         public ResolveContextTableModel(ResolveContext<?> context2) {
             context = context2;
             for (PathToResolve path : context.getPathsToResolve()) {
-                ArrayList<Object> resolversAndDefaultAction = new ArrayList<Object>();
+                ArrayList<Object> resolversAndDefaultAction = new ArrayList<>();
                 resolversAndDefaultAction.add("Choose one...");
                 for (Object resolver : path.getResolvers()) {
                     resolversAndDefaultAction.add(resolver);

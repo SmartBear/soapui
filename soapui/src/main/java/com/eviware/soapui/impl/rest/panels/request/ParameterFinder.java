@@ -30,7 +30,7 @@ class ParameterFinder {
 
     public ParameterFinder(String parametersString) {
         StringTokenizer parser = new StringTokenizer(parametersString, "?&=;", true);
-        List<String> parsedTokens = new ArrayList<String>();
+        List<String> parsedTokens = new ArrayList<>();
         while (parser.hasMoreTokens()) {
             parsedTokens.add(parser.nextToken());
         }

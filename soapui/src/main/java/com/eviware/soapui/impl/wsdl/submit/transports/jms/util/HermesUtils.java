@@ -49,7 +49,7 @@ import java.util.Set;
 
 public class HermesUtils {
     private static ClassLoader hermesClassLoader;
-    private static Map<String, Context> contextMap = new HashMap<String, Context>();
+    private static Map<String, Context> contextMap = new HashMap<>();
     public static String HERMES_CONFIG_XML = "hermes-config.xml";
 
     private static HashSet<String> classesToBeLoadedByParentClassLoader = new HashSet<>();
@@ -138,7 +138,7 @@ public class HermesUtils {
         File[] children = dir.listFiles();
         if (children != null) {
             ClassLoader currentClassLoader = Hermes.class.getClassLoader();
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             for (File file : children) {
                 // fix for users using version of hermesJMS which still has
                 // cglib-2.1.3.jar in lib directory

@@ -98,7 +98,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
     private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
     private WsdlSubmit<RestRequest> submit;
     // private final Set<String> requestProperties = new HashSet<String>();
-    private final Map<String, RestTestStepProperty> requestProperties = new HashMap<String, RestTestStepProperty>();
+    private final Map<String, RestTestStepProperty> requestProperties = new HashMap<>();
 
     public RestTestRequestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest)
             throws ItemDeletedException {
@@ -308,7 +308,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
     @Override
     public Collection<Interface> getRequiredInterfaces() {
-        ArrayList<Interface> result = new ArrayList<Interface>();
+        ArrayList<Interface> result = new ArrayList<>();
         result.add(findRestResource().getInterface());
         return result;
     }

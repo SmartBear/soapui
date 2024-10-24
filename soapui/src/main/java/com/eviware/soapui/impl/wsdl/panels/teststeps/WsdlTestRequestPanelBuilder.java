@@ -46,7 +46,7 @@ public class WsdlTestRequestPanelBuilder extends EmptyPanelBuilder<WsdlTestReque
 
     public JPanel buildOverviewPanel(WsdlTestRequestStep testStep) {
         WsdlTestRequest request = testStep.getTestRequest();
-        JPropertiesTable<WsdlTestRequest> table = new JPropertiesTable<WsdlTestRequest>("TestRequest Properties");
+        JPropertiesTable<WsdlTestRequest> table = new JPropertiesTable<>("TestRequest Properties");
 
         // basic properties
         table.addProperty("Name", "name", true);

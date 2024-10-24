@@ -50,7 +50,7 @@ public class ToolActionFactory {
     private static Hashtable<String, Class> toolActionTypeMap;
 
     static {
-        toolActionTypeMap = new Hashtable<String, Class>();
+        toolActionTypeMap = new Hashtable<>();
         toolActionTypeMap.put("axis1", Axis1XWSDL2JavaAction.class);
         toolActionTypeMap.put("axis2", Axis2WSDL2CodeAction.class);
         toolActionTypeMap.put("dotnet", DotNetWsdlAction.class);

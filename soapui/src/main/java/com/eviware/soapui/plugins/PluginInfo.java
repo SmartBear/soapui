@@ -26,7 +26,7 @@ public class PluginInfo {
     private final Version version;
     private final String description;
     private final String infoUrl;
-    private List<PluginInfo> dependencies = new ArrayList<PluginInfo>();
+    private List<PluginInfo> dependencies = new ArrayList<>();
 
     public PluginInfo(PluginId id, Version version, String description, String infoUrl) {
         this.id = id;

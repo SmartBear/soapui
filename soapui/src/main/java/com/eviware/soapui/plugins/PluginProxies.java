@@ -74,7 +74,7 @@ public class PluginProxies {
     }
 
     public static <T> Collection<T> proxyInstancesWhereApplicable(Collection<T> instancesToProxy) {
-        Collection<T> proxiedInstances = new HashSet<T>();
+        Collection<T> proxiedInstances = new HashSet<>();
         for (T instance : instancesToProxy) {
             proxiedInstances.add(proxyIfApplicable(instance));
         }

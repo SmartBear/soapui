@@ -34,8 +34,8 @@ import java.util.List;
  */
 
 public class TestRunComponentEnabler extends TestMonitorListenerAdapter {
-    private final List<JComponent> components = new ArrayList<JComponent>();
-    private final List<Boolean> states = new ArrayList<Boolean>();
+    private final List<JComponent> components = new ArrayList<>();
+    private final List<Boolean> states = new ArrayList<>();
     private final TestCase testCase;
 
     public TestRunComponentEnabler(TestCase testCase) {

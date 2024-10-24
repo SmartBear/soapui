@@ -28,7 +28,7 @@ public class BoundedQueue {
     private LinkedList<String> queue;
 
     public BoundedQueue() {
-        this.queue = new LinkedList<String>();
+        this.queue = new LinkedList<>();
     }
 
     public void remove(String e) {
@@ -48,12 +48,12 @@ public class BoundedQueue {
     }
 
     public List<String> getByAlphabeticalOrder() {
-        List<String> list = new ArrayList<String>(this.queue);
+        List<String> list = new ArrayList<>(this.queue);
         Collections.sort(list);
         return list;
     }
 
     public List<String> getByInsertionOrder() {
-        return new LinkedList<String>(this.queue);
+        return new LinkedList<>(this.queue);
     }
 }

@@ -161,7 +161,7 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
     }
 
     private Set<WsdlInterface> getRequiredInterfaces(WsdlMockService mockService, WsdlProject targetProject) {
-        Set<WsdlInterface> requiredInterfaces = new HashSet<WsdlInterface>();
+        Set<WsdlInterface> requiredInterfaces = new HashSet<>();
 
         for (int i = 0; i < mockService.getMockOperationCount(); i++) {
             WsdlOperation operation = mockService.getMockOperationAt(i).getOperation();
@@ -171,7 +171,7 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
         }
 
         if (requiredInterfaces.size() > 0 && targetProject.getInterfaceCount() > 0) {
-            Map<String, WsdlInterface> bindings = new HashMap<String, WsdlInterface>();
+            Map<String, WsdlInterface> bindings = new HashMap<>();
             for (WsdlInterface iface : requiredInterfaces) {
                 bindings.put(iface.getTechnicalId(), iface);
             }

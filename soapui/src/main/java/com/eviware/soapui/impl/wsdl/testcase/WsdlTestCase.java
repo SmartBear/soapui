@@ -89,10 +89,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     public static final String ICON_NAME = "/testcase.png";
 
     private final WsdlTestSuite testSuite;
-    private final List<WsdlTestStep> testSteps = new ArrayList<WsdlTestStep>();
-    private final List<WsdlLoadTest> loadTests = new ArrayList<WsdlLoadTest>();
-    private final List<SecurityTest> securityTests = new ArrayList<SecurityTest>();
-    private final Set<TestRunListener> testRunListeners = new HashSet<TestRunListener>();
+    private final List<WsdlTestStep> testSteps = new ArrayList<>();
+    private final List<WsdlLoadTest> loadTests = new ArrayList<>();
+    private final List<SecurityTest> securityTests = new ArrayList<>();
+    private final Set<TestRunListener> testRunListeners = new HashSet<>();
     private DefaultActionList createActions;
     private final boolean forLoadTest;
     private SoapUIScriptEngine setupScriptEngine;
@@ -117,7 +117,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         setPropertiesConfig(getConfig().getProperties());
 
         List<TestStepConfig> testStepConfigs = config.getTestStepList();
-        List<TestStepConfig> removed = new ArrayList<TestStepConfig>();
+        List<TestStepConfig> removed = new ArrayList<>();
         for (TestStepConfig tsc : testStepConfigs) {
             WsdlTestStep testStep = createTestStepFromConfig(tsc);
             if (testStep != null) {
@@ -616,7 +616,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public Map<String, TestStep> getTestSteps() {
-        Map<String, TestStep> result = new HashMap<String, TestStep>();
+        Map<String, TestStep> result = new HashMap<>();
         for (TestStep testStep : testSteps) {
             result.put(testStep.getName(), testStep);
         }
@@ -625,7 +625,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public Map<String, TestStep> getTestStepsOrdered() {
-        Map<String, TestStep> result = new TreeMap<String, TestStep>();
+        Map<String, TestStep> result = new TreeMap<>();
         for (TestStep testStep : testSteps) {
             result.put(testStep.getName(), testStep);
         }
@@ -634,7 +634,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public Map<String, LoadTest> getLoadTests() {
-        Map<String, LoadTest> result = new HashMap<String, LoadTest>();
+        Map<String, LoadTest> result = new HashMap<>();
         for (LoadTest loadTest : loadTests) {
             result.put(loadTest.getName(), loadTest);
         }
@@ -747,7 +747,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     @Override
     public List<TestStep> getTestStepList() {
-        List<TestStep> result = new ArrayList<TestStep>();
+        List<TestStep> result = new ArrayList<>();
         for (TestStep step : testSteps) {
             result.add(step);
         }
@@ -758,7 +758,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     @Override
     @SuppressWarnings("unchecked")
     public <T extends TestStep> List<T> getTestStepsOfType(Class<T> stepType) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (TestStep step : testSteps) {
             if (step.getClass().isAssignableFrom(stepType)) {
                 result.add((T) step);
@@ -854,7 +854,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     @Override
     public List<LoadTest> getLoadTestList() {
-        List<LoadTest> result = new ArrayList<LoadTest>();
+        List<LoadTest> result = new ArrayList<>();
         for (LoadTest loadTest : loadTests) {
             result.add(loadTest);
         }
@@ -900,7 +900,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     @Override
     public List<? extends ModelItem> getChildren() {
-        List<ModelItem> result = new ArrayList<ModelItem>();
+        List<ModelItem> result = new ArrayList<>();
         result.addAll(getTestStepList());
         result.addAll(getLoadTestList());
         result.addAll(getSecurityTestList());
@@ -1104,7 +1104,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public Map<String, SecurityTest> getSecurityTests() {
-        Map<String, SecurityTest> result = new HashMap<String, SecurityTest>();
+        Map<String, SecurityTest> result = new HashMap<>();
         for (SecurityTest securityTest : securityTests) {
             result.put(securityTest.getName(), securityTest);
         }

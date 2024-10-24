@@ -207,7 +207,7 @@ XPathReferenceContainer{
 	    
 	    @Override
 	    public PropertyExpansion[] getPropertyExpansions() {
-	        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+	        List<PropertyExpansion> result = new ArrayList<>();
 
 	        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getAssertable().getModelItem(), this,
 	                "expectedContent"));
@@ -263,7 +263,7 @@ XPathReferenceContainer{
 	    protected abstract String getQueryType();
 	    
 	    public XPathReference[] getXPathReferences() {
-	        List<XPathReference> result = new ArrayList<XPathReference>();
+	        List<XPathReference> result = new ArrayList<>();
 
 	        if (StringUtils.hasContent(getPath())) {
 	            TestModelItem testStep = getAssertable().getTestStep();

@@ -328,7 +328,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
                 return new DefaultPropertyHolderTableModel(holder) {
                     @Override
                     public String[] getPropertyNames() {
-                        List<String> propertyNamesList = new ArrayList<String>();
+                        List<String> propertyNamesList = new ArrayList<>();
                         for (String name : holder.getPropertyNames()) {
                             if (name.equals(WsdlTestStepWithProperties.RESPONSE_AS_XML)) {
                                 continue;

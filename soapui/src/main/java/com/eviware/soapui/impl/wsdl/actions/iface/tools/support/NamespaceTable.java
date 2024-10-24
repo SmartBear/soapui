@@ -81,7 +81,7 @@ public class NamespaceTable extends AbstractSwingXFormField<JPanel> {
     }
 
     private class NamespaceTableModel extends AbstractTableModel {
-        private List<String> namespaces = new ArrayList<String>();
+        private List<String> namespaces = new ArrayList<>();
         private List<String> packages;
 
         public NamespaceTableModel() {
@@ -93,7 +93,7 @@ public class NamespaceTable extends AbstractSwingXFormField<JPanel> {
                 SoapUI.logError(e);
             }
 
-            packages = new ArrayList<String>(Arrays.asList(new String[namespaces.size()]));
+            packages = new ArrayList<>(Arrays.asList(new String[namespaces.size()]));
         }
 
         public void setMappings(StringToStringMap mapping) {

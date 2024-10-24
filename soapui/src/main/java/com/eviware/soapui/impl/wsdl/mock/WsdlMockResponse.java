@@ -101,7 +101,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
     public static final String OUGOING_WSS = WsdlMockResponse.class.getName() + "@outgoing-wss";
     public static final String ICON_NAME = "/mockResponse.gif";
 
-    protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
+    protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<>();
     private List<HttpAttachmentPart> definedAttachmentParts;
     private IconAnimator<WsdlMockResponse> iconAnimator;
     private WsaConfig wsaConfig;
@@ -117,7 +117,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
             config.setEncoding("UTF-8");
         }
 
-        iconAnimator = new IconAnimator<WsdlMockResponse>(this, "/mockResponse.gif", "/exec_request.png", 4);
+        iconAnimator = new IconAnimator<>(this, "/mockResponse.gif", "/exec_request.png", 4);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 
     public MessagePart[] getRequestParts() {
         try {
-            List<MessagePart> result = new ArrayList<MessagePart>();
+            List<MessagePart> result = new ArrayList<>();
             result.addAll(Arrays.asList(getMockOperation().getOperation().getDefaultRequestParts()));
 
             if (getMockResult() != null) {
@@ -181,7 +181,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
                 return new MessagePart[0];
             }
 
-            List<MessagePart> result = new ArrayList<MessagePart>();
+            List<MessagePart> result = new ArrayList<>();
             WsdlContext wsdlContext = op.getInterface().getWsdlContext();
             BindingOperation bindingOperation = op.findBindingOperation(wsdlContext.getDefinition());
 
@@ -271,7 +271,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
             try {
                 WsdlOperation operation = (WsdlOperation) getMockOperation().getOperation();
                 if (operation == null) {
-                    definedAttachmentParts = new ArrayList<HttpAttachmentPart>();
+                    definedAttachmentParts = new ArrayList<>();
                 } else {
                     UISupport.setHourglassCursor();
                     definedAttachmentParts = AttachmentUtils.extractAttachmentParts(operation, getResponseContent(), true,
@@ -299,7 +299,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
     }
 
     public Attachment[] getAttachmentsForPart(String partName) {
-        List<Attachment> result = new ArrayList<Attachment>();
+        List<Attachment> result = new ArrayList<>();
 
         for (Attachment attachment : attachments) {
             if (attachment.getPart().equals(partName)) {
@@ -514,7 +514,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
     }
 
     public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        List<PropertyExpansion> result = new ArrayList<>();
 
         result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "responseContent"));
 

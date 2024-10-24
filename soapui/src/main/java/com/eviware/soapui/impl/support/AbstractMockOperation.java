@@ -40,7 +40,7 @@ public abstract class AbstractMockOperation
 
     private MockOperationDispatcher dispatcher;
 
-    private List<MockResponseType> responses = new ArrayList<MockResponseType>();
+    private List<MockResponseType> responses = new ArrayList<>();
 
     protected AbstractMockOperation(BaseMockOperationConfigType config, MockService parent, String icon) {
         super(config, parent, icon);
@@ -70,7 +70,7 @@ public abstract class AbstractMockOperation
     }
 
     public List<MockResponse> getMockResponses() {
-        return new ArrayList<MockResponse>(responses);
+        return new ArrayList<>(responses);
     }
 
     public MockResponseType getMockResponseAt(int index) {

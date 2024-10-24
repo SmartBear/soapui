@@ -85,7 +85,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     public static final String XML_ACTIONS = "xml";
 
     private final static Logger log = LogManager.getLogger(WsdlInterface.class);
-    private List<WsdlOperation> operations = new ArrayList<WsdlOperation>();
+    private List<WsdlOperation> operations = new ArrayList<>();
     private WsdlProject project;
     private SoapMessageBuilder soapMessageBuilder;
     private WsdlContext wsdlContext;
@@ -413,8 +413,8 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     @SuppressWarnings("unchecked")
     public void transferOperations(Binding binding, boolean createRequests) {
         // prepare for transfer of operations/requests
-        List<BindingOperation> newOperations = new ArrayList<BindingOperation>(binding.getBindingOperations());
-        Map<String, WsdlOperation> oldOperations = new HashMap<String, WsdlOperation>();
+        List<BindingOperation> newOperations = new ArrayList<>(binding.getBindingOperations());
+        Map<String, WsdlOperation> oldOperations = new HashMap<>();
         for (int c = 0; c < operations.size(); c++) {
             oldOperations.put(operations.get(c).getBindingOperationName(), operations.get(c));
         }
@@ -442,7 +442,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
             String name = i.next();
 
             if (newOperations.size() > 0) {
-                List<String> list = new ArrayList<String>();
+                List<String> list = new ArrayList<>();
                 list.add("none - delete operation");
                 for (int c = 0; c < newOperations.size(); c++) {
                     list.add(newOperations.get(c).getName());
@@ -576,7 +576,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     }
 
     public Map<String, Operation> getOperations() {
-        Map<String, Operation> result = new HashMap<String, Operation>();
+        Map<String, Operation> result = new HashMap<>();
         for (Operation operation : operations) {
             result.put(operation.getName(), operation);
         }
@@ -633,7 +633,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     }
 
     public List<Operation> getOperationList() {
-        return new ArrayList<Operation>(operations);
+        return new ArrayList<>(operations);
     }
 
     public static class BindingTuple {
@@ -666,7 +666,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     }
 
     public List<AbstractWsdlModelItem<?>> getAllMessages() {
-        ArrayList<AbstractWsdlModelItem<?>> list = new ArrayList<AbstractWsdlModelItem<?>>();
+        ArrayList<AbstractWsdlModelItem<?>> list = new ArrayList<>();
         getAllMessages(getProject(), list);
         return list;
     }

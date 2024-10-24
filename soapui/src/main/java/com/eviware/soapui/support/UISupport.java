@@ -110,10 +110,10 @@ public class UISupport {
     public static final int EXTENDED_ERROR_MESSAGE_THRESHOLD = 120;
 
     // This is needed in Eclipse that has strict class loader constraints.
-    private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<ClassLoader>();
+    private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<>();
 
     private static Component frame;
-    private static Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
+    private static Map<String, ImageIcon> iconCache = new HashMap<>();
     public static Dimension TOOLBAR_BUTTON_DIMENSION;
     private static boolean isWindows = System.getProperty("os.name").contains("Windows");
     private static boolean isMac = System.getProperty("os.name").contains("Mac");

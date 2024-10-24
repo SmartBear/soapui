@@ -251,13 +251,13 @@ public class RestParamsTable extends JPanel {
     }
 
     private JComponent buildDetails() {
-        paramDetailsModel = new PresentationModel<RestParamProperty>(null);
+        paramDetailsModel = new PresentationModel<>(null);
         detailsForm = new SimpleBindingForm(paramDetailsModel);
 
         detailsForm.addSpace(5);
         detailsForm.appendCheckBox("required", "Required", "Sets if parameter is required");
 
-        List<QName> types = new ArrayList<QName>();
+        List<QName> types = new ArrayList<>();
         for (SchemaType type : XmlBeans.getBuiltinTypeSystem().globalTypes()) {
             types.add(type.getName());
         }

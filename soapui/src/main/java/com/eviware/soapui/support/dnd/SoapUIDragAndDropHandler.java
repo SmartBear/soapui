@@ -82,7 +82,7 @@ public class SoapUIDragAndDropHandler implements DragGestureListener, DragSource
     private Point _ptLast = new Point();
 
     static {
-        handlers = new ArrayList<ModelItemDropHandler<ModelItem>>();
+        handlers = new ArrayList<>();
         SoapUIDragAndDropHandler.addDropHandler(new TestStepToTestCaseDropHandler());
         SoapUIDragAndDropHandler.addDropHandler(new TestStepToTestStepsDropHandler());
         SoapUIDragAndDropHandler.addDropHandler(new TestStepToTestStepDropHandler());

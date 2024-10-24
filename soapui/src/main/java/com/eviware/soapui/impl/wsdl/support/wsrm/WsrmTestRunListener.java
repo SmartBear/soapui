@@ -62,7 +62,7 @@ public class WsrmTestRunListener implements TestRunListener {
         WsdlTestCase testCase = (WsdlTestCase) runContext.getTestCase();
         if (testStep instanceof WsdlTestRequestStep && testCase.getWsrmEnabled()) {
             if (wsrmMap == null) {
-                wsrmMap = new HashMap<String, WsrmSequence>();
+                wsrmMap = new HashMap<>();
             }
             WsdlTestRequestStep requestStep = (WsdlTestRequestStep) testStep;
             String endpoint = requestStep.getHttpRequest().getEndpoint();

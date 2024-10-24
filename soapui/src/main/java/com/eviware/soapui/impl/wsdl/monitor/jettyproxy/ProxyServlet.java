@@ -78,7 +78,7 @@ public class ProxyServlet implements Servlet {
     protected Settings settings;
     protected final SoapMonitorListenerCallBack listenerCallBack;
     private ContentTypes includedContentTypes = SoapMonitorAction.defaultContentTypes();
-    static HashSet<String> dontProxyHeaders = new HashSet<String>();
+    static HashSet<String> dontProxyHeaders = new HashSet<>();
 
     static {
         dontProxyHeaders.add("proxy-connection");

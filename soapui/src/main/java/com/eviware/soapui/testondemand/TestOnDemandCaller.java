@@ -120,7 +120,7 @@ public class TestOnDemandCaller {
         NodeList locationNodes = (NodeList) xpath.evaluate(LOCATION_XPATH_EXPRESSION, responseDocument,
                 XPathConstants.NODESET);
 
-        List<Location> locations = new ArrayList<Location>();
+        List<Location> locations = new ArrayList<>();
         for (int i = 0; i < locationNodes.getLength(); i++) {
             Node locationNode = locationNodes.item(i);
             String name = (String) xpath.evaluate(LOCATION_NAME_XPATH_EXPRESSION, locationNode, XPathConstants.STRING);
@@ -287,7 +287,7 @@ public class TestOnDemandCaller {
     private XmlOptions getXmlOptionsWithoutNamespaces() {
         XmlOptions options = new XmlOptions();
         options.setUseDefaultNamespace();
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("", "http://eviware.com/soapui/config");
         options.setSaveImplicitNamespaces(namespaces);
         return options;

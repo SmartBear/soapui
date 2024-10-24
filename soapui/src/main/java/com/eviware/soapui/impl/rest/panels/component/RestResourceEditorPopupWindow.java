@@ -130,7 +130,7 @@ class RestResourceEditorPopupWindow extends JDialog {
     }
 
     private void addResourceFields(RestResource focusedResource, Box contentBox, JLabel changeWarningLabel) {
-        restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
+        restSubResourceTextFields = new ArrayList<>();
         int rowIndex = contentBox.getComponents().length;
 
         for (RestResource restResource : RestUtils.extractAncestorsParentFirst(targetResource)) {

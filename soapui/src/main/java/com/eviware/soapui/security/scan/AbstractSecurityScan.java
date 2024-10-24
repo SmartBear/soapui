@@ -524,7 +524,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 
     @Override
     public List<TestAssertion> getAssertionList() {
-        return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+        return new ArrayList<>(assertionsSupport.getAssertionList());
     }
 
     @Override

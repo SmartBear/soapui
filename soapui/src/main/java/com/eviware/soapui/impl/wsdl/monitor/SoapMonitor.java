@@ -125,7 +125,7 @@ public class SoapMonitor extends JPanel {
     // private JButton addToRestTestCaseButton;
     private JButton createRequestButton;
     private JButton addToMockServiceButton;
-    private Stack<WsdlMonitorMessageExchange> messageExchangeStack = new Stack<WsdlMonitorMessageExchange>();
+    private Stack<WsdlMonitorMessageExchange> messageExchangeStack = new Stack<>();
     private StackProcessor stackProcessor = new StackProcessor();
     private PatternFilter operationFilter;
     private PatternFilter interfaceFilter;
@@ -184,7 +184,7 @@ public class SoapMonitor extends JPanel {
     private JComponent buildContent() {
         inspectorPanel = JInspectorPanelFactory.build(buildLog());
 
-        JComponentInspector<JComponent> viewInspector = new JComponentInspector<JComponent>(buildViewer(),
+        JComponentInspector<JComponent> viewInspector = new JComponentInspector<>(buildViewer(),
                 "Message Content", "Shows message content", true);
         inspectorPanel.addInspector(viewInspector);
 

@@ -41,7 +41,7 @@ public class RestResourcePanelBuilder extends EmptyPanelBuilder<RestResource> {
     }
 
     public Component buildOverviewPanel(RestResource service) {
-        JPropertiesTable<RestResource> table = new JPropertiesTable<RestResource>("Resource Properties");
+        JPropertiesTable<RestResource> table = new JPropertiesTable<>("Resource Properties");
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);
         table.addProperty("Path", "path", true);

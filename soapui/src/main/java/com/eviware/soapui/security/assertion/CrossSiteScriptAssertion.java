@@ -118,7 +118,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
         CrossSiteScriptingScanConfig parameterExposureCheckConfig = (CrossSiteScriptingScanConfig) context
                 .getProperty(CrossSiteScriptingScan.PARAMETER_EXPOSURE_SCAN_CONFIG);
 
-        List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+        List<AssertionError> assertionErrorList = new ArrayList<>();
         boolean throwExceptionCheckResponse = false;
 
         if (checkResponse) {
@@ -184,7 +184,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
     }
 
     private List<String> submitScript(MessageExchange messageExchange, SubmitContext context) {
-        List<String> urls = new ArrayList<String>();
+        List<String> urls = new ArrayList<>();
         scriptEngine.setScript(script);
         scriptEngine.setVariable("urls", urls);
         scriptEngine.setVariable("messageExchange", messageExchange);
@@ -289,7 +289,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
             return new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     Object result = null;
-                    List<String> urls = new ArrayList<String>();
+                    List<String> urls = new ArrayList<>();
                     scriptEngine.setScript(script);
                     scriptEngine.setVariable("urls", urls);
                     scriptEngine.setVariable("messageExchange", messageExchange);

@@ -44,7 +44,7 @@ public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestReque
 
     public JPanel buildOverviewPanel(RestTestRequestStep testStep) {
         RestTestRequestInterface request = testStep.getTestRequest();
-        JPropertiesTable<RestTestRequestInterface> table = new JPropertiesTable<RestTestRequestInterface>(
+        JPropertiesTable<RestTestRequestInterface> table = new JPropertiesTable<>(
                 "REST TestRequest Properties");
 
         // basic properties

@@ -42,7 +42,7 @@ public class RestMethodPanelBuilder extends EmptyPanelBuilder<RestMethod> {
     }
 
     public Component buildOverviewPanel(RestMethod method) {
-        JPropertiesTable<RestMethod> table = new JPropertiesTable<RestMethod>("Method Properties");
+        JPropertiesTable<RestMethod> table = new JPropertiesTable<>("Method Properties");
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);
         table.addProperty("HTTP Method", "method", RestRequestInterface.HttpMethod.getMethods());

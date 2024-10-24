@@ -34,7 +34,7 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
     private final String id;
     private final String label;
     private final Class<? extends TestAssertion> assertionClass;
-    private final List<Class<? extends ModelItem>> targetClasses = new ArrayList<Class<? extends ModelItem>>();
+    private final List<Class<? extends ModelItem>> targetClasses = new ArrayList<>();
 
     public AbstractTestAssertionFactory(String id, String label, Class<? extends TestAssertion> assertionClass) {
         this.id = id;

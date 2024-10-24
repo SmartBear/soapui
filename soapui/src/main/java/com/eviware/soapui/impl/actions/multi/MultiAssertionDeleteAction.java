@@ -41,7 +41,7 @@ public class MultiAssertionDeleteAction extends AbstractSoapUIMultiAction<ModelI
                 return;
             }
             // remove duplicates
-            Set<TestAssertion> assertions = new HashSet<TestAssertion>();
+            Set<TestAssertion> assertions = new HashSet<>();
 
             for (ModelItem target : targets) {
                 assertions.add((TestAssertion) target);

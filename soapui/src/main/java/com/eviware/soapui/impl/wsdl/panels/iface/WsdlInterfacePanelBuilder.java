@@ -37,7 +37,7 @@ public class WsdlInterfacePanelBuilder extends EmptyPanelBuilder<WsdlInterface> 
     }
 
     public Component buildOverviewPanel(WsdlInterface iface) {
-        JPropertiesTable<WsdlInterface> table = new JPropertiesTable<WsdlInterface>("Interface Properties");
+        JPropertiesTable<WsdlInterface> table = new JPropertiesTable<>("Interface Properties");
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);
         table.addProperty("Definition URL", "definition", true);

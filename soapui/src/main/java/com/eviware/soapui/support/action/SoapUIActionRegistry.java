@@ -45,8 +45,8 @@ import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class SoapUIActionRegistry {
-    private Map<String, SoapUIAction> actions = new HashMap<String, SoapUIAction>();
-    private Map<String, SoapUIActionGroup> actionGroups = new HashMap<String, SoapUIActionGroup>();
+    private Map<String, SoapUIAction> actions = new HashMap<>();
+    private Map<String, SoapUIActionGroup> actionGroups = new HashMap<>();
 
     public void addAction(String soapuiActionID, SoapUIAction action) {
         actions.put(soapuiActionID, action);

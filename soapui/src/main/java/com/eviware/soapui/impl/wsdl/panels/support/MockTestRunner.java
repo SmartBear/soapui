@@ -48,7 +48,7 @@ public class MockTestRunner extends AbstractMockTestRunner<WsdlTestCase> impleme
     }
 
     public List<TestStepResult> getResults() {
-        return new ArrayList<TestStepResult>();
+        return new ArrayList<>();
     }
 
     public TestCaseRunContext getRunContext() {

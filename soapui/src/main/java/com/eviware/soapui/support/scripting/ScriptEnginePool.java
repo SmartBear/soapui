@@ -28,7 +28,7 @@ import java.util.Stack;
  */
 
 public class ScriptEnginePool {
-    private Stack<SoapUIScriptEngine> scriptEngines = new Stack<SoapUIScriptEngine>();
+    private Stack<SoapUIScriptEngine> scriptEngines = new Stack<>();
     private String script;
     private ModelItem modelItem;
     private int borrowed;

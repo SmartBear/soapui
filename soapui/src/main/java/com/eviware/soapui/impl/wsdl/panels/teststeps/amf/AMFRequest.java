@@ -65,7 +65,7 @@ public class AMFRequest extends AbstractModelItem implements Assertable, TestReq
     public static final String AMF_RESPONSE_PROPERTY = "response";
 
     private final AMFRequestTestStep testStep;
-    private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
+    private Set<SubmitListener> submitListeners = new HashSet<>();
     private AMFResponse response;
     private SoapUIScriptEngine scriptEngine;
     private String endpoint;
@@ -73,7 +73,7 @@ public class AMFRequest extends AbstractModelItem implements Assertable, TestReq
     private String script;
     private HashMap<String, TestProperty> propertyMap;
     private String[] propertyNames;
-    private List<Object> arguments = new ArrayList<Object>();
+    private List<Object> arguments = new ArrayList<>();
     private StringToStringsMap httpHeaders;
     private StringToObjectMap amfHeaders;
     private StringToStringMap amfHeadersString;
@@ -103,8 +103,8 @@ public class AMFRequest extends AbstractModelItem implements Assertable, TestReq
 
     public boolean executeAmfScript(SubmitContext context) {
         boolean scriptOK = true;
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        HashMap<String, Object> amfHeadersTemp = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
+        HashMap<String, Object> amfHeadersTemp = new HashMap<>();
         try {
             scriptEngine.setScript(script);
             scriptEngine.setVariable("parameters", parameters);

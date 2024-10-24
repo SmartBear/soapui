@@ -246,7 +246,7 @@ public class AddAssertionPanel extends SimpleDialog {
     protected void populateNonSelectableAssertionIndexes() {
         getAssertionsTable().setSelectable(true);
         SortedSet<AssertionListEntry> assertionsList = getCategoriesAssertionsMap().get(getSelectedCategory());
-        List<Integer> assertionsIndexList = new ArrayList<Integer>();
+        List<Integer> assertionsIndexList = new ArrayList<>();
         for (int i = 0; i < assertionsList.size(); i++) {
             AssertionListEntry assertionListEntry = (AssertionListEntry) assertionsList.toArray()[i];
             if (!isAssertionApplicable(assertionListEntry.getTypeId())) {
@@ -258,7 +258,7 @@ public class AddAssertionPanel extends SimpleDialog {
 
     protected void populateSelectableCategoriesIndexes() {
         getCategoriesListTable().setSelectable(true);
-        List<Integer> categoriesIndexList = new ArrayList<Integer>();
+        List<Integer> categoriesIndexList = new ArrayList<>();
         Set<String> ctgs = getCategoriesAssertionsMap().keySet();
         for (int j = 0; j < ctgs.size(); j++) {
             String selCat = (String) ctgs.toArray()[j];

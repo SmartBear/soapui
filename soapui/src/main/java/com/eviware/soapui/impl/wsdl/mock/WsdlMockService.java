@@ -139,7 +139,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
     }
 
     public WsdlInterface[] getMockedInterfaces() {
-        Set<WsdlInterface> result = new HashSet<WsdlInterface>();
+        Set<WsdlInterface> result = new HashSet<>();
 
         for (MockOperation mockOperation : getMockOperationList()) {
             WsdlOperation operation = (WsdlOperation) mockOperation.getOperation();
@@ -250,7 +250,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
     }
 
     public List<WsdlOperation> getMockedOperations() {
-        List<WsdlOperation> result = new ArrayList<WsdlOperation>();
+        List<WsdlOperation> result = new ArrayList<>();
 
         for (MockOperation mockOperation : mockOperations) {
             result.add((WsdlOperation) mockOperation.getOperation());

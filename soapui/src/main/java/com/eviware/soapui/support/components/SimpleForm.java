@@ -82,8 +82,8 @@ public class SimpleForm {
     private FormLayout layout;
     private RowSpec rowSpec;
     private int rowSpacing = 5;
-    private Map<String, JComponent> components = new HashMap<String, JComponent>();
-    private Map<JComboBox, Object[]> comboBoxMaps = new HashMap<JComboBox, Object[]>();
+    private Map<String, JComponent> components = new HashMap<>();
+    private Map<JComboBox, Object[]> comboBoxMaps = new HashMap<>();
     private String rowAlignment = "top";
     private Map<String, String> hiddenValues;
     private boolean appended;
@@ -470,7 +470,7 @@ public class SimpleForm {
 
     public void addHiddenValue(String name, String value) {
         if (hiddenValues == null) {
-            hiddenValues = new HashMap<String, String>();
+            hiddenValues = new HashMap<>();
         }
 
         hiddenValues.put(name, value);

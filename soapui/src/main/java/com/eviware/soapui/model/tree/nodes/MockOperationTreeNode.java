@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 public class MockOperationTreeNode extends AbstractModelItemTreeNode<MockOperation> {
-    private List<MockResponseTreeNode> mockResponseNodes = new ArrayList<MockResponseTreeNode>();
+    private List<MockResponseTreeNode> mockResponseNodes = new ArrayList<>();
 
     public MockOperationTreeNode(MockOperation mockOperation, SoapUITreeModel treeModel) {
         super(mockOperation, mockOperation.getMockService(), treeModel);

@@ -49,7 +49,7 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class SecurityTreeCellRender implements TreeCellRenderer {
 
-    Map<DefaultMutableTreeNode, Component> componentTree = new HashMap<DefaultMutableTreeNode, Component>();
+    Map<DefaultMutableTreeNode, Component> componentTree = new HashMap<>();
     private JTree tree;
     Color selected = new Color(205, 205, 205);
     Color unselected = new Color(228, 228, 228);

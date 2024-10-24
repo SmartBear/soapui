@@ -32,12 +32,12 @@ public class ModelItemNames<T extends ModelItem> {
     private List<T> elements;
 
     public ModelItemNames(List<T> elements) {
-        this.elements = new ArrayList<T>(elements);
+        this.elements = new ArrayList<>(elements);
     }
 
     public ModelItemNames(T[] elements) {
         // Create an ArrayList to make sure that elements is modifyable.
-        this.elements = new ArrayList<T>(Arrays.asList(elements));
+        this.elements = new ArrayList<>(Arrays.asList(elements));
     }
 
     public String[] getNames() {
@@ -46,7 +46,7 @@ public class ModelItemNames<T extends ModelItem> {
     }
 
     private ArrayList<String> getElementNameList() {
-        ArrayList<String> elementNames = new ArrayList<String>();
+        ArrayList<String> elementNames = new ArrayList<>();
         for (T element : elements) {
             elementNames.add(element.getName());
         }

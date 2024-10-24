@@ -46,8 +46,8 @@ import java.util.Set;
 public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlTestSuiteRunContext> implements
         TestSuiteRunner {
     private TestSuiteRunListener[] listeners;
-    private Set<TestCaseRunner> finishedRunners = new HashSet<TestCaseRunner>();
-    private Set<TestCaseRunner> activeRunners = new HashSet<TestCaseRunner>();
+    private Set<TestCaseRunner> finishedRunners = new HashSet<>();
+    private Set<TestCaseRunner> activeRunners = new HashSet<>();
     private int currentTestCaseIndex;
     private WsdlTestCase currentTestCase;
     private TestRunListener parallellTestRunListener = new ParallellTestRunListener();

@@ -41,7 +41,7 @@ public class XmlBeansSettingsImpl implements Settings {
     private final SettingsConfig config;
     private final Map<String, SettingConfig> values = Collections.synchronizedMap(new HashMap<String, SettingConfig>());
     private final Map<String, String> valueCache = Collections.synchronizedMap(new StringToStringMap());
-    private final Set<SettingsListener> listeners = new HashSet<SettingsListener>();
+    private final Set<SettingsListener> listeners = new HashSet<>();
     private final ModelItem item;
     private final SettingsListener settingsListener = new WeakSettingsListener(new InternalSettingsListener());
 

@@ -52,7 +52,7 @@ public class HttpPrefs implements Prefs {
     public static final String DISABLE_RESPONSE_DECOMPRESSION = "Disable Response Decompression";
     public static final String FORWARD_SLASHES = "Normalize Forward Slashes";
 
-    private static TreeMap<String, String> compressionAlgs = new TreeMap<String, String>();
+    private static TreeMap<String, String> compressionAlgs = new TreeMap<>();
 
     static {
         compressionAlgs.put("None", "None");

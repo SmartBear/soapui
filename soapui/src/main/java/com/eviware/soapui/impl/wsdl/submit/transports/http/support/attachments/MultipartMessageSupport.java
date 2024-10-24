@@ -42,7 +42,7 @@ import java.util.List;
  */
 
 public class MultipartMessageSupport {
-    private final List<BodyPartAttachment> attachments = new ArrayList<BodyPartAttachment>();
+    private final List<BodyPartAttachment> attachments = new ArrayList<>();
     private Attachment rootPart;
     private MimeMessage message;
     private String responseContent;
@@ -107,7 +107,7 @@ public class MultipartMessageSupport {
     }
 
     public Attachment[] getAttachmentsForPart(String partName) {
-        List<Attachment> results = new ArrayList<Attachment>();
+        List<Attachment> results = new ArrayList<>();
 
         for (Attachment attachment : attachments) {
             if (attachment.getPart().equals(partName)) {

@@ -86,7 +86,7 @@ public class HermesJmsRequestTransport implements RequestTransport {
     protected boolean sendAsBytesMessage;
     protected boolean addSoapAction;
     protected Hermes hermes;
-    protected static List<RequestFilter> filters = new ArrayList<RequestFilter>();
+    protected static List<RequestFilter> filters = new ArrayList<>();
 
     public Response sendRequest(SubmitContext submitContext, Request request) throws Exception {
         long timeStarted = Calendar.getInstance().getTimeInMillis();

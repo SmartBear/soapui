@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ClassUtils {
     public static List<Class<?>> getImplementedAndExtendedClasses(Object obj) {
-        ArrayList<Class<?>> result = new ArrayList<Class<?>>();
+        ArrayList<Class<?>> result = new ArrayList<>();
         addImplementedInterfacesFromSuperClass(obj.getClass(), result);
         return result;
     }

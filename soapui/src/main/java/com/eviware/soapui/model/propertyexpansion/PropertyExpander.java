@@ -51,8 +51,8 @@ import java.util.Map;
  */
 
 public class PropertyExpander implements SoapUIFactoryRegistryListener {
-    private List<PropertyResolver> propertyResolvers = new ArrayList<PropertyResolver>();
-    private static List<PropertyResolver> defaultResolvers = new ArrayList<PropertyResolver>();
+    private List<PropertyResolver> propertyResolvers = new ArrayList<>();
+    private static List<PropertyResolver> defaultResolvers = new ArrayList<>();
     private static PropertyExpander defaultExpander;
     private static boolean debuggingMode;
     private static Map<String, StringToStringMap> debuggingExpandedProperties;
@@ -78,7 +78,7 @@ public class PropertyExpander implements SoapUIFactoryRegistryListener {
 
         // WORKAROUND: eliminates a potential problem with a circular dependency between HttpClientSupport and this class
         ProxyUtils.setGlobalProxy(SoapUI.getSettings());
-        debuggingExpandedProperties = new HashMap<String, StringToStringMap>();
+        debuggingExpandedProperties = new HashMap<>();
     }
 
     public PropertyExpander(boolean addDefaultResolvers) {
@@ -111,7 +111,7 @@ public class PropertyExpander implements SoapUIFactoryRegistryListener {
         resolverFactories.put( factory, resolver );
     }
 
-    private Map<PropertyResolverFactory,PropertyResolver> resolverFactories = new HashMap<PropertyResolverFactory, PropertyResolver>();
+    private Map<PropertyResolverFactory,PropertyResolver> resolverFactories = new HashMap<>();
 
     public void removeResolverFactory( PropertyResolverFactory factory )
     {

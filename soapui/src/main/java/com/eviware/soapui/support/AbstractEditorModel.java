@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractEditorModel implements EditorModel {
-    private Set<EditorModelListener> listeners = new HashSet<EditorModelListener>();
+    private Set<EditorModelListener> listeners = new HashSet<>();
 
     public void addEditorModelListener(EditorModelListener editorModelListener) {
         listeners.add(editorModelListener);

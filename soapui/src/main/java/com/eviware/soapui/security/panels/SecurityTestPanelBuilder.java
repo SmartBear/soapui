@@ -42,7 +42,7 @@ public class SecurityTestPanelBuilder<T extends SecurityTest> extends EmptyPanel
     }
 
     public Component buildOverviewPanel(T modelItem) {
-        JPropertiesTable<SecurityTest> table = new JPropertiesTable<SecurityTest>("SecurityTest Properties", modelItem);
+        JPropertiesTable<SecurityTest> table = new JPropertiesTable<>("SecurityTest Properties", modelItem);
 
         table.addProperty("Name", "name", true);
 

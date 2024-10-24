@@ -122,20 +122,20 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
 
     public static <T extends ModelItem> SwingActionDelegate<T> createDelegate(SoapUIAction<T> action, T target,
                                                                               String keyStroke, String iconPath) {
-        return new SwingActionDelegate<T>(new StandaloneActionMapping<T>(action, keyStroke, iconPath), target);
+        return new SwingActionDelegate<>(new StandaloneActionMapping<T>(action, keyStroke, iconPath), target);
     }
 
     public static <T extends ModelItem> SwingActionDelegate<T> createDelegate(SoapUIAction<T> action, T target,
                                                                               String keyStroke) {
-        return new SwingActionDelegate<T>(new StandaloneActionMapping<T>(action, keyStroke), target);
+        return new SwingActionDelegate<>(new StandaloneActionMapping<T>(action, keyStroke), target);
     }
 
     public static <T extends ModelItem> SwingActionDelegate<T> createDelegate(SoapUIAction<T> action, T target) {
-        return new SwingActionDelegate<T>(new StandaloneActionMapping<T>(action), target);
+        return new SwingActionDelegate<>(new StandaloneActionMapping<T>(action), target);
     }
 
     public static <T extends ModelItem> SwingActionDelegate<T> createDelegate(SoapUIAction<T> action) {
-        return new SwingActionDelegate<T>(new StandaloneActionMapping<T>(action), null);
+        return new SwingActionDelegate<>(new StandaloneActionMapping<T>(action), null);
     }
 
     public static SwingActionDelegate<?> createDelegate(String soapUIActionId) {

@@ -97,7 +97,7 @@ public class JMSResponse implements WsdlResponse {
     }
 
     public String[] getPropertyNames() {
-        List<String> propertyNames = new ArrayList<String>();
+        List<String> propertyNames = new ArrayList<>();
         Enumeration<?> temp;
         try {
             if (messageReceive != null) {

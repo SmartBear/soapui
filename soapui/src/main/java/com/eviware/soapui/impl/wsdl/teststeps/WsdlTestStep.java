@@ -105,8 +105,8 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
         UISupport.setHourglassCursor();
 
         try {
-            List<MutablePropertyExpansion> result = new ArrayList<MutablePropertyExpansion>();
-            List<MutablePropertyExpansion> properties = new ArrayList<MutablePropertyExpansion>();
+            List<MutablePropertyExpansion> result = new ArrayList<>();
+            List<MutablePropertyExpansion> properties = new ArrayList<>();
 
             PropertyExpansion[] propertyExpansions = PropertyExpansionUtils.getPropertyExpansions(getTestCase(), true,
                     true);
@@ -170,7 +170,7 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
     }
 
     public Collection<Interface> getRequiredInterfaces() {
-        return new ArrayList<Interface>();
+        return new ArrayList<>();
     }
 
     public boolean isDisabled() {

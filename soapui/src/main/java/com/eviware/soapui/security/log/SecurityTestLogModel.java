@@ -91,7 +91,7 @@ public class SecurityTestLogModel extends AbstractListModel {
         int size = items.size();
         if (AbstractSecurityScan.isSecurable(testStep)) {
             SecurityTestStepResult result = new SecurityTestStepResult(testStep, null);
-            SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>(result);
+            SoftReference<SecurityResult> stepResultRef = new SoftReference<>(result);
             items.add("Step " + stepCount + " [" + result.getTestStep().getName() + "] ");
             results.add(stepResultRef);
 
@@ -135,7 +135,7 @@ public class SecurityTestLogModel extends AbstractListModel {
                     String statusToDisplay = getStatusToDisplay(result.getExecutionProgressStatus());
                     items.set(startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
                             + statusToDisplay + ": took " + result.getTimeTaken() + " ms");
-                    SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>(result);
+                    SoftReference<SecurityResult> stepResultRef = new SoftReference<>(result);
                     results.set(startStepIndex, stepResultRef);
                     fireContentsChanged(this, startStepIndex, startStepIndex);
                 }
@@ -175,7 +175,7 @@ public class SecurityTestLogModel extends AbstractListModel {
         requestCount = 0;
 
         SecurityScanResult securityCheckResult = securityCheck.getSecurityScanResult();
-        SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>(securityCheckResult);
+        SoftReference<SecurityResult> checkResultRef = new SoftReference<>(securityCheckResult);
 
         items.add("SecurityScan " + checkCount + " [" + securityCheck.getName() + "] ");
         results.add(checkResultRef);
@@ -222,7 +222,7 @@ public class SecurityTestLogModel extends AbstractListModel {
             try {
                 if (startCheckIndex > 0 && startCheckIndex < maxSize) {
                     items.set(startCheckIndex, outStr.toString());
-                    SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>(securityCheckResult);
+                    SoftReference<SecurityResult> checkResultRef = new SoftReference<>(securityCheckResult);
                     results.set(startCheckIndex, checkResultRef);
                     currentCheckEntriesCount = 0;
                     fireContentsChanged(this, startCheckIndex, startCheckIndex);
@@ -239,7 +239,7 @@ public class SecurityTestLogModel extends AbstractListModel {
         int size = items.size();
         requestCount++;
 
-        SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>(securityCheckRequestResult);
+        SoftReference<SecurityResult> checkReqResultRef = new SoftReference<>(securityCheckRequestResult);
 
         items.add(securityCheckRequestResult.getChangedParamsInfo(requestCount));
         results.add(checkReqResultRef);

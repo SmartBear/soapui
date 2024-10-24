@@ -37,8 +37,8 @@ import java.util.List;
  */
 
 public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource> implements PropertyChangeListener {
-    private List<RestResourceTreeNode> resourceNodes = new ArrayList<RestResourceTreeNode>();
-    private List<RestMethodTreeNode> methodNodes = new ArrayList<RestMethodTreeNode>();
+    private List<RestResourceTreeNode> resourceNodes = new ArrayList<>();
+    private List<RestMethodTreeNode> methodNodes = new ArrayList<>();
     private final RestResource restResource;
 
     private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();

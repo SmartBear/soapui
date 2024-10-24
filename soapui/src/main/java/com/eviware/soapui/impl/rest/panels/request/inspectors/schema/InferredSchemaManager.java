@@ -38,10 +38,10 @@ public class InferredSchemaManager {
     private static Map<String, String> rFilenames;
 
     static {
-        schemas = new HashMap<RestService, InferredSchema>();
-        propertyChangeSupports = new HashMap<RestService, PropertyChangeSupport>();
-        filenames = new HashMap<String, String>();
-        rFilenames = new HashMap<String, String>();
+        schemas = new HashMap<>();
+        propertyChangeSupports = new HashMap<>();
+        filenames = new HashMap<>();
+        rFilenames = new HashMap<>();
     }
 
     public static String filenameForNamespace(String namespace) {

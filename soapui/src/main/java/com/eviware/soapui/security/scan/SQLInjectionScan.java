@@ -65,7 +65,7 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties {
 
     private SQLInjectionScanConfig sqlInjectionConfig;
 
-    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
+    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<>();
 
     String[] defaultSqlInjectionStrings = {"' or '1'='1", "'--", "1'", "admin'--", "/*!10000%201/0%20*/",
             "/*!10000 1/0 */", "1/0", "'%20o/**/r%201/0%20--", "' o/**/r 1/0 --", ";", "'%20and%201=2%20--",

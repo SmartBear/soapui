@@ -70,7 +70,7 @@ import java.util.Map;
 public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDispatcher implements
         PropertyChangeListener {
     private MockOperationQueryMatchDispatchConfig conf;
-    private List<Query> queries = new ArrayList<Query>();
+    private List<Query> queries = new ArrayList<>();
     private PresentationModel<Query> queryDetailFormPresentationModel;
     private QueryItemListModel queryItemListModel;
     private JList itemList;
@@ -174,7 +174,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
     }
 
     protected Component buildQueryDetailComponent() {
-        queryDetailFormPresentationModel = new PresentationModel<Query>(null);
+        queryDetailFormPresentationModel = new PresentationModel<>(null);
         detailForm = new SimpleBindingForm(queryDetailFormPresentationModel);
 
         detailForm.setDefaultTextAreaRows(5);
@@ -210,7 +210,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
     public WsdlMockResponse selectMockResponse(MockRequest request, MockResult result)
             throws DispatchException {
-        Map<String, XmlCursor> cursorCache = new HashMap<String, XmlCursor>();
+        Map<String, XmlCursor> cursorCache = new HashMap<>();
 
         try {
             XmlObject xmlObject = request.getRequestXmlObject();

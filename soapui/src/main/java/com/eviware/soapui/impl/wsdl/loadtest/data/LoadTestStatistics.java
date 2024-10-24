@@ -84,7 +84,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 
     private boolean changed;
     private long updateFrequency = DEFAULT_SAMPLE_INTERVAL;
-    private Queue<SamplesHolder> samplesStack = new ConcurrentLinkedQueue<SamplesHolder>();
+    private Queue<SamplesHolder> samplesStack = new ConcurrentLinkedQueue<>();
     private long currentThreadCountStartTime;
     private long totalAverageSum;
     private boolean resetStatistics;
@@ -610,7 +610,7 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
         return result;
     }
 
-    private final static Map<Integer, Statistic> statisticIndexMap = new HashMap<Integer, Statistic>();
+    private final static Map<Integer, Statistic> statisticIndexMap = new HashMap<>();
 
     private Updater updater = new Updater();
 

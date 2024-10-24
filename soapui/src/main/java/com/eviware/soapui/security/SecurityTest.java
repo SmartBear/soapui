@@ -66,11 +66,11 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
     private WsdlTestCase testCase;
     private Set<SecurityTestRunListener> securityTestRunListeners = Collections
             .synchronizedSet(new HashSet<SecurityTestRunListener>());
-    private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
+    private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<>();
     private Map<TestStep, SecurityTestStepResult> securityTestStepResultMap;
 
-    private HashMap<String, List<SecurityScan>> securityScansMap = new HashMap<String, List<SecurityScan>>();
-    private ArrayList<SecurityTestListener> securityTestListeners = new ArrayList<SecurityTestListener>();
+    private HashMap<String, List<SecurityScan>> securityScansMap = new HashMap<>();
+    private ArrayList<SecurityTestListener> securityTestListeners = new ArrayList<>();
 
     private SecurityTestRunnerImpl runner;
     private SoapUIScriptEngine startupScriptEngine;
@@ -85,7 +85,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
         setPropertiesConfig(getConfig().getProperties());
 
-        securityTestStepResultMap = new LinkedHashMap<TestStep, SecurityTestStepResult>();
+        securityTestStepResultMap = new LinkedHashMap<>();
 
         for (SecurityTestRunListener listener : SoapUI.getListenerRegistry().getListeners(SecurityTestRunListener.class)) {
             addSecurityTestRunListener(listener);
@@ -181,7 +181,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
                 securityScansMap.get(testStepId).add(newSecScan);
             }
         } else {
-            List<SecurityScan> list = new ArrayList<SecurityScan>();
+            List<SecurityScan> list = new ArrayList<>();
             list.add(newSecScan);
             securityScansMap.put(testStepId, list);
         }
@@ -310,7 +310,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
         if (getConfig() != null) {
             if (!getConfig().getTestStepSecurityTestList().isEmpty()) {
                 for (TestStepSecurityTestConfig testStepSecurityTestListConfig : getConfig().getTestStepSecurityTestList()) {
-                    List<SecurityScan> scanList = new ArrayList<SecurityScan>();
+                    List<SecurityScan> scanList = new ArrayList<>();
                     if (testStepSecurityTestListConfig != null) {
                         if (!testStepSecurityTestListConfig.getTestStepSecurityScanList().isEmpty()) {
                             for (SecurityScanConfig secScanConfig : testStepSecurityTestListConfig
@@ -499,7 +499,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
     @SuppressWarnings("unchecked")
     public <T extends SecurityScan> List<T> getTestStepSecurityScanByType(String testStepId, Class<T> securityScanType) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (SecurityScan scan : getTestStepSecurityScans(testStepId)) {
             if (securityScanType.isAssignableFrom(scan.getClass())) {
                 result.add((T) scan);
@@ -644,7 +644,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
         if (securityTestStepRunListeners.containsKey(testStep)) {
             securityTestStepRunListeners.get(testStep).add(listener);
         } else {
-            Set<SecurityTestRunListener> listeners = new HashSet<SecurityTestRunListener>();
+            Set<SecurityTestRunListener> listeners = new HashSet<>();
             listeners.add(listener);
             securityTestStepRunListeners.put(testStep, listeners);
         }
@@ -665,7 +665,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
     @Override
     public List<? extends ModelItem> getChildren() {
-        List<ModelItem> result = new ArrayList<ModelItem>();
+        List<ModelItem> result = new ArrayList<>();
         Set<String> testStepIds = getSecurityScansMap().keySet();
         for (String testStepId : testStepIds) {
             List<SecurityScan> t = getSecurityScansMap().get(testStepId);
@@ -725,7 +725,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
      * @return boolean
      */
     public String[] getAvailableSecurityScanNames(TestStep testStep, String[] securityScanNames) {
-        List<String> availableNames = new ArrayList<String>();
+        List<String> availableNames = new ArrayList<>();
 
         for (int i = 0; i < securityScanNames.length; i++) {
             String name = securityScanNames[i];

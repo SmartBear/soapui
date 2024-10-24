@@ -113,7 +113,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
     public void setData(StringToStringMap data) {
         this.data = data == null ? new StringToStringMap() : data;
 
-        keyList = new ArrayList<String>(this.data.keySet());
+        keyList = new ArrayList<>(this.data.keySet());
         fireTableDataChanged();
     }
 }

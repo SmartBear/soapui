@@ -141,7 +141,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface> {
             boolean keepExisting = dialog.getBooleanValue(Form.KEEP_EXISTING);
             boolean keepHeaders = dialog.getBooleanValue(Form.KEEP_HEADERS);
 
-            List<ModelItem> updated = new ArrayList<ModelItem>();
+            List<ModelItem> updated = new ArrayList<>();
 
             updated.addAll(recreateRequests(iface, buildOptional, createBackups, keepExisting, keepHeaders));
 
@@ -167,7 +167,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface> {
                                                  boolean keepExisting, boolean keepHeaders) {
         int count = 0;
 
-        List<Request> result = new ArrayList<Request>();
+        List<Request> result = new ArrayList<>();
 
         // first check operations
         for (int c = 0; c < iface.getOperationCount(); c++) {
@@ -208,7 +208,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface> {
                                                                  boolean createBackups, boolean keepExisting, boolean keepHeaders) {
         int count = 0;
 
-        List<WsdlTestRequestStep> result = new ArrayList<WsdlTestRequestStep>();
+        List<WsdlTestRequestStep> result = new ArrayList<>();
 
         // now check testsuites..
         for (TestSuite testSuite : iface.getProject().getTestSuiteList()) {

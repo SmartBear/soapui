@@ -384,7 +384,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
     }
 
     public List<TestAssertion> getAssertionList() {
-        return new ArrayList<TestAssertion>(assertionsSupport.getAssertionList());
+        return new ArrayList<>(assertionsSupport.getAssertionList());
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {

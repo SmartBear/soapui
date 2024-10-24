@@ -43,7 +43,7 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest> {
     }
 
     public JPanel buildOverviewPanel(WsdlRequest request) {
-        JPropertiesTable<WsdlRequest> table = new JPropertiesTable<WsdlRequest>("Request Properties", request);
+        JPropertiesTable<WsdlRequest> table = new JPropertiesTable<>("Request Properties", request);
 
         // basic properties
         table.addProperty("Name", "name", true);

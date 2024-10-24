@@ -69,7 +69,7 @@ public class SampleXmlUtil {
     private boolean _soapEnc;
     private boolean _exampleContent = false;
     private boolean _typeComment = false;
-    private Set<QName> excludedTypes = new HashSet<QName>();
+    private Set<QName> excludedTypes = new HashSet<>();
     private Map<QName, String[]> multiValues = null;
     private boolean _skipComments;
 
@@ -1230,7 +1230,7 @@ public class SampleXmlUtil {
     public static final QName ENC_ARRAYTYPE = new QName("http://schemas.xmlsoap.org/soap/encoding/", "arrayType");
     private static final QName ENC_OFFSET = new QName("http://schemas.xmlsoap.org/soap/encoding/", "offset");
 
-    public static final Set<QName> SKIPPED_SOAP_ATTRS = new HashSet<QName>(Arrays.asList(new QName[]{HREF, ID,
+    public static final Set<QName> SKIPPED_SOAP_ATTRS = new HashSet<>(Arrays.asList(new QName[]{HREF, ID,
             ENC_OFFSET}));
 
     private void processAttributes(SchemaType stype, XmlCursor xmlc) {
@@ -1371,7 +1371,7 @@ public class SampleXmlUtil {
         return returnParticleType.toString();
     }
 
-    private ArrayList<SchemaType> _typeStack = new ArrayList<SchemaType>();
+    private ArrayList<SchemaType> _typeStack = new ArrayList<>();
 
     public boolean isIgnoreOptional() {
         return ignoreOptional;

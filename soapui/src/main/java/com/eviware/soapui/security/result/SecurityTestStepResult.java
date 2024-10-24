@@ -58,7 +58,7 @@ public class SecurityTestStepResult implements SecurityResult {
     public SecurityTestStepResult(TestStep testStep, TestStepResult originalResult) {
         this.testStep = testStep;
         executionProgressStatus = ResultStatus.INITIALIZED;
-        securityScanResultList = new ArrayList<SecurityScanResult>();
+        securityScanResultList = new ArrayList<>();
         timeStamp = System.currentTimeMillis();
         this.originalTestStepResult = originalResult;
     }

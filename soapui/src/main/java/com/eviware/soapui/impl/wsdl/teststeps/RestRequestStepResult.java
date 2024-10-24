@@ -310,7 +310,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
     @Override
     public void addAssertedXPath(AssertedXPath assertedXPath) {
         if (assertedXPaths == null) {
-            assertedXPaths = new ArrayList<AssertedXPath>();
+            assertedXPaths = new ArrayList<>();
         }
 
         assertedXPaths.add(assertedXPath);

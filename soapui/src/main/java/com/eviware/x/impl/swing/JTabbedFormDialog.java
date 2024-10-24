@@ -41,7 +41,7 @@ import java.util.List;
 
 public class JTabbedFormDialog extends SwingXFormDialog {
     private JDialog dialog;
-    private List<SwingXFormImpl> forms = new ArrayList<SwingXFormImpl>();
+    private List<SwingXFormImpl> forms = new ArrayList<>();
     private JTabbedPane tabs;
     private JButtonBar buttons;
 
@@ -80,7 +80,7 @@ public class JTabbedFormDialog extends SwingXFormDialog {
     }
 
     public XForm[] getForms() {
-        List<XForm> result = new ArrayList<XForm>();
+        List<XForm> result = new ArrayList<>();
         for (XForm form : forms) {
             result.add(form);
         }

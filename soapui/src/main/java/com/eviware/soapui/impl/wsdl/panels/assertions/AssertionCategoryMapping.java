@@ -53,7 +53,7 @@ public class AssertionCategoryMapping {
      */
     private static SortedSet<AssertionListEntry> createRecentlyUsedSet(Assertable assertable,
                                                                        RecentAssertionHandler recentAssertionHandler) {
-        SortedSet<AssertionListEntry> recentlyUsedSet = new TreeSet<AssertionListEntry>();
+        SortedSet<AssertionListEntry> recentlyUsedSet = new TreeSet<>();
 
         for (String name : recentAssertionHandler.get()) {
             String type = recentAssertionHandler.getAssertionTypeByName(name);
@@ -77,7 +77,7 @@ public class AssertionCategoryMapping {
      */
     public static LinkedHashMap<String, SortedSet<AssertionListEntry>> getCategoriesAssertionsMap(
             Assertable assertable, RecentAssertionHandler recentAssertionHandler) {
-        LinkedHashMap<String, SortedSet<AssertionListEntry>> categoriesAssertionsMap = new LinkedHashMap<String, SortedSet<AssertionListEntry>>();
+        LinkedHashMap<String, SortedSet<AssertionListEntry>> categoriesAssertionsMap = new LinkedHashMap<>();
 
         SortedSet<AssertionListEntry> recentlyUsedSet = createRecentlyUsedSet(assertable, recentAssertionHandler);
 

@@ -41,7 +41,7 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 
     @Override
     protected List<RestResource> getResourcesFor(RestResource item) {
-        List<RestResource> returnValue = new ArrayList<RestResource>();
+        List<RestResource> returnValue = new ArrayList<>();
         returnValue.add(item);
         returnValue.addAll(Arrays.asList(item.getAllChildResources()));
         return returnValue;

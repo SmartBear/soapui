@@ -46,7 +46,7 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
     public void setResponse(AMFResponse response, boolean useSoftReference) {
         if (useSoftReference) {
-            this.softResponse = new SoftReference<AMFResponse>(response);
+            this.softResponse = new SoftReference<>(response);
         } else {
             this.response = response;
         }

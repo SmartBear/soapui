@@ -50,7 +50,7 @@ public abstract class AbstractAddRequestToTestCaseAction<T extends AbstractHttpR
 
         Project targetProject = testCase.getTestSuite().getProject();
         if (targetProject != source.getOperation().getInterface().getProject()) {
-            HashSet<Interface> requiredInterfaces = new HashSet<Interface>();
+            HashSet<Interface> requiredInterfaces = new HashSet<>();
             requiredInterfaces.add(source.getOperation().getInterface());
 
             if (!DragAndDropSupport

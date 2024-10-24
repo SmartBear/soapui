@@ -43,7 +43,7 @@ public class MockResponseStepPanelBuilder extends EmptyPanelBuilder<WsdlMockResp
     }
 
     public Component buildOverviewPanel(WsdlMockResponseTestStep mockResponseStep) {
-        JPropertiesTable<WsdlMockResponseTestStep> table = new JPropertiesTable<WsdlMockResponseTestStep>(
+        JPropertiesTable<WsdlMockResponseTestStep> table = new JPropertiesTable<>(
                 "MockResponse Properties");
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);

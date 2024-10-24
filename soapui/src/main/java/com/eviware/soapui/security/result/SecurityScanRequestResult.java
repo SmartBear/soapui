@@ -41,7 +41,7 @@ public class SecurityScanRequestResult implements SecurityResult {
     public final static String TYPE = "SecurityScanRequestResult";
     private ResultStatus status = ResultStatus.UNKNOWN;
     private SecurityScan securityCheck;
-    private List<String> messages = new ArrayList<String>();
+    private List<String> messages = new ArrayList<>();
     private long timeTaken;
     private long startTime;
     private long timeStamp;

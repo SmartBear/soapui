@@ -60,7 +60,7 @@ public class AnnotatedSettingsPrefs implements Prefs {
     }
 
     public List<Setting> getSettings() {
-        ArrayList<Setting> settings = new ArrayList<Setting>();
+        ArrayList<Setting> settings = new ArrayList<>();
         for (Field field : settingsClass.getFields()) {
             Setting annotation = field.getAnnotation(Setting.class);
             if (annotation != null) {

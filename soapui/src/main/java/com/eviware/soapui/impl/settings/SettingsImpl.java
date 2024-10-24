@@ -32,7 +32,7 @@ import java.util.Set;
 public class SettingsImpl implements Settings {
     private final Settings parent;
     private final StringToStringMap values = new StringToStringMap();
-    private final Set<SettingsListener> listeners = new HashSet<SettingsListener>();
+    private final Set<SettingsListener> listeners = new HashSet<>();
 
     public SettingsImpl() {
         this(null);

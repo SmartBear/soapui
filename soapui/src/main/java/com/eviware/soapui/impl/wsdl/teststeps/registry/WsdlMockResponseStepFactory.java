@@ -92,7 +92,7 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
         WsdlMockResponseStepFactory.project = project;
 
         try {
-            List<Interface> interfaces = new ArrayList<Interface>();
+            List<Interface> interfaces = new ArrayList<>();
             for (Interface iface : project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE)) {
                 if (iface.getOperationCount() > 0) {
                     interfaces.add(iface);

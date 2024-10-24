@@ -42,7 +42,7 @@ public class RestMockResponsePanelBuilder extends EmptyPanelBuilder<RestMockResp
     }
 
     public Component buildOverviewPanel(WsdlMockResponse mockResponse) {
-        JPropertiesTable<WsdlMockResponse> table = new JPropertiesTable<WsdlMockResponse>("MockResponse Properties");
+        JPropertiesTable<WsdlMockResponse> table = new JPropertiesTable<>("MockResponse Properties");
         table.addProperty("Name", "name", true);
         table.addProperty("Description", "description", true);
         table.addProperty("Message Size", "contentLength", false);

@@ -38,7 +38,7 @@ import java.util.Map;
  */
 
 public class RestService extends AbstractInterface<RestServiceConfig> implements RestResourceContainer {
-    private List<RestResource> resources = new ArrayList<RestResource>();
+    private List<RestResource> resources = new ArrayList<>();
     private WadlDefinitionContext wadlContext;
     private boolean exportChanges = false;
 
@@ -75,7 +75,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
     }
 
     public List<Operation> getOperationList() {
-        return new ArrayList<Operation>(resources);
+        return new ArrayList<>(resources);
     }
 
     public String getBasePath() {
@@ -161,7 +161,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
     }
 
     public List<RestResource> getAllResources() {
-        List<RestResource> result = new ArrayList<RestResource>();
+        List<RestResource> result = new ArrayList<>();
         for (RestResource resource : resources) {
             addResourcesToResult(resource, result);
         }
@@ -170,7 +170,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
     }
 
     public Map<String, RestResource> getResources() {
-        Map<String, RestResource> result = new HashMap<String, RestResource>();
+        Map<String, RestResource> result = new HashMap<>();
 
         for (RestResource resource : getAllResources()) {
             result.put(resource.getFullPath(false), resource);
@@ -198,7 +198,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
     }
 
     public RestResource[] getResourcesByFullPath(String resourcePath) {
-        List<RestResource> result = new ArrayList<RestResource>();
+        List<RestResource> result = new ArrayList<>();
 
         for (RestResource resource : getAllResources()) {
             if (resource.getFullPath().equals(resourcePath)) {
@@ -261,7 +261,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
     }
 
     public List<RestResource> getResourceList() {
-        return new ArrayList<RestResource>(resources);
+        return new ArrayList<>(resources);
     }
 
     public boolean exportChanges() {

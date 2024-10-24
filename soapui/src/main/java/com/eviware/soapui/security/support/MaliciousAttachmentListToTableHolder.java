@@ -33,9 +33,9 @@ public class MaliciousAttachmentListToTableHolder {
     MaliciousAttachmentTableModel replaceTableModel;
     JFormDialog tablesDialog;
 
-    Map<String, List<MaliciousAttachmentConfig>> generateMap = new HashMap<String, List<MaliciousAttachmentConfig>>();
-    Map<String, List<MaliciousAttachmentConfig>> replaceMap = new HashMap<String, List<MaliciousAttachmentConfig>>();
-    Map<String, Boolean> removeMap = new HashMap<String, Boolean>();
+    Map<String, List<MaliciousAttachmentConfig>> generateMap = new HashMap<>();
+    Map<String, List<MaliciousAttachmentConfig>> replaceMap = new HashMap<>();
+    Map<String, Boolean> removeMap = new HashMap<>();
 
     public JFormDialog getTablesDialog() {
         return tablesDialog;
@@ -100,8 +100,8 @@ public class MaliciousAttachmentListToTableHolder {
     }
 
     private void save(AttachmentElement item) {
-        List<MaliciousAttachmentConfig> generateList = new ArrayList<MaliciousAttachmentConfig>();
-        List<MaliciousAttachmentConfig> replaceList = new ArrayList<MaliciousAttachmentConfig>();
+        List<MaliciousAttachmentConfig> generateList = new ArrayList<>();
+        List<MaliciousAttachmentConfig> replaceList = new ArrayList<>();
 
         for (int i = 0; i < generateTableModel.getRowCount(); i++) {
             generateList.add(generateTableModel.getRowValue(i));

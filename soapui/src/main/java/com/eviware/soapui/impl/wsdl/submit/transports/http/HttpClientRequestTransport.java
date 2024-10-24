@@ -75,7 +75,7 @@ import java.util.List;
  */
 
 public class HttpClientRequestTransport implements BaseHttpRequestTransport {
-    private List<RequestFilter> filters = new ArrayList<RequestFilter>();
+    private List<RequestFilter> filters = new ArrayList<>();
     public static final String USER_TOKEN_FOR_SSL = "http.user-token-ssl";
 
     public HttpClientRequestTransport() {

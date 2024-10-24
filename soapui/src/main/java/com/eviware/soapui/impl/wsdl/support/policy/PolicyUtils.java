@@ -44,7 +44,7 @@ public class PolicyUtils {
 
     public static List<Policy> getPolicies(WsdlContext wsdlContext) {
 
-        List<Policy> policies = new ArrayList<Policy>();
+        List<Policy> policies = new ArrayList<>();
         try {
             List<InterfaceDefinitionPart> parts = wsdlContext.getDefinitionCache().getDefinitionParts();
             for (int i = 0; i < parts.size(); i++) {
@@ -103,7 +103,7 @@ public class PolicyUtils {
     }
 
     public static List<Policy> getAddressingPolicies(WsdlContext wsdlContext) {
-        List<Policy> addressingPolicies = new ArrayList<Policy>();
+        List<Policy> addressingPolicies = new ArrayList<>();
         List<Policy> policies = getPolicies(wsdlContext);
         for (Policy policy : policies) {
             if (isAddressing(policy)) {

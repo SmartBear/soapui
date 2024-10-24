@@ -58,7 +58,7 @@ public class XPathInjectionSecurityScan extends AbstractSecurityScanWithProperti
 
     private XPathInjectionConfig xpathList;
 
-    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
+    private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<>();
 
     String[] defaultXPathInjectionStrings = {" or name(//users/LoginID[1]) = 'LoginID' or 'a'='b", "' or '1'='1",
             "1/0", "'%20o/**/r%201/0%20--", "' o/**/r 1/0 --", ";", "'%20and%201=2%20--", "' and 1=2 --",

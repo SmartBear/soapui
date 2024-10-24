@@ -59,7 +59,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher {
     private WsdlMockService mockService;
     private WsdlMockRunContext mockContext;
 
-    private final Map<String, StringToStringMap> wsdlCache = new HashMap<String, StringToStringMap>();
+    private final Map<String, StringToStringMap> wsdlCache = new HashMap<>();
     private final static Logger log = LogManager.getLogger(WsdlMockDispatcher.class);
 
 

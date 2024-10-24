@@ -46,8 +46,8 @@ public class ChooseAnotherPropertyTargetResolver implements Resolver {
     private boolean resolved;
     private PropertyTransfer badTransfer = null;
     private PropertyTransfersTestStep parent = null;
-    private ArrayList<Object> sources = new ArrayList<Object>();
-    private ArrayList<String[]> properties = new ArrayList<String[]>();
+    private ArrayList<Object> sources = new ArrayList<>();
+    private ArrayList<String[]> properties = new ArrayList<>();
 
     public ChooseAnotherPropertyTargetResolver(PropertyTransfer propertyTransfer, PropertyTransfersTestStep parent) {
         this.badTransfer = propertyTransfer;

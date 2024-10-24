@@ -66,9 +66,9 @@ public class OAuth2ScriptsEditor extends JPanel {
     static final String[] DEFAULT_SCRIPT_NAMES = {"Page 1 (e.g. login screen)", "Page 2 (e.g. consent screen)"};
     private static final String HELP_LINK_TEXT = "How to automate the process of getting an access token";
 
-    private List<InputPanel> inputPanels = new ArrayList<InputPanel>();
+    private List<InputPanel> inputPanels = new ArrayList<>();
     private InputPanel selectedInputField = null;
-    private List<RSyntaxTextArea> scriptFields = new ArrayList<RSyntaxTextArea>();
+    private List<RSyntaxTextArea> scriptFields = new ArrayList<>();
     private JavaScriptValidator javaScriptValidator = new JavaScriptValidator();
     private JPanel scriptsPanel;
     private JButton removeScriptButton;
@@ -103,7 +103,7 @@ public class OAuth2ScriptsEditor extends JPanel {
     }
 
     public List<String> getJavaScripts() {
-        List<String> scripts = new ArrayList<String>();
+        List<String> scripts = new ArrayList<>();
         for (RSyntaxTextArea scriptField : scriptFields) {
             scripts.add(scriptField.getText());
         }
@@ -319,14 +319,14 @@ public class OAuth2ScriptsEditor extends JPanel {
 
         private final List<String> expectedScripts;
         private boolean hasErrors = false;
-        private List<String> executedScripts = new ArrayList<String>();
+        private List<String> executedScripts = new ArrayList<>();
 
         public JavaScriptErrorReporter(List<String> automationJavaScripts) {
             this.expectedScripts = nonEmptyScriptsIn(automationJavaScripts);
         }
 
         private List<String> nonEmptyScriptsIn(List<String> scriptList) {
-            List<String> filteredList = new ArrayList<String>();
+            List<String> filteredList = new ArrayList<>();
             for (String script : scriptList) {
                 if (StringUtils.hasContent(script)) {
                     filteredList.add(script);

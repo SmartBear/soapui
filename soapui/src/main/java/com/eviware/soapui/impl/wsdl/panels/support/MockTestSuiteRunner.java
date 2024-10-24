@@ -31,7 +31,7 @@ public class MockTestSuiteRunner extends AbstractMockTestRunner<WsdlTestSuite> i
     }
 
     public List<TestCaseRunner> getResults() {
-        return new ArrayList<TestCaseRunner>();
+        return new ArrayList<>();
     }
 
     public TestSuite getTestSuite() {

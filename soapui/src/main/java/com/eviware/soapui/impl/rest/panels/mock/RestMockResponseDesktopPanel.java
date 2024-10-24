@@ -180,7 +180,7 @@ class CompleteHttpStatus {
 }
 
 class HttpStatusCodeComboBoxModel extends DefaultComboBoxModel {
-    private static Vector<CompleteHttpStatus> LIST_OF_CODES = new Vector<CompleteHttpStatus>();
+    private static Vector<CompleteHttpStatus> LIST_OF_CODES = new Vector<>();
 
     static {
         final String statusCodePrefix = "SC_";
