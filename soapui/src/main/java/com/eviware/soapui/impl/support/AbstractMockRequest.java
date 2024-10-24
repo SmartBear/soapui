@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.Util.ByteEncodingDetector;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 public abstract class AbstractMockRequest implements MockRequest {
@@ -175,11 +177,19 @@ public abstract class AbstractMockRequest implements MockRequest {
         int contentOffset = 0;
 
         String contentType = request.getContentType();
+        String dataContent;
+
         if (contentType != null && data.length > 0) {
             if (contentType.toLowerCase().endsWith("xml")) {
                 if (data.length > 3 && data[0] == (byte) 239 && data[1] == (byte) 187 && data[2] == (byte) 191) {
                     encoding = "UTF-8";
                     contentOffset = 3;
+                } else {
+                    //converting the original file encoding to UTF-8
+                    ByteEncodingDetector byteEncodingDetector = new ByteEncodingDetector();
+                    encoding = byteEncodingDetector.detectEncoding(data);
+                    dataContent = new String(data, encoding);
+                    data = dataContent.getBytes(StandardCharsets.UTF_8);
                 }
             }
 
