@@ -17,7 +17,7 @@
         </repository>
         <repository>
             <id>smartbear-dev</id>
-            <url>https://readyapinexus-internal.tools.ops.smartbear.io/nexus/content/repositories/smartbear-dev/</url>
+            <url>http://readyapinexus-internal.tools.ops.smartbear.io/nexus/content/repositories/smartbear-dev</url>
         </repository>
     </repositories>
     <pluginRepositories>
