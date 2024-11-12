@@ -17,15 +17,7 @@
         </repository>
         <repository>
             <id>smartbear-dev</id>
-            <name>smartbear-dev</name>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
             <url>https://readyapinexus-internal.tools.ops.smartbear.io/nexus/content/repositories/smartbear-dev/</url>
-            <layout>default</layout>
         </repository>
     </repositories>
     <pluginRepositories>
