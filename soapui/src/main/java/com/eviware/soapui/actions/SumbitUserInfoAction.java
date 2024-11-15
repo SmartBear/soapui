@@ -154,7 +154,7 @@ public class SumbitUserInfoAction {
             setBackgroundColor(jLeftPanel);
 
             JPanel jControlsPanel = new JPanel(new BorderLayout());
-            jControlsPanel.setBorder(new EmptyBorder(5, 2, 10, 35));
+            jControlsPanel.setBorder(new EmptyBorder(5, 2, 0, 35));
             setBackgroundColor(jControlsPanel);
             jControlsPanel.add(buildButtonsPanel(), BorderLayout.SOUTH);
             jControlsPanel.add(buildUserInfoPanel());
