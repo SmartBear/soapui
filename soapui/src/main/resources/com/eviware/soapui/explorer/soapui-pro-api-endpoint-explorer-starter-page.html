@@ -450,8 +450,11 @@
         }
 
         .re-main .re-request-item.re-request-info {
-
             -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            flex-grow: 1;
+            -webkit-flex-grow: 1;
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
@@ -746,7 +749,6 @@
             display: -webkit-box;
             display: -ms-flexbox;
             display: flex;
-            min-height: 320px;
             max-height: calc(100% - 13px);
             -webkit-box-orient: vertical;
             -webkit-box-direction: normal;
@@ -875,8 +877,8 @@
 
         .closeButton {
             float: right;
-            width: 68px;
-            height: 23px;
+            width: 72px;
+            height: 25px;
             border: 1px solid #6E6E6E;
             border-radius: 3px;
             background-image: -webkit-linear-gradient(to bottom, #FFFFFF, #E5E5E5);
@@ -898,7 +900,7 @@
         }
 
         .dontShowInscription {
-            margin-left: 2px;
+            margin-left: 4px;
             vertical-align: super;
         }
 
@@ -909,14 +911,17 @@
 
         .dontShowLabel {
             display: flex;
+            align-items: center;
         }
 
         .dontShowLabel, #dontShow {
             cursor: pointer;
+            transform: scale(1.2);
+            margin-left: 12px;
         }
 
         .labels {
-            margin-top: -105px;
+            margin-top: -120px;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
             font-size: 12px;
         }
