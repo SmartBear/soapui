@@ -91,7 +91,6 @@ public class SumbitUserInfoAction {
             setResizable(false);
             setUndecorated(true);
             setModal(true);
-            setSize(430, 270);
             setBackground(Color.WHITE);
 
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
@@ -104,7 +103,7 @@ public class SumbitUserInfoAction {
 
             JLabel jCaption = new JLabel("  " + DIALOG_CAPTION);
             jCaption.setOpaque(true);
-            jCaption.setPreferredSize(new Dimension(1000, 25));
+            jCaption.setPreferredSize(new Dimension(300, 25));
             jCaption.setBackground(new Color(166, 192, 229));
 
             String dialogDescription = DIALOG_DESCRIPTION +
@@ -117,12 +116,15 @@ public class SumbitUserInfoAction {
             jBasePanel.add(jBaseUserPanel);
 
             validEmailRegex = Pattern.compile(VALID_EMAIL_PATTERN);
+
+            pack();
         }
 
         private JPanel buildCaptionPanel(String titleStr, String descriptionStr) {
             JPanel jRoot = new JPanel(new BorderLayout());
             jRoot.setBorder(new EmptyBorder(10, 30, 0, 25));
             setBackgroundColor(jRoot);
+            jRoot.setPreferredSize(new Dimension(200, 100));
 
             title = new JLabel();
             setBackgroundColor(title);
@@ -154,7 +156,7 @@ public class SumbitUserInfoAction {
             setBackgroundColor(jLeftPanel);
 
             JPanel jControlsPanel = new JPanel(new BorderLayout());
-            jControlsPanel.setBorder(new EmptyBorder(5, 2, 0, 35));
+            jControlsPanel.setBorder(new EmptyBorder(5, 2, 10, 35));
             setBackgroundColor(jControlsPanel);
             jControlsPanel.add(buildButtonsPanel(), BorderLayout.SOUTH);
             jControlsPanel.add(buildUserInfoPanel());
