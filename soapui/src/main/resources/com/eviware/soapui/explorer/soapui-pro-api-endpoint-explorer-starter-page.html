@@ -1,5 +1,6 @@
 <html lang="eng">
 <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css"/>
@@ -374,6 +375,15 @@
             }, false);
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+            const rightAlignedTabs = document.querySelectorAll('.rightAlignedTab');
+            rightAlignedTabs.forEach(tab => {
+                tab.addEventListener('dragstart', function(event) {
+                    event.preventDefault();
+                });
+            });
+        });
+
 
     </script>
     <style>
@@ -398,6 +408,10 @@
 
         .re-main .re-request-item {
             margin: 7px 0 5px 0;
+        }
+
+        .re-request-item {
+            max-height: calc(100% - 10px);
         }
 
         .re-main .re-request-item label {
@@ -591,7 +605,6 @@
         .re-params-table-row.re-params-table-body {
             overflow-x: hidden;
             overflow-y: auto;
-            max-height: 150px;
         }
 
         .ui-tabs-panel.ui-widget-content#re-info-params-tab-3 {
@@ -881,6 +894,7 @@
             height: 25px;
             border: 1px solid #6E6E6E;
             border-radius: 3px;
+            background-image: linear-gradient(to bottom, #FFFFFF, #E5E5E5);
             background-image: -webkit-linear-gradient(to bottom, #FFFFFF, #E5E5E5);
             cursor: pointer;
         }
@@ -916,14 +930,13 @@
 
         .dontShowLabel, #dontShow {
             cursor: pointer;
-            transform: scale(1.2);
-            margin-left: 12px;
         }
 
         .labels {
             margin-top: -120px;
             font-family: "Open Sans Regular", "Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
             font-size: 12px;
+            z-index: 100;
         }
 
         .dontShowLabelContainer {
@@ -985,8 +998,9 @@
                             </li>
                             <li id="authHeadTab" class="rightAlignedTab">
                                 <a href="#re-info-params-tab-2"
-                                   onclick="inspectorCallback.exploreAPIClickAuthHeadersTab();return false;">Authentication
-                                    & Headers</a>
+                                   onclick="inspectorCallback.exploreAPIClickAuthHeadersTab();return false;">
+                                    Authentication & Headers
+                                </a>
                             </li>
                             <li id="bodyTab" class="rightAlignedTab">
                                 <a href="#re-info-params-tab-3"
