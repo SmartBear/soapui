@@ -1,9 +1,19 @@
-﻿# SoapUI Open Source 5.7.3
+﻿# SoapUI Open Source 5.8.1
 
 #### RELEASE_ME_ON ####
 
 ### Overall improvements ###
 
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.8.0
+
+#### Released on 2024-12-20 ####
+
+Upgrade to Java 17.0.12
+Updated libraries: GraphQL -> 22.3
+MacOS ARM native installer
+AES256 project encryption support
 -------------------------------------------------------------------------------
 
 # SoapUI Open Source 5.7.2

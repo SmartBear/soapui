@@ -11,8 +11,8 @@ currently being supported with security updates.
 
 | Version | Supported          | Notes                  |
 |---------| ------------------ | ---------------------- |
-| 5.7.2   | :white_check_mark: |                        |
-| <=5.7.1 | :x:                |                        |
+| 5.8.0   | :white_check_mark: |                        |
+| <=5.7.2 | :x:                |                        |
 
 ## Reporting a vulnerability
 
