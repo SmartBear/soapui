@@ -17,7 +17,19 @@
       <variable name="CERT_PATH" />
       <variable name="HERMES_INSTALLER" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsPkcs12File="${compiler:CERT_PATH}" />
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsPkcs12File="${compiler:CERT_PATH}" >
+      <macAdditionalBinaries>
+        <entry>*.dylib</entry>
+        <entry>*.so</entry>
+        <entry>*.jnilib</entry>
+        <entry>7zr-mac</entry>
+        <entry>*.exe</entry>
+      </macAdditionalBinaries>
+      <macSearchedJars>
+        <entry>javafx-*</entry>
+        <entry>jline-*</entry>
+      </macSearchedJars>
+    </codeSigning>
     <jreBundles jdkProviderId="Liberica" release="17/17.0.12+10" />
   </application>
   <files>
