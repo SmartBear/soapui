@@ -43,6 +43,7 @@
     <tns:action id="SwitchWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.SwitchWorkspaceAction"/>
     <tns:action id="RenameWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.RenameWorkspaceAction"/>
     <tns:action id="ClearWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.ClearWorkspaceAction"/>
+    <tns:action id="SwitchThemeAction" actionClass="com.eviware.soapui.actions.SwitchThemeAction"/>
 
     <!-- Project Actions -->
     <tns:action id="ReloadProjectAction"

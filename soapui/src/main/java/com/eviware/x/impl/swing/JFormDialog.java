@@ -16,6 +16,7 @@
 
 package com.eviware.x.impl.swing;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -33,6 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JComponent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog.ModalityType;
@@ -40,36 +42,61 @@ import java.awt.Dimension;
 import java.util.concurrent.CountDownLatch;
 
 public class JFormDialog extends SwingXFormDialog {
+    private static final Color DARK_BG = new Color(43, 43, 43);
+    private static final Color DARK_FG = Color.WHITE;
     private JDialog dialog;
     private SwingXFormImpl form;
     private JButtonBar buttons;
     private boolean resized;
     private ActionList actions;
     private JPanel panel;
+    private boolean isDarkmode;
 
     public JFormDialog(String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon) {
+        this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
         dialog = new JDialog(UISupport.getMainFrame(), name, true);
+        this.form = (SwingXFormImpl) form;
         dialog.setName(name);
+        JPanel panel = new JPanel(new BorderLayout());
+        if (this.isDarkmode) {
+            dialog.getContentPane().setBackground(DARK_BG);
+        }
+
         this.actions = actions;
         buttons = UISupport.initDialogActions(actions, dialog);
-        buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        JPanel panel = new JPanel(new BorderLayout());
-        this.form = (SwingXFormImpl) form;
-        panel.add((this.form.getPanel()), BorderLayout.CENTER);
+        if (this.isDarkmode) {
+            buttons.setBackground(DARK_BG);
+            buttons.setForeground(DARK_FG);
+            buttons.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(1, 0, 0, 0, DARK_BG),
+                    BorderFactory.createEmptyBorder(3, 5, 3, 5)));
+            panel.setBackground(DARK_BG);
+            panel.setForeground(DARK_FG);
+            this.form.getPanel().setBackground(DARK_BG);
+            this.form.getPanel().setForeground(DARK_FG);
+        } else {
+            buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+            buttons.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
+                            BorderFactory.createMatteBorder(1, 0, 0, 0, Color.WHITE)), BorderFactory.createEmptyBorder(3, 5,
+                            3, 5)));
+        }
+
+        panel.add(this.form.getPanel(), BorderLayout.CENTER);
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+        // Build and add the description (if provided) with a dark background
         if (description != null || icon != null) {
-            dialog.getContentPane().add(UISupport.buildDescription(name, description, icon), BorderLayout.NORTH);
+            JComponent descriptionComp = UISupport.buildDescription(name, description, icon);
+            if (isDarkmode) {
+                descriptionComp.setBackground(DARK_BG);
+                descriptionComp.setForeground(DARK_FG);
+                descriptionComp.setOpaque(true);
+            }
+            dialog.getContentPane().add(descriptionComp, BorderLayout.NORTH);
         }
 
         dialog.getContentPane().add(panel, BorderLayout.CENTER);
-
-        buttons
-                .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
-                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.WHITE)), BorderFactory.createEmptyBorder(3, 5,
-                        3, 5)));
-
         dialog.getContentPane().add(buttons, BorderLayout.SOUTH);
         this.panel = panel;
     }
