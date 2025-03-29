@@ -36,6 +36,7 @@ public class WorkspaceImplSoapUIActionGroup extends DefaultSoapUIActionGroup<Wor
         super(id, name);
     }
 
+    @Override
     public SoapUIActionMappingList<WorkspaceImpl> getActionMappings(WorkspaceImpl workspace) {
         SoapUIActionMappingList<WorkspaceImpl> mappings = super.getActionMappings(workspace);
 

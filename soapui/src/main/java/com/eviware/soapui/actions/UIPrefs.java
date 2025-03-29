@@ -27,8 +27,6 @@ import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.ToolTipManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Preferences class for UISettings
@@ -62,7 +60,6 @@ public class UIPrefs implements Prefs {
 
     private SimpleForm editorForm;
     private final String title;
-    private JCheckBox backupCheckBox;
     private JTextField backupFolder;
 
     public UIPrefs(String title) {
@@ -86,14 +83,10 @@ public class UIPrefs implements Prefs {
             editorForm.appendSeparator();
 
             editorForm.appendCheckBox(AUTOSAVE_ONEXIT, "Save all projects on exit", true);
-            backupCheckBox = editorForm.appendCheckBox(CREATE_BACKUP, "Backup project files before they are saved", true);
+            var backupCheckBox = editorForm.appendCheckBox(CREATE_BACKUP, "Backup project files before they are saved", true);
             backupFolder = editorForm.appendTextField(BACKUP_FOLDER,
                     "Folder to backup to (can be both relative or absolute)");
-            backupCheckBox.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    backupFolder.setEnabled(backupCheckBox.isSelected());
-                }
-            });
+            backupCheckBox.addActionListener(e -> backupFolder.setEnabled(backupCheckBox.isSelected()));
 
             editorForm.appendTextField(AUTOSAVE_INTERVAL,
                     "Sets the autosave interval in minutes (0 means autosave is off)");

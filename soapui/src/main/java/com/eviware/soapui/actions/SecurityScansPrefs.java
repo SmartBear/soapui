@@ -26,8 +26,6 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
@@ -48,6 +46,7 @@ public class SecurityScansPrefs implements Prefs {
 
             PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
                     SecurityScanUtil.getGlobalSensitiveInformationExposureTokens()) {
+                @Override
                 protected JTable buildPropertiesTable() {
                     propertiesModel = new DefaultPropertyHolderTableModel(holder) {
                         @Override
@@ -67,21 +66,19 @@ public class SecurityScansPrefs implements Prefs {
                     propertiesTable.setSurrendersFocusOnKeystroke(true);
 
                     propertiesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-                    propertiesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                        public void valueChanged(ListSelectionEvent e) {
-                            int selectedRow = propertiesTable.getSelectedRow();
-                            if (removePropertyAction != null) {
-                                removePropertyAction.setEnabled(selectedRow != -1);
-                            }
+                    propertiesTable.getSelectionModel().addListSelectionListener(e -> {
+                        int selectedRow = propertiesTable.getSelectedRow();
+                        if (removePropertyAction != null) {
+                            removePropertyAction.setEnabled(selectedRow != -1);
+                        }
 
-                            if (movePropertyUpAction != null) {
-                                movePropertyUpAction.setEnabled(selectedRow > 0);
-                            }
+                        if (movePropertyUpAction != null) {
+                            movePropertyUpAction.setEnabled(selectedRow > 0);
+                        }
 
-                            if (movePropertyDownAction != null) {
-                                movePropertyDownAction.setEnabled(selectedRow >= 0
-                                        && selectedRow < propertiesTable.getRowCount() - 1);
-                            }
+                        if (movePropertyDownAction != null) {
+                            movePropertyDownAction.setEnabled(selectedRow >= 0
+                                    && selectedRow < propertiesTable.getRowCount() - 1);
                         }
                     });
 
@@ -119,9 +116,10 @@ public class SecurityScansPrefs implements Prefs {
     }
 
     public void setFormValues(Settings settings) {
-
+        // not supported
     }
 
     public void storeValues(StringToStringMap values, Settings settings) {
+        // not supported
     }
 }

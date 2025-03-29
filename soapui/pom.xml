@@ -17,7 +17,7 @@
 
     <artifactId>soapui</artifactId>
     <name>SoapUI</name>
-    <url>http://www.soapui.org</url>
+    <url>https://www.soapui.org</url>
     <packaging>jar</packaging>
 
     <properties>
@@ -65,7 +65,7 @@
                 </executions>
                 <inherited>true</inherited>
                 <configuration>
-                    <javaSource>1.8</javaSource>
+                    <javaSource>17</javaSource>
                     <verbose>false</verbose>
                     <schemaDirectory>src/main/xsd</schemaDirectory>
                 </configuration>

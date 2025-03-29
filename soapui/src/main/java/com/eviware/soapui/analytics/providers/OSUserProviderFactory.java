@@ -5,7 +5,7 @@ import com.smartbear.analytics.api.ProductInfo;
 import com.smartbear.analytics.impl.SoapUIOSUserProviderFactory;
 
 public class OSUserProviderFactory extends SoapUIOSUserProviderFactory {
-    private ProductInfo productInfo;
+    private final ProductInfo productInfo;
 
     public OSUserProviderFactory(ProductInfo productInfo) {
         super(productInfo);

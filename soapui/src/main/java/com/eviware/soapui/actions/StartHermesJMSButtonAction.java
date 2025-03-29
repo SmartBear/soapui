@@ -66,16 +66,13 @@ public class StartHermesJMSButtonAction extends AbstractAction {
             env.put("JAVA_HOME", System.getProperty("java.home"));
             pb.start();
             Analytics.trackAction(USE_HERMES_JMS_TOOL);
-        } catch (Throwable t) {
-            SoapUI.logError(t);
+        } catch (Exception ex) {
+            SoapUI.logError(ex);
         }
     }
 
     private boolean isHermesHomeValid(String hermesHome) {
         File file = new File(hermesHome + File.separator + "bin" + File.separator + "hermes.bat");
-        if (file.exists()) {
-            return true;
-        }
-        return false;
+        return file.exists();
     }
 }

@@ -47,7 +47,7 @@ public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
             return;
         }
 
-        File newPath = null;
+        File newPath;
 
         if (param != null) {
             newPath = new File(param.toString());
@@ -56,8 +56,7 @@ public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     ".xml", "SoapUI Workspace (*.xml)", workspace.getPath());
         }
 
-        if (newPath != null) {
-            if (SoapUI.getDesktop().closeAll()) {
+        if (newPath != null && SoapUI.getDesktop().closeAll()) {
                 boolean save = true;
 
                 if (!newPath.exists()) {
@@ -67,14 +66,14 @@ public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     }
 
                     save = false;
-                } else if (workspace.getOpenProjectList().size() > 0) {
+                } else if (!workspace.getOpenProjectList().isEmpty()) {
                     Boolean val = UISupport.confirmOrCancel(messages.get("SwitchWorkspaceAction.SaveOpenProjects.Label"),
                             messages.get("SwitchWorkspaceAction.SaveOpenProjects.Title"));
                     if (val == null) {
                         return;
                     }
 
-                    save = val.booleanValue();
+                    save = val;
                 }
 
                 workspace.save(!save);
@@ -88,6 +87,6 @@ public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     UISupport.showErrorMessage(e);
                 }
             }
-        }
+
     }
 }

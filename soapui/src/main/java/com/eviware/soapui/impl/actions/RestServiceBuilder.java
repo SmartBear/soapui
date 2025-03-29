@@ -67,15 +67,15 @@ public class RestServiceBuilder {
         }
     }
 
-    public void createRestService(WsdlProject project, String URI) throws MalformedURLException {
-        if (StringUtils.isNullOrEmpty(URI)) {
+    public void createRestService(WsdlProject project, String uri) throws MalformedURLException {
+        if (StringUtils.isNullOrEmpty(uri)) {
             return;
         }
 
-        RestResource restResource = createResource(ModelCreationStrategy.CREATE_NEW_MODEL, project, URI);
+        RestResource restResource = createResource(ModelCreationStrategy.CREATE_NEW_MODEL, project, uri);
         RestRequest restRequest = addNewRequest(addNewMethod(ModelCreationStrategy.CREATE_NEW_MODEL,
                 restResource, RestRequestInterface.HttpMethod.GET));
-        copyParameters(extractParams(URI), restResource.getParams());
+        copyParameters(extractParams(uri), restResource.getParams());
         UISupport.select(restRequest);
         UISupport.showDesktopPanel(restRequest);
     }
@@ -89,14 +89,14 @@ public class RestServiceBuilder {
         return restRequest;
     }
 
-    public RestRequest createRestServiceWithMethod(WsdlProject project, String URI,
+    public RestRequest createRestServiceWithMethod(WsdlProject project, String uri,
                                                    RestRequestInterface.HttpMethod method,
                                                    boolean showDesktopPanel,
                                                    String requestName) throws MalformedURLException {
-        if (StringUtils.isNullOrEmpty(URI)) {
+        if (StringUtils.isNullOrEmpty(uri)) {
             throw new MalformedURLException("The URL is null or empty");
         }
-        RestResource restResource = createResource(REUSE_MODEL, project, URI);
+        RestResource restResource = createResource(REUSE_MODEL, project, uri);
         ModelCreationStrategy methodReuseStrategy = CREATE_NEW_MODEL;
         for (RestMethod restMethod : restResource.getRestMethodList()) {
             if (restMethod.getMethod() == method) {
@@ -110,7 +110,7 @@ public class RestServiceBuilder {
         } else {
             restRequest = addNewRequest(restMethod);
         }
-        copyParameters(extractParams(URI), restMethod.getParams());
+        copyParameters(extractParams(uri), restMethod.getParams());
         if (showDesktopPanel) {
             UISupport.select(restRequest);
             UISupport.showDesktopPanel(restRequest);
@@ -118,12 +118,12 @@ public class RestServiceBuilder {
         return restRequest;
     }
 
-    public RestRequest createRestServiceFromInspectionData(WsdlProject project, String URI,
+    public RestRequest createRestServiceFromInspectionData(WsdlProject project, String uri,
                                                            RestRequestInterface.HttpMethod method,
                                                            RequestInspectionData inspectionData,
                                                            boolean showDesktopPanel,
                                                            String requestName) throws MalformedURLException {
-        RestRequest restRequest = createRestServiceWithMethod(project, URI, method, showDesktopPanel, requestName);
+        RestRequest restRequest = createRestServiceWithMethod(project, uri, method, showDesktopPanel, requestName);
         if (inspectionData.getHeaders() != null) {
             applyHeaders(restRequest, inspectionData.getHeaders());
         }
@@ -133,23 +133,23 @@ public class RestServiceBuilder {
         return restRequest;
     }
 
-    protected RestParamsPropertyHolder extractParams(String URI) {
+    protected RestParamsPropertyHolder extractParams(String uri) {
         RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder(null,
                 RestParametersConfig.Factory.newInstance());
-        extractAndFillParameters(URI, params);
+        extractAndFillParameters(uri, params);
         return params;
     }
 
-    protected RestResource createResource(ModelCreationStrategy creationStrategy, WsdlProject project, String URI) throws MalformedURLException {
-        RestURIParser restURIParser = new RestURIParserImpl(URI);
+    protected RestResource createResource(ModelCreationStrategy creationStrategy, WsdlProject project, String uri) throws MalformedURLException {
+        RestURIParser restURIParser = new RestURIParserImpl(uri);
         String resourcePath = restURIParser.getResourcePath();
         String host = restURIParser.getEndpoint();
 
         RestService restService = null;
         if (creationStrategy == ModelCreationStrategy.REUSE_MODEL) {
             AbstractInterface<?> existingInterface = project.getInterfaceByName(host);
-            if (existingInterface instanceof RestService && ArrayUtils.contains(existingInterface.getEndpoints(), host)) {
-                restService = (RestService) existingInterface;
+            if (existingInterface instanceof RestService service && ArrayUtils.contains(existingInterface.getEndpoints(), host)) {
+                restService = service;
             }
         }
         if (restService == null) {
@@ -165,9 +165,9 @@ public class RestServiceBuilder {
         return restService.addNewResource(restURIParser.getResourceName(), resourcePath);
     }
 
-    protected void extractAndFillParameters(String URI, RestParamsPropertyHolder params) {
+    protected void extractAndFillParameters(String uri, RestParamsPropertyHolder params) {
         // This does lot of magic including extracting and filling up parameters on the params
-        RestUtils.extractParams(URI, params, false, RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS);
+        RestUtils.extractParams(uri, params, false, RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS);
     }
 
     //TODO: In advanced version we have to apply filtering like which type of parameter goes to which location

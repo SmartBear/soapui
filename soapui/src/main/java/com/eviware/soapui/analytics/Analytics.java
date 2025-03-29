@@ -9,6 +9,8 @@ public class Analytics {
     private static final String SOURCE_MODULE_PARAM_NAME = "SourceModule";
     private static final String PRODUCT_AREA_PARAM_NAME = "ProductArea";
 
+    private Analytics(){}
+
     public static void trackAction(SoapUIActions action) {
         trackAction(action, null);
     }

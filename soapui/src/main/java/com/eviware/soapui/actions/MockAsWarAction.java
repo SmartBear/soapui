@@ -28,7 +28,6 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.tools.MockAsWar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
@@ -40,8 +39,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
+    private static final Logger log = LogManager.getLogger(MockAsWarAction.class);
     private XFormDialog dialog;
-    private Logger log = LogManager.getLogger(MockAsWarAction.class);
 
     public MockAsWarAction() {
         super("Deploy As War", "Deploys Project MockServices as a WAR file");
@@ -59,9 +58,6 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
         }
 
         XFormField settingFile = getPreFilledSettings();
-
-        XFormField warFile = dialog.getFormField(MockAsWarDialog.WAR_FILE);
-
         String passwordForEncryption = project.getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
         project.getSettings().setString(ProjectSettings.SHADOW_PASSWORD, null);
 
@@ -111,11 +107,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
     private void buildDialog() {
         dialog = ADialogBuilder.buildDialog(MockAsWarDialog.class);
-        dialog.getFormField(MockAsWarDialog.GLOBAL_SETTINGS).addFormFieldListener(new XFormFieldListener() {
-            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                dialog.getFormField(MockAsWarDialog.SETTINGS_FILE).setEnabled(Boolean.valueOf(newValue));
-            }
-        });
+        dialog.getFormField(MockAsWarDialog.GLOBAL_SETTINGS).addFormFieldListener((sourceField, newValue, oldValue) -> dialog.getFormField(MockAsWarDialog.SETTINGS_FILE).setEnabled(Boolean.parseBoolean(newValue)));
 
         dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY).addFormFieldValidator(
                 new RequiredValidator("WAR Directory is required"));
@@ -124,30 +116,30 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
     @AForm(description = "Configure what to include in generated WAR", name = "Deploy Project as WAR", helpUrl = HelpUrls.MOCKASWAR_HELP_URL)
     protected interface MockAsWarDialog {
         @AField(description = "Specify if global settings should be included", name = "Include Global Settings", type = AFieldType.BOOLEAN)
-        public final static String GLOBAL_SETTINGS = "Include Global Settings";
+        String GLOBAL_SETTINGS = "Include Global Settings";
 
         @AField(description = "Specify Settings File", name = "Settings", type = AFieldType.FILE)
-        public final static String SETTINGS_FILE = "Settings";
+        String SETTINGS_FILE = "Settings";
 
         @AField(description = "Specify if action extensions should be included", name = "Include Actions", type = AFieldType.BOOLEAN)
-        public final static String ACTIONS = "Include Actions";
+        String ACTIONS = "Include Actions";
 
         @AField(description = "Specify if listener extensions should be included", name = "Include Listeners", type = AFieldType.BOOLEAN)
-        public final static String LISTENERS = "Include Listeners";
+        String LISTENERS = "Include Listeners";
 
         @AField(description = "Include jar files from ext folder", name = "Include External Jar Files", type = AFieldType.BOOLEAN)
-        public final static String EXT_LIBS = "Include External Jar Files";
+        String EXT_LIBS = "Include External Jar Files";
 
         @AField(description = "Check to enable WebUI", name = "WebUI", type = AFieldType.BOOLEAN)
-        public final static String ENABLE_WEBUI = "WebUI";
+        String ENABLE_WEBUI = "WebUI";
 
         @AField(description = "Local endpoint that will be used for WSDL endpoints/includes/imports", name = "MockService Endpoint", type = AFieldType.STRING)
-        public final static String MOCKSERVICE_ENDPOINT = "MockService Endpoint";
+        String MOCKSERVICE_ENDPOINT = "MockService Endpoint";
 
         @AField(description = "Specify name of target War File", name = "War File", type = AFieldType.FILE)
-        public final static String WAR_FILE = "War File";
+        String WAR_FILE = "War File";
 
         @AField(description = "Specify a directory where War file structure will be created", name = "War Directory", type = AFieldType.FOLDER)
-        public final static String WAR_DIRECTORY = "War Directory";
+        String WAR_DIRECTORY = "War Directory";
     }
 }

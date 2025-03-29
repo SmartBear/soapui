@@ -52,7 +52,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class XQueryXPathTesterAction extends AbstractAction {
     private JDialog dialog;
-    private JSplitPane mainSplit;
     private RSyntaxTextArea resultArea;
     private JSplitPane querySplit;
     private RSyntaxTextArea inputArea;
@@ -77,7 +76,7 @@ public class XQueryXPathTesterAction extends AbstractAction {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-        mainSplit = UISupport.createHorizontalSplit(createQueryPanel(), createResultPanel());
+        var mainSplit = UISupport.createHorizontalSplit(createQueryPanel(), createResultPanel());
         mainSplit.setResizeWeight(0.4);
         panel.add(mainSplit, BorderLayout.CENTER);
         panel.add(createStatusBar(), BorderLayout.SOUTH);
@@ -168,8 +167,6 @@ public class XQueryXPathTesterAction extends AbstractAction {
 
         public void actionPerformed(ActionEvent e) {
             try {
-                // XmlObject xmlObject = XmlObject.Factory.parse(
-                // inputArea.getText() );
                 XmlObject xmlObject = XmlUtils.createXmlObject(inputArea.getText());
                 XmlObject[] objects;
 
@@ -180,23 +177,22 @@ public class XQueryXPathTesterAction extends AbstractAction {
                     objects = xmlObject.selectPath(xpathArea.getText());
                 }
 
-                StringBuffer result = new StringBuffer();
+                StringBuilder result = new StringBuilder();
                 XmlOptions options = new XmlOptions();
                 options.setSaveOuter();
 
-                for (int c = 0; c < objects.length; c++) {
-
-                    result.append(objects[c].xmlText(options));
+                for (XmlObject object : objects) {
+                    result.append(object.xmlText(options));
                     result.append("\n");
                 }
 
                 resultArea.setText(result.toString());
                 statusLabel.setText("Expression returned " + objects.length + " hits");
             } catch (Throwable e1) {
-                if (e1 instanceof RuntimeException) {
-                    e1 = ((RuntimeException) e1).getCause();
-                    if (e1 instanceof InvocationTargetException) {
-                        e1 = ((InvocationTargetException) e1).getTargetException();
+                if (e1 instanceof RuntimeException runtimeException) {
+                    e1 = runtimeException.getCause();
+                    if (e1 instanceof InvocationTargetException invocationTargetException) {
+                        e1 = invocationTargetException.getTargetException();
                     }
                 }
 

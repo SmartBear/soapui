@@ -81,9 +81,9 @@ public class RestUriDialogHandler {
         dialog.setValue(uriLabelKey, exampleUri);
         XFormField uriField = dialog.getFormField(uriLabelKey);
 
-        if (uriField instanceof JTextFieldFormField) {
+        if (uriField instanceof JTextFieldFormField field) {
             defaultURIReplaced = false;
-            textField = ((JTextFieldFormField) uriField).getComponent();
+            textField = field.getComponent();
             textField.requestFocus();
             originalFont = textField.getFont();
             textField.setFont(originalFont.deriveFont(Font.ITALIC));

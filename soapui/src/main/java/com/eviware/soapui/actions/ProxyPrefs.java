@@ -30,8 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ProxyPrefs implements Prefs {
 
@@ -90,26 +88,15 @@ public class ProxyPrefs implements Prefs {
         none = createRadioButton("None", group, radioPanel);
         manual = createRadioButton("Manual", group, radioPanel);
         proxyPrefForm.append("Proxy Setting", radioPanel);
-        automatic.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                autoProxy = true;
-                setManualProxyTextFieldsEnabled(true, false);
-            }
+        automatic.addActionListener(e -> {
+            autoProxy = true;
+            setManualProxyTextFieldsEnabled(true, false);
         });
-        manual.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                autoProxy = false;
-                setManualProxyTextFieldsEnabled(true, true);
-            }
+        manual.addActionListener(e -> {
+            autoProxy = false;
+            setManualProxyTextFieldsEnabled(true, true);
         });
-        none.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setManualProxyTextFieldsEnabled(false, false);
-            }
-        });
+        none.addActionListener(e -> setManualProxyTextFieldsEnabled(false, false));
     }
 
     private JRadioButton createRadioButton(String text, ButtonGroup group, JPanel radioPanel) {

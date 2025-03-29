@@ -16,7 +16,9 @@
 
 package com.eviware.soapui.autoupdate;
 
-public interface SoapUIUpdateProvider {
+import java.io.Serializable;
+
+public interface SoapUIUpdateProvider extends Serializable {
     void start();
     void showUpdateStatus();
 }

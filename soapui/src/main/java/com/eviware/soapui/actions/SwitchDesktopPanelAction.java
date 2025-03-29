@@ -63,13 +63,10 @@ public class SwitchDesktopPanelAction extends AbstractAction {
                 }
 
                 private void initOnOpen() {
-                    SwingUtilities.invokeLater(new Runnable() {
-
-                        public void run() {
-                            desktopPanelsList.getDesktopPanelsList().requestFocus();
-                            if (desktopPanelsList.getDesktopPanels().size() > 0) {
-                                desktopPanelsList.getDesktopPanelsList().setSelectedIndex(0);
-                            }
+                    SwingUtilities.invokeLater(() -> {
+                        desktopPanelsList.getDesktopPanelsList().requestFocus();
+                        if (!desktopPanelsList.getDesktopPanels().isEmpty()) {
+                            desktopPanelsList.getDesktopPanelsList().setSelectedIndex(0);
                         }
                     });
                 }

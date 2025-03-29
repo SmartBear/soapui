@@ -26,7 +26,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import java.awt.Dimension;
 
 public class GlobalPropertiesPrefs implements Prefs {
-    public final static String ENABLE_OVERRIDE = "Enable Override";
+    public static final String ENABLE_OVERRIDE = "Enable Override";
     private SimpleForm globalPropertiesForm;
 
     public SimpleForm getForm() {

@@ -20,8 +20,8 @@ package com.eviware.soapui.autoupdate;
  * Created by avdeev on 19.08.2014.
  */
 public interface SoapUISystemProperties {
-    public final static String VERSION = "soapui.version";
-    public final static String SOAP_UI_UPDATE_URL = "http://dl.eviware.com/version-update/soapui-updates-os.xml";//http://resources.ej-technologies.com/install4j/help/doc/indexRedirect.html?http&&&resources.ej-technologies.com/install4j/help/doc/steps/installerGui/autoUpdateOptions.html
-    public final static String SOAP_UI_UPDATE_ADDITIONAL_URL = "http://dl.eviware.com/version-update/soapui-updates-additional.xml";
-    public final static String SOAP_UI_UPDATER_APP_ID = "4969";
+    String VERSION = "soapui.version";
+    String SOAP_UI_UPDATE_URL = "http://dl.eviware.com/version-update/soapui-updates-os.xml";//http://resources.ej-technologies.com/install4j/help/doc/indexRedirect.html?http&&&resources.ej-technologies.com/install4j/help/doc/steps/installerGui/autoUpdateOptions.html
+    String SOAP_UI_UPDATE_ADDITIONAL_URL = "http://dl.eviware.com/version-update/soapui-updates-additional.xml";
+    String SOAP_UI_UPDATER_APP_ID = "4969";
 }

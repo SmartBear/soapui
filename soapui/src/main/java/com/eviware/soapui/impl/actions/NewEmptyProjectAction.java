@@ -40,8 +40,8 @@ public class NewEmptyProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
         try {
             WsdlProject project = target.createProject(ModelItemNamer.createName("Project", target.getProjectList()), null);
             UISupport.selectAndShow(project);
-            if (param != null && param instanceof SoapUIActions) {
-                Analytics.trackAction((SoapUIActions) param);
+            if (param instanceof SoapUIActions actions) {
+                Analytics.trackAction(actions);
             }
         } catch (SoapUIException e) {
             UISupport.showErrorMessage(e);

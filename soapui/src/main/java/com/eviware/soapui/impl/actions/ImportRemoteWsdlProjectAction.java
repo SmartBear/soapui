@@ -47,7 +47,7 @@ public class ImportRemoteWsdlProjectAction extends AbstractSoapUIAction<Workspac
             String url = UISupport.prompt(messages.get("prompt.text"), messages.get("prompt.title"), "");
 
             if (url != null) {
-                WsdlProject project = (WsdlProject) workspace.importRemoteProject(url);
+                WsdlProject project = workspace.importRemoteProject(url);
                 if (project != null) {
                     UISupport.select(project);
                 }

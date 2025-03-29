@@ -31,19 +31,19 @@ public class MultiTestStepDisableAction extends AbstractSoapUIMultiAction<ModelI
 
     public void perform(ModelItem[] targets, Object param) {
         for (ModelItem target : targets) {
-            if (target instanceof WsdlTestStep) {
-                ((WsdlTestStep) target).setDisabled(true);
-            } else if (target instanceof WsdlTestCase) {
-                ((WsdlTestCase) target).setDisabled(true);
-            } else if (target instanceof WsdlTestSuite) {
-                ((WsdlTestSuite) target).setDisabled(true);
+            if (target instanceof WsdlTestStep wsdlTestStep) {
+                wsdlTestStep.setDisabled(true);
+            } else if (target instanceof WsdlTestCase wsdlTestCase) {
+                wsdlTestCase.setDisabled(true);
+            } else if (target instanceof WsdlTestSuite wsdlTestSuite) {
+                wsdlTestSuite.setDisabled(true);
             }
         }
     }
 
     public boolean applies(ModelItem target) {
-        return ((target instanceof WsdlTestStep) && !((WsdlTestStep) target).isDisabled())
-                || ((target instanceof WsdlTestCase) && !((WsdlTestCase) target).isDisabled())
-                || ((target instanceof WsdlTestSuite) && !((WsdlTestSuite) target).isDisabled());
+        return ((target instanceof WsdlTestStep wsdlTestStep) && !wsdlTestStep.isDisabled())
+                || ((target instanceof WsdlTestCase wsdlTestCase) && !wsdlTestCase.isDisabled())
+                || ((target instanceof WsdlTestSuite wsdlTestSuite) && !wsdlTestSuite.isDisabled());
     }
 }

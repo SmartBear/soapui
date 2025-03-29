@@ -201,9 +201,9 @@ public enum SoapUIActions {
     STAY_TUNED_DIALOG_SKIPPED("SkippedStayInLoopForm", null, NO),
     STAY_TUNED_DIALOG_ACCEPTED("CompletedStayInLoopForm", null, NO);
 
-    private String actionName;
-    private ModuleType moduleType;
-    private ProductArea productArea;
+    private final String actionName;
+    private final ModuleType moduleType;
+    private final ProductArea productArea;
     private final AnalyticsManager.Category category;
 
     SoapUIActions(String actionName, ModuleType moduleType, ProductArea productArea) {

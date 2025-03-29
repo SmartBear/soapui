@@ -52,8 +52,8 @@ public class SaveAllProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> i
     public void perform(WorkspaceImpl workspace, Object param) {
         SaveStatus status = workspace.save(false);
         if (status == SaveStatus.SUCCESS) {
-            if (param != null && param instanceof SoapUIActions) {
-                Analytics.trackAction((SoapUIActions) param);
+            if (param instanceof SoapUIActions actions) {
+                Analytics.trackAction(actions);
             } else {
                 Analytics.trackAction(SAVE_ALL_PROJECTS);
             }
@@ -65,6 +65,7 @@ public class SaveAllProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> i
     }
 
     public void projectChanged(Project project) {
+        // Not supportede
     }
 
     public void projectRemoved(Project project) {
@@ -76,13 +77,16 @@ public class SaveAllProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> i
     }
 
     public void workspaceSwitching(Workspace workspace) {
+        // Not supportede
     }
 
     @Override
     public void projectClosed(Project project) {
+        // Not supportede
     }
 
     @Override
     public void projectOpened(Project project) {
+        // Not supportede
     }
 }

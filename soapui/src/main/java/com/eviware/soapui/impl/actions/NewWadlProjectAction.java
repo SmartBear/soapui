@@ -71,7 +71,7 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
             try {
                 String projectName = createProjectName(dialog.getFormField(Form.INITIALWADL).getValue(), workspace.getProjectList());
 
-                if (projectName.length() == 0) {
+                if (projectName.isEmpty()) {
                     UISupport.showErrorMessage(messages.get("MissingProjectNameError"));
                 } else {
                     project = workspace.createProject(projectName, null);
@@ -80,7 +80,7 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                         UISupport.select(project);
                         String url = dialog.getValue(Form.INITIALWADL).trim();
 
-                        if (url.length() > 0) {
+                        if (!url.isEmpty()) {
                             if (new File(url).exists()) {
                                 url = new File(url).toURI().toURL().toString();
                             }
@@ -161,6 +161,6 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEW_WADL_PROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
     public interface Form {
         @AField(description = "Form.InitialWadl.Description", type = AField.AFieldType.FILE)
-        public final static String INITIALWADL = messages.get("Form.InitialWadl.Label");
+        String INITIALWADL = messages.get("Form.InitialWadl.Label");
     }
 }

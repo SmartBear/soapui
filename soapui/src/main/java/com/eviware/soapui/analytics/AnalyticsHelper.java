@@ -26,6 +26,8 @@ import com.smartbear.analytics.impl.SoapUIOSMixpanelProviderFactory;
 public class AnalyticsHelper {
     private static boolean initialized = false;
 
+    private AnalyticsHelper(){}
+
     public static void initializeAnalytics() {
         if (initialized) {
             return;

@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -44,7 +45,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
     }
 
     public void perform(WorkspaceImpl workspace, Object param) {
-        File file = null;
+        File file;
 
         if (param == null || param instanceof SoapUIActions) {
             file = UISupport.getFileDialogs().openXML(this, messages.get("prompt.title"));
@@ -57,7 +58,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
         }
 
         String fileName = file.getAbsolutePath();
-        if (fileName == null) {
+        if (StringUtils.isBlank(fileName)) {
             return;
         }
 
@@ -67,8 +68,8 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
             if (project != null) {
                 UISupport.select(project);
             }
-            if (param != null && param instanceof SoapUIActions) {
-                Analytics.trackAction((SoapUIActions) param);
+            if (param instanceof SoapUIActions actions) {
+                Analytics.trackAction(actions);
             } else {
                 Analytics.trackAction(SoapUIActions.IMPORT_PROJECT);
             }

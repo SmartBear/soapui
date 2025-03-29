@@ -22,7 +22,7 @@ public class SoapUIUpdateProviderStub implements SoapUIUpdateProvider {
 
     @Override
     public void start() {
-
+        // Default
     }
 
     @Override

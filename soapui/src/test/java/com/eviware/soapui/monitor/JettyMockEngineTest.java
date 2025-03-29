@@ -23,10 +23,13 @@ import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
 import java.lang.reflect.Field;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertFalse;
@@ -53,7 +56,7 @@ public class JettyMockEngineTest {
         SoapUI.getSettings().setString(SSLSettings.MOCK_KEYSTORE_PASSWORD, "abc");
         SoapUI.getSettings().setBoolean(HttpSettings.LEAVE_MOCKENGINE, false);
         SoapUI.getSettings().setBoolean(SSLSettings.ENABLE_MOCK_SSL, true);
-        SoapUI.getSettings().setLong(SSLSettings.MOCK_PORT, 8443);
+        SoapUI.getSettings().setLong(SSLSettings.MOCK_PORT, 12000);
 
         sut = new JettyMockEngine();
         when(mockRunner.getMockContext()).thenReturn(mockRunContext);
@@ -63,6 +66,12 @@ public class JettyMockEngineTest {
         addedSslConnectorField = JettyMockEngine.class.getDeclaredField("addedSslConnector");
         addedSslConnectorField.setAccessible(true);
         assertFalse("The sslConnector must not be added before starting the mockService.", (Boolean) addedSslConnectorField.get(sut));
+    }
+
+    @After
+    public void tearDown(){
+        sut.stopMockService(mockRunner);
+        Mockito.reset(mockRunner, mockRunContext, mockService);
     }
 
     @Test

@@ -40,8 +40,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -70,8 +68,8 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
     public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
     public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
     private SwingConfigurationDialogImpl dialog;
-    private List<Prefs> prefs = new ArrayList<Prefs>();
-    private Map<PrefsFactory, Prefs> prefsFactories = new HashMap<PrefsFactory, Prefs>();
+    private List<Prefs> prefs = new ArrayList<>();
+    private Map<PrefsFactory, Prefs> prefsFactories = new HashMap<>();
 
     private static SoapUIPreferencesAction instance;
     private DefaultListModel<String> prefsListModel;
@@ -162,7 +160,7 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
 
     public Prefs [] getPrefs()
     {
-        return prefs.toArray( new Prefs[prefs.size()]);
+        return prefs.toArray(new Prefs[0]);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -204,8 +202,8 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
                 "Set global SoapUI settings", UISupport.OPTIONS_ICON);
         dialog.setSize(new Dimension(1000, 700));
 
-        prefsListModel = new DefaultListModel<String>();
-        JList prefItems = new JList(prefsListModel);
+        prefsListModel = new DefaultListModel<>();
+        JList<String> prefItems = new JList<>(prefsListModel);
         prefItems.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         prefsPanel = new JPanel(new CardLayout());
 
@@ -213,13 +211,7 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
             addPrefToTabs(pref);
         }
 
-        prefItems.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                selectPrefs(prefsListModel.get(prefItems.getSelectedIndex()));
-            }
-        });
-
+        prefItems.addListSelectionListener(e -> selectPrefs(prefsListModel.get(prefItems.getSelectedIndex())));
         JSplitPane split = UISupport.createHorizontalSplit(new JScrollPane(prefItems), new JScrollPane(prefsPanel));
         split.setDividerLocation(250);
         split.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

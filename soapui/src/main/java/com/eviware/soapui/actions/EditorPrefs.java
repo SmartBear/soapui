@@ -30,7 +30,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Preferences class for UISettings
@@ -51,7 +50,6 @@ public class EditorPrefs implements Prefs {
     private SimpleForm editorForm;
     private final String title;
     private JCheckBox abortCheckBox;
-    private JCheckBox autoValidateCheckBox;
 
     public EditorPrefs(String title) {
         this.title = title;
@@ -90,17 +88,12 @@ public class EditorPrefs implements Prefs {
             editorForm.appendCheckBox(START_WITH_REQUEST_TABS, "Defaults the Request editor to the tabbed layout", true);
             editorForm.appendSeparator();
 
-            autoValidateCheckBox = editorForm.appendCheckBox(AUTO_VALIDATE_REQUEST,
+            var autoValidateCheckBox = editorForm.appendCheckBox(AUTO_VALIDATE_REQUEST,
                     "Always validate request messages before they are sent", true);
             abortCheckBox = editorForm.appendCheckBox(ABORT_ON_INVALID_REQUEST, "Abort invalid requests", true);
             editorForm.appendCheckBox(AUTO_VALIDATE_RESPONSE, "Always validate response messages", true);
 
-            autoValidateCheckBox.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-                    abortCheckBox.setEnabled(autoValidateCheckBox.isSelected());
-                }
-            });
+            autoValidateCheckBox.addActionListener(e -> abortCheckBox.setEnabled(autoValidateCheckBox.isSelected()));
         }
 
         return editorForm;

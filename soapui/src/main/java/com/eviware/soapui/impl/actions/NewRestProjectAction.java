@@ -43,9 +43,9 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     private static final MessageSupport messages = MessageSupport.getMessages(NewRestProjectAction.class);
 
 
-    private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
+    private final RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
     private XFormDialog dialog;
-    private RestServiceBuilder serviceBuilder = new RestServiceBuilder();
+    private final RestServiceBuilder serviceBuilder = new RestServiceBuilder();
 
 
     public NewRestProjectAction() {
@@ -70,8 +70,8 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                     serviceBuilder.createRestService(project, uri);
                 }
                 // If there is no exception or error we break out
-                if (param != null && param instanceof SoapUIActions) {
-                    Analytics.trackAction((SoapUIActions) param);
+                if (param instanceof SoapUIActions actions) {
+                    Analytics.trackAction(actions);
                 }
                 break;
 

@@ -32,7 +32,7 @@ public enum SoapUIFeatures {
     USE_SOAP_UI("UseSoapUI"),
     TOOL("Tool");
 
-    private String featureName;
+    private final String featureName;
 
     SoapUIFeatures(String featureName) {
         this.featureName = featureName;

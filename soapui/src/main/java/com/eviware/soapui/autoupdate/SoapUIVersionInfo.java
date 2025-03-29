@@ -17,7 +17,6 @@
 package com.eviware.soapui.autoupdate;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUICore;
 
 import java.util.Comparator;
 
@@ -29,7 +28,7 @@ public class SoapUIVersionInfo implements Comparator<SoapUIVersionInfo> {
     private int majorVersion;
     private int minorVersion;
     private int middleVersion;
-    private String asString;
+    private final String asString;
 
     public SoapUIVersionInfo(int majorVersion, int middleVersion, int minorVersion) {
         this.majorVersion = majorVersion;
@@ -104,13 +103,9 @@ public class SoapUIVersionInfo implements Comparator<SoapUIVersionInfo> {
             return false;
         }
 
-        if (getMajorVersion() == ver.getMajorVersion() &&
-                getMiddleVersion() == ver.getMiddleVersion() &&
-                getMinorVersion() == ver.getMinorVersion()) {
-            return true;
-        }
-
-        return false;
+      return getMajorVersion() == ver.getMajorVersion() &&
+          getMiddleVersion() == ver.getMiddleVersion() &&
+          getMinorVersion() == ver.getMinorVersion();
     }
 
     @Override

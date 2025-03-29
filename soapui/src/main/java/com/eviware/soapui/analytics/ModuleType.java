@@ -8,9 +8,9 @@ public enum ModuleType {
     SERVICE_V("ServiceV", "ServiceVirtualizationModule", "Virtual APIs for mocking responses and behavior"),
     SECURE("Secure", "SecurityModule", "Vulnerability testing with a wide range of security scans");
 
-    private String name;
-    private String id;
-    private String description;
+    private final String name;
+    private final String id;
+    private final String description;
 
     ModuleType(String name, String id, String description) {
         this.name = name;
@@ -37,9 +37,6 @@ public enum ModuleType {
                 return moduleType;
             }
             if (name.equalsIgnoreCase(moduleType.toString())) {
-                return moduleType;
-            }
-            if (name.equalsIgnoreCase(moduleType.getId())) {
                 return moduleType;
             }
         }

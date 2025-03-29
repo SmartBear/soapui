@@ -72,7 +72,7 @@ public class NewWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
 
             Boolean val = Boolean.TRUE;
 
-            if (workspace.getOpenProjectList().size() > 0) {
+            if (!workspace.getOpenProjectList().isEmpty()) {
                 val = UISupport.confirmOrCancel(messages.get("SaveAllProjects.Prompt"),
                         messages.get("SaveAllProjects.Title"));
                 if (val == null) {
@@ -80,7 +80,7 @@ public class NewWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
                 }
             }
 
-            workspace.save(val.booleanValue());
+            workspace.save(val);
 
             try {
                 workspace.switchWorkspace(newPath);

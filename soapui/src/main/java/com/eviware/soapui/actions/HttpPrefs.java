@@ -22,6 +22,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -52,12 +53,12 @@ public class HttpPrefs implements Prefs {
     public static final String DISABLE_RESPONSE_DECOMPRESSION = "Disable Response Decompression";
     public static final String FORWARD_SLASHES = "Normalize Forward Slashes";
 
-    private static TreeMap<String, String> compressionAlgs = new TreeMap<String, String>();
+    private static final Map<String, String> COMPRESSION_ALGS = new TreeMap<>();
 
     static {
-        compressionAlgs.put("None", "None");
-        compressionAlgs.put(CompressionSupport.ALG_GZIP, "GZIP");
-        compressionAlgs.put(CompressionSupport.ALG_DEFLATE, "DEFLATE");
+        COMPRESSION_ALGS.put("None", "None");
+        COMPRESSION_ALGS.put(CompressionSupport.ALG_GZIP, "GZIP");
+        COMPRESSION_ALGS.put(CompressionSupport.ALG_DEFLATE, "DEFLATE");
     }
 
     private SimpleForm httpForm;
@@ -75,7 +76,7 @@ public class HttpPrefs implements Prefs {
                     HttpSettings.HTTP_VERSION_1_0}, "Select HTTP Version to use");
             httpForm.appendTextField(HttpPrefs.USER_AGENT_HEADER,
                     "User-Agent HTTP header to send, blank will send default");
-            httpForm.appendComboBox(HttpPrefs.REQUEST_COMPRESSION, compressionAlgs);
+            httpForm.appendComboBox(HttpPrefs.REQUEST_COMPRESSION, COMPRESSION_ALGS);
             httpForm.appendCheckBox(HttpPrefs.RESPONSE_COMPRESSION, "Accept compressed responses from hosts", true);
             httpForm.appendCheckBox(HttpPrefs.DISABLE_RESPONSE_DECOMPRESSION,
                     "Disable decompression of compressed responses", true);
@@ -152,7 +153,7 @@ public class HttpPrefs implements Prefs {
         httpValues.put(CHUNKING_THRESHOLD, settings.getString(HttpSettings.CHUNKING_THRESHOLD, null));
         httpValues.put(USER_AGENT_HEADER, settings.getString(HttpSettings.USER_AGENT, null));
         httpValues.put(REQUEST_COMPRESSION,
-                compressionAlgs.get(settings.getString(HttpSettings.REQUEST_COMPRESSION, "None")));
+                COMPRESSION_ALGS.get(settings.getString(HttpSettings.REQUEST_COMPRESSION, "None")));
         httpValues.put(RESPONSE_COMPRESSION, settings.getString(HttpSettings.RESPONSE_COMPRESSION, null));
         httpValues.put(DISABLE_RESPONSE_DECOMPRESSION,
                 settings.getString(HttpSettings.DISABLE_RESPONSE_DECOMPRESSION, null));

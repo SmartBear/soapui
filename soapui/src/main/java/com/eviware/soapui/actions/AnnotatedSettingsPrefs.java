@@ -38,7 +38,7 @@ import java.util.List;
 
 public class AnnotatedSettingsPrefs implements Prefs {
     private SimpleForm simpleForm;
-    private Class<?> settingsClass;
+    private final Class<?> settingsClass;
     private final String title;
 
     public AnnotatedSettingsPrefs(Class<?> settingsClass, String title) {
@@ -60,7 +60,7 @@ public class AnnotatedSettingsPrefs implements Prefs {
     }
 
     public List<Setting> getSettings() {
-        ArrayList<Setting> settings = new ArrayList<Setting>();
+        List<Setting> settings = new ArrayList<>();
         for (Field field : settingsClass.getFields()) {
             Setting annotation = field.getAnnotation(Setting.class);
             if (annotation != null) {
@@ -144,9 +144,7 @@ public class AnnotatedSettingsPrefs implements Prefs {
             if (annotation != null) {
                 try {
                     settings.setString(field.get(null).toString(), values.get(annotation.name()));
-                } catch (IllegalArgumentException e) {
-                    SoapUI.logError(e);
-                } catch (IllegalAccessException e) {
+                } catch (IllegalArgumentException | IllegalAccessException e) {
                     SoapUI.logError(e);
                 }
             }
