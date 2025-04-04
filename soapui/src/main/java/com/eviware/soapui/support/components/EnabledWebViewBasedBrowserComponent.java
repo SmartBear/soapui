@@ -27,6 +27,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -314,12 +315,10 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
                 getWebEngine().load(url);
             }
         });
-
     }
 
     private void loadUrl(final String url) {
         Platform.runLater(() -> {
-
             getWebEngine().load(url);
         });
         this.url = url;
@@ -393,13 +392,21 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
     private class WebViewInitialization implements Runnable {
 
+        private boolean isDarkmode;
         public WebViewInitialization(JFXPanel browserPanel) {
+            this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
             EnabledWebViewBasedBrowserComponent.this.browserPanel = browserPanel;
         }
 
         public void run() {
             webView = new WebView();
-
+            if (this.isDarkmode) {
+                webView.setStyle("-fx-background-color: black;");
+                String darkModeCSS =
+                        "html,img,a,video {filter: invert(1) hue-rotate(180deg);}";
+                webView.getEngine().setUserStyleSheetLocation("data:text/css," +
+                        darkModeCSS.replace("\n", "").replace(" ", "%20"));
+            }
             createPopupHandler();
             listenForLocationChanges();
             listenForStateChanges();
@@ -414,6 +421,9 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
         private Scene createJfxScene() {
             Group jfxComponentGroup = new Group();
             Scene scene = new Scene(jfxComponentGroup);
+            if (this.isDarkmode) {
+                scene.setFill(Color.BLACK);
+            }
             webView.prefWidthProperty().bind(scene.widthProperty());
             webView.prefHeightProperty().bind(scene.heightProperty());
             jfxComponentGroup.getChildren().add(webView);

@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.support.editor.views.xml.source;
@@ -100,6 +100,7 @@ import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorView<XmlDocument> {
     private static final String RSYNTAXAREA_THEME = "/rsyntaxarea-theme/soapui.xml";
+    private static final String RSYNTAXAREA_DARK_THEME = "/rsyntaxarea-theme/soapui-dark.xml";
 
     private RSyntaxTextArea editArea;
     private RTextScrollPane editorScrollPane;
@@ -123,6 +124,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
     private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
     private FindAndReplaceDialogView findAndReplaceDialog;
     private final boolean readOnly;
+    private boolean isDarkmode;
 
     public XmlSourceEditorView(XmlEditor<XmlDocument> xmlEditor, T modelItem, boolean readOnly) {
         this(xmlEditor, modelItem, readOnly, "XML");
@@ -132,13 +134,14 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         super(tabTitle, xmlEditor, XmlSourceEditorViewFactory.VIEW_ID);
         this.modelItem = modelItem;
         this.readOnly = readOnly;
+        this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
     }
 
     protected void buildUI() {
         editArea = new RSyntaxTextArea(20, 60);
 
         try {
-            Theme theme = Theme.load(XmlSourceEditorView.class.getResourceAsStream(RSYNTAXAREA_THEME));
+            Theme theme = Theme.load(XmlSourceEditorView.class.getResourceAsStream(this.isDarkmode ? this.RSYNTAXAREA_DARK_THEME : this.RSYNTAXAREA_THEME));
             theme.apply(editArea);
         } catch (IOException e) {
             SoapUI.logError(e, "Could not load XML editor color theme file");
@@ -152,7 +155,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         editArea.setCaretPosition(0);
         editArea.setEnabled(!readOnly);
         editArea.setEditable(!readOnly);
-        editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.WHITE));
+        editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, this.isDarkmode ? Color.BLACK : Color.WHITE));
 
         errorListModel = new DefaultListModel();
         JList list = new JList(errorListModel);
