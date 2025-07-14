@@ -1,8 +1,16 @@
-﻿# SoapUI Open Source 5.8.1
+﻿# SoapUI Open Source 5.9.1
 
 #### RELEASE_ME_ON ####
 
 ### Overall improvements ###
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.9.0
+
+#### Released on 2025-07-16 ####
+
+Fix content-type check for XML.
 
 -------------------------------------------------------------------------------
 
