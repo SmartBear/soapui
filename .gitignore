@@ -15,3 +15,6 @@ target/
 # plugin / extension folders
 soapui/ext
 soapui/plugins
+
+# vscode
+.vscode
