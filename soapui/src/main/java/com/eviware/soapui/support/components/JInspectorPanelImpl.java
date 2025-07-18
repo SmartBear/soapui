@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.SoapUI;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 
@@ -55,6 +56,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
     public Inspector currentInspector;
 
     private final int orientation;
+    private boolean isDarkmode;
 
     public JInspectorPanelImpl(JComponent contentComponent) {
         this(contentComponent, SwingConstants.BOTTOM);
@@ -62,6 +64,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 
     public JInspectorPanelImpl(JComponent contentComponent, int orientation) {
         super(new BorderLayout());
+        this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
         this.orientation = orientation;
 
         inspectorPanel = new JPanel(new CardLayout());
@@ -71,13 +74,16 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
                 orientation == SwingConstants.LEFT || orientation == SwingConstants.RIGHT ? JSplitPane.HORIZONTAL_SPLIT
                         : JSplitPane.VERTICAL_SPLIT);
         BasicSplitPaneUI basic = (BasicSplitPaneUI) mainSplit.getUI();
-        basic.getDivider().setBorder(new LineBorder(Color.WHITE, 1) {
+        basic.getDivider().setBorder(new LineBorder(this.isDarkmode ? new Color(100, 100, 100) : Color.LIGHT_GRAY, 1) {
             @Override
             public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-                g.setColor(Color.LIGHT_GRAY);
-                g.drawLine(c.getWidth() - 1, 0, c.getWidth() - 1, c.getHeight());
+                g.setColor(isDarkmode ? new Color(100, 100, 100) : Color.LIGHT_GRAY);
+                if (orientation == SwingConstants.BOTTOM || orientation == SwingConstants.TOP) {
+                    g.drawLine(0, 0, c.getWidth(), 0);
+                } else {
+                    g.drawLine(c.getWidth() - 1, 0, c.getWidth() - 1, c.getHeight());
+                }
             }
-
         });
         mainSplit.setDividerSize(5);
         mainSplit.setBorder(null);
@@ -93,10 +99,10 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
             mainSplit.setRightComponent(contentComponent);
             JPanel p = new JPanel(new BorderLayout());
             p.add(toolbar);
-            p.setBorder(new LineBorder(Color.WHITE, 1) {
+            p.setBorder(new LineBorder(this.isDarkmode ? new Color(100, 100, 100) : Color.LIGHT_GRAY, 1) {
                 @Override
                 public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-                    g.setColor(Color.LIGHT_GRAY);
+                    g.setColor(isDarkmode ? new Color(100, 100, 100) : Color.LIGHT_GRAY);
                     g.drawLine(c.getWidth() - 1, 0, c.getWidth() - 1, c.getHeight());
                 }
             });
@@ -110,6 +116,15 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 
             JPanel p = new JPanel(new BorderLayout());
             p.add(toolbar);
+
+            // Apply dark mode styling to the right panel border
+            if (isDarkmode) {
+                p.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 1));
+                p.setBackground(new Color(60, 63, 65));
+            } else {
+                p.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+            }
+
             toolbar.setBorder(BorderFactory.createEmptyBorder(2, 1, 0, 3));
             mainSplit.setRightComponent(inspectorPanel);
             mainSplit.setResizeWeight(0.8);
@@ -126,6 +141,17 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
             public Dimension getMinimumSize() {
                 return new Dimension(10, 10);
             }
+
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (isDarkmode) {
+                    g.setColor(new Color(60, 63, 65)); // Dark background color
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                    g.setColor(Color.DARK_GRAY); // Subtle separation line color
+                    g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+                }
+            }
         };
 
         inspectToolbar.setFloatable(false);
@@ -136,7 +162,14 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
         if (orientation == SwingConstants.TOP || orientation == SwingConstants.BOTTOM) {
             inspectToolbar.addSpace(10);
         }
-        inspectToolbar.setBackground(Color.WHITE);
+
+        // Apply dark theme background if enabled
+        if (isDarkmode) {
+            inspectToolbar.setBackground(new Color(60, 63, 65));
+        } else {
+            inspectToolbar.setBackground(Color.WHITE);
+        }
+
         inspectToolbar.setOpaque(true);
         return inspectToolbar;
     }
@@ -352,7 +385,11 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
             currentInspector = inspector;
 
             button.setSelected(true);
-            button.setBackground(Color.WHITE);
+            if (this.isDarkmode) {
+                button.setBackground(new Color(60, 63, 65));
+            } else {
+                button.setBackground(Color.WHITE);
+            }
 
             if (!inspectorPanel.isVisible()) {
                 inspectorPanel.setVisible(true);

@@ -27,6 +27,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -393,12 +394,31 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
     private class WebViewInitialization implements Runnable {
 
+        private boolean isDarkmode;
+
         public WebViewInitialization(JFXPanel browserPanel) {
+            this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
             EnabledWebViewBasedBrowserComponent.this.browserPanel = browserPanel;
         }
 
         public void run() {
             webView = new WebView();
+
+            String fontCSS = "* { font-family: 'Consolas', 'Courier', 'Courier New', 'Monaco', monospace !important; font-size: 9pt !important; }";
+            String backgroundCSS;
+            String combinedCSS;
+
+            if (this.isDarkmode) {
+                webView.setStyle("-fx-background-color: #2E2E2E;");
+                backgroundCSS = "body, html { background-color: #2E2E2E !important; color: #FFFFFF !important; }";
+            } else {
+                backgroundCSS = "body, html { background-color: #FFFFFF !important; color: #000000 !important; }";
+            }
+
+            combinedCSS = fontCSS + " " + backgroundCSS;
+
+            webView.getEngine().setUserStyleSheetLocation("data:text/css," +
+                    combinedCSS.replace("\n", "").replace(" ", "%20"));
 
             createPopupHandler();
             listenForLocationChanges();
@@ -414,6 +434,10 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
         private Scene createJfxScene() {
             Group jfxComponentGroup = new Group();
             Scene scene = new Scene(jfxComponentGroup);
+            if (this.isDarkmode) {
+                // Use same background color as RSyntax dark theme (#2E2E2E)
+                scene.setFill(Color.web("#2E2E2E"));
+            }
             webView.prefWidthProperty().bind(scene.widthProperty());
             webView.prefHeightProperty().bind(scene.heightProperty());
             jfxComponentGroup.getChildren().add(webView);

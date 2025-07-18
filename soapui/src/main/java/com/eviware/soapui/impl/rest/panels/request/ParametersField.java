@@ -66,7 +66,18 @@ class ParametersField extends JPanel {
         textField = new JTextField(paramsString);
         textField.setEditable(false);
         textField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-        textField.setBackground(Color.WHITE);
+
+        // Apply dark mode styling if enabled
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            textField.setBackground(new Color(45, 45, 45)); // Same as other editable fields
+            textField.setForeground(new Color(230, 230, 230)); // Light foreground
+            textLabel.setForeground(new Color(187, 187, 187)); // Same as other labels
+            setBackground(new Color(60, 63, 65)); // Same background as other panels
+        } else {
+            textField.setBackground(Color.WHITE);
+        }
+
         textField.setName(PARAMETERS_FIELD);
         setToolTipText(paramsString);
         super.setLayout(new BorderLayout());
@@ -163,6 +174,16 @@ class ParametersField extends JPanel {
                     close();
                 }
             });
+
+            // Apply dark mode styling if enabled
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                getContentPane().setBackground(new Color(45, 45, 45));
+                buttonPanel.setBackground(new Color(45, 45, 45));
+                closeButton.setBackground(new Color(70, 70, 70));
+                closeButton.setForeground(new Color(230, 230, 230));
+            }
+
             buttonPanel.add(closeButton);
             getContentPane().add(restParamsTable, BorderLayout.CENTER);
             getContentPane().add(buttonPanel, BorderLayout.SOUTH);

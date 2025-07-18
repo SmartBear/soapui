@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.UISupport;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
@@ -105,7 +106,12 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
                     if (json.isEmpty()) {
                         content = "<Empty JSON content>";
                     } else {
-                        content = json.toString(3);
+                        try {
+                            JsonNode jsonNode = JsonUtil.parseTrimmedTextToJsonNode(me.getResponseContent());
+                            content = JsonUtil.format(jsonNode);
+                        } catch (Exception e) {
+                            content = json.toString(3);
+                        }
                     }
                 } catch (Throwable e) {
                     if (!"Invalid JSON String".equals(e.getMessage())) {

@@ -66,6 +66,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -168,7 +169,20 @@ public class PropertyHolderTable extends JPanel {
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             setSurrendersFocusOnKeystroke(true);
             setRowHeight(19);
-            if (UISupport.isMac()) {
+
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                // Show full grid in dark mode for better cell separation
+                setShowGrid(true);
+                setGridColor(new Color(100, 100, 100));
+                setIntercellSpacing(new Dimension(1, 1));
+                setBackground(new Color(60, 63, 65));
+                setForeground(Color.LIGHT_GRAY);
+                if (getTableHeader() != null) {
+                    getTableHeader().setBackground(new Color(70, 70, 70));
+                    getTableHeader().setForeground(Color.LIGHT_GRAY);
+                }
+            } else if (UISupport.isMac()) {
                 setShowGrid(false);
                 setIntercellSpacing(new Dimension(0, 0));
             }
@@ -196,7 +210,10 @@ public class PropertyHolderTable extends JPanel {
 
         @Override
         public boolean getShowVerticalLines() {
-            return !UISupport.isMac();
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            // Show vertical lines in dark mode for all platforms, or non-Mac platforms in
+            // light mode
+            return isDarkMode || !UISupport.isMac();
         }
 
         public PropertyModelItem getTestProperty() {

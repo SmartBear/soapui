@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.CredentialsConfig;
@@ -53,6 +54,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -150,11 +152,22 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         JPanel innerPanel = new JPanel(new BorderLayout());
         innerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // Apply dark mode styling to inner panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            innerPanel.setBackground(new Color(60, 63, 65));
+        }
+
         JPanel comboBoxPanel = createAuthorizationLabelAndComboBox();
 
         innerPanel.add(comboBoxPanel, BorderLayout.PAGE_START);
 
         cardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Apply dark mode styling to card panel
+        if (isDarkMode) {
+            cardPanel.setBackground(new Color(60, 63, 65));
+        }
 
         cardPanel.add(createEmptyPanel(), EMPTY_PANEL);
         innerPanel.add(cardPanel, BorderLayout.CENTER);
@@ -167,11 +180,26 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
             cardPanel.add(wssAuthenticationForm.getComponent(), WSS_FORM_LABEL);
         }
 
-        outerPanel.add(new JScrollPane(innerPanel), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(innerPanel);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+            outerPanel.setBackground(new Color(60, 63, 65));
+        }
+
+        outerPanel.add(scrollPane, BorderLayout.CENTER);
     }
 
     private JPanel createEmptyPanel() {
         JPanel panelWithText = new JPanel(new BorderLayout());
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        Color borderColor = isDarkMode ? new Color(100, 100, 100) : AbstractAuthenticationForm.CARD_BORDER_COLOR;
+        Color backgroundColor = isDarkMode ? new Color(60, 63, 65) : AbstractAuthenticationForm.CARD_BACKGROUND_COLOR;
+
         String helpText = "<html>\n" +
                 "<body>" +
                 "</div>" +
@@ -183,10 +211,17 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
                 "</html>";
         JLabel label = new JLabel(helpText);
         label.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Apply dark mode styling to label
+        if (isDarkMode) {
+            label.setForeground(Color.LIGHT_GRAY);
+        }
+
         panelWithText.add(label, BorderLayout.CENTER);
-        panelWithText.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(AbstractAuthenticationForm.CARD_BORDER_COLOR),
+        panelWithText.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(borderColor),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-        panelWithText.setBackground(AbstractAuthenticationForm.CARD_BACKGROUND_COLOR);
+        panelWithText.setBackground(backgroundColor);
         return panelWithText;
     }
 
@@ -199,8 +234,19 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         JPanel comboBoxPanel = new JPanel(formLayout);
         comboBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
+        // Apply dark mode styling to combo box panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            comboBoxPanel.setBackground(new Color(60, 63, 65));
+        }
+
         JLabel authorizationLabel = new JLabel(PROFILE_COMBO_BOX);
         authorizationLabel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+
+        // Apply dark mode styling to label
+        if (isDarkMode) {
+            authorizationLabel.setForeground(Color.LIGHT_GRAY);
+        }
 
         formLayout.appendRow(new RowSpec("top:pref"));
         comboBoxPanel.add(authorizationLabel, cc.xy(2, 1));
@@ -209,6 +255,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         comboBoxPanel.add(profileSelectionComboBox, cc.xy(4, 1));
 
         JPanel wrapperPanel = new JPanel(new BorderLayout(5, 5));
+
+        // Apply dark mode styling to wrapper panel
+        if (isDarkMode) {
+            wrapperPanel.setBackground(new Color(60, 63, 65));
+        }
+
         wrapperPanel.add(comboBoxPanel, BorderLayout.LINE_START);
         helpButton = UISupport.createFormButton(helpActions.get(EMPTY_PANEL));
         wrapperPanel.add(helpButton, BorderLayout.AFTER_LINE_ENDS);
@@ -221,6 +273,13 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         profileSelectionComboBox = new JComboBox(existingProfiles);
         profileSelectionComboBox.setName(PROFILE_COMBO_BOX);
         profileSelectionComboBox.addItemListener(new ProfileSelectionListener());
+
+        // Apply dark mode styling to combo box
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            profileSelectionComboBox.setBackground(new Color(70, 70, 70));
+            profileSelectionComboBox.setForeground(Color.LIGHT_GRAY);
+        }
     }
 
     private void setAuthenticationTypeAndShowCard(String selectedOption) {

@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,21 +32,32 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class JarClassLoader extends URLClassLoader implements PluginClassLoader {
+public class JarClassLoader extends URLClassLoader implements PluginClassLoader, Closeable {
 
     private static final Logger log = LogManager.getLogger(JarClassLoader.class);
     public static final String LIB_PREFIX = "lib/";
     private final ClassLoader parent;
     private Collection<JarClassLoader> dependencyClassLoaders;
     private GroovyClassLoader scriptClassLoader;
+    private JarFile jarFile;
 
     public JarClassLoader(File jarFile, ClassLoader parent, Collection<JarClassLoader> dependencyClassLoaders) throws IOException {
         super(new URL[]{jarFile.toURI().toURL()}, null);
         this.parent = parent;
         this.dependencyClassLoaders = dependencyClassLoaders;
-        JarFile file = new JarFile(jarFile);
-        addLibrariesIn(file);
-        addScriptsIn(file);
+        this.jarFile = new JarFile(jarFile);
+        try {
+            addLibrariesIn(this.jarFile);
+            addScriptsIn(this.jarFile);
+        } catch (IOException e) {
+            // If there's an error during initialization, close the jar file
+            try {
+                this.jarFile.close();
+            } catch (IOException closeException) {
+                log.warn("Failed to close JAR file during error cleanup", closeException);
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -184,5 +196,37 @@ public class JarClassLoader extends URLClassLoader implements PluginClassLoader 
 
     public GroovyClassLoader getScriptClassLoader() {
         return scriptClassLoader;
+    }
+
+    @Override
+    public void close() throws IOException {
+        try {
+            // Close the parent URLClassLoader
+            super.close();
+        } catch (Exception e) {
+            log.warn("Error closing URLClassLoader", e);
+        }
+
+        // Close the JAR file to release file locks
+        if (jarFile != null) {
+            try {
+                jarFile.close();
+            } catch (IOException e) {
+                log.warn("Failed to close JAR file", e);
+            } finally {
+                jarFile = null;
+            }
+        }
+
+        // Close the script class loader if it exists
+        if (scriptClassLoader != null) {
+            try {
+                scriptClassLoader.close();
+            } catch (IOException e) {
+                log.warn("Failed to close script class loader", e);
+            } finally {
+                scriptClassLoader = null;
+            }
+        }
     }
 }

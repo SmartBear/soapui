@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.swing.JTableFactory;
 import org.jdesktop.swingx.JXTable;
@@ -30,7 +31,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -115,15 +118,24 @@ public class MetricsPanel extends JPanel {
 
         public JXTable addTable(TableModel model) {
             JXTable table = JTableFactory.getInstance().makeJXTable(model);
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
             table.setBorder(null);
-            table.setShowGrid(false);
+            // Show grid in dark mode for better cell separation
+            if (isDarkMode) {
+                table.setShowGrid(true);
+                table.setGridColor(new Color(100, 100, 100));
+                table.setIntercellSpacing(new Dimension(1, 1));
+            } else {
+                table.setShowGrid(false);
+            }
             table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             table.setSortable(false);
             table.getColumn(0).setWidth(195);
             table.getColumn(0).setMinWidth(195);
 
-            InternalHeaderRenderer internalHeaderRenderer = new InternalHeaderRenderer(table.getTableHeader()
-                    .getBackground());
+            InternalHeaderRenderer internalHeaderRenderer = new InternalHeaderRenderer(
+                    isDarkMode ? new Color(70, 70, 70) : table.getTableHeader().getBackground());
             InternalCellRenderer internalCellRenderer = new InternalCellRenderer();
 
             for (int c = 0; c < table.getColumnCount(); c++) {
@@ -132,17 +144,33 @@ public class MetricsPanel extends JPanel {
             }
 
             table.getTableHeader().setReorderingAllowed(false);
-            table.getTableHeader().setBackground(Color.WHITE);
+
+            // Apply dark mode styling to table header
+            if (isDarkMode) {
+                table.getTableHeader().setBackground(new Color(70, 70, 70));
+                table.getTableHeader().setForeground(Color.LIGHT_GRAY);
+                table.setBackground(new Color(60, 63, 65));
+                table.setForeground(Color.LIGHT_GRAY);
+            } else {
+                table.getTableHeader().setBackground(Color.WHITE);
+                table.setBackground(Color.WHITE);
+            }
 
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
             form.addComponent(scrollPane);
             table.setPreferredScrollableViewportSize(new Dimension(100, 250));
-            scrollPane.setBackground(Color.WHITE);
-            scrollPane.getViewport().setBackground(Color.WHITE);
-            scrollPane.setOpaque(true);
 
-            table.setBackground(Color.WHITE);
+            // Apply dark mode styling to scroll pane
+            if (isDarkMode) {
+                scrollPane.setBackground(new Color(60, 63, 65));
+                scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+            } else {
+                scrollPane.setBackground(Color.WHITE);
+                scrollPane.getViewport().setBackground(Color.WHITE);
+            }
+
+            scrollPane.setOpaque(true);
             table.setOpaque(true);
 
             return table;
@@ -184,7 +212,13 @@ public class MetricsPanel extends JPanel {
             addSpace(7);
 
             JPanel formPanel = getPanel();
-            formPanel.setBackground(Color.WHITE);
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+            if (isDarkMode) {
+                formPanel.setBackground(new Color(60, 63, 65));
+            } else {
+                formPanel.setBackground(Color.WHITE);
+            }
             formPanel.setOpaque(true);
 
             return formPanel;
@@ -200,10 +234,17 @@ public class MetricsPanel extends JPanel {
 
         public Metric addMetric(String labelText, String text, ImageIcon icon, boolean isHyperlink) {
             JLabel label = new JLabel(labelText, icon, SwingConstants.LEFT);
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
             UISupport.setFixedSize(label, labelDimensions);
             label.setIconTextGap(5);
 
             label.setBorder(BorderFactory.createEmptyBorder(2, icon == null ? 16 : 14, 0, 0));
+
+            // Apply dark mode styling to label
+            if (isDarkMode) {
+                label.setForeground(Color.LIGHT_GRAY);
+            }
 
             JLabel textField = null;
 
@@ -214,7 +255,14 @@ public class MetricsPanel extends JPanel {
             }
 
             textField.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
-            textField.setBackground(Color.WHITE);
+
+            // Apply dark mode styling to text field
+            if (isDarkMode) {
+                textField.setBackground(new Color(60, 63, 65));
+                textField.setForeground(Color.LIGHT_GRAY);
+            } else {
+                textField.setBackground(Color.WHITE);
+            }
 
             Metric metric = new Metric(textField);
             metrics.put(labelText, metric);

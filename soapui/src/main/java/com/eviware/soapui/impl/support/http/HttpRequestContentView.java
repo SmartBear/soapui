@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.support.http;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.json.actions.FormatJsonAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
@@ -35,6 +36,7 @@ import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSON;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.Theme;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -60,6 +62,9 @@ import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 @SuppressWarnings("unchecked")
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
         PropertyChangeListener {
+    private static final String RSYNTAXAREA_THEME = "/rsyntaxarea-theme/soapui.xml";
+    private static final String RSYNTAXAREA_DARK_THEME = "/rsyntaxarea-theme/soapui-dark.xml";
+
     private final HttpRequestInterface<?> httpRequest;
     private RSyntaxTextArea contentEditor;
     private boolean updatingRequest;
@@ -68,10 +73,12 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     private JSplitPane split;
     protected RestParamsTable paramsTable;
     private JCheckBox postQueryCheckBox;
+    private boolean isDarkMode;
 
     public HttpRequestContentView(HttpRequestMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest) {
         super("Request", httpRequestMessageEditor, HttpRequestContentViewFactory.VIEW_ID);
         this.httpRequest = httpRequest;
+        this.isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
 
         httpRequest.addPropertyChangeListener(this);
     }
@@ -87,6 +94,11 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     protected void buildComponent() {
         JPanel p = new JPanel(new BorderLayout());
 
+        // Apply dark mode styling to main panel
+        if (isDarkMode) {
+            p.setBackground(new java.awt.Color(43, 43, 43));
+        }
+
         p.add(buildToolbar(), BorderLayout.NORTH);
         p.add(buildContent(), BorderLayout.CENTER);
 
@@ -95,6 +107,12 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
         split = UISupport.createVerticalSplit(paramsTable, p);
 
         panel = new JPanel(new BorderLayout());
+
+        // Apply dark mode styling to outer panel
+        if (isDarkMode) {
+            panel.setBackground(new java.awt.Color(43, 43, 43));
+        }
+
         panel.add(split);
 
         fixRequestPanel();
@@ -143,8 +161,23 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     protected Component buildContent() {
         JPanel contentPanel = new JPanel(new BorderLayout());
 
+        // Apply dark mode styling to panel
+        if (isDarkMode) {
+            contentPanel.setBackground(new java.awt.Color(43, 43, 43));
+        }
+
         // Add popup!
         contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+
+        // Apply theme (dark or light) to the editor
+        try {
+            Theme theme = Theme.load(HttpRequestContentView.class.getResourceAsStream(
+                    isDarkMode ? RSYNTAXAREA_DARK_THEME : RSYNTAXAREA_THEME));
+            theme.apply(contentEditor);
+        } catch (java.io.IOException e) {
+            SoapUI.logError(e, "Could not load request editor color theme file");
+        }
+
         SyntaxEditorUtil.setMediaType(contentEditor, httpRequest.getMediaType());
         contentEditor.setText(httpRequest.getRequestContent());
 
@@ -160,7 +193,14 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             }
         });
 
-        contentPanel.add(new JScrollPane(contentEditor));
+        JScrollPane scrollPane = new JScrollPane(contentEditor);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.getViewport().setBackground(new java.awt.Color(43, 43, 43));
+        }
+
+        contentPanel.add(scrollPane);
 
         PropertyExpansionPopupListener.enable(contentEditor, httpRequest);
         buildPopup(contentEditor.getPopupMenu(), contentEditor);

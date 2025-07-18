@@ -242,12 +242,26 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
         frame.setFrameIcon(desktopPanel.getIcon());
         frame.setToolTipText(desktopPanel.getDescription());
         frame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+
+        // Apply dark mode styling to frame borders
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         if (!SoapUI.getSettings().getBoolean(UISettings.NATIVE_LAF)) {
             // This creates an empty frame on Mac OS X native L&F.
-            frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
-                    BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+            if (isDarkMode) {
+                frame.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(100, 100, 100), 1),
+                        BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+            } else {
+                frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
+                        BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+            }
         } else if (!UISupport.isMac()) {
-            frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3));
+            if (isDarkMode) {
+                frame.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100), 3));
+            } else {
+                frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 3));
+            }
         }
         return frame;
     }

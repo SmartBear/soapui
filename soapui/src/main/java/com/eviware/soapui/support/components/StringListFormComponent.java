@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,9 +64,25 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
         listModel = new DefaultListModel();
         list = new JList(listModel);
         list.setToolTipText(tooltip);
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            list.setBackground(new Color(60, 63, 65));
+            list.setForeground(Color.LIGHT_GRAY);
+            setBackground(new Color(60, 63, 65));
+        }
+
         JScrollPane scrollPane = new JScrollPane(list);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(300, 70));
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+        }
+
         add(scrollPane, BorderLayout.CENTER);
         buttonBox = new Box(BoxLayout.Y_AXIS);
         buttonBox.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
@@ -73,6 +90,13 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
         if (!editOnly) {
             addButton = new JButton("Add..");
             addButton.addActionListener(this);
+
+            // Apply dark mode styling to buttons
+            if (isDarkMode) {
+                addButton.setBackground(new Color(70, 70, 70));
+                addButton.setForeground(Color.LIGHT_GRAY);
+            }
+
             buttonBox.add(addButton);
             buttonBox.add(Box.createVerticalStrut(5));
         }
@@ -80,12 +104,26 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
         editButton = new JButton("Edit..");
         editButton.addActionListener(this);
         buttons.add(editButton);
+
+        // Apply dark mode styling to edit button
+        if (isDarkMode) {
+            editButton.setBackground(new Color(70, 70, 70));
+            editButton.setForeground(Color.LIGHT_GRAY);
+        }
+
         buttonBox.add(editButton);
 
         if (!editOnly) {
             buttonBox.add(Box.createVerticalStrut(5));
             removeButton = new JButton("Remove..");
             removeButton.addActionListener(this);
+
+            // Apply dark mode styling to remove button
+            if (isDarkMode) {
+                removeButton.setBackground(new Color(70, 70, 70));
+                removeButton.setForeground(Color.LIGHT_GRAY);
+            }
+
             buttonBox.add(removeButton);
             buttons.add(removeButton);
         }

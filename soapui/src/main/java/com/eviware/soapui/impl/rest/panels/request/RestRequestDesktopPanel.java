@@ -107,6 +107,14 @@ public class RestRequestDesktopPanel extends
         methodComboBox.setSelectedItem(getRequest().getMethod());
 
         JLabel methodLabel = new JLabel("Method");
+
+        // Apply dark mode styling to match other labels
+        boolean isDarkMode = com.eviware.soapui.SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            methodPanel.setBackground(new java.awt.Color(60, 63, 65));
+            methodLabel.setForeground(new java.awt.Color(187, 187, 187));
+        }
+
         methodPanel.add(methodLabel, BorderLayout.NORTH);
         methodPanel.add(methodComboBox, BorderLayout.SOUTH);
         methodPanel.setMinimumSize(new Dimension(75, STANDARD_TOOLBAR_HEIGHT));

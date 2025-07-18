@@ -74,6 +74,7 @@ public class JPropertiesTable<T> extends JPanel {
     private TitledBorder titledBorder;
 
     private String title;
+    private boolean isDarkmode;
 
     public JPropertiesTable(String title) {
         this(title, null);
@@ -81,11 +82,17 @@ public class JPropertiesTable<T> extends JPanel {
 
     public JPropertiesTable(String title, T propertyObject) {
         super(new BorderLayout());
+        this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
         this.title = title;
-        setBackground(Color.WHITE);
-        tableModel = new PropertiesTableModel<>(propertyObject);
+        tableModel = new PropertiesTableModel<T>(propertyObject);
         table = new PTable(tableModel);
-        table.setBackground(Color.WHITE);
+        if (this.isDarkmode) {
+            setBackground(new Color(43, 43, 43));
+            table.setBackground(new Color(43, 43, 43));
+        } else {
+            setBackground(Color.WHITE);
+            table.setBackground(Color.WHITE);
+        }
         table.getColumnModel().getColumn(0).setHeaderValue("Property");
         table.getColumnModel().getColumn(1).setHeaderValue("Value");
         table.getColumnModel().getColumn(0).setCellRenderer(new PropertiesTableCellRenderer());
@@ -109,7 +116,11 @@ public class JPropertiesTable<T> extends JPanel {
             setBorder(titledBorder);
         }
 
-        table.setBackground(Color.WHITE);
+        if (this.isDarkmode) {
+            table.setBackground(new Color(43, 43, 43));
+        } else {
+            table.setBackground(Color.WHITE);
+        }
         setPreferredSize(table.getPreferredSize());
     }
 
@@ -460,7 +471,20 @@ public class JPropertiesTable<T> extends JPanel {
             });
 
             putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-            if (UISupport.isMac()) {
+
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                // Show full grid in dark mode for better cell separation
+                setShowGrid(true);
+                setGridColor(new Color(100, 100, 100));
+                setIntercellSpacing(new Dimension(1, 1));
+                setBackground(new Color(60, 63, 65));
+                setForeground(Color.LIGHT_GRAY);
+                if (getTableHeader() != null) {
+                    getTableHeader().setBackground(new Color(70, 70, 70));
+                    getTableHeader().setForeground(Color.LIGHT_GRAY);
+                }
+            } else if (UISupport.isMac()) {
                 setShowGrid(false);
                 setIntercellSpacing(new Dimension(0, 0));
             }
@@ -477,7 +501,10 @@ public class JPropertiesTable<T> extends JPanel {
 
         @Override
         public boolean getShowVerticalLines() {
-            return !UISupport.isMac();
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            // Show vertical lines in dark mode for all platforms, or non-Mac platforms in
+            // light mode
+            return isDarkMode || !UISupport.isMac();
         }
 
         public TableCellEditor getCellEditor(int row, int column) {

@@ -112,6 +112,12 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         add(buildContent(), BorderLayout.CENTER);
 
         setPreferredSize(new Dimension(500, 500));
+
+        // Apply dark mode styling to main panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            setBackground(new Color(60, 63, 65));
+        }
     }
 
     private JComponent buildContent() {
@@ -124,11 +130,26 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
             testCaseListInspectorPanel.setCurrentInspector("Description");
         }
 
+        // Apply dark mode styling to inspector panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            JComponent inspectorComponent = inspectorPanel.getComponent();
+            inspectorComponent.setBackground(new Color(60, 63, 65));
+        }
+
         return inspectorPanel.getComponent();
     }
 
     private JComponent buildRunLog() {
         testRunLog = new JTestRunLog(getModelItem().getSettings());
+
+        // Apply dark mode styling to test run log
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode && testRunLog instanceof JComponent) {
+            ((JComponent) testRunLog).setBackground(new Color(45, 45, 45));
+            ((JComponent) testRunLog).setForeground(Color.LIGHT_GRAY);
+        }
+
         return testRunLog;
     }
 
@@ -153,6 +174,16 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         panel.add(toolbar, BorderLayout.PAGE_START);
         panel.add(progressPanel, BorderLayout.CENTER);
+
+        // Apply dark mode styling to toolbar and progress panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            toolbar.setBackground(new Color(60, 63, 65));
+            progressPanel.setBackground(new Color(60, 63, 65));
+            progressBar.setBackground(new Color(45, 45, 45));
+            progressBar.setForeground(new Color(100, 150, 200));
+            panel.setBackground(new Color(60, 63, 65));
+        }
 
         return panel;
     }
@@ -191,6 +222,15 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         toolbar.add(sequentialButton);
         toolbar.add(parallellButton);
+
+        // Apply dark mode styling to toggle buttons
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            sequentialButton.setBackground(new Color(70, 70, 70));
+            sequentialButton.setForeground(Color.LIGHT_GRAY);
+            parallellButton.setBackground(new Color(70, 70, 70));
+            parallellButton.setForeground(Color.LIGHT_GRAY);
+        }
     }
 
     private JComponent buildTabs() {
@@ -201,6 +241,13 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         addTabs(tabs, testCaseListInspectorPanel);
         tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        // Apply dark mode styling to tabs
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            tabs.setBackground(new Color(60, 63, 65));
+            tabs.setForeground(Color.LIGHT_GRAY);
+        }
 
         return UISupport.createTabPanel(tabs, true);
     }
@@ -230,6 +277,13 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         JPanel panel = new JPanel(new BorderLayout());
         propertiesTable = createPropertyHolderTable();
         panel.add(propertiesTable, BorderLayout.CENTER);
+
+        // Apply dark mode styling to properties panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            panel.setBackground(new Color(60, 63, 65));
+        }
+
         return panel;
     }
 
@@ -247,8 +301,22 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         });
 
         panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        panel.add(new JScrollPane(descriptionArea), BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(descriptionArea);
+        panel.add(scrollPane, BorderLayout.CENTER);
         UISupport.addTitledBorder(panel, "TestSuite Description");
+
+        // Apply dark mode styling to description panel
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            panel.setBackground(new Color(60, 63, 65));
+            descriptionArea.setBackground(new Color(45, 45, 45));
+            descriptionArea.setForeground(Color.LIGHT_GRAY);
+            descriptionArea.setCaretColor(Color.LIGHT_GRAY);
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
+        }
 
         return panel;
     }
@@ -259,7 +327,18 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         JPanel p = new JPanel(new BorderLayout());
 
         p.add(buildTestCaseListToolbar(), BorderLayout.NORTH);
-        p.add(new JScrollPane(testCaseList), BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(testCaseList);
+        p.add(scrollPane, BorderLayout.CENTER);
+
+        // Apply dark mode styling to test case list panel and scroll pane
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            p.setBackground(new Color(60, 63, 65));
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
+        }
 
         return p;
     }
@@ -272,6 +351,13 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         toolbar.add(UISupport.createToolbarButton(testCaseDelegate));
         toolbar.addGlue();
         toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITEEDITOR_HELP_URL)));
+
+        // Apply dark mode styling to test case list toolbar
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            toolbar.setBackground(new Color(60, 63, 65));
+        }
+
         return toolbar;
     }
 

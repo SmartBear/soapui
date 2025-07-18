@@ -25,24 +25,29 @@ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class URLDesktopPanel extends DefaultDesktopPanel {
     private WebViewBasedBrowserComponent browser;
     private boolean closed;
     private String lastBackupUrl = null;
+    private boolean isDarkmode;
 
     public URLDesktopPanel(String title, String description, String url, String backupUrl) throws InterruptedException,
             InvocationTargetException {
         super(title, description, new JPanel(new BorderLayout()));
+        this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
 
         JPanel panel = (JPanel) getComponent();
 
         browser = WebViewBasedBrowserComponentFactory.createBrowserComponent(false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER);
         browser.addJavaScriptEventHandler(StarterPageButtonCallback.CALLBACK, new StarterPageButtonCallback(SoapUI.getWorkspace()));
         //browser.addJavaScriptEventHandler("templateProjectCreator", new TemplateProjectCreator());
-
+        if (this.isDarkmode) {
+            panel.setBackground(Color.BLACK);
+            browser.getComponent().setBackground(Color.BLACK);
+        }
         panel.add(browser.getComponent(), BorderLayout.CENTER);
 
         if (StringUtils.hasContent(url)) {

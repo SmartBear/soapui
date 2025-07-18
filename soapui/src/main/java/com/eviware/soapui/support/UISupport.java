@@ -68,28 +68,16 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.AlphaComposite;
+import java.awt.RenderingHints;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -144,7 +132,7 @@ public class UISupport {
 
     public static ImageIcon TOOL_ICON = UISupport.createImageIcon(TOOL_ICON_PATH);
     public static ImageIcon OPTIONS_ICON = UISupport.createImageIcon(OPTIONS_ICON_PATH);
-    public static ImageIcon HELP_ICON = UISupport.createImageIcon("/help-browser.png");
+    public static ImageIcon HELP_ICON = createAdaptiveHelpIcon();
     private static EditorFactory editorFactory = new DefaultEditorFactory();
 
     /**
@@ -203,8 +191,16 @@ public class UISupport {
     }
 
     public static JComboBox addTooltipListener(JComboBox combo, String defaultTooltip) {
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         combo.setToolTipText(defaultTooltip);
         combo.addItemListener(new ItemListenerImplementation(combo, defaultTooltip));
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            combo.setBackground(new Color(60, 63, 65));
+            combo.setForeground(Color.LIGHT_GRAY);
+        }
 
         return combo;
     }
@@ -309,6 +305,7 @@ public class UISupport {
 
     public static JPanel createProgressBarPanel(JProgressBar progressBar, int space, boolean indeterimate) {
         JPanel panel = new JPanel(new BorderLayout());
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
 
         if (isMac()) {
             // default native progress bar on mac ignores color settings, use a custom ui to get green/red
@@ -320,12 +317,18 @@ public class UISupport {
         progressBar.setString("");
         progressBar.setIndeterminate(indeterimate);
 
-        if (isMac()) {
+        // Apply dark mode styling to progress bar
+        if (isDarkmode) {
+            progressBar.setForeground(new Color(100, 150, 200)); // Light blue for progress
+            progressBar.setBackground(new Color(60, 63, 65)); // Dark background
+            progressBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.DARK_GRAY));
+            panel.setBackground(new Color(45, 45, 45)); // Dark panel background
+            panel.setBorder(BorderFactory.createEmptyBorder(space, space, space, space));
+        } else if (isMac()) {
             progressBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.LIGHT_GRAY));
             Border compound = BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(space, space, space, space, MAC_PROGRESSBAR_MATTE_BORDER_COLOR),
-                    BorderFactory.createLineBorder(MAC_PROGRESSBAR_LINE_BORDER_COLOR)
-            );
+                    BorderFactory.createLineBorder(MAC_PROGRESSBAR_LINE_BORDER_COLOR));
             panel.setBorder(compound);
             panel.setBackground(MAC_PROGRESSBAR_BACKGROUND_COLOR);
         } else {
@@ -342,6 +345,13 @@ public class UISupport {
         splitPane.setUI(new SoapUISplitPaneUI());
         splitPane.setDividerSize(10);
         splitPane.setOneTouchExpandable(true);
+
+        // Apply dark mode styling
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkmode) {
+            splitPane.setBackground(new Color(60, 63, 65));
+        }
+
         return splitPane;
     }
 
@@ -359,6 +369,13 @@ public class UISupport {
         splitPane.setDividerSize(10);
         splitPane.setOneTouchExpandable(true);
         splitPane.setBorder(null);
+
+        // Apply dark mode styling
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkmode) {
+            splitPane.setBackground(new Color(60, 63, 65));
+        }
+
         return splitPane;
     }
 
@@ -397,6 +414,11 @@ public class UISupport {
     public static ImageIcon createImageIcon(String path) {
         if (StringUtils.isNullOrEmpty(path)) {
             return null;
+        }
+
+        // Check if this is an arrow icon and dark mode is enabled
+        if (isArrowIcon(path) && SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false)) {
+            return createAdaptiveArrowIcon(path);
         }
 
         if (iconCache.containsKey(path)) {
@@ -451,6 +473,169 @@ public class UISupport {
         }
     }
 
+    private static boolean isArrowIcon(String path) {
+        return (path.equals("/up_arrow.gif") ||
+                path.equals("/down_arrow.gif") ||
+                path.equals("/left_arrow.gif") ||
+                path.equals("/right_arrow.gif"));
+    }
+
+    private static ImageIcon createAdaptiveArrowIcon(String path) {
+        String cacheKey = path + "_dark";
+        if (iconCache.containsKey(cacheKey)) {
+            return iconCache.get(cacheKey);
+        }
+
+        // Get the original icon first
+        String orgPath = path;
+        java.net.URL imgURL = null;
+
+        try {
+            String p = path;
+            if (p.indexOf('/', 1) == -1) {
+                p = "/com/eviware/soapui/resources/images" + p;
+            }
+
+            imgURL = SoapUI.class.getResource(p);
+            if (imgURL == null && path.endsWith(".gif")) {
+                imgURL = SoapUI.class.getResource(p.substring(0, p.length() - 4) + ".png");
+            }
+
+            if (imgURL == null) {
+                imgURL = loadFromSecondaryLoader(path);
+            }
+        } catch (Throwable t) {
+            SoapUI.logError(t, "Failed to find arrow icon [" + path + "]");
+            return null;
+        }
+
+        if (imgURL != null) {
+            try {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                ImageIcon adaptiveIcon = createLightArrowOverlay(originalIcon);
+                iconCache.put(cacheKey, adaptiveIcon);
+                return adaptiveIcon;
+            } catch (Throwable e) {
+                System.err.println("Failed to create adaptive arrow icon: " + e);
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    private static ImageIcon createLightArrowOverlay(ImageIcon originalIcon) {
+        if (originalIcon == null) {
+            return null;
+        }
+
+        Image originalImage = originalIcon.getImage();
+        BufferedImage bufferedImage = new BufferedImage(
+                originalImage.getWidth(null),
+                originalImage.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Draw original image
+        g2d.drawImage(originalImage, 0, 0, null);
+
+        // Create a light gray overlay for better visibility in dark mode
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+        g2d.setColor(new Color(200, 200, 200)); // Light gray
+
+        // Process pixel by pixel to only lighten dark pixels
+        for (int x = 0; x < bufferedImage.getWidth(); x++) {
+            for (int y = 0; y < bufferedImage.getHeight(); y++) {
+                int rgb = bufferedImage.getRGB(x, y);
+                int alpha = (rgb >> 24) & 0xFF;
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+
+                // Only modify pixels that are dark (and not transparent)
+                if (alpha > 0 && (red + green + blue) < 300) { // Dark pixels
+                    // Make them lighter for better visibility in dark mode
+                    int newRed = Math.min(255, red + 120);
+                    int newGreen = Math.min(255, green + 120);
+                    int newBlue = Math.min(255, blue + 120);
+
+                    int newRgb = (alpha << 24) | (newRed << 16) | (newGreen << 8) | newBlue;
+                    bufferedImage.setRGB(x, y, newRgb);
+                }
+            }
+        }
+
+        g2d.dispose();
+        return new ImageIcon(bufferedImage);
+    }
+
+    private static ImageIcon createAdaptiveHelpIcon() {
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        if (isDarkMode) {
+            String cacheKey = "/help-browser.png_transparent";
+            if (iconCache.containsKey(cacheKey)) {
+                return iconCache.get(cacheKey);
+            }
+
+            ImageIcon originalIcon = createImageIcon("/help-browser.png");
+            if (originalIcon != null) {
+                ImageIcon transparentIcon = createTransparentHelpIcon(originalIcon);
+                iconCache.put(cacheKey, transparentIcon);
+                return transparentIcon;
+            }
+        }
+
+        return createImageIcon("/help-browser.png");
+    }
+
+    private static ImageIcon createTransparentHelpIcon(ImageIcon originalIcon) {
+        if (originalIcon == null) {
+            return null;
+        }
+
+        Image originalImage = originalIcon.getImage();
+        BufferedImage bufferedImage = new BufferedImage(
+                originalImage.getWidth(null),
+                originalImage.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.drawImage(originalImage, 0, 0, null);
+        g2d.dispose();
+
+        // Process pixel by pixel to make white background outside circle transparent
+        int width = bufferedImage.getWidth();
+        int height = bufferedImage.getHeight();
+        int centerX = width / 2;
+        int centerY = height / 2;
+        int radius = Math.min(width, height) / 2 - 2; // Circle radius with small margin
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int rgb = bufferedImage.getRGB(x, y);
+                int alpha = (rgb >> 24) & 0xFF;
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+
+                // Calculate distance from center
+                double distance = Math.sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
+
+                // If pixel is outside the circle and is white/light colored, make it
+                // transparent
+                if (distance > radius && alpha > 0 && red > 200 && green > 200 && blue > 200) {
+                    // Make white background transparent
+                    bufferedImage.setRGB(x, y, 0x00000000);
+                }
+            }
+        }
+
+        return new ImageIcon(bufferedImage);
+    }
+
     public static boolean isHeadless() {
         if (isHeadless == null) {
             isHeadless = GraphicsEnvironment.isHeadless();
@@ -489,19 +674,36 @@ public class UISupport {
 
     public static JButton createToolbarButton(Action action) {
         JButton result = new JButton(action);
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         if (action.getValue(Action.NAME) != null) {
             result.setName(String.valueOf(action.getValue(Action.NAME)));
         }
         result.setPreferredSize(TOOLBAR_BUTTON_DIMENSION);
         result.setText("");
         result.setBorder(BorderFactory.createEmptyBorder(4, 2, 4, 2));
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            result.setBackground(new Color(60, 63, 65));
+            result.setForeground(Color.LIGHT_GRAY);
+        }
+
         return result;
     }
 
     public static JButton createFormButton(Action action) {
         JButton helpButton = createToolbarButton(action);
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         helpButton.setContentAreaFilled(false);
         helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            helpButton.setForeground(Color.LIGHT_GRAY);
+        }
+
         return helpButton;
     }
 
@@ -513,7 +715,17 @@ public class UISupport {
 
     public static JPanel createTabPanel(JTabbedPane tabs, boolean addBorder) {
         GradientPanel panel = new GradientPanel(new BorderLayout());
-        panel.setForeground(Color.WHITE);
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        if (isDarkmode) {
+            panel.setForeground(Color.LIGHT_GRAY);
+            panel.setBackground(new Color(60, 63, 65));
+            tabs.setBackground(new Color(60, 63, 65));
+            tabs.setForeground(Color.LIGHT_GRAY);
+        } else {
+            panel.setForeground(Color.WHITE);
+        }
+
         if (tabs.getTabPlacement() == JTabbedPane.LEFT || tabs.getTabPlacement() == JTabbedPane.RIGHT) {
             panel.setDirection(GradientPanel.VERTICAL);
         }
@@ -521,10 +733,11 @@ public class UISupport {
         panel.add(tabs, BorderLayout.CENTER);
 
         if (addBorder) {
+            Color borderColor = isDarkmode ? Color.DARK_GRAY : Color.GRAY;
             if (tabs.getTabPlacement() == JTabbedPane.TOP) {
-                panel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, Color.GRAY));
+                panel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, borderColor));
             } else {
-                panel.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY));
+                panel.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, borderColor));
             }
         }
 
@@ -576,6 +789,13 @@ public class UISupport {
 
     public static JPanel buildPanelWithToolbar(JComponent top, JComponent content) {
         JPanel p = new JPanel(new BorderLayout());
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            p.setBackground(new Color(60, 63, 65));
+        }
+
         p.add(top, BorderLayout.NORTH);
         p.add(content, BorderLayout.CENTER);
 
@@ -584,6 +804,13 @@ public class UISupport {
 
     public static JPanel buildPanelWithToolbarAndStatusBar(JComponent top, JComponent content, JComponent bottom) {
         JPanel p = new JPanel(new BorderLayout());
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            p.setBackground(new Color(60, 63, 65));
+        }
+
         p.add(top, BorderLayout.NORTH);
         p.add(content, BorderLayout.CENTER);
         p.add(bottom, BorderLayout.SOUTH);
@@ -609,6 +836,13 @@ public class UISupport {
 
     public static Component wrapInEmptyPanel(JComponent component, Border border) {
         JPanel panel = new JPanel(new BorderLayout());
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            panel.setBackground(new Color(60, 63, 65));
+        }
+
         panel.add(component, BorderLayout.CENTER);
         panel.setBorder(border);
 
@@ -668,26 +902,66 @@ public class UISupport {
     }
 
     public static JXToolBar createToolbar() {
-        JXToolBar toolbar = new JXToolBar();
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        JXToolBar toolbar = new JXToolBar() {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (isDarkmode) {
+                    g.setColor(new Color(60, 63, 65)); // Dark background color
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                    g.setColor(Color.DARK_GRAY); // Subtle separation line color
+                    g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+                }
+            }
+        };
+
         toolbar.setFloatable(false);
         toolbar.addSpace(1);
         toolbar.setRollover(true);
         toolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE);
         toolbar.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
         toolbar.setMinimumSize(new Dimension(20, 20));
-        toolbar.setBackground(Color.WHITE);
+
+        // Apply dark theme background if enabled
+        if (isDarkmode) {
+            toolbar.setBackground(new Color(60, 63, 65));
+        } else {
+            toolbar.setBackground(Color.WHITE);
+        }
+
         return toolbar;
     }
 
     public static JXToolBar createSmallToolbar() {
-        JXToolBar toolbar = new JXToolBar();
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        JXToolBar toolbar = new JXToolBar() {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (isDarkmode) {
+                    g.setColor(new Color(60, 63, 65)); // Dark background color
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                    g.setColor(Color.DARK_GRAY); // Subtle separation line color
+                    g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+                }
+            }
+        };
+
         toolbar.setFloatable(false);
         toolbar.addSpace(1);
         toolbar.setRollover(true);
         toolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE);
         toolbar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         toolbar.setMinimumSize(new Dimension(20, 20));
-        toolbar.setBackground(Color.WHITE);
+
+        // Apply dark theme background if enabled
+        if (isDarkmode) {
+            toolbar.setBackground(new Color(60, 63, 65));
+        } else {
+            toolbar.setBackground(Color.WHITE);
+        }
+
         return toolbar;
     }
 
@@ -860,7 +1134,15 @@ public class UISupport {
     public static PreviewCorner addPreviewCorner(JScrollPane scrollPane, boolean forceScrollbars) {
         ImageIcon previewIcon = UISupport.createImageIcon("/previewscroller.gif");
         PreviewCorner previewCorner = new PreviewCorner(scrollPane, previewIcon, true, JScrollPane.LOWER_RIGHT_CORNER);
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, previewCorner);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkmode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+        }
 
         if (forceScrollbars) {
             scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -892,7 +1174,16 @@ public class UISupport {
 
     public static JButton createToolbarButton(ImageIcon icon) {
         JButton result = new JButton(icon);
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         result.setPreferredSize(TOOLBAR_BUTTON_DIMENSION);
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            result.setBackground(new Color(60, 63, 65));
+            result.setForeground(Color.LIGHT_GRAY);
+        }
+
         return result;
     }
 
@@ -938,6 +1229,24 @@ public class UISupport {
         return dialogs.promptPassword(question, title);
     }
 
+    /**
+     * Gets the appropriate text color based on the current theme (dark/light mode)
+     * @return Color.LIGHT_GRAY for dark mode, Color.BLACK for light mode
+     */
+    public static Color getDefaultTextColor() {
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        return isDarkmode ? Color.LIGHT_GRAY : Color.BLACK;
+    }
+
+    /**
+     * Gets the appropriate placeholder/hint text color based on the current theme
+     * @return Darker gray for dark mode, lighter gray for light mode
+     */
+    public static Color getPlaceholderTextColor() {
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        return isDarkmode ? new Color(120, 120, 120) : new Color(170, 170, 170);
+    }
+
     private static final class ItemListenerImplementation implements ItemListener {
         private final JComboBox combo;
         private final String defaultTooltip;
@@ -972,13 +1281,28 @@ public class UISupport {
 
     public static JPanel createEmptyPanel(int top, int left, int bottom, int right) {
         JPanel panel = new JPanel(new BorderLayout());
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            panel.setBackground(new Color(60, 63, 65));
+        }
+
         panel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
         return panel;
     }
 
     public static JLabel createLabelLink(final String url, String labelText) {
         JLabel label = new JLabel(labelText);
-        label.setForeground(Color.BLUE);
+        boolean isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        // Apply dark mode styling
+        if (isDarkmode) {
+            label.setForeground(new Color(100, 150, 200)); // Light blue for links in dark mode
+        } else {
+            label.setForeground(Color.BLUE);
+        }
+
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

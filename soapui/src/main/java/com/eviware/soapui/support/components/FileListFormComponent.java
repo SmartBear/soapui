@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 
 import javax.swing.Box;
@@ -28,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,16 +45,47 @@ public class FileListFormComponent extends JPanel implements JFormComponent, Act
         listModel = new DefaultListModel();
         list = new JList(listModel);
         list.setToolTipText(tooltip);
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            list.setBackground(new Color(60, 63, 65));
+            list.setForeground(Color.LIGHT_GRAY);
+            setBackground(new Color(60, 63, 65));
+        }
+
         JScrollPane scrollPane = new JScrollPane(list);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+        }
+
         scrollPane.setPreferredSize(new Dimension(300, 70));
         add(scrollPane, BorderLayout.CENTER);
         Box box = new Box(BoxLayout.Y_AXIS);
+
         addButton = new JButton("Add..");
         addButton.addActionListener(this);
+
+        // Apply dark mode styling to buttons
+        if (isDarkMode) {
+            addButton.setBackground(new Color(70, 70, 70));
+            addButton.setForeground(Color.LIGHT_GRAY);
+        }
+
         box.add(addButton);
         box.add(Box.createVerticalStrut(5));
         removeButton = new JButton("Remove..");
         removeButton.addActionListener(this);
+
+        // Apply dark mode styling to remove button
+        if (isDarkMode) {
+            removeButton.setBackground(new Color(70, 70, 70));
+            removeButton.setForeground(Color.LIGHT_GRAY);
+        }
+
         box.add(removeButton);
         box.add(Box.createVerticalGlue());
 

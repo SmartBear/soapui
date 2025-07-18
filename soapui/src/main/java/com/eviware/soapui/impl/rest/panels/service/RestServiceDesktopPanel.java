@@ -77,6 +77,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -176,11 +177,25 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
         partTabs = new JTabbedPane();
         partTabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
+        // Apply dark mode styling to partTabs
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            partTabs.setBackground(new Color(60, 63, 65));
+            partTabs.setForeground(Color.LIGHT_GRAY);
+        }
+
         rootNode = new DefaultMutableTreeNode(restService.getName());
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
         tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         tree.setExpandsSelectedPaths(true);
+
+        // Apply dark mode styling to tree
+        if (isDarkMode) {
+            tree.setBackground(new Color(60, 63, 65));
+            tree.setForeground(Color.LIGHT_GRAY);
+        }
+
         tree.addTreeSelectionListener(new InternalTreeSelectionListener());
         tree.addMouseListener(new MouseAdapter() {
             @Override
@@ -203,6 +218,13 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
 
         JScrollPane scrollPane = new JScrollPane(tree);
         UISupport.addPreviewCorner(scrollPane, true);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+        }
+
         JSplitPane split = UISupport.createHorizontalSplit(scrollPane, UISupport.createTabPanel(partTabs, true));
 
         split.setDividerLocation(250);
@@ -212,9 +234,21 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
 
         JPanel panel = new JPanel(new BorderLayout());
 
+        // Apply dark mode styling to main panel
+        if (isDarkMode) {
+            panel.setBackground(new Color(60, 63, 65));
+        }
+
         panel.add(split, BorderLayout.CENTER);
         panel.add(buildWadlTabToolbar(), BorderLayout.PAGE_START);
         statusBar = new JEditorStatusBar();
+
+        // Apply dark mode styling to status bar
+        if (isDarkMode) {
+            statusBar.setBackground(new Color(60, 63, 65));
+            statusBar.setForeground(Color.LIGHT_GRAY);
+        }
+
         panel.add(statusBar, BorderLayout.PAGE_END);
         setPreferredSize(new Dimension(600, 500));
 
@@ -372,9 +406,23 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
                 progressDialog.setProgress(1, title);
             }
 
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
             JPanel panel = new JPanel(new BorderLayout());
+
+            // Apply dark mode styling to main panel
+            if (isDarkMode) {
+                panel.setBackground(new Color(60, 63, 65));
+            }
+
             JLabel label = new JLabel(url);
             label.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+
+            // Apply dark mode styling to URL label
+            if (isDarkMode) {
+                label.setForeground(Color.LIGHT_GRAY);
+            }
+
             panel.add(label, BorderLayout.NORTH);
 
             RSyntaxTextArea inputArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
@@ -388,8 +436,40 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
             inputArea.setText(xmlString);
             inputArea.setEditable(false);
 
+            // Apply dark mode styling to the text area
+            if (isDarkMode) {
+                try {
+                    // Try to apply dark theme if available
+                    org.fife.ui.rsyntaxtextarea.Theme theme = org.fife.ui.rsyntaxtextarea.Theme.load(
+                            getClass().getResourceAsStream("/rsyntaxarea-theme/soapui-dark.xml"));
+                    theme.apply(inputArea);
+                } catch (Exception e) {
+                    // Fallback to manual dark styling
+                    inputArea.setBackground(new Color(45, 45, 45));
+                    inputArea.setForeground(new Color(230, 230, 230));
+                    inputArea.setCaretColor(new Color(230, 230, 230));
+                    inputArea.setCurrentLineHighlightColor(new Color(55, 55, 55));
+                    inputArea.setSelectionColor(new Color(75, 110, 175));
+                }
+            }
+
             JPanel p = new JPanel(new BorderLayout());
+
+            // Apply dark mode styling to inner panel
+            if (isDarkMode) {
+                p.setBackground(new Color(60, 63, 65));
+            }
+
             RTextScrollPane scrollPane = new RTextScrollPane(inputArea);
+
+            // Apply dark mode styling to scroll pane
+            if (isDarkMode) {
+                scrollPane.setBackground(new Color(60, 63, 65));
+                scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+                scrollPane.getGutter().setBackground(new Color(55, 55, 55));
+                scrollPane.getGutter().setBorderColor(new Color(80, 80, 80));
+            }
+
             p.add(scrollPane, BorderLayout.CENTER);
             UISupport.addPreviewCorner(scrollPane, true);
             panel.add(scrollPane, BorderLayout.CENTER);
@@ -463,13 +543,27 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
             progressBar.setString("Loading Definition..");
             progressBar.setIndeterminate(true);
 
+            // Apply dark mode styling to progress bar
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                progressBar.setBackground(new Color(60, 63, 65));
+                progressBar.setForeground(new Color(100, 150, 200));
+            }
+
             ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
             builder.addGlue();
             builder.addFixed(progressBar);
             builder.addGlue();
             builder.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-            partTabs.addTab("Loading.. ", builder.getPanel());
+            JPanel builderPanel = builder.getPanel();
+
+            // Apply dark mode styling to builder panel
+            if (isDarkMode) {
+                builderPanel.setBackground(new Color(60, 63, 65));
+            }
+
+            partTabs.addTab("Loading.. ", builderPanel);
             return true;
         }
     }

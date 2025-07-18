@@ -16,6 +16,8 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
+import com.eviware.soapui.SoapUI;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -32,6 +34,14 @@ public class TextPanelWithTopLabel extends JPanel {
         this.textField = textField;
         textField.setText(text);
         setToolTipText(text);
+
+        // Apply dark mode styling to match other labels
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            setBackground(new java.awt.Color(60, 63, 65));
+            textLabel.setForeground(new java.awt.Color(187, 187, 187));
+        }
+
         super.setLayout(new BorderLayout());
         super.add(textLabel, BorderLayout.NORTH);
         super.add(textField, BorderLayout.SOUTH);

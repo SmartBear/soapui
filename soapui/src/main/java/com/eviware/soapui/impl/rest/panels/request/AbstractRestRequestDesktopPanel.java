@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -102,6 +103,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
         if (getRequest().getResource() != null) {
             JPanel panel = new JPanel(new BorderLayout());
 
+            // Apply dark mode styling to main panel
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                panel.setBackground(new java.awt.Color(60, 63, 65));
+            }
+
             JXToolBar topToolBar = UISupport.createToolbar();
 
             JComponent submitButton = super.getSubmitButton();
@@ -114,9 +121,24 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
             JPanel endpointPanel = new JPanel(new BorderLayout());
             endpointPanel.setMinimumSize(new Dimension(75, STANDARD_TOOLBAR_HEIGHT));
 
+            // Apply dark mode styling to endpoint panel
+            if (isDarkMode) {
+                endpointPanel.setBackground(new java.awt.Color(60, 63, 65));
+            }
+
             JPanel comboBoxPanel = buildEndpointPanel();
 
+            // Apply dark mode styling to combo box panel
+            if (isDarkMode) {
+                comboBoxPanel.setBackground(new java.awt.Color(60, 63, 65));
+            }
+
             JLabel endPointLabel = new JLabel("Endpoint");
+
+            // Apply dark mode styling to label
+            if (isDarkMode) {
+                endPointLabel.setForeground(new java.awt.Color(187, 187, 187));
+            }
 
             endpointPanel.add(endPointLabel, BorderLayout.NORTH);
             endpointPanel.add(comboBoxPanel, BorderLayout.SOUTH);

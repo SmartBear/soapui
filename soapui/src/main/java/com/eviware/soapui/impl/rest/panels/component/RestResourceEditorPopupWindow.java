@@ -60,7 +60,6 @@ class RestResourceEditorPopupWindow extends JDialog {
     private RestResource targetResource;
     private RestResource focusedResource;
 
-
     RestResourceEditorPopupWindow(RestResource resource, RestResource focusedResource) {
         super(SoapUI.getFrame());
         this.targetResource = resource;
@@ -69,9 +68,20 @@ class RestResourceEditorPopupWindow extends JDialog {
         setResizable(false);
         setMinimumSize(new Dimension(230, 0));
 
-        JPanel contentPane = new JPanel(new BorderLayout());
-        setContentPane(contentPane);
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            getContentPane().setBackground(new Color(60, 63, 65));
+        }
 
+        JPanel contentPane = new JPanel(new BorderLayout());
+
+        // Apply dark mode styling to content pane
+        if (isDarkMode) {
+            contentPane.setBackground(new Color(60, 63, 65));
+        }
+
+        setContentPane(contentPane);
 
         JButton okButton = new JButton(new AbstractAction("OK") {
             @Override
@@ -94,11 +104,26 @@ class RestResourceEditorPopupWindow extends JDialog {
             }
         };
         JButton cancelButton = new JButton(cancelAction);
+
+        // Apply dark mode styling to buttons
+        if (isDarkMode) {
+            okButton.setBackground(new Color(70, 70, 70));
+            okButton.setForeground(Color.LIGHT_GRAY);
+            cancelButton.setBackground(new Color(70, 70, 70));
+            cancelButton.setForeground(Color.LIGHT_GRAY);
+        }
+
         cancelButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
         cancelButton.getActionMap().put("cancel", cancelAction);
 
         JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(okButton, cancelButton);
         buttonBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+        // Apply dark mode styling to button bar
+        if (isDarkMode) {
+            buttonBar.setBackground(new Color(60, 63, 65));
+        }
+
         contentPane.add(createResourceEditorPanel(focusedResource), BorderLayout.CENTER);
         contentPane.add(buttonBar, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(okButton);
@@ -108,6 +133,12 @@ class RestResourceEditorPopupWindow extends JDialog {
 
     private JPanel createResourceEditorPanel(RestResource focusedResource) {
         final JPanel panel = new JPanel(new BorderLayout());
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        // Apply dark mode styling to panel
+        if (isDarkMode) {
+            panel.setBackground(new Color(60, 63, 65));
+        }
 
         Box contentBox = Box.createVerticalBox();
 
@@ -115,15 +146,21 @@ class RestResourceEditorPopupWindow extends JDialog {
         changeWarningLabel.setBorder(BorderFactory.createCompoundBorder(
                 contentBox.getBorder(),
                 BorderFactory.createEmptyBorder(10, 0, 0, 0)));
+
+        // Apply dark mode styling to warning label
+        if (isDarkMode) {
+            changeWarningLabel.setForeground(new Color(255, 165, 0)); // Orange for warnings
+        }
+
         addBasePathFieldIfApplicable(contentBox, changeWarningLabel);
         addResourceFields(focusedResource, contentBox, changeWarningLabel);
 
         panel.add(contentBox, BorderLayout.NORTH);
-
         panel.add(changeWarningLabel, BorderLayout.CENTER);
 
+        Color borderColor = isDarkMode ? new Color(100, 100, 100) : Color.BLACK;
         panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+                BorderFactory.createMatteBorder(0, 0, 1, 0, borderColor),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
         return panel;
@@ -191,6 +228,14 @@ class RestResourceEditorPopupWindow extends JDialog {
             textField = new JTextField(restResource.getPath());
             textField.setMaximumSize(new Dimension(340, (int) textField.getPreferredSize().getHeight()));
             textField.setPreferredSize(new Dimension(340, (int) textField.getPreferredSize().getHeight()));
+
+            // Apply dark mode styling to text field
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                textField.setBackground(new Color(45, 45, 45));
+                textField.setForeground(new Color(230, 230, 230));
+                textField.setCaretColor(new Color(230, 230, 230));
+            }
         }
 
         public JTextField getTextField() {
@@ -208,6 +253,15 @@ class RestResourceEditorPopupWindow extends JDialog {
             basePathTextField.getDocument().addDocumentListener(new PathChangeListener(changeWarningLabel,
                     targetResource.getTopLevelResource()));
             basePathTextField.setMaximumSize(new Dimension(340, (int) basePathTextField.getPreferredSize().getHeight()));
+
+            // Apply dark mode styling to base path text field
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                basePathTextField.setBackground(new Color(45, 45, 45));
+                basePathTextField.setForeground(new Color(230, 230, 230));
+                basePathTextField.setCaretColor(new Color(230, 230, 230));
+            }
+
             Box row = Box.createHorizontalBox();
             row.setAlignmentX(0);
             row.add(createBoxWith(basePathTextField));

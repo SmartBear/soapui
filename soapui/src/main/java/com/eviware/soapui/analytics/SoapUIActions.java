@@ -199,7 +199,9 @@ public enum SoapUIActions {
 
     //Stay Tuned
     STAY_TUNED_DIALOG_SKIPPED("SkippedStayInLoopForm", null, NO),
-    STAY_TUNED_DIALOG_ACCEPTED("CompletedStayInLoopForm", null, NO);
+    STAY_TUNED_DIALOG_ACCEPTED("CompletedStayInLoopForm", null, NO),
+
+    SWITCH_THEME("SwitchThemeAction", null, STATIC_MAIN_TOOLBAR);
 
     private String actionName;
     private ModuleType moduleType;

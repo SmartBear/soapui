@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
@@ -146,6 +147,21 @@ public class RestParamsTable extends JPanel {
         };
         paramsTable.setName(REST_PARAMS_TABLE);
         paramsTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+
+        // Apply dark mode styling to table
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            paramsTable.setBackground(new java.awt.Color(60, 63, 65));
+            paramsTable.setForeground(java.awt.Color.LIGHT_GRAY);
+            paramsTable.setGridColor(new java.awt.Color(100, 100, 100));
+            // Show grid lines in dark mode for better cell separation
+            paramsTable.setShowGrid(true);
+            paramsTable.setIntercellSpacing(new java.awt.Dimension(1, 1));
+            if (paramsTable.getTableHeader() != null) {
+                paramsTable.getTableHeader().setBackground(new java.awt.Color(70, 70, 70));
+                paramsTable.getTableHeader().setForeground(java.awt.Color.LIGHT_GRAY);
+            }
+        }
 
         if (showDefaultParamsButton) {
             defaultParamsAction = new UseDefaultParamsAction();

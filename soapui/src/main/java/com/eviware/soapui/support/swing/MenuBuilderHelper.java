@@ -37,6 +37,9 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import java.awt.Component;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class MenuBuilderHelper {
@@ -48,6 +51,23 @@ public class MenuBuilderHelper {
             }
         }
         return null;
+    }
+
+    public static JMenu buildMenuForDarkMode(JMenu menu) {
+        menu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                menu.setOpaque(true);
+                menu.setBackground(new Color(75, 75, 75)); // Darker gray on hover
+                menu.setForeground(Color.WHITE);           // Keep text white
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                menu.setBackground(new Color(60, 63, 65)); // Restore original dark color
+                menu.setForeground(Color.WHITE);           // Keep text white
+            }
+        });
+        return menu;
     }
 
     public static JMenu buildMenuForWorkspace(JMenu menu, String actionGroup) {

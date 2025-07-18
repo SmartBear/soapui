@@ -34,6 +34,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,7 +63,20 @@ public class JDebugPropertiesTable<T> {
         table.getColumnModel().getColumn(0).setCellRenderer(new PropertiesTableCellRenderer());
         table.getColumnModel().getColumn(1).setCellRenderer(new PropertiesTableCellRenderer());
 
-        table.setBackground(Color.WHITE);
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            table.setBackground(new Color(60, 63, 65));
+            table.setForeground(Color.LIGHT_GRAY);
+            table.setGridColor(new Color(100, 100, 100));
+            table.setShowGrid(true);
+            table.setIntercellSpacing(new Dimension(1, 1));
+            if (table.getTableHeader() != null) {
+                table.getTableHeader().setBackground(new Color(70, 70, 70));
+                table.getTableHeader().setForeground(Color.LIGHT_GRAY);
+            }
+        } else {
+            table.setBackground(Color.WHITE);
+        }
     }
 
     public void removeNotify() {
@@ -206,7 +220,9 @@ public class JDebugPropertiesTable<T> {
     private class PTable extends JXTable {
         public PTable(TableModel tableModel) {
             super(tableModel);
-            if (UISupport.isMac()) {
+            // Apply grid attributes for all platforms in dark mode, or Mac in light mode
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode || UISupport.isMac()) {
                 JTableFactory.setGridAttributes(this);
             }
         }
@@ -228,7 +244,10 @@ public class JDebugPropertiesTable<T> {
 
         @Override
         public boolean getShowVerticalLines() {
-            return UISupport.isMac() ? false : super.getShowVerticalLines();
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            // Show vertical lines in dark mode for all platforms, or non-Mac platforms in
+            // light mode
+            return isDarkMode || !UISupport.isMac();
         }
     }
 

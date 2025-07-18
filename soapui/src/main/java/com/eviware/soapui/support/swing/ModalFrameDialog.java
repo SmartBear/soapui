@@ -59,9 +59,27 @@ public class ModalFrameDialog {
             textField.setSelectionEnd(initialValue.length());
         }
 
+        // Apply dark mode styling
+        boolean isDarkMode = com.eviware.soapui.SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            textField.setBackground(new java.awt.Color(45, 45, 45));
+            textField.setForeground(new java.awt.Color(230, 230, 230));
+            textField.setCaretColor(new java.awt.Color(230, 230, 230));
+        }
+
         JPanel buttonPanel = new JPanel(new FlowLayout());
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
+
+        // Apply dark mode styling to buttons
+        if (isDarkMode) {
+            okButton.setBackground(new java.awt.Color(70, 70, 70));
+            okButton.setForeground(new java.awt.Color(230, 230, 230));
+            cancelButton.setBackground(new java.awt.Color(70, 70, 70));
+            cancelButton.setForeground(new java.awt.Color(230, 230, 230));
+            buttonPanel.setBackground(new java.awt.Color(60, 63, 65));
+        }
+
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
 
@@ -69,17 +87,41 @@ public class ModalFrameDialog {
         iconLabel.setVerticalAlignment(SwingConstants.TOP);
         iconLabel.setBorder(new EmptyBorder(0, 0, 0, 10));
 
+        // Apply dark mode styling to icon label
+        if (isDarkMode) {
+            iconLabel.setForeground(new java.awt.Color(230, 230, 230));
+        }
+
         JPanel outerPanel = new JPanel(new BorderLayout());
         JPanel innerPanel = new JPanel(new BorderLayout());
         outerPanel.add(iconLabel, BorderLayout.WEST);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
         outerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        innerPanel.add(new JLabel(question), BorderLayout.NORTH);
+        // Apply dark mode styling to panels
+        if (isDarkMode) {
+            outerPanel.setBackground(new java.awt.Color(60, 63, 65));
+            innerPanel.setBackground(new java.awt.Color(60, 63, 65));
+        }
+
+        JLabel questionLabel = new JLabel(question);
+
+        // Apply dark mode styling to question label
+        if (isDarkMode) {
+            questionLabel.setForeground(new java.awt.Color(230, 230, 230));
+        }
+
+        innerPanel.add(questionLabel, BorderLayout.NORTH);
         innerPanel.add(textField, BorderLayout.CENTER);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         frame = new JFrame(title);
+
+        // Apply dark mode styling to frame
+        if (isDarkMode) {
+            frame.getContentPane().setBackground(new java.awt.Color(60, 63, 65));
+        }
+
         frame.getContentPane().add(outerPanel);
         frame.getRootPane().setDefaultButton(okButton);
         frame.pack();

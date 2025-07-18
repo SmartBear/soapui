@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
@@ -49,6 +50,12 @@ public abstract class SimpleDialog extends JDialog {
         this.description = description;
         this.helpUrl = helpUrl;
         this.okAndCancel = okAndCancel;
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            getContentPane().setBackground(new Color(60, 63, 65));
+        }
     }
 
     private synchronized void init() {
@@ -56,8 +63,15 @@ public abstract class SimpleDialog extends JDialog {
             return;
         }
 
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
         buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
+        // Apply dark mode styling to button bar
+        if (isDarkMode) {
+            buttons.setBackground(new Color(60, 63, 65));
+        }
 
         getContentPane().add(
                 UISupport.buildDescription(title, description, UISupport.createImageIcon(UISupport.TOOL_ICON_PATH)),
@@ -65,11 +79,15 @@ public abstract class SimpleDialog extends JDialog {
 
         getContentPane().add(buildContent(), BorderLayout.CENTER);
 
+        Color borderColor1 = isDarkMode ? new Color(100, 100, 100) : Color.GRAY;
+        Color borderColor2 = isDarkMode ? new Color(80, 80, 80) : Color.WHITE;
+
         buttons
                 .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
-                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.WHITE)), BorderFactory.createEmptyBorder(3, 5,
-                        3, 5)));
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, borderColor1),
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, borderColor2)),
+                        BorderFactory.createEmptyBorder(3, 5,
+                                3, 5)));
 
         getContentPane().add(buttons, BorderLayout.SOUTH);
         modifyButtons();

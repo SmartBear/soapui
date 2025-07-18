@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.request.StringToStringsMapTableModel;
@@ -66,6 +67,9 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
             return panel;
         }
 
+        // Check if dark mode is enabled
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
         headersTableModel = new StringToStringsMapTableModel(model.getHeaders(), "Header", "Value", !model.isReadOnly());
         headersTableModel.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent arg0) {
@@ -76,8 +80,34 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 
         headersTable = JTableFactory.getInstance().makeJTable(headersTableModel);
 
+        // Apply dark mode styling to table
+        if (isDarkMode) {
+            headersTable.setBackground(new java.awt.Color(43, 43, 43));
+            headersTable.setForeground(new java.awt.Color(187, 187, 187));
+            headersTable.getTableHeader().setBackground(new java.awt.Color(60, 63, 65));
+            headersTable.getTableHeader().setForeground(new java.awt.Color(187, 187, 187));
+            // Show grid lines in dark mode for better cell separation
+            headersTable.setShowGrid(true);
+            headersTable.setGridColor(new java.awt.Color(100, 100, 100));
+            headersTable.setIntercellSpacing(new java.awt.Dimension(1, 1));
+        }
+
         panel = new JPanel(new BorderLayout());
-        panel.add(new JScrollPane(headersTable), BorderLayout.CENTER);
+
+        // Apply dark mode styling to panel
+        if (isDarkMode) {
+            panel.setBackground(new java.awt.Color(43, 43, 43));
+        }
+
+        JScrollPane scrollPane = new JScrollPane(headersTable);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new java.awt.Color(43, 43, 43));
+            scrollPane.getViewport().setBackground(new java.awt.Color(43, 43, 43));
+        }
+
+        panel.add(scrollPane, BorderLayout.CENTER);
 
         if (!model.isReadOnly()) {
             headersTable.setSurrendersFocusOnKeystroke(true);

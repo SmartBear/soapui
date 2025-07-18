@@ -169,6 +169,16 @@ public class DefaultSoapUICore implements SoapUICore {
         pluginManager.loadPlugins();
         log.info("All plugins loaded");
 
+        // Add shutdown hook to properly close plugin resources with high priority
+        Thread shutdownThread = new Thread(() -> {
+            if (pluginManager != null) {
+                pluginManager.shutdown();
+            }
+        });
+        shutdownThread.setName("PluginManager-Shutdown");
+        shutdownThread.setPriority(Thread.MAX_PRIORITY);
+        Runtime.getRuntime().addShutdownHook(shutdownThread);
+
     }
 
     protected void initExtensions(ClassLoader extensionClassLoader) {

@@ -38,6 +38,10 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
         textArea.setEditable(false);
         textArea.setLineWrap(SoapUI.getSettings().getBoolean(UISettings.WRAP_RAW_MESSAGES));
         textArea.setToolTipText(tooltip);
+
+        // Set Consolas font for RAW view
+        textArea.setFont(new java.awt.Font("Consolas", java.awt.Font.PLAIN, 11));
+
         scrollPane = new JScrollPane(textArea);
         UISupport.addPreviewCorner(scrollPane, true);
     }

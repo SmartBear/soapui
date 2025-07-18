@@ -17,6 +17,7 @@
 package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.SoapUI;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,9 +27,12 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 
 public class JCollapsiblePanel extends JPanel {
     private static final String HIGHLIGHT_SIGN = "* ";
@@ -45,8 +49,9 @@ public class JCollapsiblePanel extends JPanel {
     public JCollapsiblePanel(JPanel contentPanel, String title) {
         super(new BorderLayout());
         this.contentPanel = contentPanel;
-        minusIcon = UISupport.createImageIcon("/button1.gif");
-        plusIcon = UISupport.createImageIcon("/button2.gif");
+        // Use adaptive icons that work well in both light and dark modes
+        minusIcon = createAdaptiveIcon("/button1.gif", true);
+        plusIcon = createAdaptiveIcon("/button2.gif", false);
 
         add(contentPanel, BorderLayout.CENTER);
         add(startToolbar(title), BorderLayout.NORTH);
@@ -54,6 +59,41 @@ public class JCollapsiblePanel extends JPanel {
 
     public JCollapsiblePanel(String title) {
         this(new JPanel(), title);
+    }
+
+    /**
+     * Creates an adaptive icon that changes color based on dark mode
+     */
+    private ImageIcon createAdaptiveIcon(String iconPath, boolean isMinus) {
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
+        if (isDarkMode) {
+            // In dark mode, create a light colored version of the icon
+            ImageIcon originalIcon = UISupport.createImageIcon(iconPath);
+            if (originalIcon != null) {
+                return createLightColoredIcon(originalIcon);
+            }
+        }
+
+        // Fallback to original icon
+        return UISupport.createImageIcon(iconPath);
+    }
+
+    /**
+     * Creates a light-colored version of an icon for better visibility in dark mode
+     */
+    private ImageIcon createLightColoredIcon(ImageIcon originalIcon) {
+        Image img = originalIcon.getImage();
+        BufferedImage bufferedImg = new BufferedImage(img.getWidth(null), img.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB);
+
+        // Create a light gray version of the icon
+        java.awt.Graphics2D g2d = bufferedImg.createGraphics();
+        g2d.setColor(new Color(200, 200, 200)); // Light gray color for dark mode
+        g2d.fillRect(0, 0, bufferedImg.getWidth(), bufferedImg.getHeight());
+        g2d.dispose();
+
+        return new ImageIcon(bufferedImg);
     }
 
     private JXToolBar startToolbar(String title) {

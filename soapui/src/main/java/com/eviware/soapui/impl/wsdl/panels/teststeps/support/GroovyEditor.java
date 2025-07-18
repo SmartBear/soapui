@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
@@ -91,7 +92,28 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
         }
 
         editArea.setFont(editorFont);
-        editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.WHITE));
+
+        // Apply dark mode theme if enabled
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            try {
+                // Try to apply dark theme
+                org.fife.ui.rsyntaxtextarea.Theme theme = org.fife.ui.rsyntaxtextarea.Theme.load(
+                        getClass().getResourceAsStream("/rsyntaxarea-theme/soapui-dark.xml"));
+                theme.apply(editArea);
+                editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, new Color(100, 100, 100)));
+            } catch (Exception e) {
+                // Fallback to manual dark styling
+                editArea.setBackground(new Color(45, 45, 45));
+                editArea.setForeground(new Color(230, 230, 230));
+                editArea.setCaretColor(new Color(230, 230, 230));
+                editArea.setCurrentLineHighlightColor(new Color(55, 55, 55));
+                editArea.setSelectionColor(new Color(75, 110, 175));
+                editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, new Color(100, 100, 100)));
+            }
+        } else {
+            editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.WHITE));
+        }
 
         editArea.setText(model.getScript());
         editArea.setCaretPosition(0);
@@ -110,6 +132,17 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 
         scrollPane = new RTextScrollPane(editArea, true);
         scrollPane.setPreferredSize(new Dimension(500, 300));
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+            if (scrollPane.getGutter() != null) {
+                scrollPane.getGutter().setBackground(new Color(55, 55, 55));
+                scrollPane.getGutter().setBorderColor(new Color(80, 80, 80));
+            }
+        }
+
         add(scrollPane);
 
         UISupport.addPreviewCorner(scrollPane, true);

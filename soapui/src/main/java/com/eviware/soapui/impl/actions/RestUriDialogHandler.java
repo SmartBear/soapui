@@ -87,7 +87,7 @@ public class RestUriDialogHandler {
             textField.requestFocus();
             originalFont = textField.getFont();
             textField.setFont(originalFont.deriveFont(Font.ITALIC));
-            textField.setForeground(new Color(170, 170, 170));
+            textField.setForeground(UISupport.getPlaceholderTextColor());
             addListenersToTextField();
         }
         return dialog;
@@ -99,7 +99,7 @@ public class RestUriDialogHandler {
                 defaultURIReplaced = true;
                 textField.setText("");
                 textField.setFont(originalFont);
-                textField.setForeground(Color.BLACK);
+                textField.setForeground(UISupport.getDefaultTextColor());
             } finally {
                 if (initialKeyListener != null) {
                     textField.removeKeyListener(initialKeyListener);

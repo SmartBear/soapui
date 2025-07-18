@@ -89,6 +89,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
@@ -100,6 +102,7 @@ import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorView<XmlDocument> {
     private static final String RSYNTAXAREA_THEME = "/rsyntaxarea-theme/soapui.xml";
+    private static final String RSYNTAXAREA_DARK_THEME = "/rsyntaxarea-theme/soapui-dark.xml";
 
     private RSyntaxTextArea editArea;
     private RTextScrollPane editorScrollPane;
@@ -123,6 +126,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
     private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
     private FindAndReplaceDialogView findAndReplaceDialog;
     private final boolean readOnly;
+    private boolean isDarkmode;
 
     public XmlSourceEditorView(XmlEditor<XmlDocument> xmlEditor, T modelItem, boolean readOnly) {
         this(xmlEditor, modelItem, readOnly, "XML");
@@ -132,13 +136,15 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         super(tabTitle, xmlEditor, XmlSourceEditorViewFactory.VIEW_ID);
         this.modelItem = modelItem;
         this.readOnly = readOnly;
+        this.isDarkmode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
     }
 
     protected void buildUI() {
         editArea = new RSyntaxTextArea(20, 60);
 
         try {
-            Theme theme = Theme.load(XmlSourceEditorView.class.getResourceAsStream(RSYNTAXAREA_THEME));
+            Theme theme = Theme.load(XmlSourceEditorView.class
+                    .getResourceAsStream(this.isDarkmode ? this.RSYNTAXAREA_DARK_THEME : this.RSYNTAXAREA_THEME));
             theme.apply(editArea);
         } catch (IOException e) {
             SoapUI.logError(e, "Could not load XML editor color theme file");
@@ -152,7 +158,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         editArea.setCaretPosition(0);
         editArea.setEnabled(!readOnly);
         editArea.setEditable(!readOnly);
-        editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.WHITE));
+        editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, this.isDarkmode ? Color.BLACK : Color.WHITE));
 
         errorListModel = new DefaultListModel();
         JList list = new JList(errorListModel);
@@ -628,7 +634,9 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
     @Override
     public int getSupportScoreForContentType(String contentType ) {
-        return contentType.toLowerCase().contains("xml")? 2 : 0;
+        Pattern p = Pattern.compile("(?i)(?:(xml$)|((\\/|\\+)(xml|html);.+))");
+        Matcher m = p.matcher(contentType.toLowerCase());
+        return m.find() ? 2 : 0;
     }
 
     protected ValidationError[] validateXml(String xml) {

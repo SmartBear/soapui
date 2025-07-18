@@ -159,9 +159,37 @@ public class AddAssertionPanel extends SimpleDialog {
         hideDescCB.addItemListener(hideDescListener);
         hideDescCB
                 .setSelected(SoapUI.getSettings().getBoolean(AssertionDescriptionSettings.SHOW_ASSERTION_DESCRIPTION));
-        toolbar.add(new JLabel("Assertions"));
+
+        JLabel assertionsLabel = new JLabel("Assertions");
+        toolbar.add(assertionsLabel);
         toolbar.addGlue();
         toolbar.add(hideDescCB);
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            mainPanel.setBackground(new Color(60, 63, 65));
+            splitPane.setBackground(new Color(60, 63, 65));
+            assertionsLabel.setForeground(new Color(230, 230, 230));
+            hideDescCB.setForeground(new Color(230, 230, 230));
+
+            // Apply dark styling to tables
+            if (assertionsTable != null) {
+                assertionsTable.setBackground(new Color(45, 45, 45));
+                assertionsTable.setForeground(new Color(230, 230, 230));
+                assertionsTable.setSelectionBackground(new Color(75, 110, 175));
+                assertionsTable.setSelectionForeground(Color.WHITE);
+                assertionsTable.setGridColor(new Color(100, 100, 100));
+            }
+
+            if (categoriesListTable != null) {
+                categoriesListTable.setBackground(new Color(45, 45, 45));
+                categoriesListTable.setForeground(new Color(230, 230, 230));
+                categoriesListTable.setSelectionBackground(new Color(75, 110, 175));
+                categoriesListTable.setSelectionForeground(Color.WHITE);
+                categoriesListTable.setGridColor(new Color(100, 100, 100));
+            }
+        }
 
         mainPanel.add(toolbar, BorderLayout.NORTH);
         mainPanel.add(splitPane, BorderLayout.CENTER);
@@ -192,7 +220,18 @@ public class AddAssertionPanel extends SimpleDialog {
 
         assertionsTable.getColumnModel().getColumn(0).setCellRenderer(assertionEntryRenderer);
         assertionsForm.addComponent(assertionsTable);
-        return new JScrollPane(assertionsForm.getPanel());
+
+        JScrollPane scrollPane = new JScrollPane(assertionsForm.getPanel());
+
+        // Apply dark mode styling to scroll pane
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+            assertionsForm.getPanel().setBackground(new Color(45, 45, 45));
+        }
+
+        return scrollPane;
     }
 
     private Component buildCategoriesList() {
@@ -215,7 +254,18 @@ public class AddAssertionPanel extends SimpleDialog {
             }
         });
         categoriesListTable.getColumnModel().getColumn(0).setCellRenderer(categoriesListRenderer);
-        panel.add(new JScrollPane(categoriesListTable));
+
+        JScrollPane scrollPane = new JScrollPane(categoriesListTable);
+        panel.add(scrollPane);
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            panel.setBackground(new Color(60, 63, 65));
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+        }
+
         return panel;
     }
 
@@ -280,8 +330,10 @@ public class AddAssertionPanel extends SimpleDialog {
 
     protected boolean isAssertionApplicable(String assertionType, ModelItem modelItem, String property) {
         try {
-            //property is only used for adding assertions with selecting source and property,
-            //therefore here can be empty string, but gets its meaning in Override of this method
+            // property is only used for adding assertions with selecting source and
+            // property,
+            // therefore here can be empty string, but gets its meaning in Override of this
+            // method
             return TestAssertionRegistry.getInstance().canAssert(assertionType, assertable);
         } catch (Throwable t) {
             SoapUI.logError(t);
@@ -407,6 +459,9 @@ public class AddAssertionPanel extends SimpleDialog {
 
             boldFont = getFont().deriveFont(Font.BOLD);
 
+            // Apply dark mode styling - declare once at the beginning
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
             AssertionListEntry entry = (AssertionListEntry) value;
             String type = TestAssertionRegistry.getInstance().getAssertionTypeForName(entry.getName());
             boolean canAssert = false;
@@ -427,10 +482,19 @@ public class AddAssertionPanel extends SimpleDialog {
             descText.setWrapStyleWord(true);
             disabledInfo = new JLabel("Not applicable with selected Source and Property");
             descText.setFont(disabledInfo.getFont());
+
+            // Apply dark mode styling for disabled state
             if (disable) {
-                label.setForeground(Color.LIGHT_GRAY);
-                descText.setForeground(Color.LIGHT_GRAY);
-                disabledInfo.setForeground(Color.LIGHT_GRAY);
+                if (isDarkMode) {
+                    // Much darker colors for disabled items in dark mode for better distinction
+                    label.setForeground(new Color(100, 100, 100)); // Darker gray
+                    descText.setForeground(new Color(100, 100, 100));
+                    disabledInfo.setForeground(new Color(100, 100, 100));
+                } else {
+                    label.setForeground(Color.LIGHT_GRAY);
+                    descText.setForeground(Color.LIGHT_GRAY);
+                    disabledInfo.setForeground(Color.LIGHT_GRAY);
+                }
             }
             SimpleForm form = new SimpleForm();
             form.addComponent(label);
@@ -447,12 +511,43 @@ public class AddAssertionPanel extends SimpleDialog {
                 }
                 getAssertionsTable().setRowHeight(40);
             }
+            // Apply dark mode styling
             if (isSelected) {
-                descText.setBackground(Color.LIGHT_GRAY);
-                form.getPanel().setBackground(Color.LIGHT_GRAY);
+                if (isDarkMode) {
+                    descText.setBackground(new Color(75, 110, 175)); // Dark selection color
+                    form.getPanel().setBackground(new Color(75, 110, 175));
+                    label.setForeground(Color.WHITE);
+                    descText.setForeground(Color.WHITE);
+                    if (!disable) {
+                        disabledInfo.setForeground(Color.WHITE);
+                    }
+                } else {
+                    descText.setBackground(Color.LIGHT_GRAY);
+                    form.getPanel().setBackground(Color.LIGHT_GRAY);
+                }
             } else {
-                descText.setBackground(Color.WHITE);
-                form.getPanel().setBackground(Color.WHITE);
+                if (isDarkMode) {
+                    if (disable) {
+                        // Disabled items get a different background color for better distinction
+                        descText.setBackground(new Color(35, 35, 35)); // Darker background for disabled
+                        form.getPanel().setBackground(new Color(35, 35, 35));
+                        // Add visual indicator for disabled items
+                        form.getPanel().setBorder(
+                                javax.swing.BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(80, 80, 80)));
+                    } else {
+                        descText.setBackground(new Color(45, 45, 45)); // Normal dark background
+                        form.getPanel().setBackground(new Color(45, 45, 45));
+                        label.setForeground(new Color(230, 230, 230));
+                        descText.setForeground(new Color(230, 230, 230));
+                        disabledInfo.setForeground(new Color(230, 230, 230));
+                        // Add visual indicator for enabled items
+                        form.getPanel().setBorder(
+                                javax.swing.BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(70, 130, 180)));
+                    }
+                } else {
+                    descText.setBackground(Color.WHITE);
+                    form.getPanel().setBackground(Color.WHITE);
+                }
             }
             return form.getPanel();
         }
@@ -492,13 +587,46 @@ public class AddAssertionPanel extends SimpleDialog {
             SimpleForm form = new SimpleForm();
             form.addComponent(label);
             label.setFont(boldFont);
+            // Apply dark mode styling
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+
             if (disabled || !((CategoriesListTable) table).isSelectable(row)) {
-                label.setForeground(Color.GRAY);
-            }
-            if (isSelected) {
-                form.getPanel().setBackground(Color.LIGHT_GRAY);
+                if (isDarkMode) {
+                    label.setForeground(new Color(90, 90, 90)); // Much darker gray for disabled in dark mode
+                } else {
+                    label.setForeground(Color.GRAY);
+                }
             } else {
-                form.getPanel().setBackground(Color.WHITE);
+                if (isDarkMode) {
+                    label.setForeground(new Color(230, 230, 230)); // Light text for enabled in dark mode
+                } else {
+                    label.setForeground(Color.BLACK);
+                }
+            }
+
+            if (isSelected) {
+                if (isDarkMode) {
+                    form.getPanel().setBackground(new Color(75, 110, 175)); // Dark selection color
+                    label.setForeground(Color.WHITE);
+                } else {
+                    form.getPanel().setBackground(Color.LIGHT_GRAY);
+                }
+            } else {
+                if (isDarkMode) {
+                    if (disabled || !((CategoriesListTable) table).isSelectable(row)) {
+                        // Disabled categories get darker background and visual indicator
+                        form.getPanel().setBackground(new Color(35, 35, 35));
+                        form.getPanel().setBorder(
+                                javax.swing.BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(80, 80, 80)));
+                    } else {
+                        // Enabled categories get normal background and visual indicator
+                        form.getPanel().setBackground(new Color(45, 45, 45));
+                        form.getPanel().setBorder(
+                                javax.swing.BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(70, 130, 180)));
+                    }
+                } else {
+                    form.getPanel().setBackground(Color.WHITE);
+                }
             }
             return form.getPanel();
         }

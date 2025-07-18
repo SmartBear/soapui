@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE RSyntaxTheme SYSTEM "theme.dtd">
+
+<!--
+	Dark theme for SoapUI based on RSyntaxTextArea's default theme.
+-->
+<RSyntaxTheme version="1.0">
+
+    <!-- Set a dark base font color -->
+    <baseFont size="12"/>
+
+    <!-- General editor colors for dark mode -->
+    <background color="2E2E2E"/> <!-- Dark gray background -->
+    <caret color="FFFFFF"/> <!-- White caret -->
+    <selection bg="3A3A3A"/> <!-- Darker gray selection background -->
+    <currentLineHighlight color="444444" fade="true"/> <!-- Slightly lighter highlight for current line -->
+    <marginLine fg="5A5A5A"/> <!-- Margin line in dark gray -->
+    <markAllHighlight color="6B8189"/>
+    <markOccurrencesHighlight color="5A5A5A"/>
+    <matchedBracket fg="FFFFFF" bg="666666" animate="true"/> <!-- White matched brackets on dark gray background -->
+    <hyperlinks fg="0080FF"/> <!-- Blue hyperlinks -->
+    <secondaryLanguages>
+        <language index="1" bg="3A3A3A"/> <!-- Darker shades for secondary languages -->
+        <language index="2" bg="444444"/>
+        <language index="3" bg="4A4A4A"/>
+    </secondaryLanguages>
+
+    <!-- Gutter styling for dark mode -->
+    <gutterBorder color="444444"/>
+    <lineNumbers fg="C0C0C0"/> <!-- Light gray line numbers -->
+    <foldIndicator fg="808080" iconBg="2E2E2E"/> <!-- Light gray fold indicator -->
+    <iconRowHeader activeLineRange="3399FF"/> <!-- Blue active line range -->
+
+    <!-- Syntax tokens for dark mode -->
+    <tokenStyles>
+        <style token="IDENTIFIER" fg="FFFFFF"/> <!-- White identifiers -->
+        <style token="RESERVED_WORD" fg="FF80FF" bold="true"/> <!-- Pink reserved words -->
+        <style token="RESERVED_WORD_2" fg="FF80FF" bold="true"/>
+        <style token="ANNOTATION" fg="BBBBBB"/> <!-- Light gray annotations -->
+        <style token="COMMENT_DOCUMENTATION" fg="A0A0A0" italic="true"/> <!-- Gray comments -->
+        <style token="COMMENT_EOL" fg="A0A0A0" italic="true"/>
+        <style token="COMMENT_MULTILINE" fg="A0A0A0" italic="true"/>
+        <style token="COMMENT_KEYWORD" fg="FF9900" bold="true"/> <!-- Orange keywords in comments -->
+        <style token="COMMENT_MARKUP" fg="BBBBBB"/>
+        <style token="DATA_TYPE" fg="00FFFF" bold="true"/> <!-- Cyan data types -->
+        <style token="FUNCTION" fg="FFFF00"/> <!-- Yellow functions -->
+        <style token="LITERAL_BOOLEAN" fg="FF80FF" bold="true"/> <!-- Pink booleans -->
+        <style token="LITERAL_NUMBER_DECIMAL_INT" fg="00FFFF"/> <!-- Cyan numbers -->
+        <style token="LITERAL_NUMBER_FLOAT" fg="00FFFF"/>
+        <style token="LITERAL_NUMBER_HEXADECIMAL" fg="00FFFF"/>
+        <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="80FF80"/> <!-- Green strings -->
+        <style token="LITERAL_CHAR" fg="80FF80"/>
+        <style token="LITERAL_BACKQUOTE" fg="80FF80"/>
+        <style token="MARKUP_TAG_DELIMITER" fg="FF0000"/> <!-- Red markup tag delimiters -->
+        <style token="MARKUP_TAG_NAME" fg="FFFF80"/> <!-- Light yellow tag names -->
+        <style token="MARKUP_TAG_ATTRIBUTE" fg="00FFFF"/> <!-- Cyan tag attributes -->
+        <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="80FF80"/> <!-- Green attribute values -->
+        <style token="MARKUP_PROCESSING_INSTRUCTION" fg="BBBBBB"/>
+        <style token="MARKUP_CDATA" fg="993333"/>
+        <style token="OPERATOR" fg="FFFFFF"/> <!-- White operators -->
+        <style token="PREPROCESSOR" fg="BBBBBB"/>
+        <style token="REGEX" fg="00FF00"/> <!-- Bright green for regex -->
+        <style token="SEPARATOR" fg="FF0000"/> <!-- Red separators -->
+        <style token="VARIABLE" fg="FF8800" bold="true"/> <!-- Orange variables -->
+        <style token="WHITESPACE" fg="FFFFFF"/> <!-- White whitespace -->
+
+        <!-- Error tokens with dark mode background -->
+        <style token="ERROR_IDENTIFIER" fg="FFFFFF" bg="990000"/> <!-- White on dark red -->
+        <style token="ERROR_NUMBER_FORMAT" fg="FFFFFF" bg="990000"/>
+        <style token="ERROR_STRING_DOUBLE" fg="FFFFFF" bg="990000"/>
+        <style token="ERROR_CHAR" fg="FFFFFF" bg="990000"/>
+    </tokenStyles>
+
+</RSyntaxTheme>

@@ -99,23 +99,32 @@ public class LoaderBase {
     }
 
     protected void loadAutoFactories(Reflections jarFileScanner, Collection<SoapUIFactory> factories) {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.addUrls(ClasspathHelper.forClass(AutoFactory.class));
-        builder.setScanners(new SubTypesScanner(), new TypeAnnotationsScanner());
-        builder.addClassLoader(Thread.currentThread().getContextClassLoader());
-        Reflections autoAnnotationFinder = new Reflections(builder);
+        try {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.addUrls(ClasspathHelper.forClass(AutoFactory.class));
+            builder.setScanners(new SubTypesScanner(), new TypeAnnotationsScanner());
+            builder.addClassLoader(Thread.currentThread().getContextClassLoader());
+            Reflections autoAnnotationFinder = new Reflections(builder);
 
-        for (Class clazz : autoAnnotationFinder.getTypesAnnotatedWith(AutoFactory.class)) {
-            if (clazz.isAnnotation() && clazz.getSimpleName().startsWith("Plugin")) {
-                try {
-                    String className = "Auto" + clazz.getSimpleName().substring(6) + "Factory";
-                    Class<? extends SoapUIFactory> factoryClass = (Class<? extends SoapUIFactory>)
-                            Class.forName(clazz.getPackage().getName() + ".factories." + className);
-                    factories.addAll(findAutoFactoryObjects(jarFileScanner, clazz, factoryClass));
-                } catch (ClassNotFoundException e) {
-                    SoapUI.logError(e);
+            Set<Class<?>> annotatedClasses = autoAnnotationFinder.getTypesAnnotatedWith(AutoFactory.class);
+            for (Class clazz : annotatedClasses) {
+                if (clazz.isAnnotation() && clazz.getSimpleName().startsWith("Plugin")) {
+                    try {
+                        String className = "Auto" + clazz.getSimpleName().substring(6) + "Factory";
+                        Class<? extends SoapUIFactory> factoryClass = (Class<? extends SoapUIFactory>) Class
+                                .forName(clazz.getPackage().getName() + ".factories." + className);
+                        factories.addAll(findAutoFactoryObjects(jarFileScanner, clazz, factoryClass));
+                    } catch (ClassNotFoundException e) {
+                        SoapUI.logError(e);
+                    }
                 }
             }
+        } catch (org.reflections.ReflectionsException e) {
+            // Silently ignore reflection errors from external plugins that might be
+            // incompatible
+            // No logging to avoid spam from incompatible plugins
+        } catch (Exception e) {
+            SoapUI.logError(e);
         }
     }
 
@@ -123,23 +132,34 @@ public class LoaderBase {
                                                                Class<? extends SoapUIFactory> factoryClass) {
 
         Collection<SoapUIFactory> factories = new HashSet<>();
-        Set<Class<?>> objectClasses = jarFileScanner.getTypesAnnotatedWith(annotationType);
+        try {
+            Set<Class<?>> objectClasses = jarFileScanner.getTypesAnnotatedWith(annotationType);
 
-        for (Class<?> clazz : objectClasses) {
-            try {
+            for (Class<?> clazz : objectClasses) {
+                try {
 
-                Annotation annotation = clazz.getAnnotation(annotationType);
-                factories.add(createAutoFactory(annotationType, factoryClass, clazz, annotation));
-                SoapUI.log("Added AutoFactory for [" + annotationType.getSimpleName() + "]");
-            } catch (Exception e) {
-                SoapUI.logError(e);
+                    Annotation annotation = clazz.getAnnotation(annotationType);
+                    factories.add(createAutoFactory(annotationType, factoryClass, clazz, annotation));
+                    SoapUI.log("Added AutoFactory for [" + annotationType.getSimpleName() + "]");
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
             }
+        } catch (org.reflections.ReflectionsException e) {
+            // Silently ignore reflection errors from external plugins that might be
+            // incompatible
+            // No logging to avoid spam from incompatible plugins
+        } catch (Exception e) {
+            SoapUI.logError(e);
         }
 
         return factories;
     }
 
-    protected SoapUIFactory createAutoFactory(Class<? extends Annotation> annotationType, Class<? extends SoapUIFactory> factoryClass, Class<?> clazz, Annotation annotation) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
+    protected SoapUIFactory createAutoFactory(Class<? extends Annotation> annotationType,
+            Class<? extends SoapUIFactory> factoryClass, Class<?> clazz, Annotation annotation)
+            throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException,
+            NoSuchMethodException {
         return factoryClass.getConstructor(annotationType, clazz.getClass()).newInstance(annotation, clazz);
     }
 

@@ -214,13 +214,13 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
             }
             case 4:
             case 7:
-                return new Float((float) data[rowIndex][columnIndex - 2] / 100);
+                return (float) data[rowIndex][columnIndex - 2] / 100;
             case 11:
                 return data[rowIndex][Statistic.COUNT.getIndex()] == 0 ? 0
                         : (long) (((float) data[rowIndex][Statistic.ERRORS.getIndex()] / (float) data[rowIndex][Statistic.COUNT
                         .getIndex()]) * 100);
             default: {
-                return data == null || rowIndex >= data.length ? new Long(0) : new Long(data[rowIndex][columnIndex - 2]);
+                return data == null || rowIndex >= data.length ? 0L : data[rowIndex][columnIndex - 2];
             }
         }
     }

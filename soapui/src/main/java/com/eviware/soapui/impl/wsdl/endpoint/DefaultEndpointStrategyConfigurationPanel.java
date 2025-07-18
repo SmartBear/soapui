@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.endpoint;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.EndpointConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -94,6 +95,15 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
         TableColumn passwordColumn = table.getColumnModel().getColumn(tableModel.getPasswordColumnIndex());
         JPasswordField textField = new JPasswordField();
         textField.setBorder(BorderFactory.createEmptyBorder());
+
+        // Apply dark mode styling to password field
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            textField.setBackground(new Color(45, 45, 45));
+            textField.setForeground(Color.LIGHT_GRAY);
+            textField.setCaretColor(Color.LIGHT_GRAY);
+        }
+
         DefaultCellEditor cellEditor = new DefaultCellEditor(textField);
         passwordColumn.setCellEditor(cellEditor);
 
@@ -118,34 +128,55 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
                     WsdlRequest.PW_TYPE_DIGEST});
             wssTypeCombo.setEditable(true);
 
+            // Apply dark mode styling to combo box
+            if (isDarkMode) {
+                wssTypeCombo.setBackground(new Color(70, 70, 70));
+                wssTypeCombo.setForeground(Color.LIGHT_GRAY);
+            }
+
             table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(wssTypeCombo));
             table.getColumnModel().getColumn(6)
                     .setCellEditor(new OutgoingWssCellEditor(((WsdlInterface) iface).getProject().getWssContainer()));
             table.getColumnModel().getColumn(7)
                     .setCellEditor(new IncomingWssCellEditor(((WsdlInterface) iface).getProject().getWssContainer()));
+
             table.getColumnModel()
                     .getColumn(8)
                     .setCellEditor(
-                            new DefaultCellEditor(new JComboBox(new String[]{EndpointConfig.Mode.OVERRIDE.toString(),
-                                    EndpointConfig.Mode.COMPLEMENT.toString(), EndpointConfig.Mode.COPY.toString()})));
+                            new DefaultCellEditor(new JComboBox(new String[] { "OVERRIDE", "COMPLEMENT", "COPY" })));
         } else {
             table.getColumnModel()
                     .getColumn(4)
                     .setCellEditor(
-                            new DefaultCellEditor(new JComboBox(new String[]{EndpointConfig.Mode.OVERRIDE.toString(),
-                                    EndpointConfig.Mode.COMPLEMENT.toString(), EndpointConfig.Mode.COPY.toString()})));
+                            new DefaultCellEditor(new JComboBox(new String[] { "OVERRIDE", "COMPLEMENT", "COPY" })));
         }
-        setBackground(Color.WHITE);
+
+        // Apply dark mode styling to panel and table
+        if (isDarkMode) {
+            setBackground(new Color(60, 63, 65));
+            table.setBackground(new Color(60, 63, 65));
+            table.setForeground(Color.LIGHT_GRAY);
+            table.setGridColor(new Color(100, 100, 100));
+            table.getTableHeader().setBackground(new Color(70, 70, 70));
+            table.getTableHeader().setForeground(Color.LIGHT_GRAY);
+        } else {
+            setBackground(Color.WHITE);
+        }
 
         table.getTableHeader().setReorderingAllowed(false);
-
-        setBackground(Color.WHITE);
         setOpaque(true);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 2, 5, 2));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBackground(Color.WHITE);
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(60, 63, 65));
+        } else {
+            scrollPane.setBackground(Color.WHITE);
+        }
 
         add(scrollPane, BorderLayout.CENTER);
         add(createButtons(), BorderLayout.NORTH);
@@ -606,6 +637,14 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
             } else {
                 component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
+
+            // Apply dark mode styling to password cell renderer
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode && !isSelected) {
+                component.setBackground(new Color(60, 63, 65));
+                component.setForeground(Color.LIGHT_GRAY);
+            }
+
             return component;
         }
     }

@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -35,6 +36,10 @@ public abstract class AbstractAuthenticationForm {
     protected static final int TOP_SPACING = 10;
     protected static final int GROUP_SPACING = 20;
 
+    // Dark mode colors
+    protected static final Color DARK_CARD_BORDER_COLOR = new Color(100, 100, 100);
+    protected static final Color DARK_CARD_BACKGROUND_COLOR = new Color(60, 63, 65);
+
     public JPanel getComponent() {
         return buildUI();
     }
@@ -42,16 +47,25 @@ public abstract class AbstractAuthenticationForm {
     protected abstract JPanel buildUI();
 
     protected void setBorderOnPanel(JPanel card) {
-        card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, CARD_BORDER_COLOR),
-                BorderFactory.createMatteBorder(10, 10, 10, 10, CARD_BACKGROUND_COLOR)));
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        Color borderColor = isDarkMode ? DARK_CARD_BORDER_COLOR : CARD_BORDER_COLOR;
+        Color backgroundColor = isDarkMode ? DARK_CARD_BACKGROUND_COLOR : CARD_BACKGROUND_COLOR;
+
+        card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, borderColor),
+                BorderFactory.createMatteBorder(10, 10, 10, 10, backgroundColor)));
     }
 
     protected void setBackgroundColorOnPanel(JPanel panel) {
-        panel.setBackground(CARD_BACKGROUND_COLOR);
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        Color backgroundColor = isDarkMode ? DARK_CARD_BACKGROUND_COLOR : CARD_BACKGROUND_COLOR;
+        panel.setBackground(backgroundColor);
     }
 
     protected void setBorderAndBackgroundColorOnPanel(JPanel panel) {
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(CARD_BORDER_COLOR),
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        Color borderColor = isDarkMode ? DARK_CARD_BORDER_COLOR : CARD_BORDER_COLOR;
+
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(borderColor),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         setBackgroundColorOnPanel(panel);
     }

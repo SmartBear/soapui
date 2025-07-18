@@ -43,10 +43,44 @@ public class SoapUITools {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    FileUtils.deleteDirectory(directory);
-                } catch (IOException e) {
-                    log.warn("Could not delete temporary directory " + directory);
+                // Try to delete the directory with retry logic for Windows file locks
+                int maxRetries = 5;
+                int retryDelay = 100; // milliseconds
+
+                for (int attempt = 1; attempt <= maxRetries; attempt++) {
+                    try {
+                        // First, try to close any potential file handles by running garbage collection
+                        if (attempt > 1) {
+                            System.gc();
+                            System.runFinalization();
+                            Thread.sleep(retryDelay * attempt);
+                        }
+
+                        FileUtils.deleteDirectory(directory);
+                        // If successful, log at debug level only
+                        if (log.isDebugEnabled()) {
+                            log.debug(
+                                    "Successfully deleted temporary directory " + directory + " on attempt " + attempt);
+                        }
+                        return; // Success, exit the method
+
+                    } catch (IOException e) {
+                        if (attempt == maxRetries) {
+                            // Only warn on the final attempt to reduce log noise
+                            log.warn("Could not delete temporary directory " + directory + " after " + maxRetries
+                                    + " attempts: " + e.getMessage());
+                        } else {
+                            // Log at debug level for intermediate attempts
+                            if (log.isDebugEnabled()) {
+                                log.debug("Attempt " + attempt + " to delete temporary directory " + directory
+                                        + " failed: " + e.getMessage());
+                            }
+                        }
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        log.warn("Could not delete temporary directory " + directory);
+                        return;
+                    }
                 }
             }
         }));

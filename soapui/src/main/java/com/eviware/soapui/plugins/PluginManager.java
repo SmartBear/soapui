@@ -220,6 +220,17 @@ public class PluginManager {
         for (File installedPluginFile : installedPlugins.keySet()) {
             Plugin installedPlugin = installedPlugins.get(installedPluginFile).plugin;
             if (installedPlugin.getInfo().getId().equals(pluginInfo.getId())) {
+
+                // Close the classloader to release file locks before deleting
+                InstalledPluginRecord pluginRecord = installedPlugins.get(installedPluginFile);
+                if (pluginRecord != null && pluginRecord.pluginClassLoader != null) {
+                    try {
+                        pluginRecord.pluginClassLoader.close();
+                    } catch (IOException e) {
+                        log.warn("Failed to close plugin classloader for " + pluginInfo.getId(), e);
+                    }
+                }
+
                 if (!fileOperations.deleteFile(installedPluginFile)) {
                     log.warn("Couldn't delete old plugin file " + installedPluginFile + " - aborting uninstall");
                     return false;
@@ -446,5 +457,39 @@ public class PluginManager {
             }
             return result;
         }
+    }
+
+    /**
+     * Shutdown the plugin manager and release all resources including file locks.
+     * This should be called when the application is shutting down.
+     */
+    public void shutdown() {
+        log.info("Shutting down plugin manager...");
+
+        // Close all plugin classloaders to release file locks
+        for (InstalledPluginRecord pluginRecord : installedPlugins.values()) {
+            if (pluginRecord.pluginClassLoader != null) {
+                try {
+                    pluginRecord.pluginClassLoader.close();
+                } catch (IOException e) {
+                    log.warn("Failed to close plugin classloader during shutdown", e);
+                }
+            }
+        }
+
+        // Clear the installed plugins map
+        installedPlugins.clear();
+
+        // Shutdown the thread pool
+        try {
+            forkJoinPool.shutdown();
+            if (!forkJoinPool.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                forkJoinPool.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            forkJoinPool.shutdownNow();
+        }
+
+        log.info("Plugin manager shutdown complete");
     }
 }

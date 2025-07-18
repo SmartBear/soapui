@@ -19,10 +19,10 @@ package com.eviware.soapui;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SumbitUserInfoAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
+import com.eviware.soapui.actions.SwitchThemeAction;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.analytics.SoapUIActions;
@@ -55,7 +55,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -157,6 +156,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -204,6 +205,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.SAVE_ALL_PROJECTS_FROM_
 import static com.eviware.soapui.analytics.SoapUIActions.SAVE_PREFERENCES;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_OFF_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_ON_PROXY_FROM_TOOLBAR;
+import static com.eviware.soapui.analytics.SoapUIActions.SWITCH_THEME;
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 import static com.eviware.soapui.settings.UISettings.SHOW_ENDPOINT_EXPLORER_ON_START;
 import static com.eviware.soapui.settings.UISettings.SHOW_STAY_TUNED_DIALOG;
@@ -292,6 +294,8 @@ public class SoapUI {
     private static Logger groovyLogger;
     private static CmdLineRunner soapUIRunner;
 
+    private static boolean isDarkmode;
+
     public static final String BACKUP_STARTER_PAGE_URL = "/starter-page/starter-page.html";
 
     static {
@@ -359,7 +363,7 @@ public class SoapUI {
         frame.getContentPane().add(mainInspector.getComponent(), BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        mainInspector.setDividerLocation(250);
+        mainInspector.setDividerLocation(400);
         mainInspector.setResizeWeight(0.1);
         navigator.selectModelItem(workspace);
 
@@ -375,11 +379,29 @@ public class SoapUI {
         dragSource.createDefaultDragGestureRecognizer(mainTree, DnDConstants.ACTION_COPY_OR_MOVE,
                 navigatorDragAndDropHandler);
 
+        if (this.isDarkmode) {
+            applyDarkModeToComponent(mainInspector.getComponent());
+            applyDarkModeToComponent(frame.getContentPane());
+        }
+
+        // Initialize the desktop component
         desktop.init();
     }
 
     private JComponent buildToolbar() {
-        mainToolbar = new JXToolBar();
+        mainToolbar = new JXToolBar() {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (isDarkmode) {
+                    g.setColor(new Color(60, 63, 65)); // Dark background color
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                    g.setColor(Color.DARK_GRAY); // Subtle separation line color
+                    g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+                }
+            }
+        };
+
         UISupport.setPreferredHeight(mainToolbar, JXToolBar.MAIN_COMPONENT_HEIGHT);
         mainToolbar.setFloatable(false);
         mainToolbar.setRollover(true);
@@ -407,7 +429,9 @@ public class SoapUI {
         mainToolbar.add(endpointExplorerButtonPanel);
         mainToolbar.addSpace(10);
         createToolbarSeparator();
-
+        mainToolbar.addSpace(10); // 🔹 Add space after dark mode button
+        mainToolbar.add(new SwitchThemeActionDelegate(isDarkmode ? "/sun.png" : "/moon.png",
+                isDarkmode ? "Light mode" : "Dark mode", SwitchThemeAction.SOAPUI_ACTION_ID, SWITCH_THEME));
         mainToolbar.addGlue();
         searchField = new JTextField(20) {
             @Override
@@ -468,6 +492,9 @@ public class SoapUI {
         endpointExplorerButtonPanel.setPreferredSize(new Dimension(130, 32));
         endpointExplorerButtonPanel.setMaximumSize(new Dimension(130, 32));
         endpointExplorerButton = new RoundButton(6);
+        if (this.isDarkmode) {
+            endpointExplorerButtonPanel.setBackground(Color.DARK_GRAY); // Dark gray background
+        }
         endpointExplorerButton.setForeground(Color.WHITE);
         endpointExplorerButton.setBackground(new Color(52, 137, 209));
         endpointExplorerButton.setText("Endpoint Explorer");
@@ -503,11 +530,20 @@ public class SoapUI {
 
     private void createToolbarSeparator() {
         JPanel separatorPanel = new JPanel(new BorderLayout());
-        separatorPanel.setPreferredSize(new Dimension(5, 40));
-        separatorPanel.setMaximumSize(new Dimension(5, 40));
+        if (this.isDarkmode) {
+            separatorPanel.setBackground(new Color(43, 43, 43)); // Dark panel background
+            separatorPanel.setPreferredSize(new Dimension(1, 40));
+            separatorPanel.setMaximumSize(new Dimension(1, 40));
+        } else {
+            separatorPanel.setPreferredSize(new Dimension(5, 40));
+            separatorPanel.setMaximumSize(new Dimension(5, 40));
+        }
         JSeparator separator = new JSeparator();
         separator.setOrientation(JSeparator.VERTICAL);
-        separator.setBackground(new Color(112, 112, 112));
+        if (this.isDarkmode) {
+            separator.setForeground(new Color(112, 112, 112)); // Dark separator
+            separator.setBackground(new Color(60, 63, 65)); // Dark separator background
+        }
         separator.setLocation(10, 0);
         separatorPanel.add(separator);
         mainToolbar.add(separatorPanel);
@@ -518,21 +554,32 @@ public class SoapUI {
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor(Color.WHITE);
+                g.setColor(isDarkmode ? new Color(60, 63, 65) : Color.WHITE);
                 g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(Color.LIGHT_GRAY);
+                g.setColor(isDarkmode ? Color.DARK_GRAY : Color.LIGHT_GRAY);
                 g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
             }
         };
         menuBar.setBorder(BorderFactory.createEmptyBorder());
-        menuBar.add(buildFileMenu());
-        menuBar.add(buildProjectMenu());
-        menuBar.add(buildSuiteMenu());
-        menuBar.add(buildCaseMenu());
-        menuBar.add(buildStepMenu());
-        menuBar.add(buildToolsMenu());
-        menuBar.add(buildDesktopMenu());
-        menuBar.add(buildHelpMenu());
+        if (this.isDarkmode) {
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildFileMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildProjectMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildSuiteMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildCaseMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildStepMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildToolsMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildDesktopMenu()));
+            menuBar.add(MenuBuilderHelper.buildMenuForDarkMode(buildHelpMenu()));
+        } else {
+            menuBar.add(buildFileMenu());
+            menuBar.add(buildProjectMenu());
+            menuBar.add(buildSuiteMenu());
+            menuBar.add(buildCaseMenu());
+            menuBar.add(buildStepMenu());
+            menuBar.add(buildToolsMenu());
+            menuBar.add(buildDesktopMenu());
+            menuBar.add(buildHelpMenu());
+        }
         return menuBar;
     }
 
@@ -743,6 +790,38 @@ public class SoapUI {
         return monitor;
     }
 
+    private void applyDarkModeToComponent(JComponent component) {
+        component.setBackground(new Color(43, 43, 43)); // Dark background
+        component.setForeground(Color.WHITE); // Light text
+        if (component instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) component;
+            scrollPane.getViewport().setBackground(new Color(43, 43, 43));
+        }
+
+        // Recursively apply to children
+        for (Component child : component.getComponents()) {
+            if (child instanceof JComponent) {
+                applyDarkModeToComponent((JComponent) child);
+            }
+        }
+    }
+
+    private void applyDarkModeToComponent(Component component) {
+        if (component instanceof JComponent) {
+            component.setBackground(Color.DARK_GRAY);
+            component.setForeground(Color.LIGHT_GRAY);
+
+            if (component instanceof JPanel) {
+                for (Component child : ((JPanel) component).getComponents()) {
+                    applyDarkModeToComponent(child);
+                }
+            } else if (component instanceof JSplitPane) {
+                applyDarkModeToComponent(((JSplitPane) component).getLeftComponent());
+                applyDarkModeToComponent(((JSplitPane) component).getRightComponent());
+            }
+        }
+    }
+
     public static JComponent initLogMonitor(boolean hasDefault, String defaultName, Log4JMonitor logMonitor) {
         SoapUI.logMonitor = logMonitor;
         logMonitor.addLogArea(defaultName, "com.eviware.soapui", hasDefault).setLevel(Level.DEBUG);
@@ -920,9 +999,66 @@ public class SoapUI {
         UIManager.put("ScrollPane.background", Color.WHITE);
     }
 
+    private static void setBackgroundsToDark() {
+        UIManager.put("Panel.background", new Color(43, 43, 43)); // Dark background
+        UIManager.put("Panel.foreground", Color.WHITE); // White text
+        UIManager.put("MenuBar.background", new Color(60, 63, 65)); // Dark menu bar
+        UIManager.put("MenuBar.foreground", Color.WHITE); // White text in menu
+        UIManager.put("Tree.background", new Color(43, 43, 43)); // Dark background for JTree
+        UIManager.put("Tree.foreground", Color.WHITE); // White text for JTree items
+
+        UIManager.put("SplitPane.background", new Color(43, 43, 43));
+        UIManager.put("SplitPane.foreground", Color.WHITE);
+        UIManager.put("ToolBar.background", new Color(60, 63, 65));
+        UIManager.put("ToolBar.foreground", Color.WHITE);
+
+        UIManager.put("OptionPane.background", new Color(43, 43, 43)); // Dark background
+        UIManager.put("OptionPane.messageForeground", Color.WHITE); // White text for message
+        UIManager.put("TextArea.foreground", Color.WHITE); // White text in JTextArea
+        UIManager.put("TextArea.background", new Color(43, 43, 43)); // Dark background for JTextArea
+
+        UIManager.put("Menu.selectionBackground", new Color(75, 75, 75)); // Darker background on hover
+        UIManager.put("Menu.selectionForeground", Color.WHITE); // White text on hover
+        UIManager.put("MenuItem.selectionBackground", new Color(75, 75, 75)); // Darker background for menu items
+        UIManager.put("MenuItem.selectionForeground", Color.WHITE); // White text for menu items on hover
+
+        // Also set defaults for normal states
+        UIManager.put("Menu.background", new Color(60, 63, 65)); // Default dark background
+        UIManager.put("Menu.foreground", Color.WHITE); // Default white text
+        UIManager.put("MenuItem.background", new Color(60, 63, 65)); // Default dark for menu items
+        UIManager.put("MenuItem.foreground", Color.WHITE); // Default white text for menu items
+
+        UIManager.put("Button.background", Color.DARK_GRAY);
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("ComboBox.background", Color.DARK_GRAY);
+        UIManager.put("TableHeader.background", Color.DARK_GRAY);
+        UIManager.put("ToolBar.background", Color.DARK_GRAY);
+        UIManager.put("TabbedPane.background", Color.GRAY);
+        UIManager.put("TabbedPane.selected", Color.DARK_GRAY);
+        UIManager.put("Label.background", Color.BLACK);
+        UIManager.put("CheckBox.background", Color.DARK_GRAY);
+        UIManager.put("Desktop.background", Color.BLACK);
+        UIManager.put("ProgressBar.background", Color.DARK_GRAY);
+        UIManager.put("InternalFrame.background", Color.DARK_GRAY);
+        UIManager.put("ScrollBar.background", Color.DARK_GRAY);
+        UIManager.put("Spinner.background", Color.DARK_GRAY);
+        UIManager.put("OptionPane.background", Color.DARK_GRAY);
+        UIManager.put("OptionPane.messageBackground", Color.DARK_GRAY);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("ToggleButton.background", Color.DARK_GRAY);
+        UIManager.put("Slider.background", Color.DARK_GRAY);
+        UIManager.put("RadioButton.background", Color.DARK_GRAY);
+        UIManager.put("ScrollPane.background", Color.DARK_GRAY);
+    }
+
     public static void main(String[] args) throws Exception {
         WebstartUtilCore.init();
-        setBackgroundsToWhite();
+        isDarkmode = getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkmode) {
+            setBackgroundsToDark();
+        } else {
+            setBackgroundsToWhite();
+        }
         mainArgs = args;
 
         SecureTools.setTrustSSL();
@@ -1157,6 +1293,9 @@ public class SoapUI {
             }
 
             try {
+                // Apply any pending theme changes before saving settings
+                SwitchThemeAction.applyPendingThemeChange();
+                
                 soapUICore.saveSettings();
                 SaveStatus saveStatus = workspace.onClose();
                 if (saveStatus == SaveStatus.CANCELLED || saveStatus == SaveStatus.FAILED) {
@@ -1414,7 +1553,9 @@ public class SoapUI {
                 return;
             }
         }
-
+        if (isDarkmode) {
+            starterPageDesktopPanel.getComponent().setBackground(Color.BLACK);
+        }
         UISupport.showDesktopPanel(starterPageDesktopPanel);
         starterPageDesktopPanel.navigate(HelpUrls.STARTER_PAGE_URL, SoapUI.class.getResource(BACKUP_STARTER_PAGE_URL).toString(), true);
     }
@@ -1655,6 +1796,36 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             SoapUIPreferencesAction.getInstance().actionPerformed(null);
             Analytics.trackAction(OPEN_PREFERENCES_FROM_TOOLBAR);
+        }
+    }
+
+    static class SwitchThemeActionDelegate extends AbstractAction {
+        String actionId;
+        private SoapUIActions analyticAction;
+
+        public SwitchThemeActionDelegate(String icon, String name, String actionId) {
+            this(icon, name, actionId, null);
+        }
+
+        public SwitchThemeActionDelegate(String icon, String name, String actionId, SoapUIActions analyticAction) {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon(icon));
+            putValue(Action.SHORT_DESCRIPTION, "Switches to ".concat(isDarkmode ? "light mode" : "dark mode"));
+            putValue(Action.NAME, "Switch to ".concat(isDarkmode ? "light mode" : "dark mode"));
+            putValue(Action.NAME, name);
+            this.actionId = actionId;
+            this.analyticAction = analyticAction;
+        }
+
+        public void setShortDescription(String description) {
+            putValue(Action.SHORT_DESCRIPTION, description);
+        }
+
+        public void setName(String name) {
+            putValue(Action.NAME, name);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            SoapUI.getActionRegistry().getAction(SwitchThemeAction.SOAPUI_ACTION_ID).perform(workspace, SWITCH_THEME);
         }
     }
 

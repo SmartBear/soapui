@@ -63,6 +63,12 @@ public class ProcessDialog extends JDialog implements RunnerContext {
         setTitle(title);
         setModal(true);
 
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            getContentPane().setBackground(new Color(60, 63, 65));
+        }
+
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -79,13 +85,27 @@ public class ProcessDialog extends JDialog implements RunnerContext {
         progressBar.setValue(0);
         progressBar.setIndeterminate(false);
 
+        // Apply dark mode styling to progress bar
+        if (isDarkMode) {
+            progressBar.setBackground(new Color(60, 63, 65));
+            progressBar.setForeground(new Color(100, 150, 200));
+        }
+
         getContentPane().setLayout(new BorderLayout());
 
         if (description != null) {
             progressBar.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
             JPanel p = new JPanel(new BorderLayout());
-            p.add(new JLabel(description), BorderLayout.NORTH);
+            JLabel descLabel = new JLabel(description);
+
+            // Apply dark mode styling to description label and panel
+            if (isDarkMode) {
+                p.setBackground(new Color(60, 63, 65));
+                descLabel.setForeground(Color.LIGHT_GRAY);
+            }
+
+            p.add(descLabel, BorderLayout.NORTH);
             p.add(progressBar, BorderLayout.CENTER);
             p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -104,28 +124,63 @@ public class ProcessDialog extends JDialog implements RunnerContext {
             ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
             builder.addGlue();
             cancelButton = new JButton(new CancelAction());
+
+            // Apply dark mode styling to cancel button
+            if (isDarkMode) {
+                cancelButton.setBackground(new Color(70, 70, 70));
+                cancelButton.setForeground(Color.LIGHT_GRAY);
+            }
+
             builder.addFixed(cancelButton);
             builder.addUnrelatedGap();
 
             if (showLog) {
                 closeButton = new JButton(new CloseAction());
+
+                // Apply dark mode styling to close button
+                if (isDarkMode) {
+                    closeButton.setBackground(new Color(70, 70, 70));
+                    closeButton.setForeground(Color.LIGHT_GRAY);
+                }
+
                 builder.addFixed(closeButton);
             }
 
             builder.addGlue();
 
             builder.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-            getContentPane().add(builder.getPanel(), BorderLayout.SOUTH);
+            JPanel buttonPanel = builder.getPanel();
+
+            // Apply dark mode styling to button panel
+            if (isDarkMode) {
+                buttonPanel.setBackground(new Color(60, 63, 65));
+            }
+
+            getContentPane().add(buttonPanel, BorderLayout.SOUTH);
         } else if (showLog) {
             ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
             builder.addGlue();
 
             closeButton = new JButton(new CloseAction());
+
+            // Apply dark mode styling to close button
+            if (isDarkMode) {
+                closeButton.setBackground(new Color(70, 70, 70));
+                closeButton.setForeground(Color.LIGHT_GRAY);
+            }
+
             builder.addFixed(closeButton);
             builder.addGlue();
 
             builder.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-            getContentPane().add(builder.getPanel(), BorderLayout.SOUTH);
+            JPanel buttonPanel = builder.getPanel();
+
+            // Apply dark mode styling to button panel
+            if (isDarkMode) {
+                buttonPanel.setBackground(new Color(60, 63, 65));
+            }
+
+            getContentPane().add(buttonPanel, BorderLayout.SOUTH);
         }
 
         pack();
@@ -134,9 +189,25 @@ public class ProcessDialog extends JDialog implements RunnerContext {
     private Component buildLog() {
         logArea = new JTextArea();
         logArea.setEditable(false);
-        logArea.setBackground(Color.WHITE);
+
+        // Apply dark mode styling to log area
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            logArea.setBackground(new Color(45, 45, 45));
+            logArea.setForeground(Color.LIGHT_GRAY);
+            logArea.setCaretColor(Color.LIGHT_GRAY);
+        } else {
+            logArea.setBackground(Color.WHITE);
+        }
+
         JScrollPane scrollPane = new JScrollPane(logArea);
         scrollPane.setPreferredSize(new Dimension(500, 300));
+
+        // Apply dark mode styling to scroll pane
+        if (isDarkMode) {
+            scrollPane.setBackground(new Color(60, 63, 65));
+            scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+        }
 
         return UISupport.wrapInEmptyPanel(scrollPane, BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }

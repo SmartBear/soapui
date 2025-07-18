@@ -42,6 +42,7 @@ public class SwingFileDialogs implements XFileDialogs {
         JFileChooser chooser = choosers.get(action);
         if (chooser == null) {
             chooser = new JFileChooser();
+            chooser.setPreferredSize(new Dimension(800, 600));
             choosers.put(action, chooser);
         }
 

@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.project.AddNewTestSuiteAction;
@@ -84,7 +85,14 @@ public class JProjectTestSuiteList extends JPanel {
         }
 
         add(Box.createVerticalGlue());
-        setBackground(Color.WHITE);
+
+        // Apply dark mode styling
+        boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+        if (isDarkMode) {
+            setBackground(new Color(60, 63, 65));
+        } else {
+            setBackground(Color.WHITE);
+        }
 
         testSuite.addProjectListener(testSuiteListener);
 
@@ -196,7 +204,18 @@ public class JProjectTestSuiteList extends JPanel {
             JPanel progressPanel = UISupport.createProgressBarPanel(progressBar, 5, false);
 
             progressBar.setMinimumSize(new Dimension(0, 10));
-            progressBar.setBackground(Color.WHITE);
+
+            // Apply dark mode styling to progress bar
+            boolean isDarkMode = SoapUI.getSettings().getBoolean("UISettings.DARK_MODE", false);
+            if (isDarkMode) {
+                progressBar.setBackground(new Color(45, 45, 45));
+                progressBar.setForeground(new Color(100, 150, 200));
+                setBackground(new Color(60, 63, 65));
+            } else {
+                progressBar.setBackground(Color.WHITE);
+                setBackground(Color.WHITE);
+            }
+
             progressBar.setInheritsPopupMenu(true);
 
             label = new JLabel(testSuite.getLabel());
@@ -208,6 +227,11 @@ public class JProjectTestSuiteList extends JPanel {
                 Font oldFont = label.getFont();
                 Font newFont = new Font(oldFont.getName(), Font.BOLD, oldFont.getSize());
                 label.setFont(newFont);
+            }
+
+            // Apply dark mode styling to label
+            if (isDarkMode) {
+                label.setForeground(testSuite.isDisabled() ? new Color(150, 150, 150) : Color.LIGHT_GRAY);
             }
 
             add(progressPanel, BorderLayout.CENTER);
