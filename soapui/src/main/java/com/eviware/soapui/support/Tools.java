@@ -248,7 +248,7 @@ public class Tools {
                 Runtime.getRuntime().exec(new String[] { "xdg-open", url });
             }
         } catch (Exception e) {
-            log.error("Unable to open the URL \"{}\".", url, e);
+            UISupport.showErrorMessage(e);
         }
     }
 
