@@ -205,6 +205,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.SAVE_PREFERENCES;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_OFF_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.analytics.SoapUIActions.TURN_ON_PROXY_FROM_TOOLBAR;
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+import static com.eviware.soapui.impl.wsdl.support.HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE;
 import static com.eviware.soapui.settings.UISettings.SHOW_ENDPOINT_EXPLORER_ON_START;
 import static com.eviware.soapui.settings.UISettings.SHOW_STAY_TUNED_DIALOG;
 
@@ -445,16 +446,11 @@ public class SoapUI {
         return mainToolbar;
     }
 
-    //TODO Replace with the community API-based search
     public static void doCommunitySearch(String text) {
+        String prefix = "/search";
+        String searchText = "?q=" + urlEncodeWithUtf8(text.trim());
 
-        String prefix = "/t5/forums/searchpage/tab/message?include_forums=true";
-        String forum = "location=board%3ASoapUI_OS";
-        String suffix = "&search_type=thread&filter=labels%2Clocation";
-
-        String searchText = "&q=" + urlEncodeWithUtf8(text.trim());
-
-        String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + prefix + forum + searchText + suffix;
+        String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + prefix + searchText;
 
         if (StringUtils.hasContent(text)) {
             Tools.openURL(searchUrl);
@@ -590,10 +586,10 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("ReadyAPI Trial", HelpUrls.TRIAL_URL,
                 "Apply for ReadyAPI Trial License", "/Trial_16-16.png"));
-        helpMenu.add(new OpenUrlAction("Privacy Policy", "http://www.soapui.org" + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
+        helpMenu.add(new OpenUrlAction("Privacy Policy", SMARTBEAR_WEB_SITE_START_PAGE + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
-        helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
+        helpMenu.add(new OpenUrlAction("smartbear.com", SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new AboutAction());
         return helpMenu;
