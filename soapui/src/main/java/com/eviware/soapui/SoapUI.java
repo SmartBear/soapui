@@ -447,8 +447,7 @@ public class SoapUI {
     }
 
     public static void doCommunitySearch(String text) {
-        String searchText = "/search?q=" + urlEncodeWithUtf8(text.trim());
-        String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + searchText;
+        String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + "/search?q=" + urlEncodeWithUtf8(text.trim());
 
         if (StringUtils.hasContent(text)) {
             Tools.openURL(searchUrl);
