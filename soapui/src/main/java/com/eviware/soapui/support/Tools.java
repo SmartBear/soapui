@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -38,9 +39,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,6 +60,9 @@ public class Tools {
     private static final Pattern PROPERTY_EXPANSION_EQUALS_PATTERN = Pattern.compile("^\\$\\{(.*)\\}$");
     private static final Pattern PROPERTY_EXPANSION_CONTAINS_PATTERN =
             Pattern.compile("(\\$\\{(.*?)\\})|(%24%7B.*?%7D)|(%2524%257B.*?%257D)|(%252524%25257B.*?%25257D)");
+
+    private static final boolean IS_WINDOWS = getOsName().contains("Windows");
+    private static final boolean IS_MAC = getOsName().contains("Mac");
 
     public static String[] tokenizeArgs(String args) {
         if (args == null || args.trim().length() == 0) {
@@ -232,48 +237,31 @@ public class Tools {
         return helpUrl;
     }
 
-
     public static void openURL(String url) {
-        String osName = System.getProperty("os.name");
-
         try {
-            if (osName.startsWith("Mac OS")) {
-                Class<?> fileMgr = Class.forName("com.apple.eio.FileManager");
-                Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
-                openURL.invoke(null, url);
-            } else if (osName.startsWith("Windows")) {
-                if (url.startsWith("file:")) {
-                    url = URLDecoder.decode(url.substring(5), "utf-8");
-                    while (url.startsWith("/")) {
-                        url = url.substring(1);
-                    }
-
-                    url = url.replace('/', '\\');
-
-                    if (!new File(url).exists()) {
-                        UISupport.showErrorMessage("File [" + url + "] not found");
-                        return;
-                    }
-                }
-
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
-            } else { // assume Unix or Linux
-                String[] browsers = {"firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape"};
-                String browser = null;
-                for (int count = 0; count < browsers.length && browser == null; count++) {
-                    if (Runtime.getRuntime().exec(new String[]{"which", browsers[count]}).waitFor() == 0) {
-                        browser = browsers[count];
-                    }
-                }
-                if (browser == null) {
-                    throw new Exception("Could not find web browser");
-                } else {
-                    Runtime.getRuntime().exec(new String[]{browser, url});
-                }
+            File dir = new File(url);
+            if (dir.isDirectory()) {
+                Desktop.getDesktop().open(dir);
+            } else if (!isLinux()) {
+                Desktop.getDesktop().browse(getUriFromString(url));
+            } else {
+                Runtime.getRuntime().exec(new String[] { "xdg-open", url });
             }
         } catch (Exception e) {
             UISupport.showErrorMessage(e);
         }
+    }
+
+    private static URI getUriFromString(String url) {
+        try {
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            return Paths.get(url).toUri();
+        }
+    }
+
+    public static boolean isLinux() {
+        return !IS_WINDOWS && !IS_MAC;
     }
 
     public static ByteArrayOutputStream readAll(InputStream instream, long maxSize) throws IOException {
@@ -692,5 +680,9 @@ public class Tools {
                     definitionUrl, matcher.group()));
         }
         return matcher.replaceAll("");
+    }
+
+    public static String getOsName() {
+        return System.getProperty("os.name");
     }
 }

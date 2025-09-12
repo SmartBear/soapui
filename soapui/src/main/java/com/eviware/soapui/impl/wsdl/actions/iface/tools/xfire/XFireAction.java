@@ -93,7 +93,7 @@ public class XFireAction extends AbstractToolsAction<Interface> {
 
         buildArgsForm(builder, true, "WsGen");
 
-        return builder.buildDialog(buildDefaultActions(HelpUrls.XFIRE_HELP_URL, modelItem),
+        return builder.buildDialog(buildDefaultActions(null, modelItem),
                 "Specify arguments for XFire 1.X WsGen", UISupport.TOOL_ICON);
     }
 

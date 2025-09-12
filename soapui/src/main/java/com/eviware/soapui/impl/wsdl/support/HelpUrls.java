@@ -39,10 +39,8 @@ public interface HelpUrls {
 
     public static final String MISSING_URL = "/missing-url.html";
 
-    public static final String THIRD_PARTY_LICENSE_INFO = "/developers-corner/3rd.html";
-
     public static final String SMARTBEAR_WEB_SITE_START_PAGE = "http://www.smartbear.com";
-    public static final String SMARTBEAR_PRIVACY_POLICY_URL = "/Store-Info/privacy-policy.html";
+    public static final String SMARTBEAR_PRIVACY_POLICY_URL = "/privacy";
 
     public static final String ADDMOCKOPERATIONASMOCKRESPONSESTEP_HELP_URL = "/Service-Mocking/mocking-soap-services.html";
     public static final String ADDMOCKRESPONSETOTESTCASE_HELP_URL = "/Service-Mocking/mocking-soap-services.html";
@@ -75,9 +73,6 @@ public interface HelpUrls {
     public static final String CRYPTOSWSS_HELP_URL = "/soapui-projects/ws-security.html";
     public static final String CXFWSDL2JAVA_HELP_URL = "http://cxf.apache.org/docs/wsdl-to-java.html";
 
-    public static final String DEBUGGING_ASSERTION_TEST_STEP = "/Functional-Testing/assertion-test-step.html";
-    public static final String DEBUGGING_ENVIRONMENT_HANDLING = "/Environments/environment-handling-in-soapui.html";
-    public static final String DEBUGGING_TESTCASE_DEBUGGING = "/functional-testing/testcase-debugging.html";
     public static final String DOTNET_HELP_URL = "https://msdn.microsoft.com/en-us/library/7h3ystb6.aspx";
 
     public static final String ENDPOINTSEDITOR_HELP_URL = "/SOAP-and-WSDL/working-with-wsdls.html";
@@ -93,7 +88,7 @@ public interface HelpUrls {
     public static final String GROOVYASSERTION_HELP_URL = "/functional-testing/validating-messages/using-script-assertions.html";
     public static final String GROOVYSTEPEDITOR_HELP_URL = "/functional-testing/working-with-scripts.html";
     public static final String ASSERTION_JMS_TIMEOUT_EDITOR_HELP_URL = "/jms/validating-jms-responses.html";
-    public static final String GSOAP_HELP_URL = "http://www.cs.fsu.edu/~engelen/soap.html";
+    public static final String GSOAP_HELP_URL = "https://www.genivia.com/doc/guide/html/index.html";
 
     public static final String HTTP_REQUEST_HELP_URL = "/functional-testing/teststep-reference/http-request/http-request.html";
     public static final String HTTP_REQUEST_PARAMS_HELP_URL = "/functional-testing/teststep-reference/http-request/parameters.html";
@@ -104,9 +99,8 @@ public interface HelpUrls {
     public static final String INTERFACE_OVERVIEW_HELP_URL = "/SOAP-and-WSDL/working-with-wsdls.html";
 
     public static final String JABXJC_HELP_URL = "http://java.sun.com/webservices/docs/2.0/jaxb/xjc.html";
-    public static final String JBOSSWS_WSCONSUME_HELP_URL = "https://developer.jboss.org/wiki/JBossWS-wsconsume";
+    public static final String JBOSSWS_WSCONSUME_HELP_URL = "https://jbossws.github.io/documentation/5.3.0.Final/sid-3866751.html";
     public static final String JDBCSTEPEDITOR_HELP_URL = "/JDBC/getting-started.html";
-    public static final String JDBC_CONNECTION_HELP_URL = "/Working-with-Projects/jdbc-connections.html";
 
     public static final String LOADTESTEDITOR_HELP_URL = "/load-testing/getting-started.html";
     public static final String LOADTESTOPTIONS_HELP_URL = "/load-testing/reference/navigation.html";
@@ -128,7 +122,6 @@ public interface HelpUrls {
     public static final String NEWRESTSERVICE_HELP_URL = "/REST-Testing/working-with-rest-services.html";
     public static final String NEW_WADL_PROJECT_HELP_URL = "/REST-Testing/working-with-rest-services.html";
     public static final String CREATEWADLDOC_HELP_URL = "/REST-Testing/working-with-rest-services.html";
-    public static final String NEW_REST_REQUEST_HELP_URL = "/REST-testing/working-with-rest-requests.html";
 
     public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "/OAuth/access-token-from-server.html";
     public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "/OAuth/access-token-retrieval.html";
@@ -140,10 +133,8 @@ public interface HelpUrls {
     public static final String OUTGOINGWSS_HELP_URL = "/soapui-projects/ws-security.html";
 
     public static final String PREFERENCES_HELP_URL = "/Working-with-soapUI/preferences.html";
-    public static final String PREPAREDPROPERTIES_HELP_URL = "/soapui-projects/jdbc-connections.html";
     public static final String PROJECT_OVERVIEW_HELP_URL = "/Working-with-Projects/working-with-soapui-projects.html";
     public static final String PROPERTIESSTEPEDITOR_HELP_URL = "/functional-testing/properties/working-with-properties.html";
-    public static final String PROPERTY_TRANSFER_HELP_URL = "/Functional-Testing/transferring-property-values.html";
 
     public static final String REQUESTEDITOR_HELP_URL = "/soap-and-wsdl/working-with-messages.html";
     public static final String RESPONSE_ASSERTIONS_HELP_URL = "/Functional-Testing/getting-started-with-assertions.html";
@@ -179,7 +170,6 @@ public interface HelpUrls {
     public static final String STEP_MAXIMUM_LOAD_TEST_ASSERTION_HELP_URL = "/load-testing/reference/assertion.html";
     public static final String STEP_STATUS_LOAD_TEST_ASSERTION_HELP_URL = "/load-testing/reference/assertion.html";
     public static final String STEP_TPS_LOAD_TEST_ASSERTION_HELP_URL = "/load-testing/reference/assertion.html";
-    public static final String STAY_TUNED = "/getting-started/help-in-soapui/help-in-soapui.html";
     public static final String START_HERMES_HELP_URL = "/jms/getting-started.html";
 
     public static final String TCPMON_HELP_URL = "http://ws.apache.org/commons/tcpmon/";
@@ -199,15 +189,13 @@ public interface HelpUrls {
     public static final String USERGUIDE_HELP_URL = "/getting-started/help-in-soapui/help-in-soapui.html";
 
     public static final String WADL2JAVA_HELP_URL = "https://wadl.java.net/wadl2java.html";
-    public static final String WADL_PARAMS_HELP_URL = "/rest-testing/rest-resources-and-methods.html";
     public static final String WSCOMPILE_HELP_URL = "http://java.sun.com/webservices/docs/2.0/jaxrpc/jaxrpc-tools.html#wp80809";
     public static final String WSDL_CONTENT_HELP_URL = "/SOAP-and-WSDL/working-with-wsdls.html";
     public static final String WSIMPORT_HELP_URL = "http://java.sun.com/webservices/docs/2.0/jaxws/wsimport.html";
     public static final String WSI_COMPLIANCE_HELP_URL = "/SOAP-and-WSDL/working-with-wsdls.html";
     public static final String WSS_HELP_URL = "/SOAP-and-WSDL/applying-ws-security.html";
-    public static final String WSTOOLS_HELP_URL = "http://jbossas.jboss.org/docs";
+    public static final String WSTOOLS_HELP_URL = "https://jbossws.github.io/docs";
 
-    public static final String XFIRE_HELP_URL = "http://xfire.codehaus.org/Client+and+Server+Stub+Generation+from+WSDL";
     public static final String XMLBEANS_HELP_URL = "http://xmlbeans.apache.org/docs/2.0.0/guide/tools.html#scomp";
     public static final String ASSERTION_XPATH_CONTENT = "/functional-testing/validating-messages/validating-xml-messages.html";
     public static final String ASSERTION_XQUERY = "/functional-testing/validating-messages/validating-xml-messages.html";
@@ -218,9 +206,6 @@ public interface HelpUrls {
     public static final String ASSERTION_JSON_REGEX = "/functional-testing/validating-messages/validating-json-messages.html";
     public static final String ASSERTION_JSON_REGEX_CONFIG = "/functional-testing/validating-messages/validating-json-messages.html";
 
-
-
-    public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
     public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage-new.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
 
     public static final String GRAPHQL_REQUEST_HELP_URL = "/docs/graphql-testing";

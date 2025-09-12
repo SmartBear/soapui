@@ -1,8 +1,9 @@
 ﻿# SoapUI Open Source 5.9.1
 
-#### RELEASE_ME_ON ####
+#### Released on 2025-09-10 ####
 
-### Overall improvements ###
+Proper browser opening for MAC.
+Fix help links.
 
 -------------------------------------------------------------------------------
 
