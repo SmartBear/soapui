@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-14]
+        os: [ubuntu-latest, windows-latest, macos-13]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
             soapui-installer/target/install4j/*.exe
 
       - name: Upload macOS Assets
-        if: github.event_name == 'release' && matrix.os == 'macos-14'
+        if: github.event_name == 'release' && matrix.os == 'macos-13'
         uses: softprops/action-gh-release@v1
         with:
           files: |
