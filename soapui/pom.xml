@@ -655,7 +655,7 @@
             <version>${amf.version}</version>
         </dependency>
         <dependency>
-            <groupId>thoughtworks</groupId>
+            <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>${thoughtworks-xstream-version}</version>
         </dependency>
