@@ -33,13 +33,24 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y xvfb
 
+      - name: Get base version
+        run: echo "BASE_VERSION=$(grep '<revision>' pom.xml | sed -n 's/.*<revision>\(.*\)-SNAPSHOT<\/revision>.*/\1/p')" >> $GITHUB_ENV
+
+      - name: Set CI version
+        if: github.event_name == 'push'
+        run: echo "PROJECT_VERSION=${{ env.BASE_VERSION }}-$(date +'%Y-%m-%d')-${{ github.repository_owner }}-${{ github.ref_name }}-SNAPSHOT" >> $GITHUB_ENV
+
+      - name: Set Release version
+        if: github.event_name == 'release'
+        run: echo "PROJECT_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+
       - name: Build with Maven (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: xvfb-run mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" clean install
+        run: xvfb-run mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -Drevision=${{ env.PROJECT_VERSION }} clean install
 
       - name: Build with Maven (Windows/macOS)
         if: matrix.os != 'ubuntu-latest'
-        run: mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -DskipTests clean install
+        run: mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -Drevision=${{ env.PROJECT_VERSION }} -DskipTests clean install
 
       - name: Upload Linux Assets
         if: github.event_name == 'release' && matrix.os == 'ubuntu-latest'

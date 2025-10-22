@@ -7,7 +7,7 @@
     <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-project</artifactId>
     <name>SoapUI project</name>
-    <version>5.9.2-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <repositories>
@@ -24,6 +24,7 @@
     </pluginRepositories>
 
     <properties>
+        <revision>5.9.2-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <requireMavenVersion-value>3.6.3</requireMavenVersion-value>
