@@ -228,7 +228,7 @@ public class Swagger2Importer implements SwaggerImporter {
         }
 
         if (method.getRequestList().isEmpty()) {
-            method.addNewRequest("Request 1");
+            attachDefaultPayload(operation, method);
         }
 
         Map<String, Response> responses = operation.getResponses();
@@ -331,6 +331,27 @@ public class Swagger2Importer implements SwaggerImporter {
         }
 
         return RestParamsPropertyHolder.ParameterStyle.valueOf(parameterLocation.toUpperCase());
+    }
+
+    private void attachDefaultPayload(Operation operation, RestMethod method) {
+        List<String> consumes = operation.getConsumes();
+        if (consumes == null) {
+            consumes = swagger.getConsumes();
+        }
+
+        if (consumes != null && !consumes.isEmpty()) {
+            for (String mediaType : consumes) {
+                RestRequest request = method.addNewRequest("Request 1");
+                request.setMediaType(mediaType);
+                if (mediaType.toLowerCase().contains("json")) {
+                    request.setRequestContent("{}");
+                } else if (mediaType.toLowerCase().contains("xml")) {
+                    request.setRequestContent("<root/>");
+                }
+            }
+        } else {
+            method.addNewRequest("Request 1");
+        }
     }
 
     private void addResponse(String responseCode, Response response, Operation operation, RestMethod method) {

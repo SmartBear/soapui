@@ -27,7 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <requireMavenVersion-value>3.6.3</requireMavenVersion-value>
-        <maxJdkVersion-value>17</maxJdkVersion-value>
+        <maxJdkVersion-value>21</maxJdkVersion-value>
 
         <!-- Custom properties -->
         <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
@@ -75,7 +75,7 @@
         <maven-gitlog-plugin-version>1.9.1</maven-gitlog-plugin-version>
         <junit-version>4.13.1</junit-version>
         <org-bouncycastle-bcprov-jdk15on-version>1.64</org-bouncycastle-bcprov-jdk15on-version>
-        <thoughtworks-xstream-version>1.4.13</thoughtworks-xstream-version>
+        <thoughtworks-xstream-version>1.4.21</thoughtworks-xstream-version>
         <xalan-version>2.7.2</xalan-version>
         <xalan-xalan-version>${xalan-version}</xalan-xalan-version>
         <xalan-serializer-version>${xalan-version}</xalan-serializer-version>
@@ -83,7 +83,7 @@
         <commons-beanutils-version>1.9.4</commons-beanutils-version>
         <log4j2.version>2.17.1</log4j2.version>
         <mockito-core.version>2.23.4</mockito-core.version>
-        <extra-enforcer-rules.version>1.5.1</extra-enforcer-rules.version>
+        <extra-enforcer-rules.version>1.11.0</extra-enforcer-rules.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <jsr173_api.version>1.0</jsr173_api.version>
         <com.google.code.findbugs.version>2.0.0</com.google.code.findbugs.version>
@@ -272,8 +272,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.9</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
             <plugin>

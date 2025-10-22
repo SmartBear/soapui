@@ -229,6 +229,12 @@
             <version>${rsyntaxtextarea.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+
         <!--JavaFX-->
 
         <dependency>
@@ -655,7 +661,7 @@
             <version>${amf.version}</version>
         </dependency>
         <dependency>
-            <groupId>thoughtworks</groupId>
+            <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>${thoughtworks-xstream-version}</version>
         </dependency>
