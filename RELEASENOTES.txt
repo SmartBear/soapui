@@ -1,4 +1,4 @@
-﻿# SoapUI Open Source 5.9.1
+# SoapUI Open Source 5.9.1
 
 #### Released on 2025-09-10 ####
 
@@ -163,7 +163,7 @@ This release updates the Apache Log4j library to v. 2.16 that mitigates CVE-2021
 
 ### Discontinued Support ###
 
-* LoadUI integration has been removed from SoapUI. To integrate your functional tests with LoadUI, use ReadyAPI. Learn more about LoadUI in ReadyAPI at https://smartbear.com/product/ready-api/loadui/overview/.
+* LoadUI integration has been removed from SoapUI.
 
 -------------------------------------------------------------------------------
 
@@ -211,7 +211,7 @@ Many thanks to Krzysztof, Bouke and Kyle for their efforts!
 
 * A NoSuchMethodException exception could occur when creating a project from WSDL. (SOAPUIOS-204)
 
-* A bug fix by Bouke Nijhuis (BoukeNijhuis in GitHub): In certain cases, the Recently Used tab could disappear from the Assertions dialog. (SOAPUIOS-211). 
+* A bug fix by Bouke Nijhuis (BoukeNijhuis in GitHub): In certain cases, the Recently Used tab could disappear from the Assertions dialog. (SOAPUIOS-211).
 
 * A bug fix by bearsoftware (GitHub nickname): The Request  URL property of the HTTP Request test step did not allow capital letters. (SOAPUIOS-213)
 
@@ -226,8 +226,6 @@ Many thanks to Bouke Nijhuis, bearsoftware and kekemonster for contribution!
 #### Released 2015-10-02 ####
 
 * A new bundled SwaggerHub plugin that helps you easily import Swagger API definitions from SwaggerHub to your project and to export your APIs to SwaggerHub. (SOAPUIOS-152)
-  For information on SwaggerHub, see http://smartbear.com/product/swaggerhub/overview/.
-  More information on the plugin is available at https://github.com/SmartBear/readyapi-swaggerhub-plugin.
 
 * More efficient memory usage. (SOAPUIOS-154)
 
@@ -261,9 +259,9 @@ Many thanks to Stanislaw and Marc for their efforts!
 ### Improvements ###
 
 * New look inspired by ReadyAPI.
-* Support for Java 6 has been dropped. 
+* Support for Java 6 has been dropped.
   To run SoapUI, now you need to have Java 7 on your computer.
-  The SoapUI installation package includes Java 7 modules, 
+  The SoapUI installation package includes Java 7 modules,
   so if you use the installer, you do not have to download and install additional files.
 * Old-style icons have been replaced with newer icons.
 
@@ -708,7 +706,7 @@ Proxy settings can now be auto-detected (SOAP-454)
 
 ## version 4.5- 2012-03-28: The Big Ears Release
 
-Please see http://soapui.org/About-SoapUI/whats-new-in-soapui-45.html for an overview 
+Please see http://soapui.org/About-SoapUI/whats-new-in-soapui-45.html for an overview
 of all the new great features and more details on fixes in the final release!
 
 Major New Features:
@@ -771,14 +769,14 @@ Fixed a SoapUI Pro Testrunner bug, When you overrode Global Properties you could
 
 ## 4.0.1 Bugs Fixed - 2011-09-12
 
-Please see http://soapui.org/About-SoapUI/soapui-40-bugs-fixed.html for an overview 
+Please see http://soapui.org/About-SoapUI/soapui-40-bugs-fixed.html for an overview
 of the bugs fixed in this release.
 
 -------------------------------------------------------------------------------
 
 ##4.0 The Security Release - 2011-06-14
 
-Please see http://www.soapui.org/About-SoapUI/whats-new-in-soapui-40.html for an overview 
+Please see http://www.soapui.org/About-SoapUI/whats-new-in-soapui-40.html for an overview
 of all the new great features and more details on fixes in the final release!
 
 -------------------------------------------------------------------------------
@@ -786,7 +784,7 @@ of all the new great features and more details on fixes in the final release!
 ##4.0 beta 2 - 2011-05-31
 
 ###Major New Features:
-- Added a "Fuzzing Scan" to the list of Security Scans 
+- Added a "Fuzzing Scan" to the list of Security Scans
 - Improved Command-line Security-Test runner to support all TestCase Runner options and custom JUnit-Style report (Security, Automation)
 - Added wargenerator command-line utility that creates war files from soapui projects
 
@@ -877,7 +875,7 @@ of all the new great features and more details on fixes in the final release!
 - Fixed double encoding of Template URL parameters
 - Fixed forward-slashes in WAR file create by DeployAsWar and removed unnecessary jars
 - Fixed Raw view for JDBC Requests to show expanded variables
-- Fixed incorrect TestSuite Jasper Report Template 
+- Fixed incorrect TestSuite Jasper Report Template
 - Fixed duplicate saving of standard projects in pro version
 
 ###Updated Libraries:
@@ -889,24 +887,24 @@ of all the new great features and more details on fixes in the final release!
 
 2010-10-18 : 3.6.1
 
-Major New Features: 
+Major New Features:
 - None!
 
-Minor New Features: 
+Minor New Features:
 - Improved SoapUI <-> loadUI integration (loadUI)
-  - automatic detection of paths 
-  - improved component generation 
-- Multiple Parameter value support for REST requests (REST) 
+  - automatic detection of paths
+  - improved component generation
+- Multiple Parameter value support for REST requests (REST)
 
-Bugs Fixed: 
-- Improved Web Recording with Forms (Web) 
+Bugs Fixed:
+- Improved Web Recording with Forms (Web)
 - Fixed HTTP Header overrides (SoapUI)
-- Command-line runners don't execute all tests on misspelling (Automation) 
+- Command-line runners don't execute all tests on misspelling (Automation)
 - Multiple spelling and usability issues (SoapUI)
-- File DataSink IOException (Functional Testing) 
-- Project Script Library now works on project load (Scripting) 
+- File DataSink IOException (Functional Testing)
+- Project Script Library now works on project load (Scripting)
 
-Updated Libraries: 
+Updated Libraries:
 - Groovy 1.7.5
 
 -------------------------------------------------------------------------------
@@ -919,34 +917,34 @@ Major New Features:
 - Manual TestStep
 
 Minor New Features:
-- Improved WADL importer 
-- Improved viewing of attachments  
-- Improved support for huge file attachments (>200mb) 
-- Fixed many memory leaks for long-running tests 
-- Added support for project-level script libraries 
-- Added setting to enable wordwrap in Raw message views 
-- Increased default memory setting in .sh files  
-- Added action to clear the current Workspace 
-- Added option to show namespaces in refactoring wizard  
+- Improved WADL importer
+- Improved viewing of attachments
+- Improved support for huge file attachments (>200mb)
+- Fixed many memory leaks for long-running tests
+- Added support for project-level script libraries
+- Added setting to enable wordwrap in Raw message views
+- Increased default memory setting in .sh files
+- Added action to clear the current Workspace
+- Added option to show namespaces in refactoring wizard
 - Improved web-recording functionality:
   - wizards for generating web tests when creating new projects
   - possibility to exclude HTTP Headers
   - support for multiple recording sessions
-Improved loadUI project generation from functional TestCases 
+Improved loadUI project generation from functional TestCases
 
 Major bugs fixed:
-- Fixed adding of HTTP Query Parameters 
-- Fixed JDBC Assertions to handle connection errors 
-- Several fixes to JDBC-connection related functionality 
-- Fixed showing of passwords in UI  
-- Several UI cleanups and minor bug-fixes  
-- Fixed preview of -f argument in runner dialogs 
-- Fixed usage of correct soap version when refactoring  
-- Fixed parameter resolving in script properties 
-- Fixed saving of reordered TestCases 
+- Fixed adding of HTTP Query Parameters
+- Fixed JDBC Assertions to handle connection errors
+- Several fixes to JDBC-connection related functionality
+- Fixed showing of passwords in UI
+- Several UI cleanups and minor bug-fixes
+- Fixed preview of -f argument in runner dialogs
+- Fixed usage of correct soap version when refactoring
+- Fixed parameter resolving in script properties
+- Fixed saving of reordered TestCases
 - Fixed SSL Support for SoapUI TestCases in loadUI
-- Fixed bundling of external resources in generated War files 
-- Fixed all code-generation to work from command-line tools 
+- Fixed bundling of external resources in generated War files
+- Fixed all code-generation to work from command-line tools
 
 Updated Libraries:
 - Groovy 1.7.4
@@ -976,7 +974,7 @@ fixes:
 - Fixed keeping of whitespaces in XML generated from JDBC results
 - Added SOAP Request assertion for MockResponse TestSteps
 - Fixed closing of opened files in MockEngine
-- Fixed Find-and-Replace 
+- Fixed Find-and-Replace
 - Added multi-actions for enabling and disabling TestSteps, TestCases and TestSuites
 - Fixed forward slashed in .sh launchers
 - Improved moving of TestSteps
@@ -989,7 +987,7 @@ fixes:
 - Fixed DataSources to detect changes in configuration and re-initialize if neccessary
 - Spelling mistakes...
 - Updated Groovy to 1.7.2 (Library)
-- and more minor fixes.. 
+- and more minor fixes..
 
 Thanks to all our customers and users for once again helping us make SoapUI and SoapUI Pro even better!
 
@@ -1002,29 +1000,29 @@ SoapUI 3.5 adds support for JMS, JDBC and AMF for both functional and load-testi
 Major New Features
 
 JDBC Testing (Protocol)
-- A JDBC TestStep has been added for functional database testing, all standard xml 
+- A JDBC TestStep has been added for functional database testing, all standard xml
 and xpath related functionality applies to query results (assertions, transfers, etc).
 
 JMS Testing (Protocol)
-- A JMS protocol has been added for sending and receiving both text (SOAP,etc) and 
-binary messages via JMS. Provider configuration and extended JMS monitoring and 
+- A JMS protocol has been added for sending and receiving both text (SOAP,etc) and
+binary messages via JMS. Provider configuration and extended JMS monitoring and
 debugging functionality is provided via the HermesJMS integration.
 
 AMF Testing (Protocol)
-- An AMF TestStep has been added for functional and load testing of Flex server 
-applications, all standard xml and xpath related functionality applies to response 
+- An AMF TestStep has been added for functional and load testing of Flex server
+applications, all standard xml and xpath related functionality applies to response
 messages (assertions, transfers, etc).
 
 - Query Builder (Data Driven testing)
-Component for visually building Database queries used in the JDBC Teststep and 
-JDBC related DataSources and DataSinks. 
+Component for visually building Database queries used in the JDBC Teststep and
+JDBC related DataSources and DataSinks.
 
 - Deploy as War (Mocking)
 SoapUI Projects can now be packaged as WAR files to be deployed on any standard
 servlet container, which will host the contained MockServices and display a simple
 Web interface for statistics, log output, etc.
 
-Minor new features 
+Minor new features
 -   Greatly improved performance of Excel DataSource/DataSinks (Functional Testing)
 -   Greatly improved performance of script library (General)
 -   added global option to disable proxy (General)
@@ -1033,7 +1031,7 @@ Minor new features
 -   improved update-interface stability (General)
 -   improved thread-stability related to endpoints during loadtests (LoadTesting)
 -   improved statistics calculation during loadtests (LoadTesting)
--   Pressing return in httprequest endpoint field submits request (User Interface) 
+-   Pressing return in httprequest endpoint field submits request (User Interface)
 -   Added timeout property at request level (General)
 -   RunTestCase TestStep improvements: (Functional Testing)
 o   Copy LoadTest Properties
@@ -1057,7 +1055,7 @@ o   Ignore Empty
 -   set minimum toolbar size for better resizing of splitpanels (User Interface)
 -   added check that files in schema directory are actually schemas (General)
 
-Major bugs fixed: 
+Major bugs fixed:
 
 -   fixed save-all to keep track of project count (User Interface)
 -   fixed adding of method parameters from rest request, method and resource views (REST)
@@ -1080,7 +1078,7 @@ Major bugs fixed:
 -   fixed setting of nilable on missing elements in form editor (SOAP)
 -   removed unneccessary formatting of REST xml responses (REST)
 
-Updated libraries: 
+Updated libraries:
 
 -   Groovy 1.7
 -   Not-yet-commons-ssl-0.11
@@ -1098,7 +1096,7 @@ Beta2 fixes:
 -   Hermes 1.14 update (http://hermesjms.com/confluence/display/HJMS/Release+Notes)
 -   Support for named parameters in SQL queries and Stored Procedure calls
 -   Support for JMS Session authentication
--   Improved JMS endpoint naming scheme 
+-   Improved JMS endpoint naming scheme
 -   Added durableSubscriber and ClientID to JMS Request Inspector
 -   Added fetchSize property to JDBC TestStep
 -   Fixed inlining of attachments if inline files is enabled
@@ -1141,7 +1139,7 @@ Final Release fixes:
 bug-fixes galore! and a bunch of improvements :-)
 
 - Updated installers for Mac, Linux and 64-bit Windows (without JRE)
-- Updated components/libraries: JXBrowser 1.3 + hotfixes, Groovy 1.6.4, WSS4j 1.5.8, XML-Sec 1.4.3, 
+- Updated components/libraries: JXBrowser 1.3 + hotfixes, Groovy 1.6.4, WSS4j 1.5.8, XML-Sec 1.4.3,
   Bouncycastle 1.43, JTidy r820
 - Fixed Java 1.5 compatibility
 - Updated Launch-dialogs to support all current command-line options
@@ -1153,7 +1151,7 @@ bug-fixes galore! and a bunch of improvements :-)
 - New: Possibility to insert file as base64 encoded string (Thank you Cory!)
 - New: Groovy scripts are now run in seperate thread when running in TestStep editor (Thank you Piotr!)
 - New: MockServices now don't require SOAP Action by default (Thank you azl!)
-- New and experimental: Deploy as WAR (from Project menu), packages the project as a WAR file for running 
+- New and experimental: Deploy as WAR (from Project menu), packages the project as a WAR file for running
   MockServices inside an existing servlet container.
 - and many more fixes..
 
@@ -1251,7 +1249,7 @@ Some more bugfixes and improvements:
 - Improved Aut/Header inspectors to be visible for form/overview views
 - Fixed quoting of SOAP 1.2 Action in content-type header
 - Improved opening of local files in external browser (reports, etc)
-- Fixed initialization of custom RequestFilters 
+- Fixed initialization of custom RequestFilters
 - Fixed script-evaluation in MockResponses to allow modification of the responseContent
 - Fixed logging/display of failed MockRequests
 - Fixed caching of external WSDLs in SchemaComplianceAssertion if another URL was used
@@ -1291,8 +1289,8 @@ SoapUI Pro
   - Added possibility to exclude elements from coverage calculation
   - Fixed handling of empty elements
   - Moved settings to be at project-level
-- Added option to skip to closing DataSource Loop when no data is available in a DataSource 
-  TestStep  
+- Added option to skip to closing DataSource Loop when no data is available in a DataSource
+  TestStep
 - Improved import/export of requirements to include testcases and links
 - etc..
 
@@ -1300,7 +1298,7 @@ SoapUI Pro
 
 2007-12-12 : 2.0 final release!
 
-A bunch of minor improvements and a large number of bug-fixes made it into the final 
+A bunch of minor improvements and a large number of bug-fixes made it into the final
 release - thanks to all who have reported, tested and helped us out!
 
 -------------------------------------------------------------------------------
@@ -1308,7 +1306,7 @@ release - thanks to all who have reported, tested and helped us out!
 2007-12-02 : 2.0 beta2 release!
 
 Overhauled WS-Security support and many minor improvements;
-- WS-Security support has been greatly enhanced and is now managed at Project-level for 
+- WS-Security support has been greatly enhanced and is now managed at Project-level for
   application to Requests, MockServices/Responses and SOAP Monitors
 - Raw message viewer for viewing actual data sent/received
 - Aut Request inspector for editing authentication-related settings
@@ -1333,18 +1331,18 @@ your existing project-files before testing and report any issues at the sourcefo
 - tunnel / proxy modes
 - create request, testcases and mockservices from recorded traffic
 * Setup/Teardown scripts can now be specified for both TestCases and TestSuites
-* Run TestCase teststep allows parameterized running of testcases from with a testcase 
+* Run TestCase teststep allows parameterized running of testcases from with a testcase
   with return properties
 * Enabled/Disable Assertions / TestCases / TestSuites
 * MockService improvements:
 - SSL support
 - Mocked wsdls are now exposed via a (very) simple web-interface
 - Start/Stop scripts
-* New Project Overview 
+* New Project Overview
 - Project metrics
 - Load/Save scripts
 * TestSuite Editor run log
-* Much improved property-handling; 
+* Much improved property-handling;
 - properties can now be specified at testcase, testsuite, project and global level
 - property-expansions and property-transfers have been extended accordingly
 - drag-and-drop for creating property-expansions
@@ -1425,25 +1423,25 @@ Bug-Fixes:
 SoapUI 1.7.5 beta2 contains a small number of improvements and a bunch of bugfixes:
 
 Improvements:
-* Rudimentary support for wildcard element/attribute values in the matching 
+* Rudimentary support for wildcard element/attribute values in the matching
   XML of XPath Contains assertions, which eases comparisons of large XML blocks.
 * A dedicated Error Log which makes it easier to understand errors and report them back to us :-)
 * Action to import global preferences from an existing SoapUI installation.
-* An "Add Endpoint to Interface" action for easily adding MockService endpoints 
-  to their mocked Interfaces. Changing the MockService endpoint will automatically update 
+* An "Add Endpoint to Interface" action for easily adding MockService endpoints
+  to their mocked Interfaces. Changing the MockService endpoint will automatically update
   the associated Interface Endpoint as well.
-* Request/MockResponse option option to dynamically remove empty content from outgoing requests, 
+* Request/MockResponse option option to dynamically remove empty content from outgoing requests,
   which can be usefull when performing data-driven tests where not all data is available in each iteration.
-* Request/MockResponse option for automatically encoding attachments as specified by their associated 
+* Request/MockResponse option for automatically encoding attachments as specified by their associated
   WSDL Part (base64 or hexBinary)
-* Fixed WSDL import to allow redefinition of global types/element (can be turned off in WSDL Settings). 
+* Fixed WSDL import to allow redefinition of global types/element (can be turned off in WSDL Settings).
   Thanks to Lars Borup Jensen!
 * Some more dependency updates:
   o log4j to 1.2.14
   o xmlunit to 1.1
   o commons-ssl-0.3.4 to not-yet-commons-ssl-0.3.8
 * etc
-  
+
 Bug-Fixes:
 * Fixed move TestCase up/down with keyboard
 * Fixed validation mocking of RPC operation requests with attachments
@@ -1456,7 +1454,7 @@ Bug-Fixes:
 * Fixed form-editor to insert xsi:nil="true" on empty nillable fields
 * etc..
 
-As always, a huge Thank You to our community, and please don't hesitate to report any issues, etc...  
+As always, a huge Thank You to our community, and please don't hesitate to report any issues, etc...
 
 -------------------------------------------------------------------------------
 
@@ -1483,13 +1481,13 @@ Also a large number of bugs have been fixed, including
 * Error referencing included schema types in the default ns
 * WsdlMockResult.setRe_ponseContent
 * HTTP headers do not get copied to TestCase
-* Loadtest thread count has UI limit of 100 threads, 
+* Loadtest thread count has UI limit of 100 threads,
 * SoapUI uses startinfo XOP header rather than start-info
 * Junit Report times incorrect
 * and many more...
 
-As always we owe great thanks to our users for testing and giving us feedback on 
-bug-fixes and improvements... 
+As always we owe great thanks to our users for testing and giving us feedback on
+bug-fixes and improvements...
 
 -------------------------------------------------------------------------------
 
@@ -1507,8 +1505,8 @@ This is a bug-fix release which fixes some urgent issues in the 1.7 release
 * Updated to commons-logging 1.1
 * And many more internal fixes..
 
-As always we owe great thanks to our users for testing and giving us feedback on 
-bug-fixes and improvements... 
+As always we owe great thanks to our users for testing and giving us feedback on
+bug-fixes and improvements...
 
 -------------------------------------------------------------------------------
 
@@ -1526,7 +1524,7 @@ snapshot release page for details. Since the last snapshot, the following have b
 * Renamed SOAP Fault / Not SOAP Fault assertions to their correct opposite names
 * And many more minor improvements
 
-As always we owe great thanks to our users for testing and giving us feedback on 
+As always we owe great thanks to our users for testing and giving us feedback on
 bug-fixes and improvements...
 
 -------------------------------------------------------------------------------
@@ -1550,7 +1548,7 @@ snapshot releases (http://www.soapui.org/snapshot.html)
 * Fixed support for quoted charset values both for requests and mockresponses
 * ... and more internal refactorings and minor improvements
 
-As always our huge thanks goes out to all our users who have helped us identify and fix 
+As always our huge thanks goes out to all our users who have helped us identify and fix
 many of the above issues. Keep your reports coming!
 
 -------------------------------------------------------------------------------
@@ -1558,14 +1556,14 @@ many of the above issues. Keep your reports coming!
 2007-02-09 : 1.7 beta1 release
 
 We are happy to release this intermediate version with several key improvements to SoapUI functionality.
-        
+
 * Support for Mocking of WebServices from within SoapUI. Mock Services can be run either from inside SoapUI
 or with one of the IDE/Maven/CommandLine plugins.This opens for a number of usage scenarios, including:
-- Rapid Prototyping of WebServices; generate a complete static mock implementation from a WSDL in seconds 
+- Rapid Prototyping of WebServices; generate a complete static mock implementation from a WSDL in seconds
 and add dynamic functionality using Groovy.
-- Client testing/development; create mock implementations of desired operations set up a number of 
-sample responses (including attachments and custom http-headers) so clients can be developed/tested without 
-access to the "live" services. Responses can be cycled, randomized or selected with XPath expression from 
+- Client testing/development; create mock implementations of desired operations set up a number of
+sample responses (including attachments and custom http-headers) so clients can be developed/tested without
+access to the "live" services. Responses can be cycled, randomized or selected with XPath expression from
 incoming request
 - Test-Driven Development; Create SoapUI TestSuites/TestCases against MockServices before/during the actual
 services have been/are being implemented
@@ -1593,11 +1591,11 @@ fixes and many minor improvements since the beta2 release, including;
 
 * Added exclusion list to proxy settings (comma-seperated)
 * Added 2 context properties available when load-testing:
-- ThreadIndex : the index of the created thread... this value will never change for a given TestCase during its run time.. 
-New threads will simply get an incremented index... the mod of this value could for example be used as an index into a data-file 
-(to handle changes in number of threads) 
-- RunCount: tells how many times the TestCase has been run by its thread (not in total) during the current LoadTest 
-* Added initial support for unzipping gzipped response messages, ie messages with a Content-Type or Content-Encoding ending with "gzip". 
+- ThreadIndex : the index of the created thread... this value will never change for a given TestCase during its run time..
+New threads will simply get an incremented index... the mod of this value could for example be used as an index into a data-file
+(to handle changes in number of threads)
+- RunCount: tells how many times the TestCase has been run by its thread (not in total) during the current LoadTest
+* Added initial support for unzipping gzipped response messages, ie messages with a Content-Type or Content-Encoding ending with "gzip".
 Thanks to Diego Banda.
 * Added request-level property to inline attachment content in response editor (as in SoapUI 1.5)
 * Improved saving of projects to not corrupt files on out-of-memory (saving now first saves to an in-memory buffer
@@ -1605,15 +1603,15 @@ which is written to file if no errors occur..)
 * Fixed validation of derived types in xml-editors
 * Fixed automatic adding of TestStep Status assertion to newly created loadtests,
 * Added option to ignore case in Contains/NotContains assertions
-* Improved support for automatic validation by adding an option to not send invalid requests 
-* Added support for automatic validation of request/response messages in editors  
+* Improved support for automatic validation by adding an option to not send invalid requests
+* Added support for automatic validation of request/response messages in editors
 thanks to Michael Vorburger! ("Preferences / UI Settings / Validate Request / Response")
 * Added support for generating rpc-parts for attachments ("Preferences / WSDL Settings / Attachment Parts")
 * Added [Tools] button to all Tools dialogs which opens "Preferences / Integrated Tools" for setting tool paths
 * General dialog improvements; Escape closes and F1 shows online help if available
 * Fixed validation of SOAP mustUnderstand/encodingStyle attributes in entire messages
 * Added possibility to edit response message and revalidate with Alt-V (including assertions)
-* Added possibility for custom background image in desktop. Just place a soapui-background.gif/jpg/png in the 
+* Added possibility for custom background image in desktop. Just place a soapui-background.gif/jpg/png in the
 SoapUI bin directory (at last :-), Thanks to Roger Sundberg
 * Added option to open TestCase editor when adding requests to a TestCase
 * Updated to commons-ssl-0.3.0.jar
@@ -1647,14 +1645,14 @@ improvements, including;
 Welcome to SoapUI 1.6! We are happy to finally release this version with several key
 improvements to SoapUI functionality... please help us test and verify that old projects
 dont stop working and that the new features work as expected...
- 
+
 Major Improvements
 
 * Support for Attachments (MTOM / SwA / Inlining)
 * 12 Tool integrations for;
-      o Code Generation; JBossWS (wstools), JAX-RPC (wscompile), JAX-WS (wsimport), 
-        XFire 1.1.X (WsGen), Axis 1.X (wsdl2java), Axis 2 (wsdl2code), JAXB 2.0 (xjc), 
-        XmlBeans 2.X (scomp), GSoap 2.7.X and .NET 2.0, including a ToolRunner for 
+      o Code Generation; JBossWS (wstools), JAX-RPC (wscompile), JAX-WS (wsimport),
+        XFire 1.1.X (WsGen), Axis 1.X (wsdl2java), Axis 2 (wsdl2code), JAXB 2.0 (xjc),
+        XmlBeans 2.X (scomp), GSoap 2.7.X and .NET 2.0, including a ToolRunner for
         running code-generation tools from the command line
       o WSDL-Generation; JBossWS (wstools)
       o WS-I Basic Profile Validations
@@ -1693,7 +1691,7 @@ we are happy to announce the final release of SoapUI 1.5. It includes
 
 * a fair number of bug fixes
 * improvements to the website (jmeter comparison, more scenarios, etc..)
-* a windows installer including the required JRE for those that dont have java installed 
+* a windows installer including the required JRE for those that dont have java installed
   and/or want start-menu icons and an uninstaller.
 
 The release is as always available at http://sourceforge.net/projects/soapui/?abmode=1
@@ -1731,10 +1729,10 @@ And adds a small number of improvements:
 
 * Added "Show Editor" menu options to relevant popup menus in navigator
 * Added possibility to move test-steps in the testcase editor with Ctrl-Up/Down
-* Added possibility to open test-step editors by selecting their step in the 
+* Added possibility to open test-step editors by selecting their step in the
   TestCase editor and pressing Enter
-* Added a "Clone TestCase" option to the TestCase popup menu allowing cloning of an 
-  entire testCase including all its test steps.  
+* Added a "Clone TestCase" option to the TestCase popup menu allowing cloning of an
+  entire testCase including all its test steps.
 * Related site/doc updates
 
 Thanks to all that have helped in reporting/suggesting/confirming the above issues!
@@ -1764,7 +1762,7 @@ And adds a fair number of improvements:
 * Improved logging in TestCase desktop panel to show info on performed value transfers and goto conditions
 * Improved WSDL importing to handle WSDLs with invalid XSDs. A warning will be shown and request-generation/
   schema-validation will not work.
-* Upgraded to xmlbeans 2.1.0  
+* Upgraded to xmlbeans 2.1.0
 * Improved keyboard navigation in navigator so selected items can be opened by pressing enter
 * Improved endpoint combobox in request editors to include an option for adding a new endpoint
 * Added a number of unit tests for wsdl importing and valuetransfer test steps
@@ -1780,12 +1778,12 @@ Thanks to all that have helped in reporting/suggesting/confirming the above issu
 
 Maintainance release:
 
-* Fixed naming of value transfers; see bug 1342557 
-* Fixed captalization of Content-type; see bug 1328568 
+* Fixed naming of value transfers; see bug 1342557
+* Fixed captalization of Content-type; see bug 1328568
 * Fixed closing of dependant panels when removing model objects; see bug 1342555
 * Minor improvements to documentation (added PDF)
 
-Thanks to all reports / comments! Focus is now on the first 1.1 beta containing load-test functionality, 
+Thanks to all reports / comments! Focus is now on the first 1.1 beta containing load-test functionality,
 scheduled for mid-november.
 
 -------------------------------------------------------------------------------
@@ -1808,9 +1806,9 @@ Thanks to all reports / comments so far! Focus is now on fixing any new bugs and
 
 beta2 contains the following fixes/improvements;
 
-* Improved "Update Definition" functionality; fixed bug 1296190 and added the possibility to choose a 
+* Improved "Update Definition" functionality; fixed bug 1296190 and added the possibility to choose a
   new binding if the old one has been renamed
-* Added the possibility to set username/password/domain for all requests in a testcase via a "Set Credentials" 
+* Added the possibility to set username/password/domain for all requests in a testcase via a "Set Credentials"
   button in the TestCase Panel
 * Added username/password/domain properties to the maven plugin to allow overriding of these during CI test runs
 * Improved and added documentation for the CommandLine TestRunner
@@ -1832,9 +1830,9 @@ Thanks to Jesper Brandt for suggesting/helping out with several of the above iss
 
 This is the first public release and I'm sure there will problems related to
 WSDL importing, XML Validation, etc. (SoapUI has been tested rather extensively
-only with doc/literal services in a J2EE environment and running under WinXP). 
+only with doc/literal services in a J2EE environment and running under WinXP).
 
-Please have patience and notify me any problems together with WSDL's, messages, 
+Please have patience and notify me any problems together with WSDL's, messages,
 project-files, etc. so these can be fixed as soon as possible. Thanks!
 
 Get started by running one of the SoapUI scripts in the bin folder..

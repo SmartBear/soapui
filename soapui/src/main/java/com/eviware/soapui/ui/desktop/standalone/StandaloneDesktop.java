@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.ui.desktop.standalone;
@@ -430,37 +430,12 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     }
 
     class SoapUIDesktopPane extends JDesktopPane {
-        Image img;
-        private int imageWidth;
-        private int imageHeight;
 
         public SoapUIDesktopPane() {
-            try {
-                File file = new File("soapui-background.gif");
-                if (!file.exists())
-                    file = new File("soapui-background.jpg");
-                if (!file.exists())
-                    file = new File("/soapui-background.png");
-
-                if (file.exists()) {
-                    img = javax.imageio.ImageIO.read(file);
-                    imageWidth = img.getWidth(this);
-                    imageHeight = img.getHeight(this);
-                }
-            } catch (Exception e) {
-                SoapUI.logError(e, "Could not load graphics for desktop");
-            }
         }
 
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            if (img == null)
-                return;
-
-            int x = (this.getWidth() - imageWidth) / 2;
-            int y = (this.getHeight() - imageHeight) / 2;
-
-            g.drawImage(img, x, y, imageWidth, imageHeight, this);
         }
     }
 
