@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '8'
-          distribution: 'adopt'
+          distribution: 'temurin'
 
       - name: Build with Maven
         run: mvn -P assembly,installer -Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }} clean install
