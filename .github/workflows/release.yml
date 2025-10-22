@@ -33,25 +33,24 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y xvfb
 
-      - name: Get base version
-        run: ./get_version.sh
-
-      - name: Set CI version
-        if: github.event_name == 'push'
-        run: echo "PROJECT_VERSION=${{ env.BASE_VERSION }}-$(date +'%Y-%m-%d')-${{ github.repository_owner }}-${{ github.ref_name }}-SNAPSHOT" >> $GITHUB_ENV
-
-      - name: Set Release version
-        if: github.event_name == 'release'
-        run: echo "PROJECT_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
-
-      - name: Build with Maven (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: xvfb-run mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -Drevision=${{ env.PROJECT_VERSION }} clean install
-
-      - name: Build with Maven (Windows/macOS)
-        if: matrix.os != 'ubuntu-latest'
-        run: mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -Drevision=${{ env.PROJECT_VERSION }} -DskipTests clean install
-
+      - name: Set Version and Build Project
+        shell: pwsh
+        run: |
+          $baseVersion = (Select-String -Path 'pom.xml' -Pattern '<revision>(.*)-SNAPSHOT</revision>').Matches.Groups[1].Value
+          if ("${{ github.event_name }}" -eq "release") {
+            $version = "${{ github.ref_name }}"
+          }
+          else {
+            $timestamp = Get-Date -Format "yyyy-MM-dd"
+            $version = "$baseVersion-$timestamp-${{ github.repository_owner }}-${{ github.ref_name }}-SNAPSHOT"
+          }
+          echo "PROJECT_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          if ("${{ runner.os }}" -eq "Linux") {
+            xvfb-run mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -Drevision=$version clean install
+          }
+          else {
+            mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -Drevision=$version -DskipTests clean install
+          }
       - name: Upload Linux Assets
         if: github.event_name == 'release' && matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
