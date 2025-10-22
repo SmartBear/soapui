@@ -5,7 +5,6 @@
 </p>
 
 SoapUI is the world's leading testing tool for API testing. See the [SoapUI website](https://www.soapui.org/) to learn more.
-By downloading our software, you agree to our [license](https://www.soapui.org/developers-corner/soapui-license.html) and [privacy policy](https://smartbear.com/privacy/).
 
 ## Table of content
 
@@ -21,8 +20,6 @@ By downloading our software, you agree to our [license](https://www.soapui.org/d
     * [IntelliJ IDEA](#intellij-idea)
     * [Eclipse](#eclipse)
 * [Documentation](#documentation)
-* [Advanced Functionality](#advanced-functionality)
-* [Additional resources](#additional-resources)
 
 ## Structure and submodules
 
@@ -108,17 +105,3 @@ After you have created the Eclipse project, navigate to the `com.eviware.soapui.
 To generate documentation ([JavaDoc](http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html)), run `mvn javadoc:javadoc` in the root folder of the submodule you want to create documentation for. The documentation will be located in the `target/site/javadoc` folder after the Maven command is executed successfully. 
 
 You can also get the latest information on SoapUI classes and methods [here](http://www.soapui.org/apidocs).
-
-## Advanced Functionality
-
-SoapUI Open Source offers basic functionality for API testing. For additional features, such as data-driven testing, coverage testing, groovy script debugging and others, try [SoapUI Pro](https://smartbear.com/product/ready-api/soapui/overview/).
-
-
-## Additional resources
-
-* [SoapUI community](https://community.smartbear.com/t5/SoapUI-Open-Source/bd-p/SoapUI_OS) - SmartBear's SoapUI Open Source community for discussing and participating in all things SoapUI.
-* [SoapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples) - This is a collection of SoapUI projects and Groovy scripts used to demonstrate the Groovy scripting capabilities in SoapUI.
-* [Extending SoapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
-* [Custom factories](http://www.soapui.org/Developers-Corner/custom-factories.html)
-* [Integrating with SoapUI](http://www.soapui.org/Developers-Corner/integrating-with-soapui.html)
-* [Mastering SoapUI](https://www.packtpub.com/web-development/mastering-soapui) - Master the art of testing and automating your SOA using SoapUI
