@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn -P assembly,installer -Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }} clean install
+        run: mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" clean install
 
       - name: Upload Linux Assets
         if: github.event_name == 'release' && matrix.os == 'ubuntu-latest'
