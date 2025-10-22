@@ -1,6 +1,8 @@
-name: Release
+name: CI/CD
 
 on:
+  push:
+    branches: [ '**' ]
   release:
     types: [created]
 
@@ -23,7 +25,7 @@ jobs:
         run: mvn -P assembly,installer -Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }} clean install
 
       - name: Upload Linux Assets
-        if: matrix.os == 'ubuntu-latest'
+        if: github.event_name == 'release' && matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -31,7 +33,7 @@ jobs:
             soapui-installer/target/install4j/*.sh
 
       - name: Upload Windows Assets
-        if: matrix.os == 'windows-latest'
+        if: github.event_name == 'release' && matrix.os == 'windows-latest'
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -39,7 +41,7 @@ jobs:
             soapui-installer/target/install4j/*.exe
 
       - name: Upload macOS Assets
-        if: matrix.os == 'macos-latest'
+        if: github.event_name == 'release' && matrix.os == 'macos-latest'
         uses: softprops/action-gh-release@v1
         with:
           files: |
