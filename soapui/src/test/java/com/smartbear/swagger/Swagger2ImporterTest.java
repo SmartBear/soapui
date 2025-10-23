@@ -13,6 +13,9 @@ import java.net.URL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
+
 public class Swagger2ImporterTest {
 
     @Test
@@ -37,5 +40,30 @@ public class Swagger2ImporterTest {
         assertNotNull(request);
         assertEquals("{}", request.getRequestContent());
         assertEquals("application/json", request.getMediaType());
+    }
+
+    @Test
+    public void testImportSwaggerWithResponseExample() throws Exception {
+        // Given
+        WsdlProject project = new WsdlProject();
+        Swagger2Importer importer = new Swagger2Importer(project);
+        String filePath = "/swagger-with-response-example.json";
+        URL resource = getClass().getResource(filePath);
+        assertNotNull("Could not find swagger definition", resource);
+        File file = new File(resource.toURI());
+        String swaggerDefinitionPath = file.getAbsolutePath();
+
+        // When
+        importer.importSwagger(swaggerDefinitionPath);
+
+        // Then
+        assertEquals(1, project.getRestMockServiceCount());
+        RestMockService mockService = project.getRestMockServiceAt(0);
+        assertEquals(1, mockService.getMockOperationCount());
+        RestMockAction mockAction = mockService.getMockOperationAt(0);
+        assertEquals(3, mockAction.getMockResponseCount());
+        assertEquals("{\n  \"message\" : \"This is an example response\"\n}", mockAction.getMockResponseAt(0).getResponseContent());
+        assertEquals("{\n  \"message\" : \"This is another example response\"\n}", mockAction.getMockResponseAt(1).getResponseContent());
+        assertEquals("{\n  \"message\" : \"string\"\n}", mockAction.getMockResponseAt(2).getResponseContent());
     }
 }

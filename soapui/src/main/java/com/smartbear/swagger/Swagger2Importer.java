@@ -7,6 +7,9 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.MediaTypeUtils;
@@ -116,7 +119,8 @@ public class Swagger2Importer implements SwaggerImporter {
             return new RestService[]{null};
         }
         RestService restService = createRestService(swagger, url);
-        swagger.getPaths().forEach((key, value) -> importPath(restService, key, value, context));
+        RestMockService mockService = project.addNewRestMockService(restService.getName() + " Mock");
+        swagger.getPaths().forEach((key, value) -> importPath(restService, mockService, key, value, context));
 
         result.add(restService);
         ensureEndpoint(restService, url);
@@ -141,7 +145,7 @@ public class Swagger2Importer implements SwaggerImporter {
         }
     }
 
-    private RestResource importPath(RestService restService, String path, Path resource, Map<String, Object> context) {
+    private RestResource importPath(RestService restService, RestMockService mockService, String path, Path resource, Map<String, Object> context) {
         if (restService == null) {
             return null;
         }
@@ -173,33 +177,33 @@ public class Swagger2Importer implements SwaggerImporter {
         }
 
         if (resource.getGet() != null) {
-            addOperation(restResource, resource.getGet(), RestRequestInterface.HttpMethod.GET);
+            addOperation(mockService, restResource, resource.getGet(), RestRequestInterface.HttpMethod.GET);
         }
 
         if (resource.getPost() != null) {
-            addOperation(restResource, resource.getPost(), RestRequestInterface.HttpMethod.POST);
+            addOperation(mockService, restResource, resource.getPost(), RestRequestInterface.HttpMethod.POST);
         }
 
         if (resource.getPut() != null) {
-            addOperation(restResource, resource.getPut(), RestRequestInterface.HttpMethod.PUT);
+            addOperation(mockService, restResource, resource.getPut(), RestRequestInterface.HttpMethod.PUT);
         }
 
         if (resource.getDelete() != null) {
-            addOperation(restResource, resource.getDelete(), RestRequestInterface.HttpMethod.DELETE);
+            addOperation(mockService, restResource, resource.getDelete(), RestRequestInterface.HttpMethod.DELETE);
         }
 
         if (resource.getPatch() != null) {
-            addOperation(restResource, resource.getPatch(), RestRequestInterface.HttpMethod.PATCH);
+            addOperation(mockService, restResource, resource.getPatch(), RestRequestInterface.HttpMethod.PATCH);
         }
 
         if (resource.getOptions() != null) {
-            addOperation(restResource, resource.getOptions(), RestRequestInterface.HttpMethod.OPTIONS);
+            addOperation(mockService, restResource, resource.getOptions(), RestRequestInterface.HttpMethod.OPTIONS);
         }
 
         return restResource;
     }
 
-    private void addOperation(RestResource resource, Operation operation, RestRequestInterface.HttpMethod httpMethod) {
+    private void addOperation(RestMockService mockService, RestResource resource, Operation operation, RestRequestInterface.HttpMethod httpMethod) {
         String operationName = operation.getOperationId();
 
         if (StringUtils.isNullOrEmpty(operationName)) {
@@ -208,6 +212,8 @@ public class Swagger2Importer implements SwaggerImporter {
 
         RestMethod method = resource.addNewMethod(operationName);
         method.setMethod(httpMethod);
+        RestMockAction mockAction = mockService.addEmptyMockAction(httpMethod, resource.getPath());
+
         String description = StringUtils.emptyIfNull(operation.getDescription()) +
                 System.getProperty("line.separator") + StringUtils.emptyIfNull(operation.getSummary());
         method.setDescription(description);
@@ -233,7 +239,7 @@ public class Swagger2Importer implements SwaggerImporter {
 
         Map<String, Response> responses = operation.getResponses();
         if (responses != null) {
-            responses.forEach((responseCode, response) -> addResponse(responseCode, response, operation, method));
+            responses.forEach((responseCode, response) -> addResponse(responseCode, response, operation, mockAction));
         }
 
         if (method.getRepresentations(RestRepresentation.Type.RESPONSE, null) != null
@@ -354,7 +360,7 @@ public class Swagger2Importer implements SwaggerImporter {
         }
     }
 
-    private void addResponse(String responseCode, Response response, Operation operation, RestMethod method) {
+    private void addResponse(String responseCode, Response response, Operation operation, RestMockAction mockAction) {
         List<String> produces = operation.getProduces();
         if (produces == null || produces.isEmpty()) {
             operation.setProduces(swagger.getProduces());
@@ -362,31 +368,35 @@ public class Swagger2Importer implements SwaggerImporter {
         }
 
         if (produces == null || produces.isEmpty()) {
-            RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.RESPONSE);
-
-            List<String> statusList = new ArrayList<>();
-            if (!responseCode.equals("default")) {
-                statusList.add(responseCode);
-            }
-            representation.setStatus(statusList);
-            representation.setMediaType(defaultMediaType);
-
-            // just take the first example
-            Map<String, Object> responseExamples = response.getExamples();
-            if (responseExamples != null && !responseExamples.isEmpty()) {
-                representation.setMediaType(responseExamples.keySet().iterator().next());
-            }
+            addMockResponse(responseCode, response, mockAction, defaultMediaType);
         } else {
-            produces.forEach(mediaType -> {
-                RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.RESPONSE);
-                representation.setMediaType(mediaType);
+            produces.forEach(mediaType -> addMockResponse(responseCode, response, mockAction, mediaType));
+        }
+    }
 
-                List<String> statusList = new ArrayList<>();
-                if (!responseCode.equals("default")) {
-                    statusList.add(responseCode);
+    private void addMockResponse(String responseCode, Response response, RestMockAction mockAction, String mediaType) {
+        // Add mock responses for each example
+        Map<String, Object> responseExamples = response.getExamples();
+        if (responseExamples != null && !responseExamples.isEmpty()) {
+            responseExamples.forEach((exampleMediaType, exampleObject) -> {
+                RestMockResponse mockResponse = mockAction.addNewMockResponse(responseCode);
+                try {
+                    String content = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(exampleObject);
+                    mockResponse.setResponseContent(content);
+                } catch (JsonProcessingException e) {
+                    logger.error("Failed to serialize example", e);
                 }
-                representation.setStatus(statusList);
             });
+        }
+
+        // Add mock response from schema
+        if (response.getSchema() != null) {
+            RestMockResponse mockResponse = mockAction.addNewMockResponse(responseCode);
+            Example example = ExampleBuilder.fromProperty(response.getSchema(), swagger.getDefinitions());
+            if (example != null) {
+                String content = serializeExample(mediaType, example);
+                mockResponse.setResponseContent(content);
+            }
         }
     }
 

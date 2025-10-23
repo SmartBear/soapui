@@ -9,6 +9,8 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import org.junit.Test;
 import com.eviware.soapui.impl.rest.RestRepresentation;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 
 
 import java.io.File;
@@ -54,8 +56,6 @@ public class OpenAPI3ImporterTest {
         assertNotNull(request.getRequestContent());
         assertTrue(request.getRequestContent().contains("\"name\" : \"string\""));
         assertTrue(request.getRequestContent().contains("\"photoUrls\" : [ \"string\" ]"));
-        assertEquals(6, updatePetMethod.getRepresentations(RestRepresentation.Type.RESPONSE, null).length);
-        assertNotNull(updatePetMethod.getRepresentations(RestRepresentation.Type.RESPONSE, null)[0].getStatus());
 
         RestResource petByIdResource = service.getResourceByFullPath("/pet/{petId}");
         assertNotNull(petByIdResource);
@@ -99,8 +99,6 @@ public class OpenAPI3ImporterTest {
         assertEquals("application/json", request.getMediaType());
         assertNotNull(request.getRequestContent());
         assertTrue(request.getRequestContent().length() > 2);
-        assertEquals(6, updatePetMethod.getRepresentations(RestRepresentation.Type.RESPONSE, null).length);
-        assertNotNull(updatePetMethod.getRepresentations(RestRepresentation.Type.RESPONSE, null)[0].getStatus());
 
         RestResource petByIdResource = service.getResourceByFullPath("/pet/{petId}");
         assertNotNull(petByIdResource);
@@ -109,5 +107,30 @@ public class OpenAPI3ImporterTest {
         assertEquals(1, getPetByIdMethod.getPropertyCount());
         // This assertion is failing because the parameter style is not being set
         //assertEquals(RestParamsPropertyHolder.ParameterStyle.TEMPLATE, getPetByIdMethod.getProperty("petId").getStyle());
+    }
+
+    @Test
+    public void testImportOpenAPIWithResponseExample() throws Exception {
+        // Given
+        WsdlProject project = new WsdlProject();
+        SwaggerImporter importer = new OpenAPI3Importer(project);
+        String filePath = "/openapi-with-response-example.json";
+        URL resource = getClass().getResource(filePath);
+        assertNotNull("Could not find OpenAPI definition", resource);
+        File file = new File(resource.toURI());
+        String openApiDefinitionPath = file.getAbsolutePath();
+
+        // When
+        importer.importSwagger(openApiDefinitionPath);
+
+        // Then
+        assertEquals(1, project.getRestMockServiceCount());
+        RestMockService mockService = project.getRestMockServiceAt(0);
+        assertEquals(1, mockService.getMockOperationCount());
+        RestMockAction mockAction = mockAction = mockService.getMockOperationAt(0);
+        assertEquals(3, mockAction.getMockResponseCount());
+        assertEquals("{\n  \"message\" : \"This is an example response\"\n}", mockAction.getMockResponseAt(0).getResponseContent());
+        assertEquals("{\n  \"message\" : \"This is another example response\"\n}", mockAction.getMockResponseAt(1).getResponseContent());
+        assertEquals("{\n  \"message\" : \"string\"\n}", mockAction.getMockResponseAt(2).getResponseContent());
     }
 }
