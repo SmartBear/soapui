@@ -28,7 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <requireMavenVersion-value>3.6.3</requireMavenVersion-value>
-        <maxJdkVersion-value>21</maxJdkVersion-value>
+        <maxJdkVersion-value>17</maxJdkVersion-value>
 
         <!-- Custom properties -->
         <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
@@ -272,8 +272,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
