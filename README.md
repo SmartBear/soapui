@@ -1,9 +1,3 @@
-<p align="center">
-	<a href="https://soapui.org/">
-	  <img src="SoapUI-oss-logo.png">
-	</a>
-</p>
-
 SoapUI is the world's leading testing tool for API testing. See the [SoapUI website](https://www.soapui.org/) to learn more.
 
 ## Table of content
