@@ -829,6 +829,12 @@
             <version>${io.swagger.swagger-parser.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>2.1.15</version>
+        </dependency>
+
 
     </dependencies>
 

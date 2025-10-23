@@ -52,6 +52,10 @@ class SwaggerUtils {
 
     static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType,
                                                  boolean generateTestCase) throws Exception {
+        if (isOpenApi(url)) {
+            return new OpenAPI3Importer(project);
+        }
+
         if (url.endsWith(".yaml") || url.endsWith(".yml")) {
             return new Swagger2Importer(project, defaultMediaType);
         }
@@ -120,7 +124,7 @@ class SwaggerUtils {
                 logErrors(result);
             }
             JsonNode openapiNode = rootNode.get("openapi");
-            return openapiNode != null;
+            return openapiNode != null && openapiNode.asText().startsWith("3.");
         }
         catch (Exception e) {
             return false;
