@@ -290,13 +290,23 @@ public class Swagger2Importer implements SwaggerImporter {
 
         if (consumes != null) {
             consumes.forEach(mediaType -> {
-                RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.REQUEST);
-                representation.setMediaType(mediaType);
+                method.addNewRepresentation(RestRepresentation.Type.REQUEST).setMediaType(mediaType);
 
-                RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
-                request.setMediaType(mediaType);
                 Model bodyParameterModel = bodyParameter.getSchema();
                 if (bodyParameterModel != null) {
+                    // From example property
+                    if (bodyParameterModel.getExample() != null) {
+                        ObjectExample example = new ObjectExample();
+                        example.setExample(bodyParameterModel.getExample());
+                        String content = serializeExample(mediaType, example);
+                        if (StringUtils.hasContent(content)) {
+                            RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
+                            request.setMediaType(mediaType);
+                            request.setRequestContent(content);
+                        }
+                    }
+
+                    // From schema
                     ObjectProperty objectProperty = new ObjectProperty(bodyParameterModel.getProperties());
                     if (bodyParameterModel instanceof RefModel) {
                         RefModel refModel = (RefModel) bodyParameterModel;
@@ -310,8 +320,14 @@ public class Swagger2Importer implements SwaggerImporter {
                     }
                     Example output = objectProperty != null ? ExampleBuilder.fromProperty(objectProperty, swagger.getDefinitions()) :
                             ExampleBuilder.fromModel(null, bodyParameterModel, swagger.getDefinitions(), new HashSet<String>());
+
                     if (output != null) {
-                        request.setRequestContent(serializeExample(mediaType, output));
+                        String content = serializeExample(mediaType, output);
+                        if (StringUtils.hasContent(content)) {
+                            RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
+                            request.setMediaType(mediaType);
+                            request.setRequestContent(content);
+                        }
                     }
                 }
             });
@@ -349,7 +365,7 @@ public class Swagger2Importer implements SwaggerImporter {
                     request.setRequestContent("<root/>");
                 }
             }
-        } else {
+        } else if (method.getRequestList().size() == 0) {
             method.addNewRequest("Request " + (method.getRequestList().size() + 1));
         }
     }
