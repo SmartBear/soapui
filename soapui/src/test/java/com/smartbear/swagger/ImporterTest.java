@@ -81,4 +81,23 @@ public class ImporterTest {
         assertEquals("Swagger Petstore", service.getName());
         assertEquals(2, service.getOperationCount());
     }
+
+    @Test
+    public void testImportLargeSwaggerDefinition() throws Exception {
+        // Given
+        WsdlProject project = new WsdlProject();
+        Swagger2Importer importer = new Swagger2Importer(project);
+        String filePath = "/petstore-swagger-2.0.large.json";
+        URL resource = getClass().getResource(filePath);
+        assertNotNull("Could not find swagger definition", resource);
+        File file = new File(resource.toURI());
+        String swaggerDefinitionPath = file.getAbsolutePath();
+
+        // When
+        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
+
+        // Then
+        assertNotNull(services);
+        assertNotNull(services[0]);
+    }
 }
