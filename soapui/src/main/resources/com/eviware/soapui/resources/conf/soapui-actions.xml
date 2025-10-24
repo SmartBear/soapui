@@ -200,6 +200,8 @@
     <!-- TestCase Actions -->
     <tns:action id="AddNewLoadTestAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
+    <tns:action id="AddNewBulkTestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewBulkTestAction"/>
     <tns:action id="AddNewSecurityTestAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction"/>
     <tns:action id="CloneTestCaseAction"
@@ -635,6 +637,7 @@
         <tns:actionMapping groupId="WsdlTestCaseAddStepActions" name="Add Step"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddNewLoadTestAction" keyStroke="menu N"/>
+        <tns:actionMapping actionId="AddNewBulkTestAction" keyStroke="menu B"/>
         <tns:actionMapping actionId="AddNewSecurityTestAction" keyStroke="menu S"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="CloneTestCaseAction" keyStroke="F9"/>

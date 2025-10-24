@@ -34,6 +34,16 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="BulkTest">
+        <xsd:complexContent>
+            <xsd:extension base="tns:ModelItem">
+                <xsd:sequence>
+                    <xsd:element name="dataFile" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:element name="soapui-workspace" type="tns:Workspace"></xsd:element>
 
     <xsd:complexType name="Project">
@@ -442,6 +452,9 @@
                     </xsd:element>
 
                     <xsd:element name="loadTest" type="tns:LoadTest"
+                                 maxOccurs="unbounded" minOccurs="0">
+                    </xsd:element>
+                    <xsd:element name="bulkTest" type="tns:BulkTest"
                                  maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
                     <xsd:element name="setupScript" type="tns:Script"

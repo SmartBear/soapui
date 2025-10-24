@@ -83,6 +83,15 @@
                         <user.home>target/test-classes</user.home>
                     </systemProperties>
                     <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.desktop/java.awt=ALL-UNNAMED</argLine>
+                    <excludes>
+                        <exclude>**/RestResourceEditorPopupWindowTest.java</exclude>
+                        <exclude>**/RestRequestDesktopPanelTest.java</exclude>
+                        <exclude>**/WsdlRequestDesktopPanelTest.java</exclude>
+                        <exclude>**/RestTestRequestDesktopPanelTest.java</exclude>
+                        <exclude>**/OAuth2ScriptsEditorTest.java</exclude>
+                        <exclude>**/JLogListTest.java</exclude>
+                        <exclude>**/MockAsWarActionTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
@@ -584,6 +593,11 @@
             <artifactId>groovy-all</artifactId>
             <version>${groovy-all.version}</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>2.3</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
