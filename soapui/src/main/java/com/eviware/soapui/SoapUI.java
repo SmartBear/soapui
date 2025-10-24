@@ -582,7 +582,6 @@ public class SoapUI {
         helpMenu.add(new OpenUrlAction("Privacy Policy", SMARTBEAR_WEB_SITE_START_PAGE + HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
-        helpMenu.add(new OpenUrlAction("smartbear.com", SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new AboutAction());
         return helpMenu;
