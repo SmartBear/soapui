@@ -52,22 +52,15 @@ class SwaggerUtils {
 
     static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType,
                                                  boolean generateTestCase) throws Exception {
-        if (url.endsWith(".yaml") || url.endsWith(".yml")) {
-            return new Swagger2Importer(project, defaultMediaType);
-        }
-
-        UrlWsdlLoader loader = new UrlWsdlLoader(url);
-        Object json = new JsonSlurper().parse(loader.load());
-
-        if (json instanceof Map){
-            Map mapJson  = (Map)json;
-            Object swagger = mapJson.get("swagger");
-            Object swaggerVersion = mapJson.get("swaggerVersion");
-            if("2.0".equals(swaggerVersion) || "2.0".equals(swagger)) {
-                return new Swagger2Importer(project, defaultMediaType);
+        String openApiVersion = getOpenApiVersion(url);
+        if (openApiVersion != null) {
+            if (openApiVersion.startsWith("3.1")) {
+                return new OpenAPI31Importer(project, defaultMediaType);
+            } else if (openApiVersion.startsWith("3.0")) {
+                return new OpenAPI3Importer(project, defaultMediaType);
             }
         }
-        return null;
+        return new Swagger2Importer(project, defaultMediaType);
     }
 
     static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType) throws Exception {
@@ -89,7 +82,7 @@ class SwaggerUtils {
         return importSwaggerFromUrl(project, finalExpUrl, DEFAULT_MEDIA_TYPE);
     }
 
-    static boolean isOpenApi(String location) {
+    static String getOpenApiVersion(String location) {
         String data;
         try {
             location = location.replaceAll("\\\\", "/");
@@ -115,17 +108,20 @@ class SwaggerUtils {
                 ObjectMapper mapper = Json.mapper();
                 rootNode = mapper.readTree(data);
             } else {
-                SwaggerDeserializationResult result  = new SwaggerDeserializationResult();
+                SwaggerDeserializationResult result = new SwaggerDeserializationResult();
                 rootNode = DeserializationUtils.readYamlTree(data, result);
                 logErrors(result);
             }
             JsonNode openapiNode = rootNode.get("openapi");
-            return openapiNode != null;
+            if (openapiNode != null) {
+                return openapiNode.asText();
+            }
+        } catch (Exception e) {
+            return null;
         }
-        catch (Exception e) {
-            return false;
-        }
+        return null;
     }
+
 
     static SwaggerImporter importSwaggerFromUrl(final WsdlProject project,
                                                 final String finalExpUrl,
@@ -147,8 +143,7 @@ class SwaggerUtils {
                     if (!result.isEmpty()) {
                         UISupport.selectAndShow(result.get(0));
                     }
-                }
-                catch (Throwable t) {
+                } catch (Throwable t) {
                     UISupport.showErrorMessage(t);
                 }
                 return null;
@@ -182,7 +177,7 @@ class SwaggerUtils {
     }
 
     static boolean isOAS3Definition(String oasVersion) {
-        return oasVersion.startsWith("3.");
+        return oasVersion.startsWith("3.0");
     }
 
     public static Swagger getSwagger(String swaggerAsString) {
