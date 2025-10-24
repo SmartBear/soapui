@@ -307,28 +307,10 @@ public class Swagger2Importer implements SwaggerImporter {
                     }
 
                     // From schema
-                    ObjectProperty objectProperty = new ObjectProperty(bodyParameterModel.getProperties());
-                    if (bodyParameterModel instanceof RefModel) {
-                        RefModel refModel = (RefModel) bodyParameterModel;
-                        Model modelDefinition = swagger.getDefinitions().get(refModel.getSimpleRef());
-                        if (modelDefinition instanceof ComposedModel) {
-                            objectProperty = null;
-                        } else if (modelDefinition != null) {
-                            objectProperty = new ObjectProperty(modelDefinition.getProperties());
-                            objectProperty.name(refModel.getSimpleRef());
-                        }
-                    }
-                    Example output = objectProperty != null ? ExampleBuilder.fromProperty(objectProperty, swagger.getDefinitions()) :
-                            ExampleBuilder.fromModel(null, bodyParameterModel, swagger.getDefinitions(), new HashSet<String>());
-
-                    if (output != null) {
-                        String content = serializeExample(mediaType, output);
-                        if (StringUtils.hasContent(content)) {
-                            RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
-                            request.setMediaType(mediaType);
-                            request.setRequestContent(content);
-                        }
-                    }
+                    String content = mediaType.toLowerCase().contains("json") ? "{}" : "<root/>";
+                    RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
+                    request.setMediaType(mediaType);
+                    request.setRequestContent(content);
                 }
             });
         }
