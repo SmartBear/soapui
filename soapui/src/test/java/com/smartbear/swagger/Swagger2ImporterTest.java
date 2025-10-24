@@ -38,4 +38,29 @@ public class Swagger2ImporterTest {
         assertEquals("{}", request.getRequestContent());
         assertEquals("application/json", request.getMediaType());
     }
+
+    @Test
+    public void testImportSwaggerWithMultipleConsumes() throws Exception {
+        // Given
+        WsdlProject project = new WsdlProject();
+        Swagger2Importer importer = new Swagger2Importer(project);
+        String filePath = "/swagger-definition-with-multiple-consumes.json";
+        URL resource = getClass().getResource(filePath);
+        assertNotNull("Could not find swagger definition", resource);
+        File file = new File(resource.toURI());
+        String swaggerDefinitionPath = file.getAbsolutePath();
+
+        // When
+        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
+        RestService service = services[0];
+        RestResource restResource = (RestResource) service.getOperationList().get(0);
+        RestMethod method = restResource.getRestMethodAt(0);
+
+        // Then
+        assertEquals(2, method.getRequestList().size());
+        assertEquals("Request 1", method.getRequestList().get(0).getName());
+        assertEquals("application/json", method.getRequestList().get(0).getMediaType());
+        assertEquals("Request 2", method.getRequestList().get(1).getName());
+        assertEquals("application/xml", method.getRequestList().get(1).getMediaType());
+    }
 }

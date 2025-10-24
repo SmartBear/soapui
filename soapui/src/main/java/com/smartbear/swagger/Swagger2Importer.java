@@ -341,7 +341,7 @@ public class Swagger2Importer implements SwaggerImporter {
 
         if (consumes != null && !consumes.isEmpty()) {
             for (String mediaType : consumes) {
-                RestRequest request = method.addNewRequest("Request 1");
+                RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
                 request.setMediaType(mediaType);
                 if (mediaType.toLowerCase().contains("json")) {
                     request.setRequestContent("{}");
@@ -350,7 +350,7 @@ public class Swagger2Importer implements SwaggerImporter {
                 }
             }
         } else {
-            method.addNewRequest("Request 1");
+            method.addNewRequest("Request " + (method.getRequestList().size() + 1));
         }
     }
 
