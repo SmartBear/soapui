@@ -28,10 +28,6 @@ public class Swagger2Exporter implements SwaggerExporter {
 
     @Override
     public String exportToFileSystem(String fileName, String apiVersion, String format, RestService[] services, String basePath) {
-        if (!ExportSwaggerAction.shouldOverwriteFileIfExists(fileName, null)) {
-            return null;
-        }
-
         swagger = new Swagger();
         swagger.setBasePath(basePath);
         Info info = new Info();
