@@ -12,6 +12,13 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.MediaTypeUtils;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.PropertyTransfersStepFactory;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -44,6 +51,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -119,6 +127,20 @@ public class OpenAPI3Importer implements SwaggerImporter {
 
         result.add(restService);
         ensureEndpoint(restService, url);
+
+
+        if (!java.awt.GraphicsEnvironment.isHeadless()) {
+            com.smartbear.swagger.utils.PropertyTransferDiscovery discovery = new com.smartbear.swagger.utils.PropertyTransferDiscovery();
+            java.util.List<com.smartbear.swagger.utils.PropertyTransferDiscovery.PropertyTransfer> transfers = discovery.discoverPropertyTransfers(openApi);
+            com.smartbear.swagger.ui.TestCaseGenerationWizard wizard = new com.smartbear.swagger.ui.TestCaseGenerationWizard(null, openApi, transfers);
+            wizard.setVisible(true);
+
+            if (wizard.isGenerated()) {
+                java.util.List<String> selectedOperations = wizard.getSelectedOperations();
+                java.util.List<com.smartbear.swagger.utils.PropertyTransferDiscovery.PropertyTransfer> approvedTransfers = wizard.getApprovedPropertyTransfers();
+                createTestCase(Arrays.asList(result.toArray(new RestService[0])), selectedOperations, approvedTransfers);
+            }
+        }
 
         return result.toArray(new RestService[result.size()]);
     }
@@ -405,5 +427,33 @@ public class OpenAPI3Importer implements SwaggerImporter {
 
     public OpenAPI getOpenApi() {
         return openApi;
+    }
+
+    public void createTestCase(List<RestService> services, java.util.List<String> selectedOperations, java.util.List<com.smartbear.swagger.utils.PropertyTransferDiscovery.PropertyTransfer> approvedTransfers) {
+        if (project != null) {
+            WsdlTestSuite testSuite = project.addNewTestSuite("Generated Test Suite");
+            WsdlTestCase testCase = testSuite.addNewTestCase("Generated Test Case");
+
+            for (String operationId : selectedOperations) {
+                for (RestService service : services) {
+                    for (com.eviware.soapui.model.iface.Operation operation : service.getOperationList()) {
+                        if (operation instanceof RestMethod && operationId.equals(operation.getName())) {
+                            testCase.addTestStep(RestRequestStepFactory.createConfig(((RestMethod) operation).getRequestAt(0), operation.getName()));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (com.smartbear.swagger.utils.PropertyTransferDiscovery.PropertyTransfer transfer : approvedTransfers) {
+                PropertyTransfersTestStep transferStep = (PropertyTransfersTestStep) testCase.addTestStep(
+                        new PropertyTransfersStepFactory().createNewTestStep(testCase, "Property Transfer"));
+                PropertyTransfer newTransfer = transferStep.addTransfer("transfer");
+                newTransfer.setSourceStepName(transfer.sourceOperationId);
+                newTransfer.setTargetStepName(transfer.targetOperationId);
+                newTransfer.setSourcePath("Response");
+                newTransfer.setTargetPath(transfer.propertyName);
+            }
+        }
     }
 }

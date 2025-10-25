@@ -8,10 +8,15 @@ import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
+import com.smartbear.swagger.utils.PropertyTransferDiscovery;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -126,5 +131,47 @@ public class ImporterTest {
         RestMockResponse response = mockAction.getMockResponseAt(0);
         assertEquals("application/json", response.getMediaType());
         assertTrue("Should contain the example", response.getResponseContent().contains("John Doe"));
+    }
+
+    @Test
+    public void testIntelligentTestCaseGeneration() throws Exception {
+        // Given
+        WsdlProject project = new WsdlProject();
+        OpenAPI3Importer importer = new OpenAPI3Importer(project);
+        String filePath = "/simple-api-for-testing.json";
+        URL resource = getClass().getResource(filePath);
+        assertNotNull("Could not find swagger definition", resource);
+        File file = new File(resource.toURI());
+        String swaggerDefinitionPath = file.getAbsolutePath();
+        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
+
+        // When
+        PropertyTransferDiscovery discovery = new PropertyTransferDiscovery();
+        List<PropertyTransferDiscovery.PropertyTransfer> transfers = discovery.discoverPropertyTransfers(importer.getOpenApi());
+
+        // Then
+        assertEquals(1, transfers.size());
+        assertEquals("createAccount", transfers.get(0).sourceOperationId);
+        assertEquals("getAccount", transfers.get(0).targetOperationId);
+        assertEquals("accountId", transfers.get(0).propertyName);
+
+        // When
+        List<String> selectedOperations = new ArrayList<>();
+        selectedOperations.add("createAccount");
+        selectedOperations.add("getAccount");
+
+        importer.createTestCase(Arrays.asList(services), selectedOperations, transfers);
+
+        // Then
+        assertEquals(1, project.getTestSuiteCount());
+        assertEquals(1, project.getTestSuiteByName("Generated Test Suite").getTestCaseCount());
+        assertEquals(3, project.getTestSuiteByName("Generated Test Suite").getTestCaseByName("Generated Test Case").getTestStepCount());
+        PropertyTransfersTestStep transferStep = (PropertyTransfersTestStep) project.getTestSuiteByName("Generated Test Suite").getTestCaseByName("Generated Test Case").getTestStepByName("Property Transfer");
+        assertNotNull(transferStep);
+        assertEquals(1, transferStep.getTransferCount());
+        assertEquals("createAccount", transferStep.getTransferAt(0).getSourceStepName());
+        assertEquals("getAccount", transferStep.getTransferAt(0).getTargetStepName());
+        assertEquals("Response", transferStep.getTransferAt(0).getSourcePath());
+        assertEquals("accountId", transferStep.getTransferAt(0).getTargetPath());
     }
 }
