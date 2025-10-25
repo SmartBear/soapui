@@ -4,6 +4,9 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import org.junit.Test;
 
@@ -12,6 +15,7 @@ import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ImporterTest {
 
@@ -99,5 +103,28 @@ public class ImporterTest {
         // Then
         assertNotNull(services);
         assertNotNull(services[0]);
+    }
+
+    @Test
+    public void testCreatesMocksFromExamples() throws Exception {
+        WsdlProject project = new WsdlProject();
+        Swagger2Importer importer = new Swagger2Importer(project);
+        String filePath = "/swagger-with-examples.json";
+        URL resource = getClass().getResource(filePath);
+        assertNotNull("Could not find swagger definition", resource);
+        File file = new File(resource.toURI());
+        String swaggerDefinitionPath = file.getAbsolutePath();
+
+        RestMockService mockService = project.addNewRestMockService("mock");
+
+        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
+
+        assertEquals("Should have 1 service", 1, services.length);
+        assertEquals("Should have 1 mock action", 1, mockService.getMockOperationCount());
+        RestMockAction mockAction = mockService.getMockOperationAt(0);
+        assertEquals("Should have 4 mock responses", 4, mockAction.getMockResponseCount());
+        RestMockResponse response = mockAction.getMockResponseAt(0);
+        assertEquals("application/json", response.getMediaType());
+        assertTrue("Should contain the example", response.getResponseContent().contains("John Doe"));
     }
 }

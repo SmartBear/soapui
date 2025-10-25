@@ -85,12 +85,23 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
         return mockAction;
     }
 
+    public RestMockAction addNewMockAction(RestMethod restMethod) {
+        RestMockAction mockAction = addEmptyMockAction(restMethod.getMethod(),
+                RestUtils.getExpandedPath(restMethod.getResource().getFullPath(), restMethod.getParams(), restMethod),
+                restMethod.getName());
+        mockAction.setResource(restMethod.getResource());
+        return mockAction;
+    }
+
 
     public RestMockAction addEmptyMockAction(HttpMethod method, String path) {
+        return addEmptyMockAction(method, path, path);
+    }
+
+    public RestMockAction addEmptyMockAction(HttpMethod method, String path, String name) {
         RESTMockActionConfig config = getConfig().addNewRestMockAction();
 
         String slashifiedPath = slashify(path);
-        String name = path;
 
         config.setName(name);
         config.setMethod(method.name());

@@ -7,6 +7,8 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.MediaTypeUtils;
@@ -26,6 +28,7 @@ import io.swagger.inflector.processors.JsonNodeExampleSerializer;
 import io.swagger.models.ComposedModel;
 import io.swagger.models.Info;
 import io.swagger.models.Model;
+import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.RefModel;
@@ -38,6 +41,7 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.PathParameter;
 import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.properties.ObjectProperty;
+import io.swagger.models.properties.RefProperty;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
 import java.io.File;
@@ -212,6 +216,8 @@ public class Swagger2Importer implements SwaggerImporter {
                 System.getProperty("line.separator") + StringUtils.emptyIfNull(operation.getSummary());
         method.setDescription(description);
 
+        project.getRestMockServiceList().forEach(mockService -> mockService.addNewMockAction(method));
+
         List<Parameter> parameters = operation.getParameters();
         if (parameters != null) {
             parameters.forEach(parameter -> {
@@ -282,7 +288,6 @@ public class Swagger2Importer implements SwaggerImporter {
     }
 
     private void addBodyParameter(BodyParameter bodyParameter, Operation operation, RestMethod method) {
-
         List<String> consumes = operation.getConsumes();
         if (consumes == null || consumes.isEmpty()) {
             consumes = swagger.getConsumes();
@@ -304,13 +309,13 @@ public class Swagger2Importer implements SwaggerImporter {
                             request.setMediaType(mediaType);
                             request.setRequestContent(content);
                         }
+                    } else {
+                        // From schema
+                        String content = mediaType.toLowerCase().contains("json") ? "{}" : "<root/>";
+                        RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
+                        request.setMediaType(mediaType);
+                        request.setRequestContent(content);
                     }
-
-                    // From schema
-                    String content = mediaType.toLowerCase().contains("json") ? "{}" : "<root/>";
-                    RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
-                    request.setMediaType(mediaType);
-                    request.setRequestContent(content);
                 }
             });
         }
@@ -337,55 +342,163 @@ public class Swagger2Importer implements SwaggerImporter {
             consumes = swagger.getConsumes();
         }
 
-        if (consumes != null && !consumes.isEmpty()) {
-            for (String mediaType : consumes) {
-                RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
-                request.setMediaType(mediaType);
-                if (mediaType.toLowerCase().contains("json")) {
-                    request.setRequestContent("{}");
-                } else if (mediaType.toLowerCase().contains("xml")) {
-                    request.setRequestContent("<root/>");
+        if (method.getRequestList().isEmpty()) {
+            if (consumes != null && !consumes.isEmpty()) {
+                for (String mediaType : consumes) {
+                    RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
+                    request.setMediaType(mediaType);
+                    if (mediaType.toLowerCase().contains("json")) {
+                        request.setRequestContent("{}");
+                    } else if (mediaType.toLowerCase().contains("xml")) {
+                        request.setRequestContent("<root/>");
+                    }
                 }
+            } else if (method.getRequestList().size() == 0) {
+                method.addNewRequest("Request " + (method.getRequestList().size() + 1));
             }
-        } else if (method.getRequestList().size() == 0) {
-            method.addNewRequest("Request " + (method.getRequestList().size() + 1));
         }
     }
 
     private void addResponse(String responseCode, Response response, Operation operation, RestMethod method) {
-        List<String> produces = operation.getProduces();
-        if (produces == null || produces.isEmpty()) {
-            operation.setProduces(swagger.getProduces());
-            produces = operation.getProduces();
+        Map<String, Object> responseExamples = response.getExamples();
+
+        if (responseExamples != null && !responseExamples.isEmpty()) {
+            responseExamples.forEach((mediaType, example) -> {
+                ObjectExample objectExample = new ObjectExample();
+                objectExample.setExample(example);
+                attachResponse(responseCode, method, mediaType, objectExample, response);
+            });
+        } else {
+            List<String> produces = operation.getProduces();
+            if (produces == null || produces.isEmpty()) {
+                produces = swagger.getProduces();
+            }
+
+            if (produces == null || produces.isEmpty()) {
+                attachResponse(responseCode, method, defaultMediaType, null, response);
+            } else {
+                produces.forEach(mediaType -> attachResponse(responseCode, method, mediaType, null, response));
+            }
+        }
+    }
+
+    private void attachResponse(String responseCode, RestMethod method, String mediaType, ObjectExample example, Response response) {
+        RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.RESPONSE);
+        representation.setMediaType(mediaType);
+        List<String> statusList = new ArrayList<>();
+        if (!responseCode.equals("default")) {
+            statusList.add(responseCode);
+        }
+        representation.setStatus(statusList);
+
+        String content = "";
+
+        if (example != null) {
+            content = serializeExample(mediaType, example);
+        } else if (response.getSchema() != null) {
+            if (mediaType.toLowerCase().contains("xml")) {
+                content = createSampleXmlRequestFromProperty(response.getSchema());
+            } else {
+                content = createSampleRequestFromProperty(response.getSchema());
+            }
         }
 
-        if (produces == null || produces.isEmpty()) {
-            RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.RESPONSE);
-
-            List<String> statusList = new ArrayList<>();
-            if (!responseCode.equals("default")) {
-                statusList.add(responseCode);
-            }
-            representation.setStatus(statusList);
-            representation.setMediaType(defaultMediaType);
-
-            // just take the first example
-            Map<String, Object> responseExamples = response.getExamples();
-            if (responseExamples != null && !responseExamples.isEmpty()) {
-                representation.setMediaType(responseExamples.keySet().iterator().next());
-            }
-        } else {
-            produces.forEach(mediaType -> {
-                RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.RESPONSE);
-                representation.setMediaType(mediaType);
-
-                List<String> statusList = new ArrayList<>();
-                if (!responseCode.equals("default")) {
-                    statusList.add(responseCode);
+        if (StringUtils.hasContent(content)) {
+            final String finalContent = content;
+            project.getRestMockServiceList().forEach(mockService -> {
+                RestMockAction mockAction = (RestMockAction) mockService.getMockOperationByName(method.getName());
+                if (mockAction != null) {
+                    RestMockResponse mockResponse = mockAction.addNewMockResponse("Response from example");
+                    mockResponse.setResponseContent(finalContent);
+                    mockResponse.setMediaType(mediaType);
                 }
-                representation.setStatus(statusList);
             });
         }
+    }
+
+    private String createSampleRequest(Model schema) {
+        if (schema instanceof RefModel) {
+            schema = swagger.getDefinitions().get(((RefModel) schema).getSimpleRef());
+        }
+
+        if (schema instanceof ComposedModel) {
+            ComposedModel composedModel = (ComposedModel) schema;
+            List<Model> models = composedModel.getAllOf();
+            if (models != null && !models.isEmpty()) {
+                schema = models.get(0);
+            }
+        }
+
+        if (schema.getProperties() != null) {
+            StringBuilder sb = new StringBuilder("{\n");
+            schema.getProperties().forEach((key, value) -> {
+                sb.append("  \"").append(key).append("\": ");
+                sb.append(createSampleRequestFromProperty(value));
+                sb.append(",\n");
+            });
+            if (sb.length() > 2) {
+                sb.delete(sb.length() - 2, sb.length());
+            }
+            sb.append("\n}");
+            return sb.toString();
+        }
+
+        return "{}";
+    }
+
+    private String createSampleRequestFromProperty(io.swagger.models.properties.Property property) {
+        if (property instanceof RefProperty) {
+            return createSampleRequest(swagger.getDefinitions().get(((RefProperty) property).getSimpleRef()));
+        } else if (property instanceof ObjectProperty) {
+            return createSampleRequest(swagger.getDefinitions().get(((ObjectProperty) property).getType()));
+        } else if (property != null) {
+            return "\"" + property.getType() + "\"";
+        } else {
+            return "\"{}\"";
+        }
+    }
+
+    private String createSampleXmlRequestFromProperty(io.swagger.models.properties.Property property) {
+        if (property instanceof RefProperty) {
+            return createSampleXmlRequest(swagger.getDefinitions().get(((RefProperty) property).getSimpleRef()));
+        } else if (property instanceof ObjectProperty) {
+            return createSampleXmlRequest(swagger.getDefinitions().get(((ObjectProperty) property).getType()));
+        } else if (property != null){
+            return "<" + property.getType() + "/>";
+        } else {
+            return "<root/>";
+        }
+    }
+
+    private String createSampleXmlRequest(Model schema) {
+        if (schema instanceof RefModel) {
+            schema = swagger.getDefinitions().get(((RefModel) schema).getSimpleRef());
+        }
+
+        if (schema instanceof ComposedModel) {
+            ComposedModel composedModel = (ComposedModel) schema;
+            List<Model> models = composedModel.getAllOf();
+            if (models != null && !models.isEmpty()) {
+                schema = models.get(0);
+            }
+        }
+
+        if (schema.getProperties() != null) {
+            StringBuilder sb = new StringBuilder("<" + schema.getTitle() + ">\n");
+            schema.getProperties().forEach((key, value) -> {
+                sb.append("  <").append(key).append(">");
+                if (value instanceof ObjectProperty) {
+                    sb.append("\n").append(createSampleXmlRequest(swagger.getDefinitions().get(((ObjectProperty) value).getType()))).append("  ");
+                } else {
+                    sb.append(value.getType());
+                }
+                sb.append("</").append(key).append(">\n");
+            });
+            sb.append("</").append(schema.getTitle()).append(">");
+            return sb.toString();
+        }
+
+        return "<root/>";
     }
 
     private String serializeExample(String mediaType, Example output) {
@@ -425,7 +538,11 @@ public class Swagger2Importer implements SwaggerImporter {
 
         if (mapper != null) {
             try {
-                sampleValue = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(output);
+                Object valueToSerialize = output;
+                if (output instanceof ObjectExample) {
+                    valueToSerialize = ((ObjectExample) output).getExample();
+                }
+                sampleValue = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(valueToSerialize);
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
             }
