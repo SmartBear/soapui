@@ -2,212 +2,45 @@ package com.smartbear.swagger;
 
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.x.dialogs.Worker;
-import com.eviware.x.dialogs.XProgressDialog;
-import com.eviware.x.dialogs.XProgressMonitor;
+import com.eviware.soapui.support.SoapUIException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import groovy.json.JsonSlurper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.swagger.models.Swagger;
-import io.swagger.models.auth.AuthorizationValue;
 import io.swagger.parser.SwaggerParser;
-import io.swagger.parser.util.ClasspathHelper;
-import io.swagger.parser.util.DeserializationUtils;
-import io.swagger.parser.util.SwaggerDeserializationResult;
-import io.swagger.util.Json;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
 
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
-class SwaggerUtils {
-    private static final Logger logger = LogManager.getLogger(SwaggerUtils.class);
-
-    public static final String DEFAULT_MEDIA_TYPE = "application/json";
-    public static final boolean DEFAULT_FOR_CREATE_TEST_CASE = false;
-
-    /**
-     * Selects the appropriate SwaggerImporter for the specified URL. For .yaml urls the Swagger2Importer
-     * is returned. For .xml urls the Swagger1Importer is returned. For other urls the Swagger2Importer will be
-     * returned if the file is json and contains a root attribute named "swagger" or "swaggerVersion" with the
-     * value of 2.0.
-     *
-     * @param url
-     * @param project
-     * @param defaultMediaType
-     * @return the corresponding SwaggerImporter based on the described "algorithm"
-     */
-
-    static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType,
-                                                 boolean generateTestCase) throws Exception {
-        String openApiVersion = getOpenApiVersion(url);
-        if (openApiVersion != null) {
-            if (openApiVersion.startsWith("3.1")) {
-                return new OpenAPI31Importer(project, defaultMediaType);
-            } else if (openApiVersion.startsWith("3.0")) {
-                return new OpenAPI3Importer(project, defaultMediaType);
-            }
-        }
-        return new Swagger2Importer(project, defaultMediaType);
-    }
-
-    static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, String defaultMediaType) throws Exception {
-        return createSwaggerImporter(url, project, defaultMediaType, DEFAULT_FOR_CREATE_TEST_CASE);
-    }
-
-    static SwaggerImporter createSwaggerImporter(String url, WsdlProject project) throws Exception {
-        return createSwaggerImporter(url, project, DEFAULT_MEDIA_TYPE,
-                DEFAULT_FOR_CREATE_TEST_CASE);
-    }
-
-    @Deprecated
-    static SwaggerImporter createSwaggerImporter(String url, WsdlProject project, boolean removedParameterForRefactoring) throws Exception {
-        return createSwaggerImporter(url, project);
-    }
-
-    static SwaggerImporter importSwaggerFromUrl(
-            final WsdlProject project, final String finalExpUrl) throws Exception {
-        return importSwaggerFromUrl(project, finalExpUrl, DEFAULT_MEDIA_TYPE);
-    }
-
-    static String getOpenApiVersion(String location) {
-        String data;
+public class SwaggerUtils {
+    public static boolean isOpenApi(String filePath) {
         try {
-            location = location.replaceAll("\\\\", "/");
-            if (location.toLowerCase().startsWith("http")) {
-                UrlWsdlLoader loader = new UrlWsdlLoader(location);
-                data = IOUtils.toString(loader.load());
+            ObjectMapper mapper;
+            if (filePath.toLowerCase().endsWith(".yaml") || filePath.toLowerCase().endsWith(".yml")) {
+                mapper = new ObjectMapper(new YAMLFactory());
             } else {
-                final String fileScheme = "file:";
-                Path path;
-                if (location.toLowerCase().startsWith(fileScheme)) {
-                    path = Paths.get(URI.create(location));
-                } else {
-                    path = Paths.get(location);
-                }
-                if (Files.exists(path)) {
-                    data = FileUtils.readFileToString(path.toFile(), "UTF-8");
-                } else {
-                    data = ClasspathHelper.loadFileFromClasspath(location);
-                }
+                mapper = new ObjectMapper();
             }
-            JsonNode rootNode;
-            if (data.trim().startsWith("{")) {
-                ObjectMapper mapper = Json.mapper();
-                rootNode = mapper.readTree(data);
-            } else {
-                SwaggerDeserializationResult result = new SwaggerDeserializationResult();
-                rootNode = DeserializationUtils.readYamlTree(data, result);
-                logErrors(result);
-            }
-            JsonNode openapiNode = rootNode.get("openapi");
-            if (openapiNode != null) {
-                return openapiNode.asText();
-            }
-        } catch (Exception e) {
-            return null;
+            JsonNode rootNode = mapper.readTree(new File(filePath));
+            return rootNode.has("openapi");
+        } catch (IOException e) {
+            return false;
         }
-        return null;
     }
 
-
-    static SwaggerImporter importSwaggerFromUrl(final WsdlProject project,
-                                                final String finalExpUrl,
-                                                final String defaultMediaType) throws Exception {
-
-        final SwaggerImporter importer = SwaggerUtils.createSwaggerImporter(finalExpUrl, project, defaultMediaType);
-
-        XProgressDialog dlg = UISupport.getDialogs().createProgressDialog("Importing Swagger", 0, "", false);
-        dlg.run(new Worker.WorkerAdapter() {
-            @Override
-            public Object construct(XProgressMonitor xProgressMonitor) {
-                // create the importer and import!
-                List<RestService> result = new ArrayList<>();
-                try {
-                    result.addAll(Arrays.asList(importer.importSwagger(finalExpUrl)));
-
-                    // select the first imported REST Service (since a swagger definition can
-                    // define multiple APIs
-                    if (!result.isEmpty()) {
-                        UISupport.selectAndShow(result.get(0));
-                    }
-                } catch (Throwable t) {
-                    UISupport.showErrorMessage(t);
-                }
-                return null;
-            }
-        });
-
+    public static SwaggerImporter importSwaggerFromUrl(WsdlProject project, String url, String defaultMediaType) throws Exception {
+        SwaggerImporter importer;
+        if (isOpenApi(url)) {
+            importer = new OpenAPI3Importer(project);
+        } else {
+            importer = new Swagger2Importer(project);
+        }
+        importer.importSwagger(url);
         return importer;
     }
 
-    public static boolean matchesPath(String path, String swaggerPath) {
-
-        String[] pathSegments = path.split("\\/");
-        String[] swaggerPathSegments = swaggerPath.split("\\/");
-
-        if (pathSegments.length != swaggerPathSegments.length) {
-            return false;
-        }
-
-        for (int c = 0; c < pathSegments.length; c++) {
-            String pathSegment = pathSegments[c];
-            String swaggerPathSegment = swaggerPathSegments[c];
-
-            if (swaggerPathSegment.startsWith("{") && swaggerPathSegment.endsWith("}")) {
-                continue;
-            } else if (!swaggerPathSegment.equalsIgnoreCase(pathSegment)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    static boolean isOAS3Definition(String oasVersion) {
-        return oasVersion.startsWith("3.0");
-    }
-
-    public static Swagger getSwagger(String swaggerAsString) {
-        return getSwagger(swaggerAsString, true);
-    }
-
-    public static Swagger getSwagger(String swaggerAsString, boolean resolve) {
-        SwaggerDeserializationResult swaggerDeserializationResult = new SwaggerParser().readWithInfo(swaggerAsString, resolve);
-        logErrors(swaggerDeserializationResult);
-        return swaggerDeserializationResult.getSwagger();
-    }
-
-    public static Swagger getSwagger(String url, List<AuthorizationValue> auths, boolean resolve, boolean disableLogger) {
-        SwaggerParser swaggerParser = new SwaggerParser();
-        SwaggerDeserializationResult swaggerDeserializationResult = swaggerParser.readWithInfo(url, auths, resolve);
-        if (!disableLogger) {
-            logErrors(swaggerDeserializationResult);
-        }
-        return swaggerDeserializationResult.getSwagger();
-    }
-
-    public static Swagger getSwagger(String url, List<AuthorizationValue> auths, boolean resolve) {
-        return getSwagger(url, auths, resolve, false);
-    }
-
-    private static void logErrors(SwaggerDeserializationResult swaggerDeserializationResult) {
-        List<String> messages = swaggerDeserializationResult.getMessages();
-        if ((messages != null) && !messages.isEmpty()) {
-            String errorMessage = StringUtils.join(messages.toArray(new String[messages.size()]), StringUtils.NEWLINE);
-            logger.error(errorMessage);
-        }
+    public static Swagger getSwagger(String definition, String auth, boolean openApi, boolean b) {
+        return new SwaggerParser().read(definition);
     }
 }

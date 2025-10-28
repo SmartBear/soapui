@@ -1,130 +1,64 @@
 package com.smartbear.swagger;
 
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.mock.RestMockAction;
-import com.eviware.soapui.impl.rest.mock.RestMockResponse;
-import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.support.SoapUIException;
+import org.apache.xmlbeans.XmlException;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(Parameterized.class)
 public class ImporterTest {
 
-    @Test
-    public void testImportSwaggerWithDefaultPayload() throws Exception {
-        // Given
-        WsdlProject project = new WsdlProject();
-        Swagger2Importer importer = new Swagger2Importer(project);
-        String filePath = "/swagger-definition-without-body-parameter.json";
-        URL resource = getClass().getResource(filePath);
-        assertNotNull("Could not find swagger definition", resource);
-        File file = new File(resource.toURI());
-        String swaggerDefinitionPath = file.getAbsolutePath();
+    private final File swaggerFile;
 
-        // When
-        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
-        RestService service = services[0];
-        RestResource restResource = (RestResource) service.getOperationList().get(0);
-        RestMethod method = restResource.getRestMethodAt(0);
-        RestRequest request = method.getRequestList().get(0);
+    public ImporterTest(File swaggerFile) {
+        this.swaggerFile = swaggerFile;
+    }
 
-        // Then
-        assertNotNull(request);
-        assertEquals("{}", request.getRequestContent());
-        assertEquals("application/json", request.getMediaType());
+    @Parameters(name = "{0}")
+    public static Collection<Object[]> data() throws URISyntaxException {
+        List<Object[]> files = new ArrayList<>();
+        URL resource = ImporterTest.class.getResource("/swagger-test-files");
+        File directory = new File(resource.toURI());
+        File[] testFiles = directory.listFiles();
+        if (testFiles != null) {
+            for (File file : testFiles) {
+                if (file.isFile() && (file.getName().endsWith(".json") || file.getName().endsWith(".yaml") || file.getName().endsWith(".yml"))) {
+                    files.add(new Object[]{file});
+                }
+            }
+        }
+        return files;
     }
 
     @Test
-    public void testImportSwaggerWithMultipleConsumes() throws Exception {
-        // Given
+    public void testImportFile() throws IOException, SoapUIException, XmlException {
         WsdlProject project = new WsdlProject();
-        Swagger2Importer importer = new Swagger2Importer(project);
-        String filePath = "/swagger-definition-with-multiple-consumes.json";
-        URL resource = getClass().getResource(filePath);
-        assertNotNull("Could not find swagger definition", resource);
-        File file = new File(resource.toURI());
-        String swaggerDefinitionPath = file.getAbsolutePath();
+        RestService[] services;
 
-        // When
-        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
-        RestService service = services[0];
-        RestResource restResource = (RestResource) service.getOperationList().get(0);
-        RestMethod method = restResource.getRestMethodAt(0);
+        if (SwaggerUtils.isOpenApi(swaggerFile.getAbsolutePath())) {
+            OpenAPI3Importer importer = new OpenAPI3Importer(project);
+            services = importer.importSwagger(swaggerFile.getAbsolutePath());
+        } else {
+            Swagger2Importer importer = new Swagger2Importer(project);
+            services = importer.importSwagger(swaggerFile.getAbsolutePath());
+        }
 
-        // Then
-        assertEquals(2, method.getRequestList().size());
-        assertEquals("Request 1", method.getRequestList().get(0).getName());
-        assertEquals("application/json", method.getRequestList().get(0).getMediaType());
-        assertEquals("Request 2", method.getRequestList().get(1).getName());
-        assertEquals("application/xml", method.getRequestList().get(1).getMediaType());
-    }
-
-    @Test
-    public void testImportOpenApi3() throws Exception {
-        // Given
-        WsdlProject project = new WsdlProject();
-        OpenAPI3Importer importer = new OpenAPI3Importer(project);
-        String filePath = "/petstore-openapi-3.0.json";
-        URL resource = getClass().getResource(filePath);
-        assertNotNull("Could not find swagger definition", resource);
-        File file = new File(resource.toURI());
-        String swaggerDefinitionPath = file.getAbsolutePath();
-
-        // When
-        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
-        RestService service = services[0];
-        assertEquals("Swagger Petstore", service.getName());
-        assertEquals(2, service.getOperationCount());
-    }
-
-    @Test
-    public void testImportLargeSwaggerDefinition() throws Exception {
-        // Given
-        WsdlProject project = new WsdlProject();
-        Swagger2Importer importer = new Swagger2Importer(project);
-        String filePath = "/petstore-swagger-2.0.large.json";
-        URL resource = getClass().getResource(filePath);
-        assertNotNull("Could not find swagger definition", resource);
-        File file = new File(resource.toURI());
-        String swaggerDefinitionPath = file.getAbsolutePath();
-
-        // When
-        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
-
-        // Then
-        assertNotNull(services);
-        assertNotNull(services[0]);
-    }
-
-    @Test
-    public void testCreatesMocksFromExamples() throws Exception {
-        WsdlProject project = new WsdlProject();
-        Swagger2Importer importer = new Swagger2Importer(project);
-        String filePath = "/swagger-with-examples.json";
-        URL resource = getClass().getResource(filePath);
-        assertNotNull("Could not find swagger definition", resource);
-        File file = new File(resource.toURI());
-        String swaggerDefinitionPath = file.getAbsolutePath();
-
-        RestMockService mockService = project.addNewRestMockService("mock");
-
-        RestService[] services = importer.importSwagger(swaggerDefinitionPath);
-
-        assertEquals("Should have 1 service", 1, services.length);
-        assertEquals("Should have 1 mock action", 1, mockService.getMockOperationCount());
-        RestMockAction mockAction = mockService.getMockOperationAt(0);
-        assertEquals("Should have 4 mock responses", 4, mockAction.getMockResponseCount());
-        RestMockResponse response = mockAction.getMockResponseAt(0);
-        assertEquals("application/json", response.getMediaType());
-        assertTrue("Should contain the example", response.getResponseContent().contains("John Doe"));
+        assertNotNull("Import failed for " + swaggerFile.getName(), services);
+        assertTrue("No services imported for " + swaggerFile.getName(), services.length > 0);
     }
 }

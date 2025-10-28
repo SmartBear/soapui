@@ -1,6 +1,6 @@
 package com.eviware.soapui.impl.support;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 public class MediaTypeUtils {
     public static String getSubtype(String mediaType) {

@@ -145,6 +145,16 @@
         <io.swagger.swagger-core.version>1.6.2</io.swagger.swagger-core.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>2.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <modules>
         <module>soapui</module>
         <module>soapui-maven-plugin</module>

@@ -1,34 +1,23 @@
 package com.smartbear.swagger;
 
-import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.support.MediaTypeUtils;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.swagger.inflector.examples.ExampleBuilder;
-import io.swagger.inflector.examples.XmlExampleSerializer;
-import io.swagger.inflector.examples.models.Example;
-import io.swagger.inflector.examples.models.ObjectExample;
-import io.swagger.inflector.processors.JsonNodeExampleSerializer;
 import io.swagger.models.ComposedModel;
 import io.swagger.models.Info;
 import io.swagger.models.Model;
-import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.RefModel;
@@ -41,40 +30,27 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.PathParameter;
 import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.properties.ObjectProperty;
+import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
-import io.swagger.util.Json;
-import io.swagger.util.Yaml;
+import io.swagger.v3.oas.models.media.Schema;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 public class Swagger2Importer implements SwaggerImporter {
-    /*OT*/ private static final String SAMPLE_GENERATION_FAILED_MESSAGE = "Failed to create the sample. The '%s' media type is incorrect.";
-
     private static Logger logger = LogManager.getLogger(Swagger2Importer.class);
 
-    private static ObjectMapper yamlMapper;
-    private static ObjectMapper jsonMapper;
     private final WsdlProject project;
     private final String defaultMediaType;
     private Swagger swagger;
-
-    static {
-        yamlMapper = Yaml.mapper();
-        jsonMapper = Json.mapper();
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(new JsonNodeExampleSerializer());
-
-        yamlMapper.registerModule(simpleModule);
-        jsonMapper.registerModule(simpleModule);
-    }
 
     public Swagger2Importer(String defaultMediaType) {
         this(null, defaultMediaType);
@@ -301,9 +277,7 @@ public class Swagger2Importer implements SwaggerImporter {
                 if (bodyParameterModel != null) {
                     // From example property
                     if (bodyParameterModel.getExample() != null) {
-                        ObjectExample example = new ObjectExample();
-                        example.setExample(bodyParameterModel.getExample());
-                        String content = serializeExample(mediaType, example);
+                        String content = ExampleGenerator.serializeExample((Map<String, Object>) bodyParameterModel.getExample(), mediaType);
                         if (StringUtils.hasContent(content)) {
                             RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
                             request.setMediaType(mediaType);
@@ -311,7 +285,8 @@ public class Swagger2Importer implements SwaggerImporter {
                         }
                     } else {
                         // From schema
-                        String content = mediaType.toLowerCase().contains("json") ? "{}" : "<root/>";
+                        Schema schema = convertPropertyToSchema(bodyParameterModel.getProperties());
+                        String content = ExampleGenerator.generateExample(schema, mediaType);
                         RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
                         request.setMediaType(mediaType);
                         request.setRequestContent(content);
@@ -364,9 +339,7 @@ public class Swagger2Importer implements SwaggerImporter {
 
         if (responseExamples != null && !responseExamples.isEmpty()) {
             responseExamples.forEach((mediaType, example) -> {
-                ObjectExample objectExample = new ObjectExample();
-                objectExample.setExample(example);
-                attachResponse(responseCode, method, mediaType, objectExample, response);
+                attachResponse(responseCode, method, mediaType, example, response);
             });
         } else {
             List<String> produces = operation.getProduces();
@@ -382,7 +355,7 @@ public class Swagger2Importer implements SwaggerImporter {
         }
     }
 
-    private void attachResponse(String responseCode, RestMethod method, String mediaType, ObjectExample example, Response response) {
+    private void attachResponse(String responseCode, RestMethod method, String mediaType, Object example, Response response) {
         RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.RESPONSE);
         representation.setMediaType(mediaType);
         List<String> statusList = new ArrayList<>();
@@ -394,13 +367,10 @@ public class Swagger2Importer implements SwaggerImporter {
         String content = "";
 
         if (example != null) {
-            content = serializeExample(mediaType, example);
+            content = ExampleGenerator.serializeExample((Map<String, Object>) example, mediaType);
         } else if (response.getSchema() != null) {
-            if (mediaType.toLowerCase().contains("xml")) {
-                content = createSampleXmlRequestFromProperty(response.getSchema());
-            } else {
-                content = createSampleRequestFromProperty(response.getSchema());
-            }
+            Schema schema = convertPropertyToSchema(response.getSchema());
+            content = ExampleGenerator.generateExample(schema, mediaType);
         }
 
         if (StringUtils.hasContent(content)) {
@@ -414,141 +384,6 @@ public class Swagger2Importer implements SwaggerImporter {
                 }
             });
         }
-    }
-
-    private String createSampleRequest(Model schema) {
-        if (schema instanceof RefModel) {
-            schema = swagger.getDefinitions().get(((RefModel) schema).getSimpleRef());
-        }
-
-        if (schema instanceof ComposedModel) {
-            ComposedModel composedModel = (ComposedModel) schema;
-            List<Model> models = composedModel.getAllOf();
-            if (models != null && !models.isEmpty()) {
-                schema = models.get(0);
-            }
-        }
-
-        if (schema.getProperties() != null) {
-            StringBuilder sb = new StringBuilder("{\n");
-            schema.getProperties().forEach((key, value) -> {
-                sb.append("  \"").append(key).append("\": ");
-                sb.append(createSampleRequestFromProperty(value));
-                sb.append(",\n");
-            });
-            if (sb.length() > 2) {
-                sb.delete(sb.length() - 2, sb.length());
-            }
-            sb.append("\n}");
-            return sb.toString();
-        }
-
-        return "{}";
-    }
-
-    private String createSampleRequestFromProperty(io.swagger.models.properties.Property property) {
-        if (property instanceof RefProperty) {
-            return createSampleRequest(swagger.getDefinitions().get(((RefProperty) property).getSimpleRef()));
-        } else if (property instanceof ObjectProperty) {
-            return createSampleRequest(swagger.getDefinitions().get(((ObjectProperty) property).getType()));
-        } else if (property != null) {
-            return "\"" + property.getType() + "\"";
-        } else {
-            return "\"{}\"";
-        }
-    }
-
-    private String createSampleXmlRequestFromProperty(io.swagger.models.properties.Property property) {
-        if (property instanceof RefProperty) {
-            return createSampleXmlRequest(swagger.getDefinitions().get(((RefProperty) property).getSimpleRef()));
-        } else if (property instanceof ObjectProperty) {
-            return createSampleXmlRequest(swagger.getDefinitions().get(((ObjectProperty) property).getType()));
-        } else if (property != null){
-            return "<" + property.getType() + "/>";
-        } else {
-            return "<root/>";
-        }
-    }
-
-    private String createSampleXmlRequest(Model schema) {
-        if (schema instanceof RefModel) {
-            schema = swagger.getDefinitions().get(((RefModel) schema).getSimpleRef());
-        }
-
-        if (schema instanceof ComposedModel) {
-            ComposedModel composedModel = (ComposedModel) schema;
-            List<Model> models = composedModel.getAllOf();
-            if (models != null && !models.isEmpty()) {
-                schema = models.get(0);
-            }
-        }
-
-        if (schema.getProperties() != null) {
-            StringBuilder sb = new StringBuilder("<" + schema.getTitle() + ">\n");
-            schema.getProperties().forEach((key, value) -> {
-                sb.append("  <").append(key).append(">");
-                if (value instanceof ObjectProperty) {
-                    sb.append("\n").append(createSampleXmlRequest(swagger.getDefinitions().get(((ObjectProperty) value).getType()))).append("  ");
-                } else {
-                    sb.append(value.getType());
-                }
-                sb.append("</").append(key).append(">\n");
-            });
-            sb.append("</").append(schema.getTitle()).append(">");
-            return sb.toString();
-        }
-
-        return "<root/>";
-    }
-
-    private String serializeExample(String mediaType, Example output) {
-        String sampleValue = null;
-        ObjectMapper mapper = null;
-
-        String subtype = "";
-        try {
-            subtype = MediaTypeUtils.getSubtype(mediaType);
-            String suffix = MediaTypeUtils.getSuffix(mediaType);
-            if (StringUtils.hasContent(suffix)) {
-                subtype = suffix;
-            }
-        } catch (IllegalArgumentException e) {
-            logger.warn(String.format(SAMPLE_GENERATION_FAILED_MESSAGE, mediaType));
-        }
-
-        switch (subtype.toLowerCase()) {
-            case "xml":
-                sampleValue = XmlUtils.prettyPrintXml(new XmlExampleSerializer().serialize(output));
-                if (!XmlUtils.seemsToBeXml(sampleValue)) {
-                    return "";
-                }
-                break;
-            case "yaml":
-                mapper = yamlMapper;
-                break;
-            case "json":
-                mapper = jsonMapper;
-                break;
-            case "plain":
-                if (!(output instanceof ObjectExample)) {
-                    sampleValue = output.asString();
-                }
-                break;
-        }
-
-        if (mapper != null) {
-            try {
-                Object valueToSerialize = output;
-                if (output instanceof ObjectExample) {
-                    valueToSerialize = ((ObjectExample) output).getExample();
-                }
-                sampleValue = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(valueToSerialize);
-            } catch (JsonProcessingException e) {
-                logger.error(e.getMessage(), e);
-            }
-
-        }
-        return sampleValue;
     }
 
     private RestService createRestService(Swagger swagger, String url) {
@@ -619,5 +454,28 @@ public class Swagger2Importer implements SwaggerImporter {
 
     public Swagger getSwagger() {
         return swagger;
+    }
+
+    private Schema convertPropertyToSchema(Property property) {
+        Schema schema = new Schema();
+        schema.setType(property.getType());
+        schema.setFormat(property.getFormat());
+        if (property instanceof RefProperty) {
+            schema.set$ref(((RefProperty) property).get$ref());
+        } else if (property instanceof ObjectProperty) {
+            Map<String, Property> properties = ((ObjectProperty) property).getProperties();
+            if (properties != null) {
+                properties.forEach((key, value) -> schema.addProperties(key, convertPropertyToSchema(value)));
+            }
+        }
+        return schema;
+    }
+
+    private Schema convertPropertyToSchema(Map<String, Property> properties) {
+        Schema schema = new Schema();
+        if (properties != null) {
+            properties.forEach((key, value) -> schema.addProperties(key, convertPropertyToSchema(value)));
+        }
+        return schema;
     }
 }
