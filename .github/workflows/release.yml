@@ -29,17 +29,21 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Set Release Version
+        if: github.event_name == 'release'
+        run: echo "RELEASE_VERSION=-Drevision=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
       - name: Install xvfb
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y xvfb
 
       - name: Build with Maven (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: xvfb-run mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" clean install
+        run: xvfb-run mvn -P assembly,installer ${{ env.RELEASE_VERSION }} "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" clean install
 
       - name: Build with Maven (Windows/macOS)
         if: matrix.os != 'ubuntu-latest'
-        run: mvn -P assembly,installer "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -DskipTests clean install
+        run: mvn -P assembly,installer ${{ env.RELEASE_VERSION }} "-Dinstall4j.licenseKey=${{ secrets.INSTALL4J_LICENSE_KEY }}" -DskipTests clean install
 
       - name: Upload Linux Assets
         if: github.event_name == 'release' && matrix.os == 'ubuntu-latest'
@@ -56,6 +60,7 @@ jobs:
           files: |
             soapui-installer/target/assemblies/*-windows-bin.zip
             soapui-installer/target/install4j/*.exe
+            soapui-installer/target/install4j/*.msi
 
       - name: Upload macOS Assets
         if: github.event_name == 'release' && matrix.os == 'macos-13'
