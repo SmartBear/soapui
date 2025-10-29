@@ -15,6 +15,10 @@ import java.io.IOException;
 
 public class SwaggerUtils {
     public static boolean isOpenApi(String filePath) {
+        return getOpenApiVersion(filePath) != null;
+    }
+
+    public static String getOpenApiVersion(String filePath) {
         try {
             ObjectMapper mapper;
             if (filePath.toLowerCase().endsWith(".yaml") || filePath.toLowerCase().endsWith(".yml")) {
@@ -23,16 +27,26 @@ public class SwaggerUtils {
                 mapper = new ObjectMapper();
             }
             JsonNode rootNode = mapper.readTree(new File(filePath));
-            return rootNode.has("openapi");
+            if (rootNode.has("openapi")) {
+                return rootNode.get("openapi").asText();
+            } else {
+                return null;
+            }
         } catch (IOException e) {
-            return false;
+            return null;
         }
     }
 
+
     public static SwaggerImporter importSwaggerFromUrl(WsdlProject project, String url, String defaultMediaType) throws Exception {
         SwaggerImporter importer;
-        if (isOpenApi(url)) {
-            importer = new OpenAPI3Importer(project);
+        String openApiVersion = getOpenApiVersion(url);
+        if (openApiVersion != null) {
+            if (openApiVersion.startsWith("3.1")) {
+                importer = new OpenAPI31Importer(project);
+            } else {
+                importer = new OpenAPI3Importer(project);
+            }
         } else {
             importer = new Swagger2Importer(project);
         }

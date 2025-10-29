@@ -46,22 +46,10 @@ public class ImporterTest {
     }
 
     @Test
-    public void testImportFile() throws IOException, SoapUIException, XmlException {
+    public void testImportFile() throws Exception {
         WsdlProject project = new WsdlProject();
-        RestService[] services;
+        SwaggerImporter importer = SwaggerUtils.importSwaggerFromUrl(project, swaggerFile.getAbsolutePath(), "application/json");
 
-        if (swaggerFile.getName().endsWith("v3.1.json")) {
-            OpenAPI31Importer importer = new OpenAPI31Importer(project);
-            services = importer.importSwagger(swaggerFile.getAbsolutePath());
-        } else if (SwaggerUtils.isOpenApi(swaggerFile.getAbsolutePath())) {
-            OpenAPI3Importer importer = new OpenAPI3Importer(project);
-            services = importer.importSwagger(swaggerFile.getAbsolutePath());
-        } else {
-            Swagger2Importer importer = new Swagger2Importer(project);
-            services = importer.importSwagger(swaggerFile.getAbsolutePath());
-        }
-
-        assertNotNull("Import failed for " + swaggerFile.getName(), services);
-        assertTrue("No services imported for " + swaggerFile.getName(), services.length > 0);
+        assertNotNull("Import failed for " + swaggerFile.getName(), importer.importSwagger(swaggerFile.getAbsolutePath()));
     }
 }
