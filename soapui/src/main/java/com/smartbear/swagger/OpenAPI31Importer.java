@@ -221,12 +221,22 @@ public class OpenAPI31Importer implements SwaggerImporter {
     private void addBodyParameter(RequestBody requestBody, Operation operation, RestMethod method) {
         if (requestBody.getContent() != null) {
             requestBody.getContent().forEach((mediaType, mediaTypeObject) -> {
-                RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.REQUEST);
-                representation.setMediaType(mediaType);
-                RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
-                request.setMediaType(mediaType);
-                String content = ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType);
-                request.setRequestContent(content);
+                method.addNewRepresentation(RestRepresentation.Type.REQUEST).setMediaType(mediaType);
+                if (mediaTypeObject.getExamples() != null && !mediaTypeObject.getExamples().isEmpty()) {
+                    mediaTypeObject.getExamples().forEach((exampleName, example) -> {
+                        RestRequest request = method.addNewRequest(exampleName);
+                        request.setMediaType(mediaType);
+                        if (example.getValue() != null) {
+                            request.setRequestContent(example.getValue().toString());
+                        } else {
+                            request.setRequestContent(ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType));
+                        }
+                    });
+                } else {
+                    RestRequest request = method.addNewRequest("Request 1");
+                    request.setMediaType(mediaType);
+                    request.setRequestContent(ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType));
+                }
             });
         }
     }

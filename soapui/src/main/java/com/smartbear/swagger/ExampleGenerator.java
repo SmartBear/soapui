@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.models.media.Schema;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,43 +31,46 @@ public class ExampleGenerator {
     }
 
     private static String generateJsonExample(Schema schema) {
-        if ("array".equals(schema.getType())) {
-            Schema itemSchema = schema.getItems();
-            if (itemSchema != null) {
-                return "[" + generateJsonExample(itemSchema) + "]";
-            } else {
-                return "[]";
-            }
+        Object sample = createSample(schema);
+        try {
+            return new ObjectMapper().writeValueAsString(sample);
+        } catch (JsonProcessingException e) {
+            return "{}";
         }
+    }
 
-        if (schema.getProperties() != null) {
-            String properties = (String) schema.getProperties().entrySet().stream()
-                    .map(entry -> {
-                        Map.Entry<String, Schema> me = (Map.Entry<String, Schema>) entry;
-                        String propertyName = me.getKey();
-                        Schema propertySchema = me.getValue();
-                        return "\"" + propertyName + "\": " + generateJsonExample(propertySchema);
-                    })
-                    .collect(Collectors.joining(",\n"));
-            return "{\n" + properties + "\n}";
+    private static Object createSample(Schema schema) {
+        if (schema == null) {
+            return Collections.emptyMap();
         }
-
         if (schema.getType() != null) {
             switch (schema.getType()) {
                 case "string":
-                    return "\"string\"";
+                    return "string";
                 case "integer":
-                    return "0";
+                    return 0;
                 case "number":
-                    return "0.0";
+                    return 0.0;
                 case "boolean":
-                    return "true";
+                    return true;
+                case "array":
+                    return new Object[]{createSample(schema.getItems())};
+                case "object":
+                    Map<String, Object> sampleObject = new java.util.HashMap<>();
+                    if (schema.getProperties() != null) {
+                        schema.getProperties().forEach((key, value) ->
+                                sampleObject.put((String) key, createSample((Schema) value)));
+                    }
+                    return sampleObject;
             }
         }
-        return "{}";
+        return Collections.emptyMap();
     }
 
     private static String generateXmlExample(Schema schema) {
+        if (schema == null) {
+            return "";
+        }
         if ("array".equals(schema.getType())) {
             Schema itemSchema = schema.getItems();
             if (itemSchema != null) {
