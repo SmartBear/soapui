@@ -223,12 +223,22 @@ public class OpenAPI3Importer implements SwaggerImporter {
     private void addBodyParameter(RequestBody requestBody, Operation operation, RestMethod method) {
         if (requestBody.getContent() != null) {
             requestBody.getContent().forEach((mediaType, mediaTypeObject) -> {
-                RestRepresentation representation = method.addNewRepresentation(RestRepresentation.Type.REQUEST);
-                representation.setMediaType(mediaType);
-                RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
-                request.setMediaType(mediaType);
-                String content = ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType);
-                request.setRequestContent(content);
+                method.addNewRepresentation(RestRepresentation.Type.REQUEST).setMediaType(mediaType);
+                if (mediaTypeObject.getExamples() != null && !mediaTypeObject.getExamples().isEmpty()) {
+                    mediaTypeObject.getExamples().forEach((exampleName, example) -> {
+                        RestRequest request = method.addNewRequest(exampleName);
+                        request.setMediaType(mediaType);
+                        if (example.getValue() != null) {
+                            request.setRequestContent(example.getValue().toString());
+                        } else {
+                            request.setRequestContent(ExampleGenerator.generateExample(resolveSchema(mediaTypeObject.getSchema()), mediaType));
+                        }
+                    });
+                } else {
+                    RestRequest request = method.addNewRequest("Request 1");
+                    request.setMediaType(mediaType);
+                    request.setRequestContent(ExampleGenerator.generateExample(resolveSchema(mediaTypeObject.getSchema()), mediaType));
+                }
             });
         }
     }
@@ -271,7 +281,7 @@ public class OpenAPI3Importer implements SwaggerImporter {
                     statusList.add(responseCode);
                 }
                 representation.setStatus(statusList);
-                String content = ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType);
+                String content = ExampleGenerator.generateExample(resolveSchema(mediaTypeObject.getSchema()), mediaType);
                 if (StringUtils.hasContent(content)) {
                     final String finalContent = content;
                     project.getRestMockServiceList().forEach(mockService -> {
@@ -294,6 +304,17 @@ public class OpenAPI3Importer implements SwaggerImporter {
             representation.setStatus(statusList);
             representation.setMediaType(defaultMediaType);
         }
+    }
+
+    private Schema resolveSchema(Schema schema) {
+        if (schema != null && StringUtils.hasContent(schema.get$ref())) {
+            String ref = schema.get$ref();
+            if (ref.startsWith("#/components/schemas/")) {
+                String schemaName = ref.substring("#/components/schemas/".length());
+                return openApi.getComponents().getSchemas().get(schemaName);
+            }
+        }
+        return schema;
     }
 
     private RestService createRestService(OpenAPI openApi, String url) {

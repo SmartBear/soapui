@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Multiple Examples",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/multiple-examples": {
+      "post": {
+        "summary": "Request with multiple examples",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleObject"
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "id": 1,
+                    "name": "Example 1"
+                  }
+                },
+                "example2": {
+                  "value": {
+                    "id": 2,
+                    "name": "Example 2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/no-examples": {
+      "post": {
+        "summary": "Request with no examples",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SampleObject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SampleObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

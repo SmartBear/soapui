@@ -285,7 +285,7 @@ public class Swagger2Importer implements SwaggerImporter {
                         }
                     } else {
                         // From schema
-                        Schema schema = convertPropertyToSchema(bodyParameterModel.getProperties());
+                        Schema schema = convertModelToSchema(bodyParameterModel);
                         String content = ExampleGenerator.generateExample(schema, mediaType);
                         RestRequest request = method.addNewRequest("Request " + (method.getRequestList().size() + 1));
                         request.setMediaType(mediaType);
@@ -475,6 +475,18 @@ public class Swagger2Importer implements SwaggerImporter {
         Schema schema = new Schema();
         if (properties != null) {
             properties.forEach((key, value) -> schema.addProperties(key, convertPropertyToSchema(value)));
+        }
+        return schema;
+    }
+
+    private Schema convertModelToSchema(Model model) {
+        Schema schema = new Schema();
+        if (model instanceof RefModel) {
+            schema.set$ref(((RefModel) model).get$ref());
+        } else if (model instanceof ComposedModel) {
+            ((ComposedModel) model).getAllOf().forEach(m -> schema.addProperties(null, convertModelToSchema(m)));
+        } else if (model.getProperties() != null) {
+            model.getProperties().forEach((key, value) -> schema.addProperties(key, convertPropertyToSchema(value)));
         }
         return schema;
     }
