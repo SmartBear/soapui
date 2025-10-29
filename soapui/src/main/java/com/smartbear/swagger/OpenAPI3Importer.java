@@ -25,6 +25,7 @@ import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
+import io.swagger.v3.parser.core.models.ParseOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,7 +80,9 @@ public class OpenAPI3Importer implements SwaggerImporter {
 
         logger.info(String.format("Importing swagger %s", url));
 
-        openApi = new OpenAPIV3Parser().read(url);
+        ParseOptions options = new ParseOptions();
+        options.setResolve(true);
+        openApi = new OpenAPIV3Parser().read(url, null, options);
 
         if (openApi == null) {
             return new RestService[]{null};
