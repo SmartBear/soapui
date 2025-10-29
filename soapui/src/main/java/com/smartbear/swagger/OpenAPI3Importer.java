@@ -123,17 +123,7 @@ public class OpenAPI3Importer implements SwaggerImporter {
         }
         RestResource restResource = restService.addNewResource(path, path);
 
-        List<Parameter> parameters = resource.getParameters();
-        if (parameters != null) {
-            parameters.forEach(parameter -> {
-                resource.getGet().getParameters().add(parameter);
-                resource.getPost().getParameters().add(parameter);
-                resource.getPut().getParameters().add(parameter);
-                resource.getDelete().getParameters().add(parameter);
-                resource.getPatch().getParameters().add(parameter);
-                resource.getOptions().getParameters().add(parameter);
-            });
-        }
+        transferParameters(resource);
 
         if (resource.getGet() != null) {
             addOperation(restResource, resource.getGet(), RestRequestInterface.HttpMethod.GET);
@@ -160,6 +150,31 @@ public class OpenAPI3Importer implements SwaggerImporter {
         }
 
         return restResource;
+    }
+
+    private void transferParameters(PathItem resource) {
+        List<Parameter> parameters = resource.getParameters();
+        if (parameters != null) {
+            if (resource.getGet() != null) {
+                parameters.forEach(parameter -> resource.getGet().getParameters().add(parameter));
+            }
+            if (resource.getPost() != null) {
+                parameters.forEach(parameter -> resource.getPost().getParameters().add(parameter));
+            }
+            if (resource.getPut() != null) {
+                parameters.forEach(parameter -> resource.getPut().getParameters().add(parameter));
+            }
+            if (resource.getDelete() != null) {
+                parameters.forEach(parameter -> resource.getDelete().getParameters().add(parameter));
+            }
+            if (resource.getPatch() != null) {
+                parameters.forEach(parameter -> resource.getPatch().getParameters().add(parameter));
+            }
+            if (resource.getOptions() != null) {
+                parameters.forEach(parameter -> resource.getOptions().getParameters().add(parameter));
+            }
+            resource.setParameters(new ArrayList<>());
+        }
     }
 
     private void addOperation(RestResource resource, Operation operation, RestRequestInterface.HttpMethod httpMethod) {

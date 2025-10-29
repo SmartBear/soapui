@@ -50,7 +50,10 @@ public class ImporterTest {
         WsdlProject project = new WsdlProject();
         RestService[] services;
 
-        if (SwaggerUtils.isOpenApi(swaggerFile.getAbsolutePath())) {
+        if (swaggerFile.getName().endsWith("v3.1.json")) {
+            OpenAPI31Importer importer = new OpenAPI31Importer(project);
+            services = importer.importSwagger(swaggerFile.getAbsolutePath());
+        } else if (SwaggerUtils.isOpenApi(swaggerFile.getAbsolutePath())) {
             OpenAPI3Importer importer = new OpenAPI3Importer(project);
             services = importer.importSwagger(swaggerFile.getAbsolutePath());
         } else {

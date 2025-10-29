@@ -19,11 +19,13 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
+import io.swagger.v3.parser.core.models.ParseOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +44,7 @@ public class OpenAPI31Importer implements SwaggerImporter {
     private final WsdlProject project;
     private final String defaultMediaType;
     private OpenAPI openApi;
+
 
     public OpenAPI31Importer(String defaultMediaType) {
         this(null, defaultMediaType);
@@ -77,7 +80,9 @@ public class OpenAPI31Importer implements SwaggerImporter {
 
         logger.info(String.format("Importing swagger %s", url));
 
-        openApi = new OpenAPIV3Parser().read(url);
+        ParseOptions options = new ParseOptions();
+        options.setResolve(true);
+        openApi = new OpenAPIV3Parser().read(url, null, options);
 
         if (openApi == null) {
             return new RestService[]{null};
@@ -118,17 +123,7 @@ public class OpenAPI31Importer implements SwaggerImporter {
         }
         RestResource restResource = restService.addNewResource(path, path);
 
-        List<Parameter> parameters = resource.getParameters();
-        if (parameters != null) {
-            parameters.forEach(parameter -> {
-                resource.getGet().getParameters().add(parameter);
-                resource.getPost().getParameters().add(parameter);
-                resource.getPut().getParameters().add(parameter);
-                resource.getDelete().getParameters().add(parameter);
-                resource.getPatch().getParameters().add(parameter);
-                resource.getOptions().getParameters().add(parameter);
-            });
-        }
+        transferParameters(resource);
 
         if (resource.getGet() != null) {
             addOperation(restResource, resource.getGet(), RestRequestInterface.HttpMethod.GET);
@@ -155,6 +150,31 @@ public class OpenAPI31Importer implements SwaggerImporter {
         }
 
         return restResource;
+    }
+
+    private void transferParameters(PathItem resource) {
+        List<Parameter> parameters = resource.getParameters();
+        if (parameters != null) {
+            if (resource.getGet() != null) {
+                parameters.forEach(parameter -> resource.getGet().getParameters().add(parameter));
+            }
+            if (resource.getPost() != null) {
+                parameters.forEach(parameter -> resource.getPost().getParameters().add(parameter));
+            }
+            if (resource.getPut() != null) {
+                parameters.forEach(parameter -> resource.getPut().getParameters().add(parameter));
+            }
+            if (resource.getDelete() != null) {
+                parameters.forEach(parameter -> resource.getDelete().getParameters().add(parameter));
+            }
+            if (resource.getPatch() != null) {
+                parameters.forEach(parameter -> resource.getPatch().getParameters().add(parameter));
+            }
+            if (resource.getOptions() != null) {
+                parameters.forEach(parameter -> resource.getOptions().getParameters().add(parameter));
+            }
+            resource.setParameters(new ArrayList<>());
+        }
     }
 
     private void addOperation(RestResource resource, Operation operation, RestRequestInterface.HttpMethod httpMethod) {
@@ -229,13 +249,13 @@ public class OpenAPI31Importer implements SwaggerImporter {
                         if (example.getValue() != null) {
                             request.setRequestContent(example.getValue().toString());
                         } else {
-                            request.setRequestContent(ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType));
+                            request.setRequestContent(ExampleGenerator.generateExample(resolveSchema(mediaTypeObject.getSchema()), mediaType));
                         }
                     });
                 } else {
                     RestRequest request = method.addNewRequest("Request 1");
                     request.setMediaType(mediaType);
-                    request.setRequestContent(ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType));
+                    request.setRequestContent(ExampleGenerator.generateExample(resolveSchema(mediaTypeObject.getSchema()), mediaType));
                 }
             });
         }
@@ -279,7 +299,7 @@ public class OpenAPI31Importer implements SwaggerImporter {
                     statusList.add(responseCode);
                 }
                 representation.setStatus(statusList);
-                String content = ExampleGenerator.generateExample(mediaTypeObject.getSchema(), mediaType);
+                String content = ExampleGenerator.generateExample(resolveSchema(mediaTypeObject.getSchema()), mediaType);
                 if (StringUtils.hasContent(content)) {
                     final String finalContent = content;
                     project.getRestMockServiceList().forEach(mockService -> {
@@ -302,6 +322,17 @@ public class OpenAPI31Importer implements SwaggerImporter {
             representation.setStatus(statusList);
             representation.setMediaType(defaultMediaType);
         }
+    }
+
+    private Schema resolveSchema(Schema schema) {
+        if (schema != null && StringUtils.hasContent(schema.get$ref())) {
+            String ref = schema.get$ref();
+            if (ref.startsWith("#/components/schemas/")) {
+                String schemaName = ref.substring("#/components/schemas/".length());
+                return openApi.getComponents().getSchemas().get(schemaName);
+            }
+        }
+        return schema;
     }
 
     private RestService createRestService(OpenAPI openApi, String url) {
