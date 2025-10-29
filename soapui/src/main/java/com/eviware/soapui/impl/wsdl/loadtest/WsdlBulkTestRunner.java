@@ -1,7 +1,7 @@
 
 package com.eviware.soapui.impl.wsdl.loadtest;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 import com.eviware.soapui.model.testsuite.BulkTestRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;

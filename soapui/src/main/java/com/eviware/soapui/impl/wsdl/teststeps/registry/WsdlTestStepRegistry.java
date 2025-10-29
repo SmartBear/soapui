@@ -44,10 +44,10 @@ public class WsdlTestStepRegistry implements SoapUIFactoryRegistryListener {
         addFactory(new PropertiesStepFactory());
         addFactory(new PropertyTransfersStepFactory());
 
-        addFactory(new ProPlaceholderStepFactory("datasource", "SoapUI Pro DataSource", "/datasource_step.png"));
+        addFactory(new DataSourceStepFactory());
         addFactory(new ProPlaceholderStepFactory("datasink", "SoapUI Pro DataSink", "/datasink_step.png"));
         addFactory(new ProPlaceholderStepFactory("datagen", "SoapUI Pro DataGen", "/datagen_step.png"));
-        addFactory(new ProPlaceholderStepFactory("datasourceloop", "SoapUI Pro DataSourceLoop", "/datasource_loop_step.png"));
+        addFactory(new DataSourceLoopStepFactory());
 
         addFactory(new GotoStepFactory());
         addFactory(new RunTestCaseStepFactory());

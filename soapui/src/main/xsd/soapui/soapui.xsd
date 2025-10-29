@@ -1166,24 +1166,9 @@
 
     <xsd:complexType name="DataSourceStep">
         <xsd:sequence>
-            <xsd:element name="dataSource" type="tns:DataSource">
-            </xsd:element>
-            <xsd:element name="shared" type="xsd:boolean"></xsd:element>
-            <xsd:element name="restartShared" type="xsd:boolean"></xsd:element>
-            <xsd:element name="preload" type="xsd:boolean"></xsd:element>
-            <xsd:element name="property" type="xsd:string" maxOccurs="unbounded"
-                         minOccurs="0">
-            </xsd:element>
-            <xsd:element name="startRow" type="xsd:string"></xsd:element>
-            <xsd:element name="endRow" type="xsd:string"></xsd:element>
-            <xsd:element name="failOnEmpty" type="xsd:boolean"
-                         maxOccurs="1" minOccurs="0">
-            </xsd:element>
-            <xsd:element name="gotoLoopOnEmpty" type="xsd:boolean"></xsd:element>
-            <xsd:element name="trimValues" type="xsd:boolean"></xsd:element>
-            <xsd:element name="entitizeValues" type="xsd:boolean"></xsd:element>
-            <xsd:element name="restartOnRun" type="xsd:boolean"></xsd:element>
-            <xsd:element name="expandProperties" type="xsd:boolean"></xsd:element>
+            <xsd:element name="file" type="xsd:string"></xsd:element>
+            <xsd:element name="type" type="xsd:string"></xsd:element>
+            <xsd:element name="properties" type="tns:PropertiesType"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -1196,9 +1181,8 @@
 
     <xsd:complexType name="DataSourceLoopStep">
         <xsd:sequence>
-            <xsd:element name="name" type="xsd:string"></xsd:element>
             <xsd:element name="dataSourceStep" type="xsd:string"></xsd:element>
-            <xsd:element name="targetStep" type="xsd:string"></xsd:element>
+            <xsd:element name="properties" type="tns:PropertiesType"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 
