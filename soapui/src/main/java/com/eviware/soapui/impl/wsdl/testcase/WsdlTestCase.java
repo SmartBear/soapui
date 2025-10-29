@@ -91,6 +91,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     private final WsdlTestSuite testSuite;
     private final List<WsdlTestStep> testSteps = new ArrayList<>();
+    private final List<DataSourceLoop> dataSourceLoops = new ArrayList<>();
     private final List<WsdlLoadTest> loadTests = new ArrayList<>();
     private final List<SecurityTest> securityTests = new ArrayList<>();
     private final Set<TestRunListener> testRunListeners = new HashSet<>();
@@ -168,6 +169,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
             addTestRunListener(listener);
         }
 
+        for (com.eviware.soapui.config.DataSourceLoopConfig dataSourceLoopConfig : config.getDataSourceLoopList()) {
+            dataSourceLoops.add(new DataSourceLoop(this, dataSourceLoopConfig));
+        }
+
         WsrmTestRunListener wsrmListener = new WsrmTestRunListener();
 
         addTestRunListener(wsrmListener);
@@ -180,6 +185,13 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     public WsdlLoadTest buildLoadTest(LoadTestConfig tsc) {
         return new WsdlLoadTest(this, tsc);
+    }
+
+    public DataSourceLoop addDataSourceLoop(String name) {
+        DataSourceLoop dataSourceLoop = new DataSourceLoop(this, getConfig().addNewDataSourceLoop());
+        dataSourceLoop.setName(name);
+        dataSourceLoops.add(dataSourceLoop);
+        return dataSourceLoop;
     }
 
     public boolean getKeepSession() {
@@ -292,7 +304,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         }
     }
 
-    private WsdlTestStep createTestStepFromConfig(TestStepConfig tsc) {
+    public List<DataSourceLoop> getDataSourceLoops() {
+        return dataSourceLoops;
+    }
+
+    public WsdlTestStep createTestStepFromConfig(TestStepConfig tsc) {
         WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory(tsc.getType());
         if (factory != null) {
             WsdlTestStep testStep = factory.buildTestStep(this, tsc, forLoadTest);

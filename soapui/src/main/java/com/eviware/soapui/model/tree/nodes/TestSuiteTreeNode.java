@@ -1,21 +1,22 @@
 /*
  * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.model.tree.nodes;
 
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -48,7 +49,7 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite> {
         testSuite.addTestSuiteListener(internalTestSuiteListener);
 
         for (int c = 0; c < testSuite.getTestCaseCount(); c++) {
-            TestCase testCase = testSuite.getTestCaseAt(c);
+            WsdlTestCase testCase = (WsdlTestCase) testSuite.getTestCaseAt(c);
             testCase.addPropertyChangeListener(TestCase.NAME_PROPERTY, propertyChangeListener);
             testCaseNodes.add(new TestCaseTreeNode(testCase, getTreeModel()));
         }
@@ -101,7 +102,7 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite> {
 
     private class InternalTestSuiteListener implements TestSuiteListener {
         public void testCaseAdded(TestCase testCase) {
-            TestCaseTreeNode testCaseTreeNode = new TestCaseTreeNode(testCase, getTreeModel());
+            TestCaseTreeNode testCaseTreeNode = new TestCaseTreeNode((WsdlTestCase) testCase, getTreeModel());
             testCaseNodes.add(testCase.getTestSuite().getIndexOfTestCase(testCase), testCaseTreeNode);
 
             testCase.addPropertyChangeListener(TestCase.NAME_PROPERTY, propertyChangeListener);
@@ -122,35 +123,35 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite> {
         public void testStepAdded(TestStep testStep, int index) {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel().getTreeNode(testStep.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.testStepInserted(testStep, index);
+                //testCaseTreeNode.testStepInserted(testStep, index);
             }
         }
 
         public void testStepRemoved(TestStep testStep, int index) {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel().getTreeNode(testStep.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.testStepRemoved(testStep, index);
+                //testCaseTreeNode.testStepRemoved(testStep, index);
             }
         }
 
         public void loadTestAdded(LoadTest loadTest) {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel().getTreeNode(loadTest.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.loadTestInserted(loadTest);
+                //testCaseTreeNode.loadTestInserted(loadTest);
             }
         }
 
         public void loadTestRemoved(LoadTest loadTest) {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel().getTreeNode(loadTest.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.loadTestRemoved(loadTest);
+                //testCaseTreeNode.loadTestRemoved(loadTest);
             }
         }
 
         public void testStepMoved(TestStep testStep, int fromIndex, int offset) {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel().getTreeNode(testStep.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.testStepMoved(testStep, fromIndex, offset);
+                //testCaseTreeNode.testStepMoved(testStep, fromIndex, offset);
             }
         }
 
@@ -164,7 +165,7 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite> {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel()
                     .getTreeNode(securityTest.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.securityTestInserted(securityTest);
+                //testCaseTreeNode.securityTestInserted(securityTest);
             }
 
         }
@@ -174,7 +175,7 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite> {
             TestCaseTreeNode testCaseTreeNode = (TestCaseTreeNode) getTreeModel()
                     .getTreeNode(securityTest.getTestCase());
             if (testCaseTreeNode != null) {
-                testCaseTreeNode.securityTestRemoved(securityTest);
+                //testCaseTreeNode.securityTestRemoved(securityTest);
             }
 
         }

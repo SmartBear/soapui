@@ -140,6 +140,44 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
             }
         }
 
+        for (com.eviware.soapui.impl.wsdl.testcase.DataSourceLoop dataSourceLoop : testCase.getDataSourceLoops()) {
+            com.eviware.soapui.impl.wsdl.teststeps.DataSourceTestStep dataSourceStep = (com.eviware.soapui.impl.wsdl.teststeps.DataSourceTestStep) testCase.getTestStepByName(dataSourceLoop.getDataSourceStep());
+            if (dataSourceStep == null) {
+                continue;
+            }
+            int rowCount = 0;
+            try {
+                if ("CSV".equals(dataSourceStep.getType())) {
+                    try (com.opencsv.CSVReader reader = new com.opencsv.CSVReader(new java.io.FileReader(dataSourceStep.getFile()))) {
+                        rowCount = reader.readAll().size() - 1;
+                    }
+                } else if ("JSON".equals(dataSourceStep.getType())) {
+                    try (java.io.FileReader reader = new java.io.FileReader(dataSourceStep.getFile())) {
+                        rowCount = com.google.gson.JsonParser.parseReader(reader).getAsJsonArray().size();
+                    }
+                } else if ("XML".equals(dataSourceStep.getType())) {
+                    try (java.io.FileReader reader = new java.io.FileReader(dataSourceStep.getFile())) {
+                        org.jdom2.input.SAXBuilder saxBuilder = new org.jdom2.input.SAXBuilder();
+                        org.jdom2.Document document = saxBuilder.build(reader);
+                        rowCount = document.getRootElement().getChildren().size();
+                    }
+                }
+            } catch (Exception e) {
+                continue;
+            }
+            for (int i = 0; i < rowCount; i++) {
+                runContext.setProperty("currentRow", i);
+                try {
+                    dataSourceStep.loadData(runContext);
+                } catch (Exception e) {
+                    continue;
+                }
+                for (TestStep testStep : dataSourceLoop.getTestSteps()) {
+                    runTestStep(testStep, true, true);
+                }
+            }
+        }
+
         failTestRunnableOnErrors(runContext);
         preserveContext(getRunContext());
     }

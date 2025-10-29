@@ -121,34 +121,8 @@ public class DataSourceTestStepPanel extends ModelItemDesktopPanel<DataSourceTes
         gbc.gridy = 0;
         mainPanel.add(loadButton, gbc);
 
-        setLayout(new BorderLayout());
-        add(mainPanel, BorderLayout.NORTH);
-
-        JTable dataTable = new JTable();
-        add(new JScrollPane(dataTable), BorderLayout.CENTER);
-
-        loadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    getModelItem().run(null, null);
-                    List<TestProperty> properties = getModelItem().getPropertyList();
-                    if (properties.isEmpty()) {
-                        return;
-                    }
-                    String[] columnNames = new String[properties.size()];
-                    for (int i = 0; i < properties.size(); i++) {
-                        columnNames[i] = properties.get(i).getName();
-                    }
-                    String[][] data = new String[1][properties.size()];
-                    for (int i = 0; i < properties.size(); i++) {
-                        data[0][i] = properties.get(i).getValue();
-                    }
-                    dataTable.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+        setLayout(new FlowLayout());
+        setPreferredSize(new Dimension(500, 300));
+        add(mainPanel);
     }
 }

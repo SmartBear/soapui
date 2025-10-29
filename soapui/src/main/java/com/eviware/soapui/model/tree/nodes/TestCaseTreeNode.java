@@ -24,6 +24,9 @@ import com.eviware.soapui.model.tree.AbstractTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.nodes.support.SecurityTestsModelItem;
+import com.eviware.soapui.impl.wsdl.testcase.DataSourceLoop;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.tree.nodes.support.DataSourceLoopsModelItem;
 import com.eviware.soapui.model.tree.nodes.support.WsdlLoadTestsModelItem;
 import com.eviware.soapui.model.tree.nodes.support.WsdlTestStepsModelItem;
 import com.eviware.soapui.security.SecurityTest;
@@ -41,6 +44,7 @@ import java.util.List;
 
 public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
     private TestStepsTreeNode testStepsNode;
+    private DataSourceLoopsTreeNode dataSourceLoopsNode;
     private LoadTestsTreeNode loadTestsNode;
     private SecurityTestsTreeNode securityTestsNode;
     private PropertiesTreeNode<?> propertiesTreeNode;
@@ -50,10 +54,12 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
         super(testCase, testCase.getTestSuite(), treeModel);
 
         testStepsNode = new TestStepsTreeNode();
+        dataSourceLoopsNode = new DataSourceLoopsTreeNode();
         loadTestsNode = new LoadTestsTreeNode();
         securityTestsNode = new SecurityTestsTreeNode();
 
         getTreeModel().mapModelItem(testStepsNode);
+        getTreeModel().mapModelItem(dataSourceLoopsNode);
         getTreeModel().mapModelItem(loadTestsNode);
         getTreeModel().mapModelItem(securityTestsNode);
 
@@ -62,8 +68,48 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
 
         childNodes.add(propertiesTreeNode);
         childNodes.add(testStepsNode);
+        childNodes.add(dataSourceLoopsNode);
         childNodes.add(loadTestsNode);
         childNodes.add(securityTestsNode);
+    }
+
+    public class DataSourceLoopsTreeNode extends AbstractTreeNode<DataSourceLoopsModelItem> {
+        private List<DataSourceLoopTreeNode> dataSourceLoopNodes = new ArrayList<>();
+
+        protected DataSourceLoopsTreeNode() {
+            super(new DataSourceLoopsModelItem(getTestCase()));
+
+            for (DataSourceLoop dataSourceLoop : ((WsdlTestCase) getTestCase()).getDataSourceLoops()) {
+                dataSourceLoopNodes.add(new DataSourceLoopTreeNode(dataSourceLoop, getTreeModel()));
+            }
+
+            getTreeModel().mapModelItems(dataSourceLoopNodes);
+        }
+
+        public SoapUITreeNode getParentTreeNode() {
+            return TestCaseTreeNode.this;
+        }
+
+        @Override
+        public SoapUITreeNode getChildNode(int i) {
+            return dataSourceLoopNodes.get(i);
+        }
+
+        @Override
+        public int getChildCount() {
+            return dataSourceLoopNodes.size();
+        }
+
+        @Override
+        public int getIndexOfChild(Object child) {
+            return dataSourceLoopNodes.indexOf(child);
+        }
+
+        public void release() {
+            for (DataSourceLoopTreeNode dataSourceLoopNode : dataSourceLoopNodes) {
+                dataSourceLoopNode.release();
+            }
+        }
     }
 
     public void release() {
@@ -107,6 +153,10 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase> {
 
     public TestStepsTreeNode getTestStepsNode() {
         return testStepsNode;
+    }
+
+    public DataSourceLoopsTreeNode getDataSourceLoopsNode() {
+        return dataSourceLoopsNode;
     }
 
     public TestCase getTestCase() {

@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
