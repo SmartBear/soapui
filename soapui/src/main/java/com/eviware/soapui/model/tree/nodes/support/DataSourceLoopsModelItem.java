@@ -26,7 +26,7 @@ public class DataSourceLoopsModelItem extends BaseTestsModelItem {
     private TestSuiteListener listener = new InternalTestSuiteListener();
 
     public DataSourceLoopsModelItem(TestCase testCase) {
-        super(testCase, createLabel(testCase), UISupport.createImageIcon("/datasource_loop_node.png"));
+        super(testCase, createLabel(testCase), UISupport.createImageIcon("/datasource_loop_step.png"));
         testCase.getTestSuite().addTestSuiteListener(listener);
     }
 
