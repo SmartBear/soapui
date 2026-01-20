@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="10.0.5" transformSequenceNumber="10">
-  <directoryPresets config="${compiler:DIST_STANDALONE}/bin/installationcomplete.sh" />
+<install4j version="12.0.2" transformSequenceNumber="12">
+  <directoryPresets config="./resources/images" />
   <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" autoSave="true" convertDotsToUnderscores="false" macVolumeId="11e3ac6b2ec2ffac" javaMinVersion="1.8">
     <variables>
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
@@ -17,7 +17,7 @@
       <variable name="CERT_PATH" />
       <variable name="HERMES_INSTALLER" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsPkcs12File="${compiler:CERT_PATH}" >
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsPkcs12File="${compiler:CERT_PATH}">
       <macAdditionalBinaries>
         <entry>*.dylib</entry>
         <entry>*.so</entry>
@@ -272,8 +272,25 @@
         <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_256-256.png" />
       </iconImageFiles>
     </launcher>
+    <launcher name="MacOS SoapUI GUI" id="7979" menuName="SoapUI-${installer:sys.version}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" useCustomMacosExecutableName="true" customMacosExecutableName="SoapUI-${compiler:sys.version}">
+      <executable name="${compiler:EXECUTABLE_NAME}" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" executableDir="bin" executableMode="gui" singleInstance="true" globalSingleInstance="true" />
+      <splashScreen show="true" bitmapFile="${compiler:DIST_ROOT}/bin/SoapUI-Spashscreen.png" />
+      <java mainClass="com.eviware.soapui.SoapUI">
+        <classPath>
+          <scanDirectory location="lib" failOnError="false" />
+          <archive location="bin/soapui-${compiler:VERSION_NUMBER}.jar" failOnError="false" />
+        </classPath>
+      </java>
+      <iconImageFiles>
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_16-16.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_24-24.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_32-32.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_48-48.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/SoapUI-OS_256-256.png" />
+      </iconImageFiles>
+    </launcher>
   </launchers>
-  <installerGui suggestPreviousLocations="false" autoUpdateDescriptorUrl="https://dl.eviware.com/version-update/soapui-updates-os.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://dl.eviware.com/soapuios/${compiler:VERSION_NUMBER}/">
+  <installerGui autoUpdateDescriptorUrl="https://dl.eviware.com/version-update/soapui-updates-os.xml" useAutoUpdateBaseUrl="true" autoUpdateBaseUrl="https://dl.eviware.com/soapuios/${compiler:VERSION_NUMBER}/">
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" styleId="7375" customIcnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" customIcoFile="${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico" launchInNewProcess="false">
         <serializedBean>
@@ -326,15 +343,21 @@
           <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
               <action id="4626" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" />
+              <action id="8053" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none" />
+              <action id="7974" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none">
+                <serializedBean>
+                  <property name="searchForPreviousInstallation" type="boolean" value="false" />
+                </serializedBean>
+              </action>
               <action name="Set memory calculation for vmoptions" id="186" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
                 <serializedBean>
                   <property name="script">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">long xx = Math.round(SystemInfo.getPhysicalMemory() * 0.5 / 1024 / 1024);
-if (xx &gt; 1000) {
-    xx = 1000;
-}
-return xx;</property>
+                        if (xx &gt; 1000) {
+                        xx = 1000;
+                        }
+                        return xx;</property>
                     </object>
                   </property>
                   <property name="variableName" type="string">xmx</property>
@@ -369,7 +392,7 @@ return xx;</property>
             </styleOverrides>
             <actions>
               <action id="4627" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
-                <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+                <condition>context.getBooleanVariable("sys.streamlinedInstallation")</condition>
               </action>
             </actions>
             <formComponents>
@@ -384,15 +407,18 @@ return xx;</property>
                   <property name="consoleScript">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">String message = context.getMessage("ConsoleWelcomeLabel", context.getApplicationName());
-return console.askOkCancel(message, true);
-</property>
+                        return console.askOkCancel(message, true);
+                      </property>
                     </object>
                   </property>
                 </serializedBean>
               </formComponent>
-              <formComponent id="5492" beanClass="com.install4j.runtime.beans.formcomponents.UpdateAlertComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
+              <formComponent id="5492" beanClass="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationChooserComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
+                <serializedBean>
+                  <property name="streamlinedInstallationStrategy" type="enum" class="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationStrategy" value="UPDATE_ONLY" />
+                </serializedBean>
                 <externalParametrizationPropertyNames>
-                  <propertyName>updateCheck</propertyName>
+                  <propertyName>streamlinedInstallationStrategy</propertyName>
                 </externalParametrizationPropertyNames>
               </formComponent>
               <formComponent id="5493" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
@@ -435,7 +461,7 @@ return console.askOkCancel(message, true);
             </formComponents>
           </screen>
           <screen id="3" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen">
-            <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
             <actions>
               <action id="4" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
                 <condition>context.getVariable("sys.responseFile") == null</condition>
@@ -474,7 +500,7 @@ return console.askOkCancel(message, true);
                   <property name="script">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">InstallationComponentSetup component =context.getInstallationComponentById("2393");
-return component.isSelected();</property>
+                        return component.isSelected();</property>
                     </object>
                   </property>
                   <property name="variableName" type="string">installTutorials</property>
@@ -501,8 +527,8 @@ return component.isSelected();</property>
           <screen name="Display Hermes license agreement" id="1478" beanClass="com.install4j.runtime.beans.screens.LicenseScreen">
             <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
 
-//for mac hermes installation is trigered and license agreement shouldn't be duplicated
-return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
+              //for mac hermes installation is trigered and license agreement shouldn't be duplicated
+              return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
             <formComponents>
               <formComponent id="5510" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
                 <serializedBean>
@@ -544,7 +570,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
                 <serializedBean>
                   <property name="hideIfBlank" type="boolean" value="true" />
                   <property name="labelText" type="string">Please select the target directory for SoapUI Tutorials.
-Be sure to have write permissions for this directory.</property>
+                    Be sure to have write permissions for this directory.</property>
                 </serializedBean>
                 <visibilityScript>!context.isConsole()</visibilityScript>
                 <externalParametrizationPropertyNames>
@@ -583,7 +609,7 @@ Be sure to have write permissions for this directory.</property>
             <serializedBean>
               <property name="programGroupName" type="string">SmartBear\${compiler:sys.fullName}</property>
             </serializedBean>
-            <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
           </screen>
           <screen id="430" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen">
             <formComponents>
@@ -610,9 +636,9 @@ Be sure to have write permissions for this directory.</property>
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">import java.io.File;
 
-    return File.separator;
+                        return File.separator;
 
-</property>
+                      </property>
                     </object>
                   </property>
                   <property name="variableName" type="string">FILE_SEPARATOR</property>
@@ -623,11 +649,11 @@ Be sure to have write permissions for this directory.</property>
                   <property name="script">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">if (Util.isWindows()) {
-    return  "bat";
-} else {
-    return "sh";
-}
-</property>
+                        return  "bat";
+                        } else {
+                        return "sh";
+                        }
+                      </property>
                     </object>
                   </property>
                   <property name="variableName" type="string">EXTENSION</property>
@@ -640,185 +666,178 @@ Be sure to have write permissions for this directory.</property>
                   <property name="script">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">if (Util.isMacOS()) {
-    return  context.getVariable("sys.contentDir");
-} else {
-    return context.getVariable("sys.installationDir");
-}
-</property>
+                        return  context.getVariable("sys.contentDir");
+                        } else {
+                        return context.getVariable("sys.installationDir");
+                        }
+                      </property>
                     </object>
                   </property>
                   <property name="variableName" type="string">rootInstallDir</property>
                 </serializedBean>
               </action>
-              <action name="Set OS" id="1532" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">if(Util.isWindowsVista() || Util.isWindows7()){
-    return "64bit";
-}
-else if (Util.isMacOS()) {
-return "MAC";
-}
-else return "";</property>
-                    </object>
-                  </property>
-                  <property name="variableName" type="string">WhatOS</property>
-                </serializedBean>
-              </action>
-              <action name="Set jre lib folder" id="4804" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">String jre = String.format("%s%s",
-    (String)context.getVariable("sys.preferredJre"),
-    (String)context.getVariable("sys.fileSeparator"));
-if (Util.isMacOS()) {
-    return String.format("%s%sContents%sHome%sjre%slib",
-        jre,
-        (String)context.getVariable("sys.fileSeparator"),
-        (String)context.getVariable("sys.fileSeparator"),
-        (String)context.getVariable("sys.fileSeparator"),
-        (String)context.getVariable("sys.fileSeparator"));
-} else {
-    return jre + "lib";
-}</property>
-                    </object>
-                  </property>
-                  <property name="variableName" type="string">JreLib</property>
-                </serializedBean>
-              </action>
-              <action id="470" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="addUninstaller" type="boolean" value="true" />
-                  <property name="programGroupEntryConfigs">
-                    <add>
-                      <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
-                        <property name="iconFile">
-                          <object class="com.install4j.api.beans.ExternalFile">
-                            <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
-                          </object>
-                        </property>
-                        <property name="name" type="string">Online JavaDoc</property>
-                        <property name="target">
-                          <object class="java.io.File">
-                            <string>${installer:sys.installationDir}/JavaDoc.url</string>
-                          </object>
-                        </property>
-                      </object>
-                    </add>
-                    <add>
-                      <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
-                        <property name="name" type="string">soapui.org website</property>
-                        <property name="target">
-                          <object class="java.io.File">
-                            <string>${installer:sys.installationDir}/SoapUI.url</string>
-                          </object>
-                        </property>
-                      </object>
-                    </add>
-                  </property>
-                  <property name="uninstallerMenuName" type="string">${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</property>
-                </serializedBean>
-                <condition>!context.getBooleanVariable("sys.programGroupDisabled")</condition>
-              </action>
-              <action id="10" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" actionElevationType="elevated" failureStrategy="quit">
-                <serializedBean>
-                  <property name="icon">
-                    <object class="com.install4j.api.beans.ExternalFile">
-                      <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
-                    </object>
-                  </property>
-                  <property name="iconSource" type="enum" class="com.install4j.runtime.beans.actions.desktop.IconSource" value="CUSTOM" />
-                  <property name="itemName" type="string">${compiler:sys.fullName}</property>
-                </serializedBean>
-              </action>
-              <action id="606" beanClass="com.install4j.runtime.beans.actions.text.ReplaceInstallerVariablesAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>bin/SoapUI-${compiler:VERSION_NUMBER}.vmoptions</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-              </action>
-              <action name="Set access mode for wsi-test-tools" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" failureStrategy="askQuit" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
-                <serializedBean>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDir}${installer:FILE_SEPARATOR}wsi-test-tools</string>
-                      </object>
-                    </element>
-                  </property>
-                  <property name="mode" type="string">755</property>
-                  <property name="recursive" type="boolean" value="true" />
-                </serializedBean>
-              </action>
-              <group name="Set access mode for command line scripts" id="2095" beanClass="com.install4j.runtime.beans.groups.ActionGroup">
+              <group name="After install" id="8037" beanClass="com.install4j.runtime.beans.groups.ActionGroup">
                 <beans>
-                  <action name="testrunner" id="2096" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for testrunner.sh">
+                  <action name="Set OS" id="1532" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                    <serializedBean>
+                      <property name="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <property name="value" type="string">if(Util.isWindowsVista() || Util.isWindows7()){
+                            return "64bit";
+                            }
+                            else if (Util.isMacOS()) {
+                            return "MAC";
+                            }
+                            else return "";</property>
+                        </object>
+                      </property>
+                      <property name="variableName" type="string">WhatOS</property>
+                    </serializedBean>
+                  </action>
+                  <action name="Set jre lib folder" id="4804" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                    <serializedBean>
+                      <property name="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <property name="value" type="string">String jre = String.format("%s%s",
+                            (String)context.getVariable("sys.preferredJre"),
+                            (String)context.getVariable("sys.fileSeparator"));
+                            if (Util.isMacOS()) {
+                            return String.format("%s%sContents%sHome%sjre%slib",
+                            jre,
+                            (String)context.getVariable("sys.fileSeparator"),
+                            (String)context.getVariable("sys.fileSeparator"),
+                            (String)context.getVariable("sys.fileSeparator"),
+                            (String)context.getVariable("sys.fileSeparator"));
+                            } else {
+                            return jre + "lib";
+                            }</property>
+                        </object>
+                      </property>
+                      <property name="variableName" type="string">JreLib</property>
+                    </serializedBean>
+                  </action>
+                  <action id="470" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDefaultStartMenuEntriesAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="folderName" type="string">${installer:sys.programGroupName}</property>
+                      <property name="linkDirectory" type="string">${installer:sys.symlinkDir}</property>
+                      <property name="programGroupEntryConfigs">
+                        <add>
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
+                            <property name="iconFile">
+                              <object class="com.install4j.api.beans.ExternalFile">
+                                <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
+                              </object>
+                            </property>
+                            <property name="name" type="string">Online JavaDoc</property>
+                            <property name="target">
+                              <object class="java.io.File">
+                                <string>${installer:sys.installationDir}/JavaDoc.url</string>
+                              </object>
+                            </property>
+                          </object>
+                        </add>
+                        <add>
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
+                            <property name="name" type="string">soapui.org website</property>
+                            <property name="target">
+                              <object class="java.io.File">
+                                <string>${installer:sys.installationDir}/SoapUI.url</string>
+                              </object>
+                            </property>
+                          </object>
+                        </add>
+                      </property>
+                    </serializedBean>
+                    <condition>!context.getBooleanVariable("sys.programGroupDisabled")</condition>
+                  </action>
+                  <action id="10" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" actionElevationType="elevated" failureStrategy="quit">
+                    <serializedBean>
+                      <property name="icon">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
+                        </object>
+                      </property>
+                      <property name="iconSource" type="enum" class="com.install4j.runtime.beans.actions.desktop.IconSource" value="CUSTOM" />
+                      <property name="itemName" type="string">${compiler:sys.fullName}</property>
+                    </serializedBean>
+                  </action>
+                  <action name="Set access mode for wsi-test-tools" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
                     <serializedBean>
                       <property name="files" type="array" class="java.io.File" length="1">
                         <element index="0">
                           <object class="java.io.File">
-                            <string>${installer:rootInstallDir}/bin/testrunner.sh</string>
+                            <string>${installer:rootInstallDir}${installer:FILE_SEPARATOR}wsi-test-tools</string>
                           </object>
                         </element>
                       </property>
                       <property name="mode" type="string">755</property>
+                      <property name="recursive" type="boolean" value="true" />
                     </serializedBean>
                   </action>
-                  <action name="toolrunner" id="2097" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for toolrunner.sh">
-                    <serializedBean>
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>${installer:rootInstallDir}/bin/toolrunner.sh</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="mode" type="string">755</property>
-                    </serializedBean>
-                  </action>
-                  <action name="loadtestrunner" id="2098" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for loadtestrunner.sh">
-                    <serializedBean>
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>${installer:rootInstallDir}/bin/loadtestrunner.sh</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="mode" type="string">755</property>
-                    </serializedBean>
-                  </action>
-                  <action name="mockservicerunner" id="2099" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for mockservicerunner.sh">
-                    <serializedBean>
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>${installer:rootInstallDir}/bin/mockservicerunner.sh</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="mode" type="string">755</property>
-                    </serializedBean>
-                  </action>
-                  <action name="soapui" id="2100" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for soapui.sh">
-                    <serializedBean>
-                      <property name="files" type="array" class="java.io.File" length="1">
-                        <element index="0">
-                          <object class="java.io.File">
-                            <string>${installer:rootInstallDir}/bin/soapui.sh</string>
-                          </object>
-                        </element>
-                      </property>
-                      <property name="mode" type="string">755</property>
-                    </serializedBean>
-                  </action>
+                  <group name="Set access mode for command line scripts" id="2095" beanClass="com.install4j.runtime.beans.groups.ActionGroup">
+                    <beans>
+                      <action name="testrunner" id="2096" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for testrunner.sh">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>${installer:rootInstallDir}/bin/testrunner.sh</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">755</property>
+                        </serializedBean>
+                      </action>
+                      <action name="toolrunner" id="2097" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for toolrunner.sh">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>${installer:rootInstallDir}/bin/toolrunner.sh</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">755</property>
+                        </serializedBean>
+                      </action>
+                      <action name="loadtestrunner" id="2098" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for loadtestrunner.sh">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>${installer:rootInstallDir}/bin/loadtestrunner.sh</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">755</property>
+                        </serializedBean>
+                      </action>
+                      <action name="mockservicerunner" id="2099" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for mockservicerunner.sh">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>${installer:rootInstallDir}/bin/mockservicerunner.sh</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">755</property>
+                        </serializedBean>
+                      </action>
+                      <action name="soapui" id="2100" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated" errorMessage="Couldn't set access mode for soapui.sh">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>${installer:rootInstallDir}/bin/soapui.sh</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">755</property>
+                        </serializedBean>
+                      </action>
+                    </beans>
+                  </group>
                 </beans>
               </group>
               <action id="1073" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
@@ -876,20 +895,31 @@ if (Util.isMacOS()) {
                   </property>
                 </serializedBean>
               </action>
-              <action name="SetMacLookAndFeel" id="2341" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="launcherId" type="string">64</property>
-                  <property name="vmOptions" type="array" elementType="string" length="2">
-                    <element index="0">-Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel</element>
-                    <element index="1">-Dapple.eawt.quitStrategy=CLOSE_ALL_WINDOWS</element>
-                  </property>
-                </serializedBean>
-                <condition>//for mac only
-if (Util.isMacOS())
-return true;
-else
-return false;</condition>
-              </action>
+              <group name="After VM Options" id="8039" beanClass="com.install4j.runtime.beans.groups.ActionGroup">
+                <beans>
+                  <action id="606" beanClass="com.install4j.runtime.beans.actions.text.ReplaceInstallerVariablesAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>bin/SoapUI-${compiler:VERSION_NUMBER}.vmoptions</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                  </action>
+                  <action name="set root installation dir platform independent" id="7154" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                    <serializedBean>
+                      <property name="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <property name="value" type="string">return context.getVariable("sys.contentDir").toString();</property>
+                        </object>
+                      </property>
+                      <property name="variableName" type="string">rootInstallDirPI</property>
+                    </serializedBean>
+                  </action>
+                </beans>
+              </group>
               <action id="1436" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="encoding" type="string" />
@@ -916,276 +946,257 @@ return false;</condition>
                   <property name="mode" type="string">755</property>
                 </serializedBean>
                 <condition>return context.getInstallationComponentById("1263").isSelected();
-</condition>
+                </condition>
               </action>
-              <action name="Set mode for MAC" id="1747" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>tempHermes/hermesInstallMAC.${installer:EXTENSION}</string>
-                      </object>
-                    </element>
-                  </property>
-                  <property name="mode" type="string">755</property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="set root installation dir platform independent" id="7154" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">return context.getVariable("sys.contentDir").toString();</property>
-                    </object>
-                  </property>
-                  <property name="variableName" type="string">rootInstallDirPI</property>
-                </serializedBean>
-              </action>
-              <action name="install hermesJMS" id="1264" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="executable">
-                    <object class="java.io.File">
-                      <string>tempHermes/hermesInstall${installer:WhatOS}.${installer:EXTENSION}</string>
-                    </object>
-                  </property>
-                  <property name="keepConsoleWindow" type="boolean" value="true" />
-                  <property name="wait" type="boolean" value="true" />
-                  <property name="workingDirectory">
-                    <object class="java.io.File">
-                      <string>tempHermes</string>
-                    </object>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();
-</condition>
-              </action>
-              <action name="Copy updated xml-apis.jar for Hermes" id="7059" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>tempHermes${installer:FILE_SEPARATOR}xml-apis.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy updated xercesImpl.jar for Hermes" id="7251" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>tempHermes${installer:FILE_SEPARATOR}xercesImpl.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy jaxb-impl.jar for Hermes" id="7252" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>tempHermes${installer:FILE_SEPARATOR}jaxb-impl-2.1.17.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy jaxb-api.jar for Hermes" id="7253" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jaxb-api.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy jide-action.jar for Hermes" id="7254" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-action.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy jide-common.jar for Hermes" id="7255" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-common.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy jide-components.jar for Hermes" id="7256" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-components.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action name="Copy jide-dock.jar for Hermes" id="7257" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-dock.jar</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
-              </action>
-              <action id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="description" type="string">Install Desktop ShortCut</property>
-                  <property name="file">
-                    <object class="java.io.File">
-                      <string>bin/${compiler:EXECUTABLE_NAME}</string>
-                    </object>
-                  </property>
-                  <property name="name" type="string">${compiler:sys.fullName}</property>
-                  <property name="winIconFile">
-                    <object class="com.install4j.api.beans.ExternalFile">
-                      <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
-                    </object>
-                  </property>
-                </serializedBean>
-                <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
-              </action>
-              <action name="Move Tutorials" id="2503" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated" failureStrategy="askQuit">
-                <serializedBean>
-                  <property name="destinationFile">
-                    <object class="java.io.File">
-                      <string>${installer:tutorialsLocation}</string>
-                    </object>
-                  </property>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>SoapUI-Tutorials</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-                <condition>boolean installTutorials = context.getBooleanVariable("installTutorials");
-return installTutorials;</condition>
-              </action>
-              <group name="Set log files permissions" id="4579" beanClass="com.install4j.runtime.beans.groups.ActionGroup" commentSet="true" comment="ss">
+              <group name="End Install Phase" id="8041" beanClass="com.install4j.runtime.beans.groups.ActionGroup">
                 <beans>
-                  <action name="soapui.log on Windows" id="4580" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" actionElevationType="elevated">
+                  <action name="install hermesJMS" id="1264" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
                     <serializedBean>
-                      <property name="all" type="boolean" value="false" />
+                      <property name="executable">
+                        <object class="java.io.File">
+                          <string>tempHermes/hermesInstall${installer:WhatOS}.${installer:EXTENSION}</string>
+                        </object>
+                      </property>
+                      <property name="keepConsoleWindow" type="boolean" value="true" />
+                      <property name="wait" type="boolean" value="true" />
+                      <property name="workingDirectory">
+                        <object class="java.io.File">
+                          <string>tempHermes</string>
+                        </object>
+                      </property>
+                    </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();
+                    </condition>
+                  </action>
+                  <action name="Copy updated xml-apis.jar for Hermes" id="7059" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
                       <property name="files" type="array" class="java.io.File" length="1">
                         <element index="0">
                           <object class="java.io.File">
-                            <string>bin/soapui.log</string>
+                            <string>tempHermes${installer:FILE_SEPARATOR}xml-apis.jar</string>
                           </object>
                         </element>
                       </property>
-                      <property name="group" type="enum" class="com.install4j.runtime.beans.actions.files.WindowsGroup" value="WORLD" />
-                      <property name="read" type="boolean" value="true" />
-                      <property name="write" type="boolean" value="true" />
                     </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
                   </action>
-                  <action name="soapui-errors.log on Windows" id="4582" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" actionElevationType="elevated">
+                  <action name="Copy updated xercesImpl.jar for Hermes" id="7251" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
                     <serializedBean>
-                      <property name="all" type="boolean" value="false" />
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
                       <property name="files" type="array" class="java.io.File" length="1">
                         <element index="0">
                           <object class="java.io.File">
-                            <string>bin/soapui-errors.log</string>
+                            <string>tempHermes${installer:FILE_SEPARATOR}xercesImpl.jar</string>
                           </object>
                         </element>
                       </property>
-                      <property name="group" type="enum" class="com.install4j.runtime.beans.actions.files.WindowsGroup" value="WORLD" />
-                      <property name="read" type="boolean" value="true" />
-                      <property name="write" type="boolean" value="true" />
                     </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
                   </action>
-                  <action name="soapui.log on Unix" id="4624" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
+                  <action name="Copy jaxb-impl.jar for Hermes" id="7252" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
                     <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
                       <property name="files" type="array" class="java.io.File" length="1">
                         <element index="0">
                           <object class="java.io.File">
-                            <string>bin/soapui.log</string>
+                            <string>tempHermes${installer:FILE_SEPARATOR}jaxb-impl-2.1.17.jar</string>
                           </object>
                         </element>
                       </property>
-                      <property name="mode" type="string">666</property>
                     </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
                   </action>
-                  <action name="soapui-errors.log on Unix" id="4625" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
+                  <action name="Copy jaxb-api.jar for Hermes" id="7253" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
                     <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
                       <property name="files" type="array" class="java.io.File" length="1">
                         <element index="0">
                           <object class="java.io.File">
-                            <string>bin/soapui-errors.log</string>
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jaxb-api.jar</string>
                           </object>
                         </element>
                       </property>
-                      <property name="mode" type="string">666</property>
                     </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
                   </action>
+                  <action name="Copy jide-action.jar for Hermes" id="7254" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-action.jar</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
+                  </action>
+                  <action name="Copy jide-common.jar for Hermes" id="7255" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-common.jar</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
+                  </action>
+                  <action name="Copy jide-components.jar for Hermes" id="7256" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-components.jar</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
+                  </action>
+                  <action name="Copy jide-dock.jar for Hermes" id="7257" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}lib</string>
+                        </object>
+                      </property>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}hermesJMS${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jide-dock.jar</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                    <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
+                  </action>
+                  <action id="566" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="description" type="string">Install Desktop ShortCut</property>
+                      <property name="file">
+                        <object class="java.io.File">
+                          <string>bin/${compiler:EXECUTABLE_NAME}</string>
+                        </object>
+                      </property>
+                      <property name="name" type="string">${compiler:sys.fullName}</property>
+                      <property name="winIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>${compiler:RESOURCES_HOME}/images/SoapUI-OS.ico</string>
+                        </object>
+                      </property>
+                    </serializedBean>
+                    <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
+                  </action>
+                  <action name="Move Tutorials" id="2503" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:tutorialsLocation}</string>
+                        </object>
+                      </property>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>SoapUI-Tutorials</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                    <condition>boolean installTutorials = context.getBooleanVariable("installTutorials");
+                      return installTutorials;</condition>
+                  </action>
+                  <group name="Set log files permissions" id="4579" beanClass="com.install4j.runtime.beans.groups.ActionGroup" commentSet="true" comment="ss">
+                    <beans>
+                      <action name="soapui.log on Windows" id="4580" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" actionElevationType="elevated">
+                        <serializedBean>
+                          <property name="all" type="boolean" value="false" />
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>bin/soapui.log</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="group" type="enum" class="com.install4j.runtime.beans.actions.files.WindowsGroup" value="WORLD" />
+                          <property name="read" type="boolean" value="true" />
+                          <property name="write" type="boolean" value="true" />
+                        </serializedBean>
+                      </action>
+                      <action name="soapui-errors.log on Windows" id="4582" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" actionElevationType="elevated">
+                        <serializedBean>
+                          <property name="all" type="boolean" value="false" />
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>bin/soapui-errors.log</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="group" type="enum" class="com.install4j.runtime.beans.actions.files.WindowsGroup" value="WORLD" />
+                          <property name="read" type="boolean" value="true" />
+                          <property name="write" type="boolean" value="true" />
+                        </serializedBean>
+                      </action>
+                      <action name="soapui.log on Unix" id="4624" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>bin/soapui.log</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">666</property>
+                        </serializedBean>
+                      </action>
+                      <action name="soapui-errors.log on Unix" id="4625" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
+                        <serializedBean>
+                          <property name="files" type="array" class="java.io.File" length="1">
+                            <element index="0">
+                              <object class="java.io.File">
+                                <string>bin/soapui-errors.log</string>
+                              </object>
+                            </element>
+                          </property>
+                          <property name="mode" type="string">666</property>
+                        </serializedBean>
+                      </action>
+                    </beans>
+                  </group>
                 </beans>
               </group>
             </actions>
@@ -1221,119 +1232,123 @@ return installTutorials;</condition>
               </styleOverride>
             </styleOverrides>
             <actions>
-              <action name="tempHermes folder delete" id="1333" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="files" type="array" class="java.io.File" length="1">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>tempHermes</string>
-                      </object>
-                    </element>
-                  </property>
-                  <property name="recursive" type="boolean" value="true" />
-                </serializedBean>
-              </action>
-              <action name="Set browser for opening readme in linux" id="4924" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">import com.install4j.runtime.installer.helper.InstallerUtil;
-import com.install4j.runtime.installer.frontend.GUIHelper;
+              <group name="Finisher" id="8043" beanClass="com.install4j.runtime.beans.groups.ActionGroup">
+                <beans>
+                  <action name="tempHermes folder delete" id="1333" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="files" type="array" class="java.io.File" length="1">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>tempHermes</string>
+                          </object>
+                        </element>
+                      </property>
+                      <property name="recursive" type="boolean" value="true" />
+                    </serializedBean>
+                  </action>
+                  <action name="Set browser for opening readme in linux" id="4924" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                    <serializedBean>
+                      <property name="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <property name="value" type="string">import com.install4j.runtime.installer.helper.InstallerUtil;
+                            import com.install4j.runtime.installer.frontend.GUIHelper;
 
-if (!(InstallerUtil.isUnattended() || InstallerUtil.isConsole() || InstallerUtil.isWindows() || InstallerUtil.isMacOS())) {
-    for (String browser : new String[]{"xdg-open", "firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape", "chromium-browser"}) {
-        if (Runtime.getRuntime().exec(new String[]{"which", browser}).waitFor() == 0) {
-            GUIHelper.setBrowserExecutable(browser);
-            break;
-        }
-    }
-}
-return "";</property>
-                    </object>
-                  </property>
-                  <property name="variableName" type="string">BROWSER_DUMMY</property>
-                </serializedBean>
-              </action>
-              <action id="413" beanClass="com.install4j.runtime.beans.actions.finish.ShowFileAction" actionElevationType="none">
-                <serializedBean>
-                  <property name="file">
-                    <object class="java.io.File">
-                      <string>RELEASENOTES.txt</string>
-                    </object>
-                  </property>
-                </serializedBean>
-                <condition>context.getBooleanVariable("showFileAction") &amp;&amp; (!context.isUnattended())</condition>
-              </action>
-              <action id="935" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none">
-                <serializedBean>
-                  <property name="launcherId" type="string">64</property>
-                </serializedBean>
-                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
-              </action>
-              <action name="set root installation dir platform independent" id="5058" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                <serializedBean>
-                  <property name="script">
-                    <object class="com.install4j.api.beans.ScriptProperty">
-                      <property name="value" type="string">return context.getVariable("sys.contentDir").toString();</property>
-                    </object>
-                  </property>
-                  <property name="variableName" type="string">rootInstallDirPI</property>
-                </serializedBean>
-              </action>
-              <action name="Send Analytics" id="5056" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="arguments" type="array" elementType="string" length="1">
-                    <element index="0">${compiler:sys.version}</element>
-                  </property>
-                  <property name="executable">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}installationcomplete.${installer:EXTENSION}</string>
-                    </object>
-                  </property>
-                  <property name="waitForStreams" type="boolean" value="false" />
-                  <property name="workingDirectory">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin</string>
-                    </object>
-                  </property>
-                </serializedBean>
-                <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
-              </action>
-              <action name="Send UpdateIntall Action" id="5057" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="arguments" type="array" elementType="string" length="1">
-                    <element index="0">${compiler:sys.version}</element>
-                  </property>
-                  <property name="executable">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}updateinstallation.${installer:EXTENSION}</string>
-                    </object>
-                  </property>
-                  <property name="waitForStreams" type="boolean" value="false" />
-                  <property name="workingDirectory">
-                    <object class="java.io.File">
-                      <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin</string>
-                    </object>
-                  </property>
-                </serializedBean>
-                <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
-              </action>
-              <action id="5059" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" actionElevationType="elevated">
-                <serializedBean>
-                  <property name="files" type="array" class="java.io.File" length="2">
-                    <element index="0">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}installationcomplete.${installer:EXTENSION}</string>
-                      </object>
-                    </element>
-                    <element index="1">
-                      <object class="java.io.File">
-                        <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}updateinstallation.${installer:EXTENSION}</string>
-                      </object>
-                    </element>
-                  </property>
-                </serializedBean>
-              </action>
+                            if (!(InstallerUtil.isUnattended() || InstallerUtil.isConsole() || InstallerUtil.isWindows() || InstallerUtil.isMacOS())) {
+                            for (String browser : new String[]{"xdg-open", "firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape", "chromium-browser"}) {
+                            if (Runtime.getRuntime().exec(new String[]{"which", browser}).waitFor() == 0) {
+                            GUIHelper.setBrowserExecutable(browser);
+                            break;
+                            }
+                            }
+                            }
+                            return "";</property>
+                        </object>
+                      </property>
+                      <property name="variableName" type="string">BROWSER_DUMMY</property>
+                    </serializedBean>
+                  </action>
+                  <action id="413" beanClass="com.install4j.runtime.beans.actions.finish.ShowFileAction" actionElevationType="none">
+                    <serializedBean>
+                      <property name="file">
+                        <object class="java.io.File">
+                          <string>RELEASENOTES.txt</string>
+                        </object>
+                      </property>
+                    </serializedBean>
+                    <condition>context.getBooleanVariable("showFileAction") &amp;&amp; (!context.isUnattended())</condition>
+                  </action>
+                  <action id="935" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none">
+                    <serializedBean>
+                      <property name="launcherId" type="string">64</property>
+                    </serializedBean>
+                    <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
+                  </action>
+                  <action name="set root installation dir platform independent" id="5058" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                    <serializedBean>
+                      <property name="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <property name="value" type="string">return context.getVariable("sys.contentDir").toString();</property>
+                        </object>
+                      </property>
+                      <property name="variableName" type="string">rootInstallDirPI</property>
+                    </serializedBean>
+                  </action>
+                  <action name="Send Analytics" id="5056" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="arguments" type="array" elementType="string" length="1">
+                        <element index="0">${compiler:sys.version}</element>
+                      </property>
+                      <property name="executable">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}installationcomplete.${installer:EXTENSION}</string>
+                        </object>
+                      </property>
+                      <property name="waitForStreams" type="boolean" value="false" />
+                      <property name="workingDirectory">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin</string>
+                        </object>
+                      </property>
+                    </serializedBean>
+                    <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+                  </action>
+                  <action name="Send UpdateIntall Action" id="5057" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="arguments" type="array" elementType="string" length="1">
+                        <element index="0">${compiler:sys.version}</element>
+                      </property>
+                      <property name="executable">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}updateinstallation.${installer:EXTENSION}</string>
+                        </object>
+                      </property>
+                      <property name="waitForStreams" type="boolean" value="false" />
+                      <property name="workingDirectory">
+                        <object class="java.io.File">
+                          <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin</string>
+                        </object>
+                      </property>
+                    </serializedBean>
+                    <condition>context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+                  </action>
+                  <action id="5059" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" actionElevationType="elevated">
+                    <serializedBean>
+                      <property name="files" type="array" class="java.io.File" length="2">
+                        <element index="0">
+                          <object class="java.io.File">
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}installationcomplete.${installer:EXTENSION}</string>
+                          </object>
+                        </element>
+                        <element index="1">
+                          <object class="java.io.File">
+                            <string>${installer:rootInstallDirPI}${installer:FILE_SEPARATOR}bin${installer:FILE_SEPARATOR}updateinstallation.${installer:EXTENSION}</string>
+                          </object>
+                        </element>
+                      </property>
+                    </serializedBean>
+                  </action>
+                </beans>
+              </group>
             </actions>
             <formComponents>
               <formComponent id="7273" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
@@ -1457,8 +1472,8 @@ return "";</property>
                   <property name="consoleScript">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">String message = context.getMessage("ConfirmUninstall", context.getApplicationName());
-return console.askYesNo(message, true);
-</property>
+                        return console.askYesNo(message, true);
+                      </property>
                     </object>
                   </property>
                 </serializedBean>
@@ -1473,9 +1488,9 @@ return console.askYesNo(message, true);
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">import java.io.File;
 
-    return File.separator;
+                        return File.separator;
 
-</property>
+                      </property>
                     </object>
                   </property>
                   <property name="variableName" type="string">FILE_SEPARATOR</property>
@@ -1486,11 +1501,11 @@ return console.askYesNo(message, true);
                   <property name="script">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">if (Util.isWindows()) {
-    return  "bat";
-} else {
-    return "sh";
-}
-</property>
+                        return  "bat";
+                        } else {
+                        return "sh";
+                        }
+                      </property>
                     </object>
                   </property>
                   <property name="variableName" type="string">EXTENSION</property>
@@ -1523,7 +1538,7 @@ return console.askYesNo(message, true);
                     </object>
                   </property>
                 </serializedBean>
-                <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+                <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
               </action>
               <action id="2201" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" actionElevationType="elevated">
                 <serializedBean>
@@ -1767,23 +1782,28 @@ return console.askYesNo(message, true);
                   <formComponent id="4973" beanClass="com.install4j.runtime.beans.formcomponents.KeyValuePairComponent">
                     <serializedBean>
                       <property name="labelText" type="string">${i18n:updater.CurrentVersionLabel}</property>
-                      <property name="valueLabelColor">
-                        <object class="java.awt.Color">
-                          <int>128</int>
-                          <int>0</int>
-                          <int>0</int>
-                          <int>255</int>
-                        </object>
-                      </property>
-                      <property name="valueLabelFont">
-                        <object class="java.awt.Font">
-                          <string>dialog</string>
-                          <int>1</int>
-                          <int>0</int>
-                        </object>
-                      </property>
-                      <property name="valueLabelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="CUSTOM" />
                       <property name="valueLabelText" type="string">${installer:sys.version}</property>
+                      <property name="valueLabelWidgetStyle" id="LabelWidgetStyle0">
+                        <property name="fontDescriptor">
+                          <property name="font">
+                            <object class="java.awt.Font">
+                              <string>dialog</string>
+                              <int>1</int>
+                              <int>0</int>
+                            </object>
+                          </property>
+                          <property name="fontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="CUSTOM" />
+                        </property>
+                        <property name="foregroundColor">
+                          <object class="java.awt.Color">
+                            <int>128</int>
+                            <int>0</int>
+                            <int>0</int>
+                            <int>255</int>
+                          </object>
+                        </property>
+                      </property>
+                      <property name="valueLabelWidgetStyleId" type="null" />
                     </serializedBean>
                   </formComponent>
                   <group id="4974" beanClass="com.install4j.runtime.beans.groups.HorizontalFormComponentGroup">
@@ -1791,23 +1811,28 @@ return console.askYesNo(message, true);
                       <formComponent id="4975" beanClass="com.install4j.runtime.beans.formcomponents.KeyValuePairComponent">
                         <serializedBean>
                           <property name="labelText" type="string">${i18n:updater.NewVersionLabel}</property>
-                          <property name="valueLabelColor">
-                            <object class="java.awt.Color">
-                              <int>0</int>
-                              <int>128</int>
-                              <int>0</int>
-                              <int>255</int>
-                            </object>
-                          </property>
-                          <property name="valueLabelFont">
-                            <object class="java.awt.Font">
-                              <string>dialog</string>
-                              <int>1</int>
-                              <int>0</int>
-                            </object>
-                          </property>
-                          <property name="valueLabelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="CUSTOM" />
                           <property name="valueLabelText" type="string">${installer:updaterNewVersion}</property>
+                          <property name="valueLabelWidgetStyle" id="LabelWidgetStyle0">
+                            <property name="fontDescriptor">
+                              <property name="font">
+                                <object class="java.awt.Font">
+                                  <string>dialog</string>
+                                  <int>1</int>
+                                  <int>0</int>
+                                </object>
+                              </property>
+                              <property name="fontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="CUSTOM" />
+                            </property>
+                            <property name="foregroundColor">
+                              <object class="java.awt.Color">
+                                <int>0</int>
+                                <int>128</int>
+                                <int>0</int>
+                                <int>255</int>
+                              </object>
+                            </property>
+                          </property>
+                          <property name="valueLabelWidgetStyleId" type="null" />
                         </serializedBean>
                       </formComponent>
                       <formComponent id="4976" beanClass="com.install4j.runtime.beans.formcomponents.HyperlinkActionLabelComponent" insetLeft="5">
@@ -1852,14 +1877,14 @@ return console.askYesNo(message, true);
                   <property name="title" type="string">${i18n:updater.CommentsTitle}</property>
                 </serializedBean>
                 <condition>false // This screen is only shown if the user clicks the "Show comments" hyperlink label in the previous screen.
-</condition>
+                </condition>
                 <validation>if (context.isConsole()) {
-    context.goBackInHistory(1);
-}
-return true;</validation>
+                  context.goBackInHistory(1);
+                  }
+                  return true;</validation>
                 <postActivation>WizardContext wizardContext = context.getWizardContext();
-wizardContext.setNextButtonVisible(false);
-wizardContext.setCancelButtonVisible(false);</postActivation>
+                  wizardContext.setNextButtonVisible(false);
+                  wizardContext.setCancelButtonVisible(false);</postActivation>
                 <formComponents>
                   <formComponent id="7320" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" useExternalParametrization="true" externalParametrizationName="Header" externalParametrizationMode="include">
                     <serializedBean>
@@ -1889,8 +1914,8 @@ wizardContext.setCancelButtonVisible(false);</postActivation>
                       <property name="consoleScript">
                         <object class="com.install4j.api.beans.ScriptProperty">
                           <property name="value" type="string">console.waitForEnter();
-return true;
-</property>
+                            return true;
+                          </property>
                         </object>
                       </property>
                     </serializedBean>
@@ -1903,9 +1928,9 @@ return true;
                   <property name="title" type="string">${i18n:updater.DownloadTitle}</property>
                 </serializedBean>
                 <postActivation>context.getWizardContext().setControlButtonVisible(ControlButtonType.NEXT, false);
-context.getWizardContext().setControlButtonVisible(ControlButtonType.PREVIOUS, false);
-context.goForward(1, true, true);
-</postActivation>
+                  context.getWizardContext().setControlButtonVisible(ControlButtonType.PREVIOUS, false);
+                  context.goForward(1, true, true);
+                </postActivation>
                 <actions>
                   <action name="Download location" id="4983" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
                     <serializedBean>
@@ -1968,13 +1993,13 @@ context.goForward(1, true, true);
                           <property name="script">
                             <object class="com.install4j.api.beans.ScriptProperty">
                               <property name="value" type="string">String installationDirectory = context.getInstallationDirectory().getPath();
-if (context.isUnattended()) {
-    return new String[] {"-q", "-wait", "20", "-dir", installationDirectory};
-} else if (context.isConsole()) {
-    return new String[] {"-c", "-dir", installationDirectory};
-} else {
-    return new String[] {"-dir", installationDirectory};
-}</property>
+                                if (context.isUnattended()) {
+                                return new String[] {"-q", "-wait", "20", "-dir", installationDirectory};
+                                } else if (context.isConsole()) {
+                                return new String[] {"-c", "-dir", installationDirectory};
+                                } else {
+                                return new String[] {"-dir", installationDirectory};
+                                }</property>
                             </object>
                           </property>
                           <property name="variableName" type="string">installerArguments</property>
@@ -2055,6 +2080,344 @@ if (context.isUnattended()) {
           </group>
         </screens>
       </application>
+      <application name="MacOS Installer Helper" id="7981" beanClass="com.install4j.runtime.beans.applications.CustomApplication" automaticLauncherIntegration="true" launchMode="startupSync" launchSchedule="always" allLaunchers="false">
+        <serializedBean>
+          <property name="executableName" type="string">SoapuIMacOsInstallerHelper</property>
+          <property name="windowTitle" type="string">${compiler:sys.fullName}</property>
+        </serializedBean>
+        <launcherIds>
+          <launcher id="7979" />
+        </launcherIds>
+        <startup>
+          <screen id="7982" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
+            <actions>
+              <action id="7983" beanClass="com.install4j.runtime.beans.actions.control.RunScriptAction" rollbackBarrierExitCode="0" failureStrategy="quit" errorMessage="Application is running from a read-only volume (likely a mounted DMG). Please drag the application to a writeable destination to continue.">
+                <serializedBean>
+                  <property name="script">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <property name="value" type="string">import java.nio.file.FileStore;
+                        import java.nio.file.Files;
+                        import java.nio.file.Path;
+                        import java.nio.file.Paths;
+
+                        try {
+                        // Get the path to the current launcher
+                        String launcherPath = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+
+                        // Resolve the parent directory (e.g., /Volumes/MyApp)
+                        Path parentPath = Paths.get(launcherPath).getParent();
+
+                        // Get the FileStore representing the mounted volume
+                        FileStore store = Files.getFileStore(parentPath);
+
+                        // Check if the volume is read-only
+                        if (store.isReadOnly()) {
+                        context.setVariable("readOnlyDestination", true);
+                        return false;
+                        }
+
+                        } catch (Exception e) {
+                        e.printStackTrace();
+                        context.setVariable("readOnlyDestination", true);
+                        return false;
+                        }
+
+                        context.setVariable("readOnlyDestination", false);
+                        return true;</property>
+                    </object>
+                  </property>
+                </serializedBean>
+              </action>
+              <action name="Quit_Installer" id="7984" beanClass="com.install4j.runtime.beans.actions.control.RunScriptAction" rollbackBarrierExitCode="0" failureStrategy="quit">
+                <serializedBean>
+                  <property name="script">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <property name="value" type="string">import java.nio.file.Path;
+                        import java.nio.file.Paths;
+                        import java.nio.file.Files;
+
+                        String contentDir = Objects.toString(context.getVariable("sys.contentDir"));
+                        Path path = Paths.get(contentDir);
+                        Path mainAppBundleDir = path.getParent().getParent();
+
+                        Path placeholderFile = mainAppBundleDir.resolve(".installdone");
+
+                        return !placeholderFile.toFile().exists();</property>
+                    </object>
+                  </property>
+                </serializedBean>
+              </action>
+              <action id="8052" beanClass="com.install4j.runtime.beans.actions.update.ShutdownCallingLauncherAction" enabled="false" actionElevationType="none" rollbackBarrierExitCode="0" failureStrategy="quit">
+                <condition>Boolean.valueOf(Objects.toString(context.getVariable("readOnlyDestination")))</condition>
+              </action>
+              <link id="7985" targetId="186" />
+            </actions>
+          </screen>
+        </startup>
+        <screens>
+          <screen id="7986" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" styleId="7381" rollbackBarrierExitCode="0">
+            <styleOverrides>
+              <styleOverride name="Customize banner image" enabled="true">
+                <group id="7991" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
+                  <serializedBean>
+                    <property name="backgroundColor">
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>49</int>
+                          <int>52</int>
+                          <int>53</int>
+                          <int>255</int>
+                        </object>
+                      </object>
+                    </property>
+                    <property name="borderSides">
+                      <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                        <property name="bottom" type="boolean" value="true" />
+                      </object>
+                    </property>
+                    <property name="imageAnchor" type="enum" class="com.install4j.api.beans.Anchor" value="WEST" />
+                    <property name="imageEdgeBackgroundColor">
+                      <object class="java.awt.Color">
+                        <int>239</int>
+                        <int>240</int>
+                        <int>240</int>
+                        <int>255</int>
+                      </object>
+                    </property>
+                    <property name="imageFile">
+                      <object class="com.install4j.api.beans.ExternalFile">
+                        <string>./resources/images/panel_164x321_soapUI-CORE.png</string>
+                      </object>
+                    </property>
+                    <property name="insets">
+                      <object class="java.awt.Insets">
+                        <int>5</int>
+                        <int>10</int>
+                        <int>10</int>
+                        <int>10</int>
+                      </object>
+                    </property>
+                  </serializedBean>
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
+            </styleOverrides>
+            <actions>
+              <link id="7992" targetId="4627" />
+            </actions>
+            <formComponents>
+              <formComponent id="7987" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                <serializedBean>
+                  <property name="labelText" type="string">${form:welcomeMessage}</property>
+                </serializedBean>
+                <visibilityScript>!context.isConsole()</visibilityScript>
+              </formComponent>
+              <formComponent id="7988" beanClass="com.install4j.runtime.beans.formcomponents.ConsoleHandlerFormComponent">
+                <serializedBean>
+                  <property name="consoleScript">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <property name="value" type="string">String message = context.getMessage("ConsoleWelcomeLabel", context.getApplicationName());
+                        return console.askOkCancel(message, true);
+                      </property>
+                    </object>
+                  </property>
+                </serializedBean>
+              </formComponent>
+              <formComponent id="7989" beanClass="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationChooserComponent" useExternalParametrization="true" externalParametrizationName="Streamlined installation chooser" externalParametrizationMode="include">
+                <externalParametrizationPropertyNames>
+                  <propertyName>streamlinedInstallationStrategy</propertyName>
+                </externalParametrizationPropertyNames>
+              </formComponent>
+              <formComponent id="7990" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
+                <serializedBean>
+                  <property name="labelText" type="string">${form:footerMessage}</property>
+                </serializedBean>
+                <visibilityScript>!context.isConsole()</visibilityScript>
+              </formComponent>
+            </formComponents>
+          </screen>
+          <screen id="7993" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" rollbackBarrier="true">
+            <actions>
+              <link id="8034" targetId="1477" />
+              <link id="8035" targetId="1337" />
+              <link id="8036" targetId="1220" />
+              <link id="8038" targetId="8037" />
+              <action id="8011" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="launcherId" type="string">7979</property>
+                  <property name="vmOptions" type="array" elementType="string" length="48">
+                    <element index="0">-XX:MinHeapFreeRatio=20</element>
+                    <element index="1">-XX:MaxHeapFreeRatio=40</element>
+                    <element index="2">-Xms128m</element>
+                    <element index="3">-Xmx${installer:xmx}m</element>
+                    <element index="4">-Dsoapui.properties=soapui.properties</element>
+                    <element index="5">-Dsoapui.home=${installer:rootInstallDir}/bin</element>
+                    <element index="6">-Dsoapui.ext.libraries=${installer:rootInstallDir}/bin/ext</element>
+                    <element index="7">-Dsoapui.ext.listeners=${installer:rootInstallDir}/bin/listeners</element>
+                    <element index="8">-Dsoapui.ext.actions=${installer:rootInstallDir}/bin/actions</element>
+                    <element index="9">-Dwsi.dir=${installer:rootInstallDir}/wsi-test-tools</element>
+                    <element index="10">-Djava.library.path=${installer:rootInstallDir}/bin</element>
+                    <element index="11">-Djava.util.Arrays.useLegacyMergeSort=true</element>
+                    <element index="12">-splash:SoapUI-Spashscreen.png</element>
+                    <element index="13">-Dlog4j2.formatMsgNoLookups=true</element>
+                    <element index="14">--add-opens</element>
+                    <element index="15">java.base/java.lang=ALL-UNNAMED</element>
+                    <element index="16">--add-opens</element>
+                    <element index="17">java.base/java.lang.invoke=ALL-UNNAMED</element>
+                    <element index="18">--add-opens</element>
+                    <element index="19">java.desktop/java.beans=ALL-UNNAMED</element>
+                    <element index="20">--add-opens</element>
+                    <element index="21">java.desktop/javax.swing.plaf=ALL-UNNAMED</element>
+                    <element index="22">--add-opens</element>
+                    <element index="23">java.desktop/javax.swing.plaf.basic=ALL-UNNAMED</element>
+                    <element index="24">--add-opens</element>
+                    <element index="25">java.base/java.util=ALL-UNNAMED</element>
+                    <element index="26">--add-opens</element>
+                    <element index="27">java.base/java.lang.reflect=ALL-UNNAMED</element>
+                    <element index="28">--add-opens</element>
+                    <element index="29">java.base/java.util.concurrent.atomic=ALL-UNNAMED</element>
+                    <element index="30">--add-opens</element>
+                    <element index="31">java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED</element>
+                    <element index="32">--add-opens</element>
+                    <element index="33">java.base/java.net=ALL-UNNAMED</element>
+                    <element index="34">--add-opens</element>
+                    <element index="35">java.desktop/java.awt=ALL-UNNAMED</element>
+                    <element index="36">--add-opens</element>
+                    <element index="37">java.desktop/javax.swing=ALL-UNNAMED</element>
+                    <element index="38">--add-opens</element>
+                    <element index="39">java.base/sun.net.www=ALL-UNNAMED</element>
+                    <element index="40">--add-opens</element>
+                    <element index="41">java.base/sun.net.www.protocol.https=ALL-UNNAMED</element>
+                    <element index="42">--add-opens</element>
+                    <element index="43">java.base/sun.net.www.protocol.http=ALL-UNNAMED</element>
+                    <element index="44">--add-opens</element>
+                    <element index="45">jdk.jdi/com.sun.jdi=ALL-UNNAMED</element>
+                    <element index="46">--add-opens</element>
+                    <element index="47">java.prefs/java.util.prefs=ALL-UNNAMED</element>
+                  </property>
+                </serializedBean>
+              </action>
+              <action name="SetMacLookAndFeel" id="8012" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="launcherId" type="string">7979</property>
+                  <property name="vmOptions" type="array" elementType="string" length="2">
+                    <element index="0">-Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel</element>
+                    <element index="1">-Dapple.eawt.quitStrategy=CLOSE_ALL_WINDOWS</element>
+                  </property>
+                </serializedBean>
+                <condition>//for mac only
+                  if (Util.isMacOS())
+                  return true;
+                  else
+                  return false;</condition>
+              </action>
+              <link id="8040" targetId="8039" />
+              <action id="8013" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="encoding" type="string" />
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>tempHermes${installer:FILE_SEPARATOR}script.xml</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="replaceValue" type="string">${installer:sys.installationDir}${installer:FILE_SEPARATOR}hermesJMS</property>
+                  <property name="searchValue" type="string">wheretoinstall</property>
+                </serializedBean>
+              </action>
+              <action name="Set mode for MAC" id="8015" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" actionElevationType="elevated">
+                <serializedBean>
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>tempHermes/hermesInstallMAC.${installer:EXTENSION}</string>
+                      </object>
+                    </element>
+                  </property>
+                  <property name="mode" type="string">755</property>
+                </serializedBean>
+                <condition>return context.getInstallationComponentById("1263").isSelected();</condition>
+              </action>
+              <link id="8042" targetId="8041" />
+            </actions>
+            <formComponents>
+              <formComponent id="8033" beanClass="com.install4j.runtime.beans.formcomponents.ProgressComponent">
+                <serializedBean>
+                  <property name="initialStatusMessage" type="string">${i18n:WizardPreparing}</property>
+                </serializedBean>
+              </formComponent>
+            </formComponents>
+          </screen>
+          <screen id="8044" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" styleId="7381" rollbackBarrierExitCode="0" finishScreen="true">
+            <actions>
+              <action id="8047" beanClass="com.install4j.runtime.beans.actions.files.MoveFileAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="destinationFile">
+                    <object class="java.io.File">
+                      <string>${installer:sys.contentDir}/../../vmoptions.txt</string>
+                    </object>
+                  </property>
+                  <property name="files" type="array" class="java.io.File" length="1">
+                    <element index="0">
+                      <object class="java.io.File">
+                        <string>${installer:sys.installationDir}/${compiler:sys.shortName}-${compiler:sys.version}.vmoptions</string>
+                      </object>
+                    </element>
+                  </property>
+                </serializedBean>
+              </action>
+              <link id="8046" targetId="8043" />
+              <action name="Set installdone file" id="8048" beanClass="com.install4j.runtime.beans.actions.control.RunScriptAction" rollbackBarrierExitCode="0" failureStrategy="quit">
+                <serializedBean>
+                  <property name="script">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <property name="value" type="string">import java.nio.file.Path;
+                        import java.nio.file.Paths;
+                        import java.nio.file.Files;
+
+                        String contentDir = Objects.toString(context.getVariable("sys.contentDir"));
+                        Path path = Paths.get(contentDir);
+                        Path mainAppBundleDir = path.getParent().getParent();
+
+                        Path placeholderFile = mainAppBundleDir.resolve(".installdone");
+
+                        try {
+                        // Create the file if it doesn't exist
+                        if (Files.notExists(placeholderFile)) {
+                        Files.createFile(placeholderFile);
+                        }
+                        } catch (IOException e) {
+                        System.err.println("Error creating file: " + e.getMessage());
+                        return false;
+                        }
+                        return true;</property>
+                    </object>
+                  </property>
+                </serializedBean>
+              </action>
+              <action id="8049" beanClass="com.install4j.runtime.beans.actions.update.ShutdownCallingLauncherAction" actionElevationType="none" rollbackBarrierExitCode="0" />
+            </actions>
+            <formComponents>
+              <formComponent id="8045" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
+                <serializedBean>
+                  <property name="labelText" type="string">${form:finishedMessage}</property>
+                </serializedBean>
+              </formComponent>
+            </formComponents>
+          </screen>
+        </screens>
+      </application>
     </applications>
     <styles defaultStyleId="7375">
       <style name="Standard" id="7375" beanClass="com.install4j.runtime.beans.styles.FormStyle">
@@ -2113,20 +2476,19 @@ if (context.isUnattended()) {
               <property name="imageEdgeBackgroundColor">
                 <object class="com.install4j.runtime.beans.LightOrDarkColor">
                   <object class="java.awt.Color">
-                    <int>25</int>
+                    <int>27</int>
                     <int>143</int>
                     <int>220</int>
                     <int>255</int>
                   </object>
                   <object class="java.awt.Color">
                     <int>0</int>
-                    <int>74</int>
-                    <int>151</int>
+                    <int>73</int>
+                    <int>150</int>
                     <int>255</int>
                   </object>
                 </object>
               </property>
-              <property name="imageEdgeBorder" type="boolean" value="true" />
               <property name="imageFile">
                 <object class="com.install4j.api.beans.ExternalFile">
                   <string>${compiler:sys.install4jHome}/resource/styles/wizard.png</string>
@@ -2144,9 +2506,14 @@ if (context.isUnattended()) {
             <beans>
               <formComponent id="7383" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent" insetTop="0">
                 <serializedBean>
-                  <property name="labelFontSizePercent" type="int" value="130" />
-                  <property name="labelFontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
-                  <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                  <property name="labelWidgetStyle" id="LabelWidgetStyle0">
+                    <property name="fontDescriptor">
+                      <property name="fontSizePercent" type="int" value="130" />
+                      <property name="fontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
+                      <property name="fontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                    </property>
+                  </property>
+                  <property name="labelWidgetStyleId" type="null" />
                 </serializedBean>
               </formComponent>
               <formComponent id="7384" beanClass="com.install4j.runtime.beans.formcomponents.SeparatorComponent" />
@@ -2224,8 +2591,13 @@ if (context.isUnattended()) {
                 <beans>
                   <formComponent name="Title" id="7390" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent">
                     <serializedBean>
-                      <property name="labelFontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
-                      <property name="labelFontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                      <property name="labelWidgetStyle" id="LabelWidgetStyle0">
+                        <property name="fontDescriptor">
+                          <property name="fontStyle" type="enum" class="com.install4j.runtime.beans.formcomponents.FontStyle" value="BOLD" />
+                          <property name="fontType" type="enum" class="com.install4j.runtime.beans.formcomponents.FontType" value="DERIVED" />
+                        </property>
+                      </property>
+                      <property name="labelWidgetStyleId" type="null" />
                     </serializedBean>
                   </formComponent>
                   <formComponent name="Subtitle" id="7391" beanClass="com.install4j.runtime.beans.styles.ScreenTitleComponent" insetLeft="8">
@@ -2290,27 +2662,11 @@ if (context.isUnattended()) {
         </beans>
       </group>
     </styles>
+    <widgetStyles defaultWidgetStyleId="298">
+      <widgetStyle name="Standard" id="298" beanClass="com.install4j.runtime.beans.widgets.WidgetStyleCollection" />
+    </widgetStyles>
   </installerGui>
   <mediaSets>
-    <macos name="Mac OS X x64" id="198" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" launcherId="64">
-      <exclude>
-        <entry filesetId="1658" />
-        <entry filesetId="1843" />
-        <entry filesetId="1573" />
-        <entry filesetId="1859" />
-        <entry filesetId="7717" />
-        <entry filesetId="7965" />
-        <entry filesetId="7971" />
-      </exclude>
-      <variables>
-        <variable name="OS_EXT" value="MAC" />
-      </variables>
-      <jreBundle>
-        <modules>
-          <module name="jdk.jdi" />
-        </modules>
-      </jreBundle>
-    </macos>
     <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" runPostProcessor="true" postProcessor="&quot;C:\dev\eviware-cert\signtool.exe&quot; sign /s my /fd sha256 /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /v $EXECUTABLE" architecture="64">
       <exclude>
         <entry filesetId="1841" />
@@ -2339,7 +2695,26 @@ if (context.isUnattended()) {
         <variable name="32-BIT-INSTALLER" value="false" />
       </variables>
     </unixInstaller>
-    <macos name="Mac OS X ARM" id="7975" mediaFileName="SoapUI-arm64-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" architecture="aarch64" launcherId="64">
+    <macosArchive name="macOS x64 Single Bundle Archive" id="7975" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" includeAllDownloadableComponents="false" volumeName="SoapUI-x64-${compiler:sys.version}" architecture="amd64" launcherId="7979" executeSetupApp="true" setupAppId="7981" setupLaunchInNewProcess="true">
+      <exclude>
+        <entry filesetId="1658" />
+        <entry filesetId="1843" />
+        <entry filesetId="1573" />
+        <entry filesetId="1859" />
+        <entry filesetId="7717" />
+        <entry filesetId="7965" />
+        <entry filesetId="7971" />
+      </exclude>
+      <variables>
+        <variable name="OS_EXT" value="MAC" />
+      </variables>
+      <jreBundle>
+        <modules>
+          <module name="jdk.jdi" />
+        </modules>
+      </jreBundle>
+    </macosArchive>
+    <macosArchive name="macOS arm64 Single Bundle Archive" id="7978" mediaFileName="SoapUI-arm64-${compiler:VERSION_NUMBER}" includeAllDownloadableComponents="false" volumeName="SoapUI-arm64-${compiler:sys.version}" launcherId="7979" executeSetupApp="true" setupAppId="7981" setupLaunchInNewProcess="true">
       <exclude>
         <entry filesetId="1658" />
         <entry filesetId="1843" />
@@ -2357,7 +2732,7 @@ if (context.isUnattended()) {
           <module name="jdk.jdi" />
         </modules>
       </jreBundle>
-    </macos>
+    </macosArchive>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="196" />
