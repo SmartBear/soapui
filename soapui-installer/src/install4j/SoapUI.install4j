@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="12.0.2" transformSequenceNumber="12">
+<install4j version="10.0.9" transformSequenceNumber="10">
   <directoryPresets config="./resources/images" />
   <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" autoSave="true" convertDotsToUnderscores="false" macVolumeId="11e3ac6b2ec2ffac" javaMinVersion="1.8">
     <variables>
@@ -343,12 +343,6 @@
           <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
               <action id="4626" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" />
-              <action id="8053" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none" />
-              <action id="7974" beanClass="com.install4j.runtime.beans.actions.control.SetInstallationDirectoryAction" actionElevationType="none">
-                <serializedBean>
-                  <property name="searchForPreviousInstallation" type="boolean" value="false" />
-                </serializedBean>
-              </action>
               <action name="Set memory calculation for vmoptions" id="186" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
                 <serializedBean>
                   <property name="script">
@@ -392,7 +386,7 @@
             </styleOverrides>
             <actions>
               <action id="4627" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
-                <condition>context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+                <condition>context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
               </action>
             </actions>
             <formComponents>
@@ -412,14 +406,6 @@
                     </object>
                   </property>
                 </serializedBean>
-              </formComponent>
-              <formComponent id="5492" beanClass="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationChooserComponent" useExternalParametrization="true" externalParametrizationName="Update Alert" externalParametrizationMode="include">
-                <serializedBean>
-                  <property name="streamlinedInstallationStrategy" type="enum" class="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationStrategy" value="UPDATE_ONLY" />
-                </serializedBean>
-                <externalParametrizationPropertyNames>
-                  <propertyName>streamlinedInstallationStrategy</propertyName>
-                </externalParametrizationPropertyNames>
               </formComponent>
               <formComponent id="5493" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
                 <serializedBean>
@@ -461,7 +447,7 @@
             </formComponents>
           </screen>
           <screen id="3" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen">
-            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+            <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
             <actions>
               <action id="4" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" multiExec="true">
                 <condition>context.getVariable("sys.responseFile") == null</condition>
@@ -609,7 +595,7 @@
             <serializedBean>
               <property name="programGroupName" type="string">SmartBear\${compiler:sys.fullName}</property>
             </serializedBean>
-            <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+            <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
           </screen>
           <screen id="430" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen">
             <formComponents>
@@ -716,10 +702,9 @@
                       <property name="variableName" type="string">JreLib</property>
                     </serializedBean>
                   </action>
-                  <action id="470" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDefaultStartMenuEntriesAction" actionElevationType="elevated">
+                  <action id="470" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated">
                     <serializedBean>
-                      <property name="folderName" type="string">${installer:sys.programGroupName}</property>
-                      <property name="linkDirectory" type="string">${installer:sys.symlinkDir}</property>
+                      <property name="addUninstaller" type="boolean" value="true" />
                       <property name="programGroupEntryConfigs">
                         <add>
                           <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
@@ -747,6 +732,7 @@
                           </object>
                         </add>
                       </property>
+                      <property name="uninstallerMenuName" type="string">${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</property>
                     </serializedBean>
                     <condition>!context.getBooleanVariable("sys.programGroupDisabled")</condition>
                   </action>
@@ -843,6 +829,7 @@
               <action id="1073" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="launcherId" type="string">64</property>
+                  <property name="macosVmOptionsType" type="enum" class="com.install4j.runtime.beans.actions.misc.MacosVmOptionsType" value="OUTER" />
                   <property name="vmOptions" type="array" elementType="string" length="48">
                     <element index="0">-XX:MinHeapFreeRatio=20</element>
                     <element index="1">-XX:MaxHeapFreeRatio=40</element>
@@ -1538,7 +1525,7 @@
                     </object>
                   </property>
                 </serializedBean>
-                <condition>!context.getBooleanVariable("sys.streamlinedInstallation")</condition>
+                <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
               </action>
               <action id="2201" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" actionElevationType="elevated">
                 <serializedBean>
@@ -2233,11 +2220,6 @@
                   </property>
                 </serializedBean>
               </formComponent>
-              <formComponent id="7989" beanClass="com.install4j.runtime.beans.formcomponents.StreamlinedInstallationChooserComponent" useExternalParametrization="true" externalParametrizationName="Streamlined installation chooser" externalParametrizationMode="include">
-                <externalParametrizationPropertyNames>
-                  <propertyName>streamlinedInstallationStrategy</propertyName>
-                </externalParametrizationPropertyNames>
-              </formComponent>
               <formComponent id="7990" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetTop="20">
                 <serializedBean>
                   <property name="labelText" type="string">${form:footerMessage}</property>
@@ -2662,9 +2644,6 @@
         </beans>
       </group>
     </styles>
-    <widgetStyles defaultWidgetStyleId="298">
-      <widgetStyle name="Standard" id="298" beanClass="com.install4j.runtime.beans.widgets.WidgetStyleCollection" />
-    </widgetStyles>
   </installerGui>
   <mediaSets>
     <windows name="Windows x64" id="1215" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" runPostProcessor="true" postProcessor="&quot;C:\dev\eviware-cert\signtool.exe&quot; sign /s my /fd sha256 /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /v $EXECUTABLE" architecture="64">
@@ -2695,7 +2674,7 @@
         <variable name="32-BIT-INSTALLER" value="false" />
       </variables>
     </unixInstaller>
-    <macosArchive name="macOS x64 Single Bundle Archive" id="7975" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" includeAllDownloadableComponents="false" volumeName="SoapUI-x64-${compiler:sys.version}" architecture="amd64" launcherId="7979" executeSetupApp="true" setupAppId="7981" setupLaunchInNewProcess="true">
+    <macosArchive name="macOS x64 Single Bundle Archive" id="7975" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" includeAllDownloadableComponents="false" volumeName="SoapUI-x64-${compiler:sys.version}" launcherId="7979" executeSetupApp="true" setupAppId="7981" setupLaunchInNewProcess="true">
       <exclude>
         <entry filesetId="1658" />
         <entry filesetId="1843" />
@@ -2714,7 +2693,7 @@
         </modules>
       </jreBundle>
     </macosArchive>
-    <macosArchive name="macOS arm64 Single Bundle Archive" id="7978" mediaFileName="SoapUI-arm64-${compiler:VERSION_NUMBER}" includeAllDownloadableComponents="false" volumeName="SoapUI-arm64-${compiler:sys.version}" launcherId="7979" executeSetupApp="true" setupAppId="7981" setupLaunchInNewProcess="true">
+    <macosArchive name="macOS arm64 Single Bundle Archive" id="7978" mediaFileName="SoapUI-arm64-${compiler:VERSION_NUMBER}" includeAllDownloadableComponents="false" volumeName="SoapUI-arm64-${compiler:sys.version}" architecture="aarch64" launcherId="7979" executeSetupApp="true" setupAppId="7981" setupLaunchInNewProcess="true">
       <exclude>
         <entry filesetId="1658" />
         <entry filesetId="1843" />
