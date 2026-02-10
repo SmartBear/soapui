@@ -45,9 +45,9 @@ if [ -f "$SOAPUI_HOME/jre/bin/java" ]
 then
   JAVA=$SOAPUI_HOME/jre/bin/java
 else
-    if [ -f "$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java" ]
+    if [ -f "$SOAPUI_HOME/../../Resources/jre.bundle/Contents/Home/bin/java" ]
     then
-        JAVA=$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java
+        JAVA=$SOAPUI_HOME/../../Resources/jre.bundle/Contents/Home/bin/java
     else
         JAVA=java
     fi
