@@ -22,17 +22,18 @@ import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequestSettings;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.htmlunit.BrowserVersion;
+import org.htmlunit.FailingHttpStatusCodeException;
+import org.htmlunit.WebClient;
+import org.htmlunit.WebRequest;
+import org.htmlunit.html.HtmlElement;
+import org.htmlunit.html.HtmlPage;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +41,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class HTMLPageSourceDownloader {
-    WebClient client = new WebClient();
+    WebClient client = new WebClient(new BrowserVersion.BrowserVersionBuilder(BrowserVersion.FIREFOX)
+            .setUserAgent("Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0")
+            .build());
     List<String> missingResourcesList = new ArrayList<>();
     public static final String MISSING_RESOURCES_LIST = "MissingResourcesList";
 
@@ -56,7 +59,7 @@ public class HTMLPageSourceDownloader {
     List<Attachment> attachmentList = new ArrayList<>();
 
     protected List<Attachment> downloadCssAndImages(String endpoint, HttpRequest request)
-            throws MalformedURLException, IOException {
+            throws IOException {
         HtmlPage htmlPage = client.getPage(endpoint);
         String xPathExpression = "//*[name() = 'img' or name() = 'link' and @type = 'text/css']";
         List<?> resultList = htmlPage.getByXPath(xPathExpression);
@@ -98,9 +101,10 @@ public class HTMLPageSourceDownloader {
     }
 
     public Attachment createAttachment(byte[] bytes, URL url, Request request) throws IOException {
-        String fileName = url.getPath()
-                .substring(url.getPath().lastIndexOf("/") + 1, url.getPath().lastIndexOf("."));
-        String extension = url.getPath().substring(url.getPath().lastIndexOf("."));
+        String path = url.getPath();
+        int endIndex = path.lastIndexOf(".") == -1 ? path.length() : path.lastIndexOf(".");
+        String fileName = path.substring(path.lastIndexOf("/") + 1, endIndex);
+        String extension = path.substring(endIndex);
 
         // handling -> java.lang.IllegalArgumentException: Prefix string too short
         if (fileName.length() < 3) {
@@ -108,20 +112,18 @@ public class HTMLPageSourceDownloader {
         }
 
         File temp = File.createTempFile(fileName, extension);
-        OutputStream out = new FileOutputStream(temp);
-        out.write(bytes);
-        out.close();
+        FileUtils.writeByteArrayToFile(temp, bytes);
         return new RequestFileAttachment(temp, false, (AbstractHttpRequest<?>) request);
     }
 
     private byte[] downloadResource(HtmlPage page, HtmlElement htmlElement, URL url) throws IOException {
-        WebRequestSettings wrs = null;
+        WebRequest wrs = new WebRequest(url);
 
-        wrs = new WebRequestSettings(url);
-        wrs.setAdditionalHeader("Referer", page.getWebResponse().getRequestSettings().getUrl().toString());
+        wrs.setAdditionalHeader("Referer", page.getWebResponse().getWebRequest().getUrl().toString());
         client.addRequestHeader("Accept", acceptTypes.get(htmlElement.getTagName().toLowerCase()));
-        return client.getPage(wrs).getWebResponse().getContentAsBytes();
-
+        try (InputStream stream = client.getPage(wrs).getWebResponse().getContentAsStream()) {
+            return IOUtils.toByteArray(stream);
+        }
     }
 
     public List<String> getMissingResourcesList() {
