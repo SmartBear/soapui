@@ -117,6 +117,12 @@
             <version>${hamcrest-all.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- XML Beans -->
 
@@ -411,7 +417,7 @@
         <!-- HtmlUnit dependencies -->
 
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
+            <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
             <version>${htmlunit.version}</version>
             <exclusions>
@@ -427,7 +433,7 @@
             <version>${sac.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
+            <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit-core-js</artifactId>
             <version>${htmlunit.version}</version>
         </dependency>
