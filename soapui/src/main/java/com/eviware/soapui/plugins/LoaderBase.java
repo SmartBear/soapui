@@ -31,11 +31,9 @@ import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
 import org.apache.commons.lang.ObjectUtils;
 import org.reflections.Reflections;
-import org.reflections.adapters.JavaReflectionAdapter;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import org.reflections.vfs.Vfs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,8 +99,8 @@ public class LoaderBase {
     protected void loadAutoFactories(Reflections jarFileScanner, Collection<SoapUIFactory> factories) {
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.addUrls(ClasspathHelper.forClass(AutoFactory.class));
-        builder.setScanners(new SubTypesScanner(), new TypeAnnotationsScanner());
-        builder.addClassLoader(Thread.currentThread().getContextClassLoader());
+        builder.setScanners(Scanners.SubTypes, Scanners.TypesAnnotated);
+        builder.addClassLoaders(Thread.currentThread().getContextClassLoader());
         Reflections autoAnnotationFinder = new Reflections(builder);
 
         for (Class clazz : autoAnnotationFinder.getTypesAnnotatedWith(AutoFactory.class)) {
@@ -373,35 +371,4 @@ public class LoaderBase {
         return annotation != null && StringUtils.hasContent(annotation.toolbarIcon());
     }
 
-    // due to Reflections internals (or my misunderstanding of them) this class has to be
-    // named as its superclass
-    protected static class TypeAnnotationsScanner extends org.reflections.scanners.TypeAnnotationsScanner {
-        @Override
-        public boolean acceptsInput(String file) {
-            if (file.endsWith(".groovy")) {
-                return true;
-            } else {
-                return super.acceptsInput(file);
-            }
-        }
-    }
-
-    // loads both groovy and java classes for Reflections package
-    protected static class GroovyAndJavaReflectionAdapter extends JavaReflectionAdapter {
-
-        private final JarClassLoader jarClassLoader;
-
-        public GroovyAndJavaReflectionAdapter(JarClassLoader jarClassLoader) {
-            this.jarClassLoader = jarClassLoader;
-        }
-
-        @Override
-        public Class getOfCreateClassObject(Vfs.File file) throws Exception {
-            if (file.getName().endsWith(".groovy")) {
-                return jarClassLoader.loadScriptClass(file.getRelativePath());
-            } else {
-                return super.getOfCreateClassObject(file, jarClassLoader);
-            }
-        }
-    }
 }

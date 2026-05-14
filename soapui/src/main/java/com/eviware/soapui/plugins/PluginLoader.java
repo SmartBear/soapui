@@ -61,12 +61,13 @@ public class PluginLoader extends LoaderBase {
         tempFile.deleteOnExit();
         FileUtils.copyFile(pluginFile, tempFile);
         JarClassLoader jarClassLoader = new JarClassLoader(tempFile, PluginLoader.class.getClassLoader(), dependencyClassLoaders);
-        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder().setUrls(jarClassLoader.getURLs()).addClassLoader(jarClassLoader);
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+                .setUrls(jarClassLoader.getURLs())
+                .addClassLoaders(jarClassLoader);
 
         if (jarClassLoader.hasScripts()) {
-            configurationBuilder.addClassLoader(jarClassLoader.getScriptClassLoader());
-            configurationBuilder.addScanners(new TypeAnnotationsScanner());
-            configurationBuilder.setMetadataAdapter(new GroovyAndJavaReflectionAdapter(jarClassLoader));
+            configurationBuilder.addClassLoaders(jarClassLoader.getScriptClassLoader())
+                    .addScanners(new TypeAnnotationsScanner());
         }
 
         return new ReflectionsAndClassLoader(new Reflections(configurationBuilder), jarClassLoader);
