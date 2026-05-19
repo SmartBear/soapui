@@ -216,9 +216,9 @@ public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
     public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
-    public final static Logger log = LogManager.getLogger(SoapUI.class);
-    public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
-    public final static String PRODUCT_NAME = "SoapUI";
+    public static final Logger log = LogManager.getLogger(SoapUI.class);
+    public static final String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
+    public static final String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
     public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
     public static final String SOAPUI_ABOUT = "SoapUI-blank.png";
@@ -286,7 +286,7 @@ public class SoapUI {
     private static JPanel endpointExplorerButtonPanel;
     private static JButton endpointExplorerButton;
 
-    private final static ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+    private static final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(
             getMaxThreadpoolSize(), new SoapUIThreadCreator());
     private JTextField searchField;
     private static JToggleButton applyProxyButton;
@@ -1169,8 +1169,6 @@ public class SoapUI {
         }
 
         Analytics.trackSessionStop();
-        Analytics.trackAction(AnalyticsManager.Category.MIXPANEL_PROFILE, null, UniqueUserIdentifier.getInstance().prepareUserProfile());
-
         shutdown();
 
         return true;
