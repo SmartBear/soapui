@@ -142,8 +142,8 @@
 
         <!-- Swagger/OpenAPI -->
 
-        <io.swagger.swagger-parser.version>1.0.54</io.swagger.swagger-parser.version>
-        <io.swagger.swagger-core.version>1.6.2</io.swagger.swagger-core.version>
+        <io.swagger.swagger-parser.version>1.0.75</io.swagger.swagger-parser.version>
+        <io.swagger.swagger-core.version>1.6.16</io.swagger.swagger-core.version>
     </properties>
 
     <modules>
