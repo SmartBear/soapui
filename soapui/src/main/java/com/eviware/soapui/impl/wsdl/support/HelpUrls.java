@@ -39,8 +39,8 @@ public interface HelpUrls {
 
     public static final String MISSING_URL = "/missing-url.html";
 
-    public static final String SMARTBEAR_WEB_SITE_START_PAGE = "http://www.smartbear.com";
-    public static final String SMARTBEAR_PRIVACY_POLICY_URL = "/privacy";
+    public static final String SMARTBEAR_WEB_SITE_START_PAGE = "https://www.smartbear.com";
+    public static final String SMARTBEAR_PRIVACY_POLICY_URL = "/privacy/";
 
     public static final String ADDMOCKOPERATIONASMOCKRESPONSESTEP_HELP_URL = "/Service-Mocking/mocking-soap-services.html";
     public static final String ADDMOCKRESPONSETOTESTCASE_HELP_URL = "/Service-Mocking/mocking-soap-services.html";
@@ -49,7 +49,6 @@ public interface HelpUrls {
     public static final String ADD_AUTHORIZATION = "/OAuth/add-authorization.html";
     public static final String ALERT_SITE_HELP_URL = "http://help.alertsite.com/WebHome";
     public static final String AMF_REQUEST_HEADERS_HELP_URL = "/amf/reference/the-amf-request-window.html";
-    public static final String API_TESTING_DOJO_HELP_URL = "/dojo/overview.html";
     public static final String ATTACHMENTS_HELP_URL = "/SOAP-and-WSDL/adding-headers-and-attachments.html";
     public static final String AUTHORIZATION = "/OAuth/authorization.html";
     public static final String AUTHORIZATION_BASIC = "/OAuth/Basic.html";
@@ -83,7 +82,7 @@ public interface HelpUrls {
     public static final String GENERATE_MOCKSERVICE_HELP_URL = "/Service-Mocking/mocking-soap-services.html ";
     public static final String GENERATE_REST_MOCKSERVICE = "/rest-testing-mocking/rest-mock-service-creation/rest-mock-from-service.html";
     public static final String GENERATE_TESTSUITE_HELP_URL = "/Functional-Testing/structuring-and-running-tests.html";
-    public static final String GETTINGSTARTED_HELP_URL = "/Getting-Started/your-first-soapui-project.html";
+    public static final String GETTING_STARTED_HELP_URL = "https://www.soapui.org/docs/getting-started/";
     public static final String GOTOSTEPEDITOR_HELP_URL = "/functional-testing/teststep-reference/conditional-goto/conditional-goto.html";
     public static final String GROOVYASSERTION_HELP_URL = "/functional-testing/validating-messages/using-script-assertions.html";
     public static final String GROOVYSTEPEDITOR_HELP_URL = "/functional-testing/working-with-scripts.html";
