@@ -19,7 +19,6 @@ package com.eviware.soapui;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SumbitUserInfoAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
@@ -55,7 +54,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -121,7 +119,7 @@ import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktop;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.x.impl.swing.SwingDialogs;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
@@ -216,9 +214,9 @@ public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
     public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
-    public final static Logger log = LogManager.getLogger(SoapUI.class);
-    public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
-    public final static String PRODUCT_NAME = "SoapUI";
+    public static final Logger log = LogManager.getLogger(SoapUI.class);
+    public static final String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
+    public static final String PRODUCT_NAME = "SoapUI";
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
     public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
     public static final String SOAPUI_ABOUT = "SoapUI-blank.png";
@@ -286,7 +284,7 @@ public class SoapUI {
     private static JPanel endpointExplorerButtonPanel;
     private static JButton endpointExplorerButton;
 
-    private final static ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+    private static final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(
             getMaxThreadpoolSize(), new SoapUIThreadCreator());
     private JTextField searchField;
     private static JToggleButton applyProxyButton;
@@ -1451,7 +1449,7 @@ public class SoapUI {
                     + "Copyright (C) " + COPYRIGHT + "<br>"
                     + "<a href=\"" + SOAPUI_WEBSITE + "\">" + SOAPUI_WEBSITE + "</a> | "
                     + "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br><br>"
-                    + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty("build.date"), "UNKNOWN BUILD DATE") + "<br>"
+                    + "Build Date: " + MoreObjects.firstNonNull(buildInfoProperties.getProperty("build.date"), "UNKNOWN BUILD DATE") + "<br>"
                     + "</font></p>"
                     + "</div></body></html>";
 
