@@ -7,7 +7,7 @@
     <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-project</artifactId>
     <name>SoapUI project</name>
-    <version>5.9.2-SNAPSHOT</version>
+    <version>5.7.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <repositories>
@@ -273,7 +273,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>1.8</source>
-                    <target>1.9</target>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
