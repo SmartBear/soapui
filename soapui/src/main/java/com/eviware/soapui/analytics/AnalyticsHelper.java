@@ -18,10 +18,10 @@ package com.eviware.soapui.analytics;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
-import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.model.settings.Settings;
 import com.smartbear.analytics.AnalyticsManager;
-import com.smartbear.analytics.api.AnalyticsProviderFactory;
-import com.smartbear.analytics.impl.SoapUIOSMixpanelProviderFactory;
+
+import static com.eviware.soapui.settings.UISettings.DISABLE_ANALYTICS;
 
 public class AnalyticsHelper {
     private static boolean initialized = false;
@@ -31,15 +31,12 @@ public class AnalyticsHelper {
             return;
         }
         initialized = true;
-        UniqueUserIdentifier userIdentifier = UniqueUserIdentifier.getInstance();
         AnalyticsManager manager = com.smartbear.analytics.Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         SoapUIProductInfo productInfo = SoapUIProductInfo.getInstance();
         manager.registerAnalyticsProviderFactory(new OSUserProviderFactory(productInfo));
-        if (SoapUI.getSettings().getBoolean(UISettings.DISABLE_ANALYTICS, false)) {
-            return;
-        }
-        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.MANDATORY));
-        manager.registerAnalyticsProviderFactory(new SoapUIOSMixpanelProviderFactory(productInfo, userIdentifier, AnalyticsProviderFactory.HandleType.USER_ALLOWED));
+
+        Settings settings = SoapUI.getSettings();
+        settings.setBoolean(DISABLE_ANALYTICS, true);
     }
 }
