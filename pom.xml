@@ -112,7 +112,7 @@
         <commons-cli.version>1.2</commons-cli.version>
         <json-lib.version>2.2.2-jdk15</json-lib.version>
         <ezmorph.version>1.0.5</ezmorph.version>
-        <xom.version>1.1</xom.version>
+        <xom.version>1.4.1</xom.version>
         <commons-codec.version>1.10</commons-codec.version>
         <rhino-js.version>1.7R2</rhino-js.version>
         <saxon.version>9.1.0.8j</saxon.version>
@@ -132,7 +132,7 @@
         <commons-httpclient.version>3.1</commons-httpclient.version>
         <i4jruntime.version>5.1.14</i4jruntime.version>
         <animal-sniffer-annotations.version>1.11</animal-sniffer-annotations.version>
-        <reflections.version>0.9.9-RC1</reflections.version>
+        <reflections.version>0.10.2</reflections.version>
         <install4j-maven-plugin.version>1.1.1</install4j-maven-plugin.version>
         <io.cucumber.version>7.20.1</io.cucumber.version>
         <picocontainer.version>2.14.3</picocontainer.version>
