@@ -19,7 +19,6 @@ package com.eviware.soapui;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SumbitUserInfoAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
@@ -55,7 +54,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -573,9 +571,7 @@ public class SoapUI {
 
         helpMenu.add(new ShowStarterPageAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("API Testing Dojo", HelpUrls.API_TESTING_DOJO_HELP_URL));
-        helpMenu.add(new ShowOnlineHelpAction("Getting Started", HelpUrls.GETTINGSTARTED_HELP_URL));
-        helpMenu.add(new SearchForumAction());
+        helpMenu.add(new ShowOnlineHelpAction("Getting Started", HelpUrls.GETTING_STARTED_HELP_URL));
         helpMenu.addSeparator();
         helpMenu.add(new ShowSystemPropertiesAction());
         helpMenu.addSeparator();
@@ -615,10 +611,6 @@ public class SoapUI {
         toolsMenu.add(SwingActionDelegate.createDelegate(GSoapAction.SOAPUI_ACTION_ID));
         toolsMenu.addSeparator();
         toolsMenu.add(SwingActionDelegate.createDelegate(TcpMonAction.SOAPUI_ACTION_ID));
-        /*toolsMenu.addSeparator();
-        StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
-        hermesJMSButtonAction.setEnabled(HermesUtils.isHermesJMSSupported());
-        toolsMenu.add(hermesJMSButtonAction);*/
 
         return toolsMenu;
     }
@@ -1376,22 +1368,6 @@ public class SoapUI {
 
         public void actionPerformed(ActionEvent e) {
             doCommunitySearch(searchField.getText());
-        }
-    }
-
-    private class SearchForumAction extends AbstractAction {
-        public SearchForumAction() {
-            super("Search Forum");
-            putValue(Action.SHORT_DESCRIPTION, "Searches the Smartbear Community Forum");
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            String text = UISupport.prompt("Search Text", "Search Community Forum", "");
-            if (text == null) {
-                return;
-            }
-
-            doCommunitySearch(text);
         }
     }
 
