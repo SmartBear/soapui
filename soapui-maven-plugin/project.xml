@@ -328,9 +328,9 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>thoughtworks</groupId>
+			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>1.4.13</version>
+			<version>1.4.21</version>
 			<type>jar</type>
 		</dependency>
 		<!-- HtmlUnit dependencies -->
