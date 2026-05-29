@@ -205,7 +205,7 @@ public interface HelpUrls {
     public static final String ASSERTION_JSON_REGEX = "/functional-testing/validating-messages/validating-json-messages.html";
     public static final String ASSERTION_JSON_REGEX_CONFIG = "/functional-testing/validating-messages/validating-json-messages.html";
 
-    public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage-new.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
+    public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage-new-2026.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
 
     public static final String GRAPHQL_REQUEST_HELP_URL = "/docs/graphql-testing";
 }
