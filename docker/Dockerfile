@@ -9,7 +9,7 @@ RUN set -eux; \
 
 WORKDIR /usr/local/SmartBear
 
-ARG SOAPUI_VERSION=5.10.0
+ARG SOAPUI_VERSION=5.10.1
 ENV PROJECT_DIR ./project
 ENV REPORTS_DIR ./reports
 ENV MOUNTED_PROJECT_DIR ./project
@@ -43,7 +43,7 @@ RUN set -eux; \
 
 WORKDIR /usr/local/SmartBear
 
-ARG SOAPUI_VERSION=5.10.0
+ARG SOAPUI_VERSION=5.10.1
 ENV PROJECT_DIR ./project
 ENV REPORTS_DIR ./reports
 ENV MOUNTED_PROJECT_DIR ./project
