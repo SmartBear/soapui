@@ -113,13 +113,23 @@ public class SignatureEntry extends WssEntryBase {
                 }
         });
         form.appendComboBox("signatureAlgorithm", "Signature Algorithm", new String[]{DEFAULT_OPTION, WSConstants.RSA,
-                WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
-                XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512,
-                XMLSignature.ALGO_ID_MAC_HMAC_RIPEMD160, XMLSignature.ALGO_ID_MAC_HMAC_NOT_RECOMMENDED_MD5,
-                XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_NOT_RECOMMENDED_RSA_MD5,
-                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256,
-                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512,
-                XMLSignature.ALGO_ID_SIGNATURE_RSA_RIPEMD160}, "Set the name of the signature encryption algorithm to use");
+                WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_SIGNATURE_DSA ,
+                XMLSignature.ALGO_ID_SIGNATURE_DSA_SHA256, XMLSignature.ALGO_ID_SIGNATURE_RSA ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_NOT_RECOMMENDED_RSA_MD5 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_RIPEMD160, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA224 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1_MGF1 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA224_MGF1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256_MGF1 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384_MGF1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512_MGF1 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA3_224_MGF1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA3_256_MGF1 ,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA3_384_MGF1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA3_512_MGF1 ,
+                XMLSignature.ALGO_ID_MAC_HMAC_NOT_RECOMMENDED_MD5, XMLSignature.ALGO_ID_MAC_HMAC_RIPEMD160 ,
+                XMLSignature.ALGO_ID_MAC_HMAC_SHA224, XMLSignature.ALGO_ID_MAC_HMAC_SHA256 ,
+                XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512 ,
+                XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA224 ,
+                XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA256, XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA384 ,
+                XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA512, XMLSignature.ALGO_ID_SIGNATURE_ECDSA_RIPEMD160
+}, "Set the name of the signature encryption algorithm to use");
         form.appendComboBox("signatureCanonicalization", "Signature Canonicalization", new String[]{DEFAULT_OPTION,
                 WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
                 WSConstants.C14N_EXCL_WITH_COMMENTS}, "Set the canonicalization method to use.");
