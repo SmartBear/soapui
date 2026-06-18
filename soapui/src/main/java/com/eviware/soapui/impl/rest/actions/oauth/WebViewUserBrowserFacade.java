@@ -31,7 +31,7 @@ import java.net.URL;
  */
 public class WebViewUserBrowserFacade implements UserBrowserFacade {
 
-    private WebViewBasedBrowserComponent browserComponent;
+    private final WebViewBasedBrowserComponent browserComponent;
     private JFrame popupWindow;
 
     public WebViewUserBrowserFacade() {
@@ -46,26 +46,26 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade {
     public void open(URL url) {
         popupWindow = new JFrame("Browser");
         popupWindow.setIconImages(SoapUI.getFrameIcons());
-        popupWindow.getContentPane().add(browserComponent.getComponent());
+        popupWindow.getContentPane().add(getBrowserComponent().getComponent());
         popupWindow.setBounds(100, 100, 800, 600);
         popupWindow.setVisible(true);
         popupWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                browserComponent.close(true);
+                getBrowserComponent().close(true);
             }
         });
-        browserComponent.navigate(url.toString());
+        getBrowserComponent().navigate(url.toString());
     }
 
     @Override
     public void addBrowserListener(BrowserListener listener) {
-        browserComponent.addBrowserStateListener(listener);
+        getBrowserComponent().addBrowserStateListener(listener);
     }
 
     @Override
     public void removeBrowserStateListener(BrowserListener listener) {
-        browserComponent.removeBrowserStateListener(listener);
+        getBrowserComponent().removeBrowserStateListener(listener);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade {
                     popupWindow.dispose();
                 }
             });
-            browserComponent.close(true);
+            getBrowserComponent().close(true);
         } catch (Exception e) {
             SoapUI.log.debug("Could not close window due to unexpected error: " + e.getMessage() + "!");
         }
@@ -88,7 +88,11 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade {
 
     @Override
     public void executeJavaScript(String script) {
-        browserComponent.executeJavaScript(script);
+        getBrowserComponent().executeJavaScript(script);
     }
 
+    public WebViewBasedBrowserComponent getBrowserComponent(){
+        return browserComponent;
+    }
 }
+
