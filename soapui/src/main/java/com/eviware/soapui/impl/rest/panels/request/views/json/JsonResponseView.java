@@ -31,8 +31,7 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
 import com.eviware.soapui.support.xml.actions.GoToLineAction;
-import net.sf.json.JSON;
-import net.sf.json.JSONException;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -143,13 +142,13 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
 
             if (JsonUtil.seemsToBeJsonContentType(httpResponse.getContentType())) {
                 try {
-                    JSON json = new JsonUtil().parseTrimmedText(httpResponse.getContentAsString());
-                    if (json.isEmpty()) {
+                    JsonNode jsonNode = JsonUtil.parseTrimmedTextToJsonNode(httpResponse.getContentAsString());
+                    if (jsonNode == null) {
                         content = "<Empty JSON content>";
                     } else {
-                        content = json.toString(3);
+                        content = JsonUtil.format(jsonNode);
                     }
-                } catch (JSONException e) {
+                } catch (IOException e) {
                     content = httpResponse.getContentAsString();
                 }
                 contentEditor.setText(content);
