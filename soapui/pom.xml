@@ -416,6 +416,13 @@
         </dependency>
 
 
+        <!-- Converts javax.* WAR to jakarta.* WAR for Tomcat 10+ -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>jakartaee-migration</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+
         <!-- WSS4J -->
 
         <dependency>

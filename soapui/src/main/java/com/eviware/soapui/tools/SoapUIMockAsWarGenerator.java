@@ -34,6 +34,7 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
     private boolean enableWebUI;
     private String localEndpoint;
     private String warFile;
+    private TomcatTarget tomcatTarget = TomcatTarget.TOMCAT_10_PLUS;
 
     public SoapUIMockAsWarGenerator() {
         super(TITLE);
@@ -82,6 +83,10 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
             setWarFile(cmd.getOptionValue("f"));
         }
 
+        if (cmd.hasOption("t")) {
+            setTomcatTarget(TomcatTarget.fromVersion(cmd.getOptionValue("t")));
+        }
+
         if (cmd.hasOption("e")) {
             setLocalEndpoint(cmd.getOptionValue("e"));
         }
@@ -99,6 +104,7 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
         options.addOption("e", true, "Set the local endpoint of the MockService");
         options.addOption("f", true, "Specify the name of the generated WAR file");
         options.addOption("d", true, "Sets the local folder to use for war generation");
+        options.addOption("t", true, "Target Tomcat version: 10 (default, Tomcat 10+) or 9 (Tomcat 9 or older, legacy)");
         options.addOption("s", true, "Sets the soapui-settings.xml file to use");
         options.addOption("p", true, "Sets project password for decryption if project is encrypted");
         options.addOption("v", true, "Sets password for soapui-settings.xml file");
@@ -128,7 +134,8 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
         log.info("Creating WAR file with endpoint [" + endpoint + "]");
 
         MockAsWar mockAsWar = new MockAsWar(pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
-                includeActions, includeListeners, endpoint, enableWebUI, project);
+                includeActions, includeListeners, endpoint, enableWebUI, project,
+                tomcatTarget);
 
         mockAsWar.createMockAsWarArchive();
         log.info("WAR Generation complete");
@@ -173,6 +180,14 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
 
     public void setLocalEndpoint(String localEndpoint) {
         this.localEndpoint = localEndpoint;
+    }
+
+    public TomcatTarget getTomcatTarget() {
+        return tomcatTarget;
+    }
+
+    public void setTomcatTarget(TomcatTarget tomcatTarget) {
+        this.tomcatTarget = tomcatTarget;
     }
 
     public String getWarFile() {

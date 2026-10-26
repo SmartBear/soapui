@@ -18,6 +18,7 @@ package com.eviware.soapui.actions;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.tools.TomcatTarget;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
@@ -35,6 +36,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static com.eviware.soapui.utils.ResourceUtils.getFilePathFromResource;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -122,6 +124,20 @@ public class MockAsWarActionTest {
         assertTrue(new File(warFileName).exists());
         assertValidWarDirectory(warDirectoryPath);
         assertValidWarFile(warFileName);
+    }
+
+    @Test
+    public void createMockAsWarForLegacyTomcat() throws SoapUIException, IOException {
+        when(mockedDialog.getValue(MockAsWarAction.MockAsWarDialog.TOMCAT_VERSION))
+                .thenReturn(TomcatTarget.TOMCAT_9_LEGACY.getLabel());
+
+        MockAsWarAction action = new MockAsWarAction();
+        action.setDialog(mockedDialog);
+        action.perform(project, null);
+
+        assertTrue(new File(warFileName).exists());
+        assertValidWarFile(warFileName);
+        assertFalse(new File(warFileName + ".jakarta.tmp").exists());
     }
 
     private void assertValidWarFile(String warFileName) throws IOException {
