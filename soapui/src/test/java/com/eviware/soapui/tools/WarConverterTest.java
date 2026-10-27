@@ -18,6 +18,11 @@ package com.eviware.soapui.tools;
 
 import com.eviware.soapui.mockaswar.MockAsWarServlet;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -68,6 +75,36 @@ public class WarConverterTest {
             // Tomcat 10+ still accepts the Servlet 2.5 descriptor, the TOMCAT profile leaves it as is
             assertEquals(JAVAEE_WEB_XML, read(war, "WEB-INF/web.xml"));
         }
+    }
+
+    @Test
+    public void routesMigrationLogsToLog4jInsteadOfStderr() throws IOException {
+        List<String> messages = new ArrayList<>();
+        Appender appender = new AbstractAppender("warConverterTestAppender", null, null, true, Property.EMPTY_ARRAY) {
+            @Override
+            public void append(LogEvent event) {
+                messages.add(event.getMessage().getFormattedMessage());
+            }
+        };
+        appender.start();
+        org.apache.logging.log4j.core.Logger converterLogger =
+                (org.apache.logging.log4j.core.Logger) LogManager.getLogger(WarConverter.class);
+        converterLogger.addAppender(appender);
+        org.apache.logging.log4j.Level previousLevel = converterLogger.getLevel();
+        converterLogger.setLevel(org.apache.logging.log4j.Level.INFO);
+        java.util.logging.Logger julLogger = java.util.logging.Logger.getLogger("org.apache.tomcat.jakartaee");
+        try {
+            WarConverter.convert(createJavaxWar(), new File(tmpDir, "converted.war"));
+        } finally {
+            converterLogger.setLevel(previousLevel);
+            converterLogger.removeAppender(appender);
+            appender.stop();
+        }
+
+        assertTrue("Migration logs should be forwarded to log4j: " + messages,
+                messages.stream().anyMatch(m -> m.contains("Migration completed")));
+        assertTrue("JUL parent handlers should be restored", julLogger.getUseParentHandlers());
+        assertEquals(0, julLogger.getHandlers().length);
     }
 
     @Test

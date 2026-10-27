@@ -111,13 +111,22 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
         return settingFile;
     }
 
-    private void buildDialog() {
+    // Only to be called from test class
+    XFormDialog getDialog() {
+        return dialog;
+    }
+
+    // package-private for tests
+    void buildDialog() {
         dialog = ADialogBuilder.buildDialog(MockAsWarDialog.class);
         dialog.getFormField(MockAsWarDialog.GLOBAL_SETTINGS).addFormFieldListener(new XFormFieldListener() {
             public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
                 dialog.getFormField(MockAsWarDialog.SETTINGS_FILE).setEnabled(Boolean.valueOf(newValue));
             }
         });
+
+        // RADIOGROUP fields ignore @AField.defaultValue, so preselect the default explicitly
+        dialog.setValue(MockAsWarDialog.TOMCAT_VERSION, TomcatTarget.TOMCAT_10_PLUS.getLabel());
 
         dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY).addFormFieldValidator(
                 new RequiredValidator("WAR Directory is required"));
@@ -148,7 +157,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
         @AField(description = "Select the Tomcat version the WAR will be deployed on. Note: " + TomcatTarget.LEGACY_DEPRECATION_NOTE,
                 name = "Target Tomcat", type = AFieldType.RADIOGROUP,
-                values = {"Tomcat 10+", "Tomcat 9 or older (legacy)"}, defaultValue = "Tomcat 10+")
+                values = {"Tomcat 10+", "Tomcat 9 or older (legacy)"})
         public final static String TOMCAT_VERSION = "Target Tomcat";
 
         @AField(description = "Specify name of target War File", name = "War File", type = AFieldType.FILE)
