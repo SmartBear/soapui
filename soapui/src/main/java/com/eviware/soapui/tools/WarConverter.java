@@ -1,5 +1,5 @@
 /*
- * SoapUI, Copyright (C) 2004-2022 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2026 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Wraps the Apache Tomcat Jakarta EE migration tool (https://tomcat.apache.org/download-migration.cgi)
@@ -78,7 +79,7 @@ public class WarConverter {
 
         private String getFormattedMessage(LogRecord record) {
             try {
-                return new java.util.logging.SimpleFormatter().formatMessage(record);
+                return new SimpleFormatter().formatMessage(record);
             } catch (RuntimeException e) {
                 return record.getMessage();
             }
