@@ -1,4 +1,12 @@
-﻿# SoapUI Open Source 5.10.0
+﻿# SoapUI Open Source (unreleased)
+
+* "Deploy As War" lets you choose the target Tomcat version. Tomcat 10+ (jakarta.*) is the new default; Tomcat 9 or older (legacy) is kept until Tomcat 9 support ends on 31 March 2027. The generated WAR is converted with the Apache Tomcat Jakarta EE migration tool. The `wargenerator` command line has a new `-t 9|10` option, and WARs it generates now target Tomcat 10+ by default.
+
+* Updated commons-io to 2.22.0.
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.10.0
 
 #### Released on 2026-06-02 ####
 

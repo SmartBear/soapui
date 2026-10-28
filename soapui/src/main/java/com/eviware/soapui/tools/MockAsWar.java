@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -72,9 +74,18 @@ public class MockAsWar {
     protected boolean enableWebUI;
 
     private WsdlProject project;
+    private final TomcatTarget tomcatTarget;
 
     public MockAsWar(String projectPath, String settingsPath, String warDir, String warFile, boolean includeExt,
                      boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI, WsdlProject project) {
+        this(projectPath, settingsPath, warDir, warFile, includeExt, actions, listeners, localEndpoint, enableWebUI,
+                project, TomcatTarget.TOMCAT_10_PLUS);
+    }
+
+    public MockAsWar(String projectPath, String settingsPath, String warDir, String warFile, boolean includeExt,
+                     boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI, WsdlProject project,
+                     TomcatTarget tomcatTarget) {
+        this.tomcatTarget = tomcatTarget == null ? TomcatTarget.TOMCAT_10_PLUS : tomcatTarget;
         this.project = project;
         this.localEndpoint = localEndpoint;
         this.projectFile = new File(projectPath);
@@ -96,7 +107,7 @@ public class MockAsWar {
 
     public void createMockAsWarArchive() {
 
-        XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog("Creating War File", 3,
+        XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog("Creating War File", 4,
                 "Building war file..", false);
         WorkerAdapter warWorker = new WorkerAdapter() {
 
@@ -112,6 +123,10 @@ public class MockAsWar {
 
                         File[] filez = files.toArray(new File[files.size()]);
                         JarPackager.createJarArchive(warFile, warDir, filez);
+
+                        if (MockAsWar.this.tomcatTarget == TomcatTarget.TOMCAT_10_PLUS) {
+                            convertToJakartaEe();
+                        }
                     }
                 }
                 return null;
@@ -123,6 +138,19 @@ public class MockAsWar {
             log.error(e.getMessage(), e);
         }
 
+    }
+
+    protected void convertToJakartaEe() {
+        File converted = new File(warFile.getParentFile(), warFile.getName() + ".jakarta.tmp");
+        try {
+            WarConverter.convert(warFile, converted);
+            Files.move(converted.toPath(), warFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            log.error("Could not convert WAR file to Tomcat 10+ format: " + e.getMessage(), e);
+            converted.delete();
+            warFile.delete();
+            UISupport.showErrorMessage("Could not convert WAR file to Tomcat 10+ format: " + e.getMessage());
+        }
     }
 
     private ArrayList<File> getAllFilesFrom(File dir) {

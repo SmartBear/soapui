@@ -26,6 +26,7 @@ import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.tools.MockAsWar;
+import com.eviware.soapui.tools.TomcatTarget;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -83,7 +84,8 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
                     dialog.getBooleanValue(MockAsWarDialog.ACTIONS), dialog.getBooleanValue(MockAsWarDialog.LISTENERS),
                     dialog.getValue(MockAsWarDialog.MOCKSERVICE_ENDPOINT),
                     dialog.getBooleanValue(MockAsWarDialog.ENABLE_WEBUI),
-                    project);
+                    project,
+                    TomcatTarget.fromLabel(dialog.getValue(MockAsWarDialog.TOMCAT_VERSION)));
             mockAsWar.createMockAsWarArchive();
 
             if (project.getRestMockServiceCount() > 0) {
@@ -109,13 +111,22 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
         return settingFile;
     }
 
-    private void buildDialog() {
+    // Only to be called from test class
+    XFormDialog getDialog() {
+        return dialog;
+    }
+
+    // package-private for tests
+    void buildDialog() {
         dialog = ADialogBuilder.buildDialog(MockAsWarDialog.class);
         dialog.getFormField(MockAsWarDialog.GLOBAL_SETTINGS).addFormFieldListener(new XFormFieldListener() {
             public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
                 dialog.getFormField(MockAsWarDialog.SETTINGS_FILE).setEnabled(Boolean.valueOf(newValue));
             }
         });
+
+        // RADIOGROUP fields ignore @AField.defaultValue, so preselect the default explicitly
+        dialog.setValue(MockAsWarDialog.TOMCAT_VERSION, TomcatTarget.TOMCAT_10_PLUS.getLabel());
 
         dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY).addFormFieldValidator(
                 new RequiredValidator("WAR Directory is required"));
@@ -143,6 +154,11 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
         @AField(description = "Local endpoint that will be used for WSDL endpoints/includes/imports", name = "MockService Endpoint", type = AFieldType.STRING)
         public final static String MOCKSERVICE_ENDPOINT = "MockService Endpoint";
+
+        @AField(description = "Select the Tomcat version the WAR will be deployed on. Note: " + TomcatTarget.LEGACY_DEPRECATION_NOTE,
+                name = "Target Tomcat", type = AFieldType.RADIOGROUP,
+                values = {"Tomcat 10+", "Tomcat 9 or older (legacy)"})
+        public final static String TOMCAT_VERSION = "Target Tomcat";
 
         @AField(description = "Specify name of target War File", name = "War File", type = AFieldType.FILE)
         public final static String WAR_FILE = "War File";
