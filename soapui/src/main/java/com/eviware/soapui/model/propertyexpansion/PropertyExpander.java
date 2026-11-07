@@ -145,12 +145,14 @@ public class PropertyExpander implements SoapUIFactoryRegistryListener {
         return expand(context, content, false);
     }
 
+    final static String regexPropertyName = "(?<=\\$\\{)[^\\r\\n]+(?=})";
+
     public String expand(PropertyExpansionContext context, String content, boolean entitize) {
         SoapUIClassLoaderState clState = SoapUIExtensionClassLoader.ensure();
 
         try {
 
-            if (StringUtils.isNullOrEmpty(content)) {
+            if (StringUtils.isNullOrEmpty(content) || !content.matches(regexPropertyName)) {
                 return content;
             }
 
