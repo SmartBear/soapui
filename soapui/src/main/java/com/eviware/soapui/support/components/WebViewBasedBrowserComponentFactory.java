@@ -37,4 +37,16 @@ public class WebViewBasedBrowserComponentFactory {
             return new EnabledWebViewBasedBrowserComponent(addNavigationBar, popupStrategy);
         }
     }
+
+    public static WebViewBasedBrowserComponent createAuthorizationBrowserComponent(boolean addNavigationBar) {
+        return createAuthorizationBrowserComponent(addNavigationBar, WebViewBasedBrowserComponent.PopupStrategy.INTERNAL_BROWSER_NEW_WINDOW);
+    }
+
+    public static WebViewBasedBrowserComponent createAuthorizationBrowserComponent(boolean addNavigationBar, WebViewBasedBrowserComponent.PopupStrategy popupStrategy) {
+        if (SoapUI.isBrowserDisabled()) {
+            return new DisabledWebViewBasedBrowserComponent();
+        } else {
+            return new EnabledAuthorizationCodeWebViewBasedBrowserComponent(addNavigationBar, popupStrategy);
+        }
+    }
 }
