@@ -1,17 +1,17 @@
 /*
  * SoapUI, Copyright (C) 2004-2022 SmartBear Software
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
- * versions of the EUPL (the "Licence"); 
- * You may not use this work except in compliance with the Licence. 
- * You may obtain a copy of the Licence at: 
- * 
- * http://ec.europa.eu/idabc/eupl 
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- * express or implied. See the Licence for the specific language governing permissions and limitations 
- * under the Licence. 
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
  */
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.OAuth1ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -45,7 +46,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
     private static Logger log = LogManager.getLogger(OAuth2RequestFilter.class);
 
 
-	/* setLog() and getLog() should only be used for testing */
+    /* setLog() and getLog() should only be used for testing */
 
     static Logger getLog() {
         return log;
@@ -56,14 +57,22 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
     }
 
     @Override
+    public void filterWsdlRequest(SubmitContext context, WsdlRequest request) {
+        filter(context, request);
+    }
+
+    @Override
     public void filterRestRequest(SubmitContext context, RestRequestInterface request) {
+        filter(context, (AbstractHttpRequest)request);
+    }
+
+    private void filter(SubmitContext context, AbstractHttpRequest request) {
 
         HttpRequestBase httpMethod = (HttpRequestBase) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
 
         if (O_AUTH_2_0.toString().equals(request.getAuthType())) {
-            OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
-                    .getOAuth2ProfileContainer();
-            OAuth2Profile profile = profileContainer.getProfileByName(((AbstractHttpRequest) request).getSelectedAuthProfile());
+            OAuth2ProfileContainer profileContainer = request.getProject().getOAuth2ProfileContainer();
+            OAuth2Profile profile = profileContainer.getProfileByName((request).getSelectedAuthProfile());
             if (profile == null || StringUtils.isNullOrEmpty(profile.getAccessToken())) {
                 return;
             }
@@ -78,10 +87,8 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
             }
             oAuth2Client.applyAccessToken(profile, httpMethod, request.getRequestContent());
         } else if (O_AUTH_1_0.toString().equals(request.getAuthType())) {
-            OAuth1ProfileContainer profileContainer = request.getResource().getService().getProject()
-                    .getOAuth1ProfileContainer();
-            OAuth1Profile profile = profileContainer.getProfileByName(
-                    ((AbstractHttpRequest) request).getSelectedAuthProfile());
+            OAuth1ProfileContainer profileContainer = request.getProject().getOAuth1ProfileContainer();
+            OAuth1Profile profile = profileContainer.getProfileByName((request).getSelectedAuthProfile());
 
             if (profile == null || StringUtils.isNullOrEmpty(profile.getAccessToken())) {
                 return;

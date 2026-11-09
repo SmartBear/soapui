@@ -25,7 +25,6 @@ import com.eviware.soapui.impl.rest.OAuth1ProfileListener;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.OAuth2ProfileListener;
-import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -68,8 +67,7 @@ import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_O_AUTH10;
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_O_AUTH10_FOR_TEST_REQUEST;
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_SPNEGO_KERBEROS_AUTH;
 import static com.eviware.soapui.analytics.SoapUIActions.ASSIGN_SPNEGO_KERBEROS_AUTH_FOR_TEST_REQUEST;
-import static com.eviware.soapui.config.CredentialsConfig.AuthType.NTLM;
-import static com.eviware.soapui.config.CredentialsConfig.AuthType.SPNEGO_KERBEROS;
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.*;
 
 public class ProfileSelectionForm<T extends AbstractHttpRequest> extends AbstractXmlInspector {
 
@@ -243,7 +241,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
                 changeAuthorizationType(BASIC_FORM_LABEL, selectedOption);
                 trackBasicTypes(selectedOption);
             }
-        } else if (isRestRequest(request) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(selectedOption)) {
+        } else if (getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(selectedOption)) {
             setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
             request.setSelectedAuthProfileAndAuthType(selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0);
             oAuth2Form = new OAuth2Form(getOAuth2ProfileContainer().getProfileByName(selectedOption), this);
@@ -257,7 +255,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
                 Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH20, "OAuth2Flow",
                         oAuth2Form.getProfile().getOAuth2Flow().name());
             }
-        } else if (isRestRequest(request) && getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(selectedOption)) {
+        } else if (getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(selectedOption)) {
             setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
             request.setSelectedAuthProfileAndAuthType(selectedOption, CredentialsConfig.AuthType.O_AUTH_1_0);
             oAuth1Form = new OAuth1Form(getOAuth1ProfileContainer().getProfileByName(selectedOption), this);
@@ -308,7 +306,10 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        new AuthorizationSelectionDialog<T>(request, getBasicAuthenticationTypes());
+                        ArrayList<String> options=  getBasicAuthenticationTypes();
+                        options.add(O_AUTH_2_0.toString());
+                        options.add(O_AUTH_1_0.toString());
+                        new AuthorizationSelectionDialog<T>(request, options);
                         refreshProfileSelectionComboBox(request.getSelectedAuthProfile());
                     }
                 });
@@ -368,9 +369,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
             return;
         }
 
-        if (isRestRequest(request) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(profileName)) {
+        if ( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(profileName)) {
             getOAuth2ProfileContainer().removeProfile(profileName);
-        } else if (isRestRequest(request) && getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(profileName)) {
+        } else if (getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(profileName)) {
             getOAuth1ProfileContainer().removeProfile(profileName);
         } else if (getBasicAuthenticationTypes().contains(profileName)) {
             request.removeBasicAuthenticationProfile(profileName);
@@ -423,12 +424,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
         ArrayList<String> oAuth2Profiles = null;
         ArrayList<String> oAuth1Profiles = null;
-        if (isRestRequest(request)) {
-            oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
-            oAuth1Profiles = getOAuth1ProfileContainer().getOAuth1ProfileNameList();
-            options.addAll(oAuth2Profiles);
-            options.addAll(oAuth1Profiles);
-        }
+
+        oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
+        oAuth1Profiles = getOAuth1ProfileContainer().getOAuth1ProfileNameList();
+        options.addAll(oAuth2Profiles);
+        options.addAll(oAuth1Profiles);
+
         if (isSoapRequest(request)) {
             if (basicAuthenticationProfiles.size() >= getBasicAuthenticationTypes().size()) {
                 addEditOptions.remove(AddEditOptions.ADD.getDescription());
@@ -448,10 +449,6 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         }
 
         return options.toArray(new String[options.size()]);
-    }
-
-    private boolean isRestRequest(T request) {
-        return request instanceof RestRequest;
     }
 
     private ArrayList<String> getAddEditOptions() {
