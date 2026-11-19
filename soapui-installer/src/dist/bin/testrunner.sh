@@ -31,7 +31,7 @@ SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 export SOAPUI_HOME
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin"
+JAVA_OPTS="-Xms128m -Xmx1024m -XX:-UseBASE64Intrinsics -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin"
 
 #CVE-2021-44228
 JAVA_OPTS="$JAVA_OPTS -Dlog4j2.formatMsgNoLookups=true"
