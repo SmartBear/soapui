@@ -926,7 +926,7 @@
                 <serializedBean>
                   <property name="launcherId" type="string">64</property>
                   <property name="macosVmOptionsType" type="enum" class="com.install4j.runtime.beans.actions.misc.MacosVmOptionsType" value="OUTER" />
-                  <property name="vmOptions" type="array" elementType="string" length="48">
+                  <property name="vmOptions" type="array" elementType="string" length="49">
                     <element index="0">-XX:MinHeapFreeRatio=20</element>
                     <element index="1">-XX:MaxHeapFreeRatio=40</element>
                     <element index="2">-Xms128m</element>
@@ -975,6 +975,7 @@
                     <element index="45">jdk.jdi/com.sun.jdi=ALL-UNNAMED</element>
                     <element index="46">--add-opens</element>
                     <element index="47">java.prefs/java.util.prefs=ALL-UNNAMED</element>
+                    <element index="48">-XX:-UseBASE64Intrinsics</element>
                   </property>
                 </serializedBean>
               </action>
@@ -2436,7 +2437,7 @@
               <action id="8011" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="launcherId" type="string">7979</property>
-                  <property name="vmOptions" type="array" elementType="string" length="48">
+                  <property name="vmOptions" type="array" elementType="string" length="49">
                     <element index="0">-XX:MinHeapFreeRatio=20</element>
                     <element index="1">-XX:MaxHeapFreeRatio=40</element>
                     <element index="2">-Xms128m</element>
@@ -2485,6 +2486,7 @@
                     <element index="45">jdk.jdi/com.sun.jdi=ALL-UNNAMED</element>
                     <element index="46">--add-opens</element>
                     <element index="47">java.prefs/java.util.prefs=ALL-UNNAMED</element>
+                    <element index="48">-XX:-UseBASE64Intrinsics</element>
                   </property>
                 </serializedBean>
               </action>

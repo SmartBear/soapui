@@ -29,7 +29,7 @@ del %TEMP%\jfxrtpath
 set CLASSPATH=%CLASSPATH%;%JFXRTPATH%
 
 rem JVM parameters, modify as appropriate
-set JAVA_OPTS=-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\" -splash:SoapUI-Spashscreen.png
+set JAVA_OPTS=-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:-UseBASE64Intrinsics -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\" -splash:SoapUI-Spashscreen.png
 
 rem CVE-2021-44228
 set JAVA_OPTS=%JAVA_OPTS% -Dlog4j2.formatMsgNoLookups=true
