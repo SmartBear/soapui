@@ -44,6 +44,7 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -162,7 +163,12 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(AbstractHttpRequestInterface.RESPONSE_PROPERTY) && !updatingRequest) {
             updatingRequest = true;
-            setEditorContent(((HttpResponse) evt.getNewValue()));
+            final HttpResponse response = (HttpResponse) evt.getNewValue();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    setEditorContent(response);
+                }
+            });
             updatingRequest = false;
         }
     }
